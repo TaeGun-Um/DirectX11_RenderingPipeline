@@ -10,28 +10,10 @@
 class Base_Debug
 {
 public:
-	// delete Function
-	Base_Debug(const Base_Debug& _Other) = delete;
-	Base_Debug(Base_Debug&& _Other) noexcept = delete;
-	Base_Debug& operator=(const Base_Debug& _Other) = delete;
-	Base_Debug& operator=(Base_Debug&& _Other) noexcept = delete;
-
 	// 릭 체크 함수 실행
-	static void LeakCheck()
-	{
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	}
+	static void LeakCheck() { _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); }
 
 	// 릭 발생 지점 확인 함수
-	static void LeakPointBreak(int _Point)
-	{
-		_CrtSetBreakAlloc(_Point);
-	}
-
-protected:
-	
-private:
-	Base_Debug() {};
-	~Base_Debug() {};
+	static void LeakPointBreak(int _Point) { _CrtSetBreakAlloc(_Point); }
 	
 };
