@@ -10,6 +10,9 @@
     <ClInclude Include="Base_Windows.h">
       <Filter>01.Platform</Filter>
     </ClInclude>
+    <ClInclude Include="Base_Math.h">
+      <Filter>03.Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PrecompileHeader.cpp">
@@ -20,6 +23,9 @@
     </ClCompile>
     <ClCompile Include="Base_Windows.cpp">
       <Filter>01.Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_Math.cpp">
+      <Filter>03.Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,7 +38,7 @@
     <Filter Include="01.Platform">
       <UniqueIdentifier>{d72a76c4-d6c7-44f9-801c-854fee3a58f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Enum">
+    <Filter Include="03.Math">
       <UniqueIdentifier>{726ec14b-a9f7-4d74-a47b-a2746737339c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

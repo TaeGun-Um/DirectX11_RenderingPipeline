@@ -4,6 +4,4 @@
 
 #include <DirectX11_Base/PrecompileHeader.h>
 #include <DirectX11_Base/Base_Debug.h>
-
-// DirectX11
-#include <d3d11.h>
+#include <DirectX11_Base/Base_Math.h>

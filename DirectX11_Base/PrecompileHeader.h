@@ -13,3 +13,10 @@
 #include <map>
 #include <list>
 #include <vector>
+
+// DirectX11
+#include <d3d11.h> // Direct3D 11 디바이스를 위한 헤더
+#include <dxgi.h>    // DXGI 인터페이스를 위한 헤더(어댑터, 출력 등)
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")

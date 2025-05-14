@@ -10,7 +10,7 @@ public:
 	Ext_Core& operator=(const Ext_Core& _Other) = delete;
 	Ext_Core& operator=(Ext_Core&& _Other) noexcept = delete;
 
-	static void Run(HINSTANCE _hInstance);
+	static void Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen);
 
 protected:
 	

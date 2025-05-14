@@ -1,12 +1,15 @@
 #include "PrecompileHeader.h"
 #include "Base_Windows.h"
 #include "Base_Debug.h"
+#include "Base_Math.h"
 
 std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)> Base_Windows::UserMessageFunction;
 WNDCLASSEX  Base_Windows::wcex;
 HWND             Base_Windows::HWnd = nullptr;
 HDC                Base_Windows::WindowBackBufferHdc = nullptr;
 bool                Base_Windows::IsWindowUpdate = true;
+float4              Base_Windows::ScreenSize = { 0.f, 0.f, 0.f, 0.f };
+float4              Base_Windows::WindowSize = { 0.f, 0.f, 0.f, 0.f };
 
 LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
@@ -44,7 +47,7 @@ LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM
     return 0;
 }
 
-void Base_Windows::WindowCreate(HINSTANCE _hInstance)
+void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
 {
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -64,8 +67,6 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance)
         MsgAssert("윈도우 클래스 등록에 실패했습니다.");
         return;
     }
-
-    bool _IsFullScreen = false;
 
     HWnd = CreateWindow
     (
@@ -92,14 +93,13 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance)
     ShowWindow(HWnd, SW_SHOW); // 창 표시 방법 제어, SW_SHOW는 창을 활성화하고 현재 크기와 위치에 표시
     UpdateWindow(HWnd);                 // 창의 업데이트 영역이 비어 있지 않은 경우 창에 WM_PAINT 메시지를 보내 지정된 창의 클라이언트 영역을 업데이트
 
-    //RECT Rc = { 0, 0, _Size.ix(), _Size.iy() }; // 윈도우 창 설정은 타이틀바, 프레임의 크기를 고려하여 설정한다.
-    RECT Rc = { 0, 0, 1280, 720 }; 
-
-    // ScreenSize = _Size;
+    ScreenSize = _ScreenSize;
+    RECT Rc = { 0, 0, _ScreenSize.ix(), _ScreenSize .iy() }; // 윈도우 창 설정은 타이틀바, 프레임의 크기를 고려하여 설정한다.
 
     AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE); // 내가 원하는 크기를 넣으면 타이틀바까지 고려한 크기를 리턴주는 함수.
 
-    // WindowSize = { static_cast<float>(Rc.right - Rc.left), static_cast<float>(Rc.bottom - Rc.top) };
+    WindowSize = { static_cast<float>(Rc.right - Rc.left), static_cast<float>(Rc.bottom - Rc.top) };
+    
     // 0을 넣어주면 기존의 크기를 유지한다.
     // SetWindowPos(HWnd, nullptr, WindowPos.ix(), WindowPos.iy(), WindowSize.ix(), WindowSize.iy(), SWP_NOZORDER);
     SetWindowPos(HWnd, nullptr, 0, 0, Rc.right - Rc.left, Rc.bottom - Rc.top, SWP_NOZORDER);
