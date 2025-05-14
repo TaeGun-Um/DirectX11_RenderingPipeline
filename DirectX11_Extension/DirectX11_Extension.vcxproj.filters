@@ -1,20 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="EngineCore.cpp" />
     <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>PrecompileHeader</Filter>
+      <Filter>00.PrecompileHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXDevice.cpp">
+      <Filter>02.DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_Core.cpp">
+      <Filter>01.ProcessCore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EngineCore.h" />
     <ClInclude Include="PrecompileHeader.h">
-      <Filter>PrecompileHeader</Filter>
+      <Filter>00.PrecompileHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXDevice.h">
+      <Filter>02.DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_Core.h">
+      <Filter>01.ProcessCore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="PrecompileHeader">
+    <Filter Include="00.PrecompileHeader">
       <UniqueIdentifier>{95d3a607-fde2-4ae1-86ea-5b40f4f85733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.ProcessCore">
+      <UniqueIdentifier>{286b5147-238a-4e53-ba15-367384bc8cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX">
+      <UniqueIdentifier>{c25a8a80-0398-40ae-b1ee-98f3e9a79c25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "PrecompileHeader.h"
-#include <DirectX11_Base/EngineWindows.h>
-#include <DirectX11_Extension/EngineCore.h>
+#include <DirectX11_Base/Base_Windows.h>
+#include <DirectX11_Extension/Ext_Core.h>
 
 int APIENTRY wWinMain
 (
@@ -12,6 +12,6 @@ int APIENTRY wWinMain
 	_In_ int       nCmdShow
 )
 {
-	EngineCore::Run(hInstance);
+	Ext_Core::Run(hInstance);
 	return 0;
 }

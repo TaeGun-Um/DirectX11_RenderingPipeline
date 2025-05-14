@@ -1,19 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>PrecompileHeader</Filter>
+      <Filter>00.PrecompileHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>01.main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="PrecompileHeader">
+    <Filter Include="00.PrecompileHeader">
       <UniqueIdentifier>{45dce3fc-bb53-4cb2-a97d-7803268a1ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.main">
+      <UniqueIdentifier>{231dfcb5-b5b8-4d3d-b0ba-0ddc38fdf80c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrecompileHeader.h">
-      <Filter>PrecompileHeader</Filter>
+      <Filter>00.PrecompileHeader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

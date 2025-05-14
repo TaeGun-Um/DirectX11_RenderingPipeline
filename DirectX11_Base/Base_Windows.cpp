@@ -1,14 +1,14 @@
 #include "PrecompileHeader.h"
-#include "EngineWindows.h"
-#include "EngineDebug.h"
+#include "Base_Windows.h"
+#include "Base_Debug.h"
 
-std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)> EngineWindows::UserMessageFunction;
-WNDCLASSEX EngineWindows::wcex;
-HWND EngineWindows::HWnd = nullptr;
-HDC EngineWindows::WindowBackBufferHdc = nullptr;
-bool EngineWindows::IsWindowUpdate = true;
+std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)> Base_Windows::UserMessageFunction;
+WNDCLASSEX  Base_Windows::wcex;
+HWND             Base_Windows::HWnd = nullptr;
+HDC                Base_Windows::WindowBackBufferHdc = nullptr;
+bool                Base_Windows::IsWindowUpdate = true;
 
-LRESULT CALLBACK EngineWindows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
+LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
     if (nullptr != UserMessageFunction)
     {
@@ -34,7 +34,7 @@ LRESULT CALLBACK EngineWindows::MessageFunction(HWND _hWnd, UINT _message, WPARA
     }
     case WM_DESTROY:
     {
-        // IsWindowUpdate = false;
+        Base_Windows::SetWindowsEnd();
         break;
     }
     default:
@@ -44,11 +44,11 @@ LRESULT CALLBACK EngineWindows::MessageFunction(HWND _hWnd, UINT _message, WPARA
     return 0;
 }
 
-void EngineWindows::WindowCreate(HINSTANCE _hInstance)
+void Base_Windows::WindowCreate(HINSTANCE _hInstance)
 {
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = &EngineWindows::MessageFunction;
+    wcex.lpfnWndProc = &Base_Windows::MessageFunction;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = _hInstance;
@@ -69,7 +69,8 @@ void EngineWindows::WindowCreate(HINSTANCE _hInstance)
 
     HWnd = CreateWindow
     (
-        "WindowDefault", "DirectX11", 
+        "WindowDefault", 
+        "DirectX11", 
         _IsFullScreen ? (WS_VISIBLE | WS_POPUP) : WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 
         0, 
@@ -89,12 +90,10 @@ void EngineWindows::WindowCreate(HINSTANCE _hInstance)
     WindowBackBufferHdc = GetDC(HWnd);
 
     ShowWindow(HWnd, SW_SHOW); // 창 표시 방법 제어, SW_SHOW는 창을 활성화하고 현재 크기와 위치에 표시
-    UpdateWindow(HWnd);        // 창의 업데이트 영역이 비어 있지 않은 경우 창에 WM_PAINT 메시지를 보내 지정된 창의 클라이언트 영역을 업데이트
+    UpdateWindow(HWnd);                 // 창의 업데이트 영역이 비어 있지 않은 경우 창에 WM_PAINT 메시지를 보내 지정된 창의 클라이언트 영역을 업데이트
 
-    // 윈도우 창 설정은 타이틀바, 프레임의 크기를 고려하여 설정한다.
-    //          위치      크기
-    //RECT Rc = { 0, 0, _Size.ix(), _Size.iy() };
-    RECT Rc = { 0, 0, 1280, 720 };
+    //RECT Rc = { 0, 0, _Size.ix(), _Size.iy() }; // 윈도우 창 설정은 타이틀바, 프레임의 크기를 고려하여 설정한다.
+    RECT Rc = { 0, 0, 1280, 720 }; 
 
     // ScreenSize = _Size;
 
@@ -115,7 +114,7 @@ void EngineWindows::WindowCreate(HINSTANCE _hInstance)
     //DoubleBufferImage->ImageCreate(ScreenSize);
 }
 
-int EngineWindows::WindowLoop(std::function<void()> _Start, std::function<void()> _Loop, std::function<void()> _End)
+int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()> _Loop, std::function<void()> _End)
 {
     if (nullptr != _Start)
     {
@@ -129,7 +128,6 @@ int EngineWindows::WindowLoop(std::function<void()> _Start, std::function<void()
         // 비동기 함수
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-
             if (nullptr != _Loop)
             {
                 _Loop();

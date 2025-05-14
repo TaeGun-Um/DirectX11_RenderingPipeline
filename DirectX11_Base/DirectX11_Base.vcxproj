@@ -160,11 +160,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="EngineDebug.h">
+    <ClInclude Include="Base_Debug.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="EngineWindows.h">
+    <ClInclude Include="Base_Windows.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -174,11 +174,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EngineDebug.cpp">
+    <ClCompile Include="Base_Debug.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="EngineWindows.cpp">
+    <ClCompile Include="Base_Windows.cpp">
       <SubType>
       </SubType>
     </ClCompile>
