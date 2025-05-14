@@ -1,0 +1,69 @@
+#pragma once
+
+// 동적할당된 리소스들을 관리해주는 클래스
+template<typename ResourcesType>
+class ResourceManager
+{
+public:
+	// constrcuter destructer
+	ResourceManager() {}
+	virtual ~ResourceManager() {};
+	// 템플릿 클래스는 컴파일 시 인스턴스화 되므로, 선언이 없으면 해당 타입이 다른 곳에 사용될 때 몸체를 못찾음
+	// 템플릿 클래스의 멤버 함수(소멸자 포함)는 헤더에서 정의되지 않으면 링크 불가
+
+	// delete Function
+	ResourceManager(const ResourceManager& _Other) = delete;
+	ResourceManager(ResourceManager&& _Other) noexcept = delete;
+	ResourceManager& operator=(const ResourceManager& _Other) = delete;
+	ResourceManager& operator=(ResourceManager&& _Other) noexcept = delete;
+
+	static std::shared_ptr<ResourcesType> Find(std::string_view _Name)
+	{
+		std::string UpperName = Base_String::ToUpper(_Name);
+
+		if (NameResources.end() == NameResources.find(UpperName.c_str()))
+		{
+			return nullptr;
+		}
+
+		return NameResources[UpperName];
+	}
+
+	static std::shared_ptr<ResourcesType> CreateResource()
+	{
+		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
+		Resources.push_back(NewRes);
+
+		return NewRes;
+	}
+
+	static std::shared_ptr<ResourcesType> CreateNameResource(std::string_view _Name)
+	{
+		std::string UpperName = Base_String::ToUpper(_Name);
+
+		if (nullptr != Find(UpperName))
+		{
+			MsgAssert("이미 존재하는 이름의 리소스를 또 만들려고 했습니다.");
+			return nullptr;
+		}
+
+		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
+		//NewRes->SetName(UpperName);
+		NameResources.insert(std::map<std::string, std::shared_ptr<ResourcesType>>::value_type(UpperName, NewRes));
+
+		return NewRes;
+	}
+
+protected:
+	
+private:
+	static std::vector<std::shared_ptr<ResourcesType>> Resources; // 그냥 저장할 리소스
+	static std::map<std::string, std::shared_ptr<ResourcesType>> NameResources; // 이름으로 저장할 리소스
+	
+};
+
+template<typename ResourcesType>
+std::vector<std::shared_ptr<ResourcesType>> ResourceManager<ResourcesType>::Resources;
+
+template<typename ResourcesType>
+std::map<std::string, std::shared_ptr<ResourcesType>> ResourceManager<ResourcesType>::NameResources;

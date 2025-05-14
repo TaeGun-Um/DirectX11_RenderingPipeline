@@ -13,6 +13,8 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <string>
+#include <string_view>
 
 // DirectX11
 #include <d3d11.h> // Direct3D 11 디바이스를 위한 헤더

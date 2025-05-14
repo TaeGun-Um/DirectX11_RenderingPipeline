@@ -5,10 +5,19 @@
       <Filter>00.PrecompileHeader</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXDevice.cpp">
-      <Filter>02.DirectX</Filter>
+      <Filter>02.DirectX\00. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXTexture.cpp">
+      <Filter>02.DirectX\01. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXRenderTarget.cpp">
+      <Filter>02.DirectX\01. Texture</Filter>
     </ClCompile>
     <ClCompile Include="Ext_Core.cpp">
-      <Filter>01.ProcessCore</Filter>
+      <Filter>01.Process\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>01.Process\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -16,21 +25,42 @@
       <Filter>00.PrecompileHeader</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXDevice.h">
-      <Filter>02.DirectX</Filter>
+      <Filter>02.DirectX\00. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXTexture.h">
+      <Filter>02.DirectX\01. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXRenderTarget.h">
+      <Filter>02.DirectX\01. Texture</Filter>
     </ClInclude>
     <ClInclude Include="Ext_Core.h">
-      <Filter>01.ProcessCore</Filter>
+      <Filter>01.Process\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>01.Process\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.PrecompileHeader">
       <UniqueIdentifier>{95d3a607-fde2-4ae1-86ea-5b40f4f85733}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.ProcessCore">
-      <UniqueIdentifier>{286b5147-238a-4e53-ba15-367384bc8cee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.DirectX">
       <UniqueIdentifier>{c25a8a80-0398-40ae-b1ee-98f3e9a79c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\00. Device">
+      <UniqueIdentifier>{1140bec2-32c6-4fd9-8f5d-6c4f2c6c6426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\01. Texture">
+      <UniqueIdentifier>{876cba7e-de67-434f-9c8f-1987e56c41bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Process">
+      <UniqueIdentifier>{286b5147-238a-4e53-ba15-367384bc8cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Process\Core">
+      <UniqueIdentifier>{989ac411-e285-4e18-be39-743c1cd2580e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Process\Manager">
+      <UniqueIdentifier>{055dfa1e-5edf-423b-ae77-0c49ff7932e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -3,10 +3,13 @@
 #include <DirectX11_Base/Base_Debug.h>
 #include <DirectX11_Base/Base_Windows.h>
 #include <DirectX11_Base/Base_Math.h>
+#include "Ext_DirectXTexture.h"
+#include "Ext_DirectXRenderTarget.h"
 
 ID3D11Device* Ext_DirectXDevice::Device = nullptr;
 ID3D11DeviceContext* Ext_DirectXDevice::Context = nullptr;
 IDXGISwapChain* Ext_DirectXDevice::SwapChain = nullptr;
+std::shared_ptr<Ext_DirectXRenderTarget> Ext_DirectXDevice::BackBufferTarget = nullptr;
 
 // DirectX11 시작
 void Ext_DirectXDevice::Initialize()
@@ -31,19 +34,34 @@ void Ext_DirectXDevice::Initialize()
 		return;
 	}
 
+	// 디바이스, 디바이스 컨텍스트 생성 함수
 	HRESULT Hr = D3D11CreateDevice
 	(
-		Adapter,                       // 기본 어댑터
-		D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_UNKNOWN,  // 하드웨어 가속
-		nullptr,                         // 소프트웨어 드라이버 없음
-		iFlag,                            // 디버그 레이어 플래그
-		nullptr,                         // 사용할 Feature Level
-		0,                                // Feature Level 수
-		D3D11_SDK_VERSION, // SDK 버전
-		&Device,                      // 디바이스 반환
-		&Level,						  // 선택된 Feature Level 반환
-		&Context                     // 디바이스 컨텍스트 반환
+		/*1*/Adapter,
+		/*2*/D3D_DRIVER_TYPE_UNKNOWN,
+		/*3*/nullptr,
+		/*4*/iFlag,
+		/*5*/nullptr,
+		/*6*/0,
+		/*7*/D3D11_SDK_VERSION,
+		/*8*/&Device,
+		/*9*/&Level,
+		/*10*/&Context
 	);
+	// <<설명>>
+	// [1] IDXGIAdapter*						: 디바이스를 만들 때 사용할 비디오 어댑터에 대한 포인터, nullptr 전달 시 IDXGIFactory1::EnumAdapters로 열거된 첫 번째 어댑터인 기본값이 설정됨
+	// [2] D3D_DRIVER_TYPE				: 드라이버 유형 선택, 어댑터를 전달했으니 UNKNOWN을 전달하면 됨(HARDWARE == GPU 사용, REFERENCE == CPU 기반 소프트웨어 구현, WARP == 고성능 소프트웨어 구현)
+	// [3] HMODULE								: 소프트웨어 래스터라이저를 구현하는 DLL에 대한 핸들, nullptr 전달 시 소프트웨어 드라이버 없음을 전달, 보통 nullptr을 전달한다.
+	// [4] UINT									: D3D11_CREATE_DEVICE_FLAG 값 전달, 디버그 레이어 플래그
+	// [5] const D3D_FEATURE_LEVEL   : 만드는 기능 수준의 순서를 결정하는 Feature Level 배열에 대한 포인터 전달, nullptr 전달 시 D3D_FEATURE_LEVEL 배열의 첫 번째 값이 반환됨
+	// [6] UINT									: [5]에 대한 배열 요소의 개수
+	// [7] UINT									: SDK 버전, 무조건 D3D11_SDK_VERSION로 전달
+	// [8] ID3D11Device**					: 만든 디바이스를 반환해주니 받으면 됨
+	// [9] D3D_FEATURE_LEVEL*			: 실제로 생성된 디바이스의 기능 수준 반환, 첫 번째 D3D_FEATURE_LEVEL 반환해줌
+	// [10] ID3D11DeviceContext**		: 디바이스컨텍스트 반환해주니 받으면 됨
+	
+	// Feature Level은 DirectX에서 GPU가 지원하는 기능을 단계별로 구분한 것이다. -> 이 그래픽카드가 얼마나 최신 기술을 쓸 수 있는가?
+	// DirectX11을 사용하고 싶어도 GPU가 기능 지원 안하면 안되기때문에, 이걸로 받아서 확인해보면 된다.
 
 	if (S_OK != Hr)
 	{
@@ -58,20 +76,15 @@ void Ext_DirectXDevice::Initialize()
 		Adapter = nullptr;
 	}
 
-	// DirectX11로 초기화된게 아니라면 
+	// DirectX11로 초기화된게 아니라면 해당 어댑터는 DirectX11을 지원하지 않는 그래픽카드임
 	if (Level != D3D_FEATURE_LEVEL_11_0)
 	{
 		MsgAssert("다이렉트 11을 지원하지 않는 그래픽카드 입니다");
 		return;
 	}
 
-	// 멀티스레드 사용 설정
-	Hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-	// 스왑체인 생성
-	CreateSwapChain();
-
-	int a = 0;
+	Hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED); // 멀티스레드 사용 설정
+	CreateSwapChain(); // 스왑체인 생성
 }
 
 // 그래픽카드 정보 가져오기
@@ -80,12 +93,12 @@ IDXGIAdapter* Ext_DirectXDevice::GetHighPerformanceAdapter()
 	IDXGIFactory* Factory = nullptr;
 	IDXGIAdapter* Adapter = nullptr;
 
-	// 팩토리 생성, c++에서 지원하는 클래스를 구분하기 위한 GUI를 얻어오는 과정이다.
-	// 디바이스에서는 내부에 가지고 있는 포인터나 맴버변수를 얻어오려면
-	// __uuidof(IDXGIAdapter) 같은 GUID를 넣어줘야 한다.
-	// 이것은 프로그램을 통틀어서 단 1개만 존재하는 "Key"를 만드는 방법이다.
-	// MIDL_INTERFACE("2411e7e1-12ac-4ccf-bd14-9798e8534dc0") << 이런 값이 고유 GUID 값이라고 보면 된다.
-	HRESULT HR = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&Factory);
+	// 팩토리 생성
+	HRESULT HR = CreateDXGIFactory
+	(
+		__uuidof(IDXGIFactory), // [1] 생성할 인터페이스의 GUID를 지정, IDXGIFactory는 DXGI 팩토리 인터페이스이며 __uuidof는 컴파일 타임에 GUID를 추출하는 매크로
+		(void**)&Factory		    // [2] 결과로 생성된 IDXGIFactory 객체를 받을 포인터를 전달
+	);
 
 	if (nullptr == Factory)
 	{
@@ -93,35 +106,35 @@ IDXGIAdapter* Ext_DirectXDevice::GetHighPerformanceAdapter()
 		return nullptr;
 	}
 
+	// 여러 GPU 중에서, "가장 많은 전용 비디오 메모리(DedicatedVideoMemory)"를 가진 어댑터를 선택
 	size_t prevAdapterVideoMemory = 0;
-
 	for (UINT Adapterindex = 0; ; Adapterindex++)
 	{
 		IDXGIAdapter* CurAdapter = nullptr;
-		Factory->EnumAdapters(Adapterindex, &CurAdapter); // 팩토리를 통해 어뎁터를 얻어온다.
+		Factory->EnumAdapters(Adapterindex, &CurAdapter); // DXGI 팩토리를 통해 어댑터를 하나 얻음
 
-		if (nullptr == CurAdapter)
+		if (nullptr == CurAdapter) // 어댑터가 더 이상 없으면 루프 종료
 		{
 			break;
 		}
 
 		DXGI_ADAPTER_DESC Desc;
-		CurAdapter->GetDesc(&Desc); // 팩토리로 얻어온 어뎁터를 통해 DXGI_ADAPTER_DESC에 값 복사
+		CurAdapter->GetDesc(&Desc); // 현재 어댑터의 정보를 DXGI_ADAPTER_DESC에 채움
 
-		if (prevAdapterVideoMemory <= Desc.DedicatedVideoMemory)
+		if (prevAdapterVideoMemory <= Desc.DedicatedVideoMemory) // 이전에 선택된 어댑터보다 메모리가 같거나 많다면 갱신
 		{
 			prevAdapterVideoMemory = Desc.DedicatedVideoMemory;
 
 			if (nullptr != Adapter)
 			{
-				Adapter->Release(); // 사용 후 반드시 Release 해주도록 한다.
+				Adapter->Release(); // 이전 어댑터 메모리 해제
 			}
 
-			Adapter = CurAdapter;
+			Adapter = CurAdapter; // 현재 어댑터를 최종 후보로 저장
 			continue;
 		}
 
-		CurAdapter->Release(); // 사용 후 반드시 Release 해주도록 한다.
+		CurAdapter->Release(); // 사용 후 반드시 Release
 	}
 
 	Factory->Release(); // 사용 후 반드시 Release 해주도록 한다.
@@ -133,30 +146,39 @@ IDXGIAdapter* Ext_DirectXDevice::GetHighPerformanceAdapter()
 void Ext_DirectXDevice::CreateSwapChain()
 {
 	float4 ScreenSize = Base_Windows::GetScreenSize();
+	DXGI_SWAP_CHAIN_DESC SwapChainDesc = { 0, }; // DXGI_SWAP_CHAIN_DESC 구조체 생성
 
-	DXGI_SWAP_CHAIN_DESC SwapChainDesc = { 0, };
-
-	SwapChainDesc.BufferCount = 2;                                                         // 기본정보
-	SwapChainDesc.BufferDesc.Width = ScreenSize.uix();
-	SwapChainDesc.BufferDesc.Height = ScreenSize.uiy();
-	SwapChainDesc.OutputWindow = Base_Windows::GetHWnd();
-	SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;                                  // 화면 갱신률
-	SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-	SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                          // 그래픽이미지 포맷
-	SwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	SwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;                      // 기억안남
-	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT; // DXGI_USAGE_RENDER_TARGET_OUTPUT == 윈도우에 무언가를 띄우는 용도 // DXGI_USAGE_SHADER_INPUT == 쉐이더도 해당 옵션 사용한다.
-	SwapChainDesc.SampleDesc.Quality = 0;                                                  // 안티얼라이어싱을 자동으로 설정
-	SwapChainDesc.SampleDesc.Count = 1;                                                    // 기억안남
-	SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;                          // 큰 의미는 없음, 화면 사이즈 조정 가능성을 말하는 것인데, 우리는 안쓸 예정
-	SwapChainDesc.Windowed = true;                                                         // false는 전체화면
-
-	// 팩토리 생성, c++에서 지원하는 클래스를 구분하기 위한 GUI를 얻어오는 과정이다.
-	// 디바이스에서는 내부에 가지고 있는 포인터나 맴버변수를 얻어오려면
-	// __uuidof(IDXGIAdapter) 같은 GUID를 넣어줘야 한다.
-	// 이것은 프로그램을 통틀어서 단 1개만 존재하는 "Key"를 만드는 방법이다.
-	// MIDL_INTERFACE("2411e7e1-12ac-4ccf-bd14-9798e8534dc0") << 이런 값이 고유 GUID 값이라고 보면 된다.
+	/*1*/SwapChainDesc.BufferCount = 2;
+	/*2*/SwapChainDesc.BufferDesc.Width = ScreenSize.uix();
+	/*3*/SwapChainDesc.BufferDesc.Height = ScreenSize.uiy();
+	/*4*/SwapChainDesc.OutputWindow = Base_Windows::GetHWnd();
+	/*5*/SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	/*6*/SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+	/*7*/SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	/*8*/SwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	/*9*/SwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	/*10*/SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
+	/*11*/SwapChainDesc.SampleDesc.Quality = 0;
+	/*12*/SwapChainDesc.SampleDesc.Count = 1;
+	/*13*/SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	/*14*/SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	/*15*/SwapChainDesc.Windowed = true;
+	// <<설명>>
+	// [1] : 더블 버퍼링 사용, GPU가 하나의 버퍼에 렌더링하는 동안 다른 하나는 화면에 표시하여 깜빡임과 티어링 방지
+	// [2] : 스왑체인 버퍼 해상도 설정(너비)
+	// [3] : 스왑체인 버퍼 해상도 설정(높이)
+	// [4] : 렌더링 결과를 출력할 윈도우의 핸들 설정, CreateWindow()로 만든 창의 핸들(현재 실행하는 프로세스 핸들 넣어줌)
+	// [5] : 화면 주사율 설정, 여기서 1
+	// [6] : 화면 주사율 설정, 여기서 60, 이러면 Numerator/ Denominator가 되어 60 / 1 = 60Hz로 설정됨
+	// [7] : 픽셀 포멧 설정, DXGI_FORMAT_R8G8B8A8_UNORM는 각 RGBA 채널이 8bit이며 0~255 범위의 정규화 된 값을 가짐
+	// [8] : 스캔라인 순서를 명시하지 않는다는 뜻으로 기본 설정하라고 전달
+	// [9] : 화면 확대/축소 모드 설정, DXGI_MODE_SCALING_UNSPECIFIED는 디스플레이 기본 설정을 따른다는 뜻이다.
+	// [10] : 해당 스왑 체인을 렌더 타겟으로 사용하고, 쉐이더도 해당 옵션을 사용하도록 설정
+	// [11] : Count가 1이면 안티앨리어싱 사용 안한다는 뜻
+	// [12] : 멀티 샘플링(MSAA) 비활성화
+	// [13] : 최신 방식의 플립 체인 사용한다는 뜻
+	// [14] : 전체화면 전환 시 해상도 변경을 허용할 것인지, 해당 프로젝트는 안쓰도록 설정
+	// [15] : 창모드 설정(false는 전체화면 모드)
 
 	IDXGIDevice* SwapDevice = nullptr;
 	IDXGIAdapter* SwapAdapter = nullptr;
@@ -186,7 +208,7 @@ void Ext_DirectXDevice::CreateSwapChain()
 		return;
 	}
 
-	// 사용한 것은 Release를 실시하여 릭 제거
+	// 사용한 것은 Release
 	SwapDevice->Release();
 	SwapAdapter->Release();
 	SwapFactory->Release();
@@ -194,19 +216,20 @@ void Ext_DirectXDevice::CreateSwapChain()
 	// 랜더타겟은 DC의 라고 보면 된다.
 	ID3D11Texture2D* SwapBackBufferTexture = nullptr;
 
-	// 스왑체인이 정상적으로 생성되었다면, HRESULT로 S_OK가 전달된다.
-	HRESULT Result = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&SwapBackBufferTexture));
-	if (S_OK != Result)
+	// 스왑체인이 정상적으로 생성됐는지 확인
+	if (S_OK != SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&SwapBackBufferTexture)))
 	{
 		MsgAssert("스왑체인 생성에 실패했습니다.");
 		return;
 	}
 
-	// 스왑체인(백버퍼) 생성 후, 텍스쳐에서 랜더타겟뷰(RTV) 생성
-	//std::shared_ptr<GameEngineTexture> BackBufferTexture = std::make_shared<GameEngineTexture>();
-	//BackBufferTexture->ResCreate(SwapBackBufferTexture);
+	// 랜더타겟뷰 생성
+	std::shared_ptr<Ext_DirectXTexture> BackBufferTexture = std::make_shared<Ext_DirectXTexture>();
+	BackBufferTexture->CreateRenderTargetView(SwapBackBufferTexture);
 
-	//// 랜더타겟뷰 생성 후, 메인랜더타겟 생성
-	//BackBufferTarget = GameEngineRenderTarget::Create("MainBackBufferTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
-	//BackBufferTarget->CreateDepthTexture();
+	// 메인으로 사용할 랜더타겟 생성
+	BackBufferTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
+	BackBufferTarget->CreateDepthTexture();
+
+	int a = 0;
 }

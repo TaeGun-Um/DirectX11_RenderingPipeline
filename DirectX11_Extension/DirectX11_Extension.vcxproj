@@ -105,6 +105,7 @@
       <PrecompiledHeaderFile>PrecompileHeader.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,6 +124,7 @@
       <PrecompiledHeaderFile>PrecompileHeader.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +143,7 @@
       <PrecompiledHeaderFile>PrecompileHeader.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +162,7 @@
       <PrecompiledHeaderFile>PrecompileHeader.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -173,7 +177,19 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXTexture.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXRenderTarget.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -184,7 +200,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_DirectXTexture.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXRenderTarget.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
       <SubType>
       </SubType>
     </ClInclude>

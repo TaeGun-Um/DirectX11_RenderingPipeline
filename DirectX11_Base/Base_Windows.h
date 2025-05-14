@@ -36,4 +36,5 @@ private:
 	static bool IsWindowUpdate;
 	static float4 ScreenSize;
 	static float4 WindowSize;
+	static float4 WindowPosition;
 };

@@ -13,6 +13,9 @@
     <ClInclude Include="Base_Math.h">
       <Filter>03.Math</Filter>
     </ClInclude>
+    <ClInclude Include="Base_String.h">
+      <Filter>04.String</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PrecompileHeader.cpp">
@@ -27,6 +30,9 @@
     <ClCompile Include="Base_Math.cpp">
       <Filter>03.Math</Filter>
     </ClCompile>
+    <ClCompile Include="Base_String.cpp">
+      <Filter>04.String</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.PrecompileHeader">
@@ -40,6 +46,9 @@
     </Filter>
     <Filter Include="03.Math">
       <UniqueIdentifier>{726ec14b-a9f7-4d74-a47b-a2746737339c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.String">
+      <UniqueIdentifier>{55493ae7-21e0-4931-9afb-640e05b98bb7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

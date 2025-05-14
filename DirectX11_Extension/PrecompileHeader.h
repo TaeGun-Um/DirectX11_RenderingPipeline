@@ -5,3 +5,4 @@
 #include <DirectX11_Base/PrecompileHeader.h>
 #include <DirectX11_Base/Base_Debug.h>
 #include <DirectX11_Base/Base_Math.h>
+#include <DirectX11_Base/Base_String.h>
