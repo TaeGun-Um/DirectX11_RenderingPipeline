@@ -11,6 +11,7 @@ public:
 	Ext_Core& operator=(Ext_Core&& _Other) noexcept = delete;
 
 	static void Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen);
+	static void RenderTest();
 
 protected:
 	

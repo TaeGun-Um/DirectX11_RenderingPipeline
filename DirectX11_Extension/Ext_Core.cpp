@@ -3,6 +3,7 @@
 #include <DirectX11_Base/Base_Windows.h>
 #include <DirectX11_Base/Base_Debug.h>
 #include "Ext_DirectXDevice.h"
+#include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXResourceLoader.h"
 
 void Ext_Core::Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
@@ -25,10 +26,33 @@ void Ext_Core::Start()
 void Ext_Core::Update()
 {
 	// After EngineStart, EngineLoop
+	RenderTest();
 }
 
 void Ext_Core::End()
 {
 	// After Window Destroy, Process ending
 	int EndVal = 0;
+}
+
+void Ext_Core::RenderTest()
+{
+	// 1. ¸ÞÀÎ ·»´õ Å¸°Ù °¡Á®¿À±â
+	std::shared_ptr<Ext_DirectXRenderTarget> MainRenderTarget = Ext_DirectXDevice::GetMainRenderTarget();
+
+	// 2. ·»´õ Å¸°Ù ¹× ºäÆ÷Æ® ¹ÙÀÎµù
+	ID3D11RenderTargetView* RTV = MainRenderTarget->GetTexture(0)->GetRTV();
+	ID3D11DepthStencilView* DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
+	D3D11_VIEWPORT* ViewPort = MainRenderTarget->GetViewPort(0);
+
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, &RTV, DSV);
+	Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
+
+	// 3. ·»´õ Å¸°Ù ¹× µª½º Å¬¸®¾î
+	float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // ÆÄ¶õ»ö
+	Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV, ClearColor);
+	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	// 4. È­¸é Ãâ·Â
+	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
 }

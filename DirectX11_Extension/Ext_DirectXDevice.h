@@ -19,6 +19,8 @@ public:
 	// Getter, Setter
 	static ID3D11Device* GetDevice() { return Device; };
 	static ID3D11DeviceContext* GetContext() { return Context; };
+	static IDXGISwapChain* GetSwapChain() { return SwapChain; };
+	static std::shared_ptr<class Ext_DirectXRenderTarget> GetMainRenderTarget() { return MainRenderTarget; };
 
 protected:
 	
@@ -29,7 +31,7 @@ private:
 	static ID3D11Device* Device;				  // GPU를 제어할 수 있는 인터페이스
 	static ID3D11DeviceContext* Context;  // GPU를 제어할 수 있는 인터페이스이지만 추가 기능이 있음(렌더링 관련 연산)
 	static IDXGISwapChain* SwapChain;    // 화면을 표시하는 스왑체인 기능을 다룸
-	static std::shared_ptr<class Ext_DirectXRenderTarget> BackBufferTarget;
+	static std::shared_ptr<class Ext_DirectXRenderTarget> MainRenderTarget; // BackBuffer RenderTarget
 	
 };
 // [ID3D11Device]

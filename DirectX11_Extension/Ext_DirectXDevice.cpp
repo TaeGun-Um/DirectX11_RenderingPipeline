@@ -9,7 +9,7 @@
 ID3D11Device* Ext_DirectXDevice::Device = nullptr;
 ID3D11DeviceContext* Ext_DirectXDevice::Context = nullptr;
 IDXGISwapChain* Ext_DirectXDevice::SwapChain = nullptr;
-std::shared_ptr<Ext_DirectXRenderTarget> Ext_DirectXDevice::BackBufferTarget = nullptr;
+std::shared_ptr<Ext_DirectXRenderTarget> Ext_DirectXDevice::MainRenderTarget = nullptr;
 
 // DirectX11 시작
 void Ext_DirectXDevice::Initialize()
@@ -231,7 +231,7 @@ void Ext_DirectXDevice::CreateSwapChain()
 	// 백 버퍼에 모든 화면을 렌더링하고 난 다음에는 SwapChain을 통해 백버퍼를 화면에 그리면 되는 것이다.
 
 	// 메인으로 사용할 랜더타겟 생성
-	BackBufferTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
-	BackBufferTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
+	MainRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
+	MainRenderTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
 }
 

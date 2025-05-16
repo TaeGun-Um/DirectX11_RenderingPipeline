@@ -70,7 +70,7 @@ void Ext_DirectXTexture::CreateDepthStencilView()
 		return;
 	}
 
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateDepthStencilView(Texture2D, nullptr, &DepthStencilView))
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateDepthStencilView(Texture2D, nullptr, &DSV))
 	{
 		MsgAssert("뎁스 스텐실 뷰 생성에 실패했습니다.");
 		return;
@@ -90,7 +90,7 @@ void Ext_DirectXTexture::CreateShaderResourcesView()
 		return;
 	}
 
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D, nullptr, &ShaderResourceView))
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D, nullptr, &SRV))
 	{
 		MsgAssert("쉐이더 리소스 뷰 생성에 실패했습니다.");
 		return;

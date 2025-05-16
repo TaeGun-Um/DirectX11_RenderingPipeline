@@ -31,8 +31,10 @@ public:
 	int GetWidth() {	return Desc.Width; }
 	int GetHeight() { return Desc.Height; }
 	float4 GetScale() {	return float4(static_cast<float>(Desc.Width), static_cast<float>(Desc.Height)); }
-	ID3D11ShaderResourceView* GetSRV() { return ShaderResourceView; }
+	ID3D11Texture2D* GetTexture2D() { return Texture2D; }
 	ID3D11RenderTargetView* GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
+	ID3D11ShaderResourceView* GetSRV() { return SRV; }
+	ID3D11DepthStencilView* GetDSV() { return DSV; }
 
 protected:
 	
@@ -46,8 +48,8 @@ private:
 	D3D11_TEXTURE2D_DESC Desc;
 
 	std::vector<ID3D11RenderTargetView*> RTVs; // 생성된 렌더타겟뷰들을 저장하는 컨테이너
-	ID3D11ShaderResourceView* ShaderResourceView = nullptr; // 생성된 쉐이더 리소스 뷰
-	ID3D11DepthStencilView* DepthStencilView = nullptr; // 생성된 뎁스스텐실 뷰
+	ID3D11ShaderResourceView* SRV = nullptr; // 생성된 쉐이더 리소스 뷰
+	ID3D11DepthStencilView* DSV = nullptr; // 생성된 뎁스스텐실 뷰
 
 	std::vector<float4> Colors;
 
@@ -92,4 +94,3 @@ private:
 // 렌더링 과정에서 GPU가 픽셀을 그릴 때, 두 가지 주요한 테스트(Depth Test, Stencil Test)를 수행할 수도 있다.
 /*1. Depth Test (깊이 테스트) : 이미 그려진 픽셀보다 가까운지 판단해 렌더링할지 결정*/ 
 /*2. Stencil Test (스텐실 테스트) : 지정된 조건을 만족하는 경우에만 픽셀을 렌더링*/
-

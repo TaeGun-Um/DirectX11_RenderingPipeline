@@ -27,6 +27,11 @@ public:
 
 	void CreateDepthTexture(int _Index = 0);
 
+	// Getter, Setter
+	std::shared_ptr<Ext_DirectXTexture> GetTexture(int _Index) { return Textures[_Index]; }
+	std::shared_ptr<Ext_DirectXTexture> GetDepthTexture() { return DepthTexture; }
+	D3D11_VIEWPORT* GetViewPort(int _Index) { return &ViewPorts[_Index]; }
+
 protected:
 	
 private:
