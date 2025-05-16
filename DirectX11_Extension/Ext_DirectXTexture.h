@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ResourceManager.h"
+#include "Ext_ResourceManager.h"
 
 // DirectX의 Texture2D, View 담당
-class Ext_DirectXTexture : public ResourceManager<Ext_DirectXTexture>
+class Ext_DirectXTexture : public Ext_ResourceManager<Ext_DirectXTexture>
 {
 public:
 	// constrcuter destructer
@@ -22,7 +22,7 @@ public:
 	// 리소스 매니저에 값을 기록하고, Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
 	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Value)
 	{
-		std::shared_ptr<Ext_DirectXTexture> NewTexture = ResourceManager::CreateResource();
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateResource();
 		NewTexture->CreateView(_Value);
 		return NewTexture;
 	}

@@ -2,20 +2,20 @@
 
 // 동적할당된 리소스들을 관리해주는 클래스
 template<typename ResourcesType>
-class ResourceManager
+class Ext_ResourceManager
 {
 public:
 	// constrcuter destructer
-	ResourceManager() {}
-	virtual ~ResourceManager() {};
+	Ext_ResourceManager() {}
+	virtual ~Ext_ResourceManager() {};
 	// 템플릿 클래스는 컴파일 시 인스턴스화 되므로, 선언이 없으면 해당 타입이 다른 곳에 사용될 때 몸체를 못찾음
 	// 템플릿 클래스의 멤버 함수(소멸자 포함)는 헤더에서 정의되지 않으면 링크 불가
 
 	// delete Function
-	ResourceManager(const ResourceManager& _Other) = delete;
-	ResourceManager(ResourceManager&& _Other) noexcept = delete;
-	ResourceManager& operator=(const ResourceManager& _Other) = delete;
-	ResourceManager& operator=(ResourceManager&& _Other) noexcept = delete;
+	Ext_ResourceManager(const Ext_ResourceManager& _Other) = delete;
+	Ext_ResourceManager(Ext_ResourceManager&& _Other) noexcept = delete;
+	Ext_ResourceManager& operator=(const Ext_ResourceManager& _Other) = delete;
+	Ext_ResourceManager& operator=(Ext_ResourceManager&& _Other) noexcept = delete;
 
 	static std::shared_ptr<ResourcesType> Find(std::string_view _Name)
 	{
@@ -63,7 +63,7 @@ private:
 };
 
 template<typename ResourcesType>
-std::vector<std::shared_ptr<ResourcesType>> ResourceManager<ResourcesType>::Resources;
+std::vector<std::shared_ptr<ResourcesType>> Ext_ResourceManager<ResourcesType>::Resources;
 
 template<typename ResourcesType>
-std::map<std::string, std::shared_ptr<ResourcesType>> ResourceManager<ResourcesType>::NameResources;
+std::map<std::string, std::shared_ptr<ResourcesType>> Ext_ResourceManager<ResourcesType>::NameResources;

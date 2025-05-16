@@ -234,3 +234,4 @@ void Ext_DirectXDevice::CreateSwapChain()
 	BackBufferTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
 	BackBufferTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
 }
+

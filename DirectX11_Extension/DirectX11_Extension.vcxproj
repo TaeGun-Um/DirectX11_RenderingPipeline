@@ -177,6 +177,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXResourceLoader.cpp" />
     <ClCompile Include="Ext_DirectXTexture.cpp">
       <SubType>
       </SubType>
@@ -189,7 +190,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="Ext_ResourceManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -200,6 +201,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_DirectXResourceLoader.h" />
     <ClInclude Include="Ext_DirectXTexture.h">
       <SubType>
       </SubType>
@@ -212,7 +214,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Ext_ResourceManager.h">
       <SubType>
       </SubType>
     </ClInclude>

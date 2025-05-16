@@ -22,4 +22,5 @@ private:
 	static void Start();
 	static void Update();
 	static void End();
+	static void ResourceInit();
 };

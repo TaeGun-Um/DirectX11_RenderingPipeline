@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Ext_DirectXTexture.h"
-#include "ResourceManager.h"
+#include "Ext_ResourceManager.h"
 
 // ·»´õ Å¸°Ù °ü¸® Å¬·¡½º
-class Ext_DirectXRenderTarget : public ResourceManager<Ext_DirectXRenderTarget>
+class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarget>
 {
 public:
 	// constrcuter destructer
@@ -20,7 +20,7 @@ public:
 	// ·»´õÅ¸°Ù »ı¼º, [1] ·»´õÅ¸°Ù ÀÌ¸§ ÁöÁ¤, [2] Ext_DirectXTexture Æ÷ÀÎÅÍ, [3] ·»´õÅ¸°Ù »ö»ó
 	static std::shared_ptr<Ext_DirectXRenderTarget> CreateRenderTarget(std::string_view _Name, std::shared_ptr<class Ext_DirectXTexture> _Texture, const float4& _Color)
 	{
-		std::shared_ptr<Ext_DirectXRenderTarget> NewRenderTarget = ResourceManager::CreateNameResource(_Name);
+		std::shared_ptr<Ext_DirectXRenderTarget> NewRenderTarget = Ext_ResourceManager::CreateNameResource(_Name);
 		NewRenderTarget->CreateRenderTarget(_Texture, _Color);
 		return NewRenderTarget;
 	}
