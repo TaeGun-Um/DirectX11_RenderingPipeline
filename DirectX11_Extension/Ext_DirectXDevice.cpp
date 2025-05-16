@@ -208,28 +208,29 @@ void Ext_DirectXDevice::CreateSwapChain()
 		return;
 	}
 
-	// 사용한 것은 Release
+	// 사용 후 반드시 Release
 	SwapDevice->Release();
 	SwapAdapter->Release();
 	SwapFactory->Release();
 
-	// 랜더타겟은 DC의 라고 보면 된다.
+	// 백버퍼의 포인터를 얻어오는 과정을 통해 스왑체인이 정상적으로 생성됐는지 확인할 수 있음
 	ID3D11Texture2D* SwapBackBufferTexture = nullptr;
-
-	// 스왑체인이 정상적으로 생성됐는지 확인
 	if (S_OK != SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&SwapBackBufferTexture)))
 	{
 		MsgAssert("스왑체인 생성에 실패했습니다.");
 		return;
 	}
+	// 스왑체인은 내부적으로 여러 개의 버퍼를 관리하는데, 그 중 0번째 버퍼(화면에 그릴 백버퍼)를 ID3D11Texture2D로 가져올 수 있다.
+	// 백버퍼에 직접 그리려면 렌더타겟뷰가 필요하고, 이 렌더타겟뷰를 만드려면 ID3D11Texture2D가 필요
 
-	// 랜더타겟뷰 생성
+	// 백버퍼 포인터(ID3D11Texture2D)로 랜더타겟뷰 생성
 	std::shared_ptr<Ext_DirectXTexture> BackBufferTexture = std::make_shared<Ext_DirectXTexture>();
 	BackBufferTexture->CreateRenderTargetView(SwapBackBufferTexture);
+	// Swap Chain 생성 -> Swap Chain 안에서 백버퍼(스왑 체인 텍스처, 2D 텍스처임)를 꺼내옴 -> 꺼내온 백버퍼를 가지고 랜더타겟뷰라는 오브젝트에 바운딩
+	// 렌더타겟뷰에 게임 화면을 렌더링한다는 것은 백버퍼에 렌더링하는 것과 같다.
+	// 백 버퍼에 모든 화면을 렌더링하고 난 다음에는 SwapChain을 통해 백버퍼를 화면에 그리면 되는 것이다.
 
 	// 메인으로 사용할 랜더타겟 생성
 	BackBufferTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
-	BackBufferTarget->CreateDepthTexture();
-
-	int a = 0;
+	BackBufferTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
 }
