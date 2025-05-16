@@ -173,16 +173,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ext_Core.cpp" />
+    <ClCompile Include="Ext_DirectXBlend.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXDepth.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXDevice.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXMaterial.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXRasterizer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXResourceLoader.cpp" />
+    <ClCompile Include="Ext_DirectXSampler.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXShader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXTexture.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Ext_DirectXRenderTarget.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXVertex.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -197,16 +225,44 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_Core.h" />
+    <ClInclude Include="Ext_DirectXBlend.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXDepth.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_DirectXDevice.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_DirectXMaterial.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXRasterizer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_DirectXResourceLoader.h" />
+    <ClInclude Include="Ext_DirectXSampler.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXShader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_DirectXTexture.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_DirectXRenderTarget.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXVertex.h">
       <SubType>
       </SubType>
     </ClInclude>

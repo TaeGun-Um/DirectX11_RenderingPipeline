@@ -15,8 +15,12 @@ public:
 protected:
 	
 private:
-	// constrcuter destructer
-	Ext_DirectXResourceLoader() {};
-	~Ext_DirectXResourceLoader() {};
-	
+	static void MakeVertex();
+	static void MakeSampler();
+	static void MakeBlend();
+	static void MakeDepth();
+	static void ShaderCompile();
+	static void MakeRasterizer();
+	static void MakeMaterial();
+
 };
