@@ -22,10 +22,11 @@ void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXText
 	/*5. MinDepth : 깊이값 최소 (보통 0.0f)*/
 	/*6. MaxDepth : 깊이값 최대 (보통 1.0f)*/
 
-	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT 저장
 	Textures.push_back(_Texture); // Ext_DirectXTexture 저장
-	SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView 저장
-	RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView 저장
+	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT 저장
+	
+	//SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView 저장
+	//RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView 저장
 }
 
 void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)

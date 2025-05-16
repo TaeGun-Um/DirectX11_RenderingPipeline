@@ -39,11 +39,11 @@ private:
 
 	std::vector<float4> Colors; // 생성된 렌더타겟 색상 저장
 	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(생성 주체) 포인터 저장 컨테이너
-	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // 생성 주체의 ViewPort 정보 저장 컨테이너
-	std::vector<ID3D11RenderTargetView*> RTVs = {}; // 생성 주체의 렌더타겟뷰 정보 저장 컨테이너
-	std::vector<ID3D11ShaderResourceView*> SRVs = {}; // 생성 주체의 셰이더리소스뷰 정보 저장 컨테이너
 	std::shared_ptr<Ext_DirectXTexture> DepthTexture = {};
+	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // 생성 주체의 ViewPort 정보 저장 컨테이너
 
+	// std::vector<ID3D11RenderTargetView*> RTVs = {}; // 생성 주체의 렌더타겟뷰 정보 저장 컨테이너
+	// std::vector<ID3D11ShaderResourceView*> SRVs = {}; // 생성 주체의 셰이더리소스뷰 정보 저장 컨테이너
 };
 // [RenderTarget]
 // 렌더 타겟은 렌더링 결과를 기록하는 최종 목적지가 된다. 즉, 셰이더의 출력 결과가 그려지는 공간이다.
