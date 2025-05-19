@@ -6,10 +6,10 @@
 #include "Ext_DirectXTexture.h"
 #include "Ext_DirectXRenderTarget.h"
 
-ID3D11Device* Ext_DirectXDevice::Device = nullptr;
-ID3D11DeviceContext* Ext_DirectXDevice::Context = nullptr;
-IDXGISwapChain* Ext_DirectXDevice::SwapChain = nullptr;
 std::shared_ptr<Ext_DirectXRenderTarget> Ext_DirectXDevice::MainRenderTarget = nullptr;
+COMPTR<ID3D11Device> Ext_DirectXDevice::Device = nullptr;
+COMPTR<ID3D11DeviceContext> Ext_DirectXDevice::Context = nullptr;
+COMPTR<IDXGISwapChain> Ext_DirectXDevice::SwapChain = nullptr;
 
 // DirectX11 시작
 void Ext_DirectXDevice::Initialize()
@@ -27,7 +27,7 @@ void Ext_DirectXDevice::Initialize()
 
 #endif
 	D3D_FEATURE_LEVEL Level = D3D_FEATURE_LEVEL_11_0;
-	IDXGIAdapter* Adapter = GetHighPerformanceAdapter();
+	COMPTR<IDXGIAdapter> Adapter = GetHighPerformanceAdapter();
 	if (!Adapter)
 	{
 		MsgAssert("그래픽카드 어댑터 인터페이스 획득 실패");
@@ -37,16 +37,16 @@ void Ext_DirectXDevice::Initialize()
 	// 디바이스, 디바이스 컨텍스트 생성 함수
 	HRESULT Hr = D3D11CreateDevice
 	(
-		/*1*/Adapter,
+		/*1*/Adapter.Get(),
 		/*2*/D3D_DRIVER_TYPE_UNKNOWN,
 		/*3*/nullptr,
 		/*4*/iFlag,
 		/*5*/nullptr,
 		/*6*/0,
 		/*7*/D3D11_SDK_VERSION,
-		/*8*/&Device,
+		/*8*/Device.GetAddressOf(),
 		/*9*/&Level,
-		/*10*/&Context
+		/*10*/Context.GetAddressOf()
 	);
 	// <<설명>>
 	// [1] IDXGIAdapter*						: 디바이스를 만들 때 사용할 비디오 어댑터에 대한 포인터, nullptr 전달 시 IDXGIFactory1::EnumAdapters로 열거된 첫 번째 어댑터인 기본값이 설정됨
@@ -72,8 +72,7 @@ void Ext_DirectXDevice::Initialize()
 	// 어댑터 다썼으면 해제
 	if (nullptr != Adapter)
 	{
-		Adapter->Release();
-		Adapter = nullptr;
+		Adapter.Reset();
 	}
 
 	// DirectX11로 초기화된게 아니라면 해당 어댑터는 DirectX11을 지원하지 않는 그래픽카드임
@@ -88,30 +87,30 @@ void Ext_DirectXDevice::Initialize()
 }
 
 // 그래픽카드 정보 가져오기
-IDXGIAdapter* Ext_DirectXDevice::GetHighPerformanceAdapter()
+COMPTR<IDXGIAdapter> Ext_DirectXDevice::GetHighPerformanceAdapter()
 {
-	IDXGIFactory* Factory = nullptr;
-	IDXGIAdapter* Adapter = nullptr;
+	COMPTR<IDXGIFactory> Factory = nullptr;
+	COMPTR<IDXGIAdapter> Adapter = nullptr;
 
 	// 팩토리 생성
 	HRESULT HR = CreateDXGIFactory
 	(
-		__uuidof(IDXGIFactory), // [1] 생성할 인터페이스의 GUID를 지정, IDXGIFactory는 DXGI 팩토리 인터페이스이며 __uuidof는 컴파일 타임에 GUID를 추출하는 매크로
-		(void**)&Factory		    // [2] 결과로 생성된 IDXGIFactory 객체를 받을 포인터를 전달
+		__uuidof(IDXGIFactory),				// [1] 생성할 인터페이스의 GUID를 지정, IDXGIFactory는 DXGI 팩토리 인터페이스이며 __uuidof는 컴파일 타임에 GUID를 추출하는 매크로
+		(void**)Factory.GetAddressOf()	// [2] 결과로 생성된 IDXGIFactory 객체를 받을 포인터를 전달
 	);
 
 	if (nullptr == Factory)
 	{
 		MsgAssert("그래픽카드에서 팩토리 인터페이스를 생성하지 못했습니다.");
-		return nullptr;
+		return COMPTR<IDXGIAdapter>();
 	}
 
 	// 여러 GPU 중에서, "가장 많은 전용 비디오 메모리(DedicatedVideoMemory)"를 가진 어댑터를 선택
 	size_t prevAdapterVideoMemory = 0;
 	for (UINT Adapterindex = 0; ; Adapterindex++)
 	{
-		IDXGIAdapter* CurAdapter = nullptr;
-		Factory->EnumAdapters(Adapterindex, &CurAdapter); // DXGI 팩토리를 통해 어댑터를 하나 얻음
+		COMPTR<IDXGIAdapter> CurAdapter = nullptr;
+		Factory->EnumAdapters(Adapterindex, CurAdapter.GetAddressOf()); // DXGI 팩토리를 통해 어댑터를 하나 얻음
 
 		if (nullptr == CurAdapter) // 어댑터가 더 이상 없으면 루프 종료
 		{
@@ -127,17 +126,17 @@ IDXGIAdapter* Ext_DirectXDevice::GetHighPerformanceAdapter()
 
 			if (nullptr != Adapter)
 			{
-				Adapter->Release(); // 이전 어댑터 메모리 해제
+				Adapter.Reset(); // 이전 어댑터 메모리 해제
 			}
 
 			Adapter = CurAdapter; // 현재 어댑터를 최종 후보로 저장
 			continue;
 		}
 
-		CurAdapter->Release(); // 사용 후 반드시 Release
+		CurAdapter.Reset(); // 사용 후 반드시 Release
 	}
 
-	Factory->Release(); // 사용 후 반드시 Release 해주도록 한다.
+	Factory.Reset(); // 사용 후 반드시 Release 해주도록 한다.
 
 	return Adapter;
 }
@@ -180,12 +179,12 @@ void Ext_DirectXDevice::CreateSwapChain()
 	// [14] : 전체화면 전환 시 해상도 변경을 허용할 것인지, 해당 프로젝트는 안쓰도록 설정
 	// [15] : 창모드 설정(false는 전체화면 모드)
 
-	IDXGIDevice* SwapDevice = nullptr;
-	IDXGIAdapter* SwapAdapter = nullptr;
-	IDXGIFactory* SwapFactory = nullptr;
+	COMPTR<IDXGIDevice> SwapDevice = nullptr;
+	COMPTR<IDXGIAdapter> SwapAdapter = nullptr;
+	COMPTR<IDXGIFactory> SwapFactory = nullptr;
 
 	// 디바이스 쿼리인터페이스에서 SwapDevice 값 복사
-	Device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&SwapDevice));
+	Device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(SwapDevice.GetAddressOf()));
 	if (nullptr == SwapDevice)
 	{
 		MsgAssert("DXGI 디바이스를 DirectX디바이스에서 얻어오지 못했습니다.");
@@ -193,7 +192,7 @@ void Ext_DirectXDevice::CreateSwapChain()
 	}
 
 	// SwapDevice에서 SwapAdapter 값 복사
-	SwapDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&SwapAdapter));
+	SwapDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(SwapAdapter.GetAddressOf()));
 	if (nullptr == SwapAdapter)
 	{
 		MsgAssert("DXGI 디바이스를 DirectX디바이스에서 얻어오지 못했습니다.");
@@ -201,21 +200,21 @@ void Ext_DirectXDevice::CreateSwapChain()
 	}
 
 	// SwapAdapter에서 SwapFactory 값을 복사한 뒤, 그로부터 스왑체인을 생성함
-	SwapAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&SwapFactory));
-	if (S_OK != SwapFactory->CreateSwapChain(Device, &SwapChainDesc, &SwapChain))
+	SwapAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(SwapFactory.GetAddressOf()));
+	if (S_OK != SwapFactory->CreateSwapChain(Device.Get(), &SwapChainDesc, SwapChain.GetAddressOf()))
 	{
 		MsgAssert("스왑체인 생성에 실패했습니다.");
 		return;
 	}
 
 	// 사용 후 반드시 Release
-	SwapDevice->Release();
-	SwapAdapter->Release();
-	SwapFactory->Release();
+	SwapDevice.Reset();
+	SwapAdapter.Reset();
+	SwapFactory.Reset();
 
 	// 백버퍼의 포인터를 얻어오는 과정을 통해 스왑체인이 정상적으로 생성됐는지 확인할 수 있음
-	ID3D11Texture2D* SwapBackBufferTexture = nullptr;
-	if (S_OK != SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&SwapBackBufferTexture)))
+	COMPTR<ID3D11Texture2D> SwapBackBufferTexture = nullptr;
+	if (S_OK != SwapChain.Get()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(SwapBackBufferTexture.GetAddressOf())))
 	{
 		MsgAssert("스왑체인 생성에 실패했습니다.");
 		return;

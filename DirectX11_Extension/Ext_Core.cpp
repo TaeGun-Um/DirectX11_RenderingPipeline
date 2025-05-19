@@ -9,7 +9,7 @@
 void Ext_Core::Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
 {
 	Base_Debug::LeakCheck();
-	 int* TrustLeak = new int;
+	int* TrustLeak = new int;
 
 	// 윈도우 창 생성 후 루프문 시작
 	Base_Windows::WindowCreate(_hInstance, _ScreenSize, _IsFullScreen);
@@ -41,18 +41,19 @@ void Ext_Core::RenderTest()
 	std::shared_ptr<Ext_DirectXRenderTarget> MainRenderTarget = Ext_DirectXDevice::GetMainRenderTarget();
 
 	// 2. 렌더 타겟 및 뷰포트 바인딩
-	ID3D11RenderTargetView* RTV = MainRenderTarget->GetTexture(0)->GetRTV();
-	ID3D11DepthStencilView* DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
+	COMPTR<ID3D11RenderTargetView> RTV = MainRenderTarget->GetTexture(0)->GetRTV();
+	COMPTR<ID3D11DepthStencilView> DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
 	D3D11_VIEWPORT* ViewPort = MainRenderTarget->GetViewPort(0);
 
-	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, &RTV, DSV);
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
 	Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
 
 	// 3. 렌더 타겟 및 뎁스 클리어
 	float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파란색
-	Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV, ClearColor);
-	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
+	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// 4. 화면 출력
 	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
 }
+

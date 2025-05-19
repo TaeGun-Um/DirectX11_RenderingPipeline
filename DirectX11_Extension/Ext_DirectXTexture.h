@@ -17,7 +17,7 @@ public:
 	Ext_DirectXTexture& operator=(Ext_DirectXTexture&& _Other) noexcept = delete;
 
 	// 백버퍼 렌더타겟뷰 생성을 위해 호출됨
-	void CreateRenderTargetView(ID3D11Texture2D* _Texture);
+	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture);
 	
 	// 리소스 매니저에 값을 기록하고, Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
 	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Value)
@@ -31,10 +31,10 @@ public:
 	int GetWidth() {	return Desc.Width; }
 	int GetHeight() { return Desc.Height; }
 	float4 GetScale() {	return float4(static_cast<float>(Desc.Width), static_cast<float>(Desc.Height)); }
-	ID3D11Texture2D* GetTexture2D() { return Texture2D; }
-	ID3D11RenderTargetView* GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
-	ID3D11ShaderResourceView* GetSRV() { return SRV; }
-	ID3D11DepthStencilView* GetDSV() { return DSV; }
+	COMPTR<ID3D11Texture2D>& GetTexture2D() { return Texture2D; }
+	COMPTR<ID3D11RenderTargetView>& GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
+	COMPTR<ID3D11ShaderResourceView>& GetSRV() { return SRV; }
+	COMPTR<ID3D11DepthStencilView>& GetDSV() { return DSV; }
 
 protected:
 	
@@ -44,12 +44,12 @@ private:
 	void CreateDepthStencilView(); // 뎁스스텐실뷰 생성
 	void CreateShaderResourcesView(); // 쉐이더리소스뷰 생성
 
-	ID3D11Texture2D* Texture2D = nullptr;
+	COMPTR<ID3D11Texture2D> Texture2D;
 	D3D11_TEXTURE2D_DESC Desc;
 
-	std::vector<ID3D11RenderTargetView*> RTVs; // 생성된 렌더타겟뷰들을 저장하는 컨테이너
-	ID3D11ShaderResourceView* SRV = nullptr; // 생성된 쉐이더 리소스 뷰
-	ID3D11DepthStencilView* DSV = nullptr; // 생성된 뎁스스텐실 뷰
+	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs; // 생성된 렌더타겟뷰들을 저장하는 컨테이너
+	COMPTR<ID3D11ShaderResourceView> SRV; // 생성된 쉐이더 리소스 뷰
+	COMPTR<ID3D11DepthStencilView> DSV; // 생성된 뎁스스텐실 뷰
 
 	std::vector<float4> Colors;
 

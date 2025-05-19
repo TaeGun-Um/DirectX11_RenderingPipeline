@@ -224,6 +224,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ext_BaseEnum.h" />
+    <ClInclude Include="Ext_BaseHeader.h" />
     <ClInclude Include="Ext_Core.h" />
     <ClInclude Include="Ext_DirectXBlend.h">
       <SubType>

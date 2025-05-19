@@ -17,20 +17,20 @@ public:
 	static void Initialize(); // DirectX11 시작
 
 	// Getter, Setter
-	static ID3D11Device* GetDevice() { return Device; };
-	static ID3D11DeviceContext* GetContext() { return Context; };
-	static IDXGISwapChain* GetSwapChain() { return SwapChain; };
+	static COMPTR<ID3D11Device>& GetDevice() { return Device; };
+	static COMPTR<ID3D11DeviceContext>& GetContext() { return Context; };
+	static COMPTR<IDXGISwapChain>& GetSwapChain() { return SwapChain; };
 	static std::shared_ptr<class Ext_DirectXRenderTarget> GetMainRenderTarget() { return MainRenderTarget; };
 
 protected:
 	
 private:
-	static IDXGIAdapter* GetHighPerformanceAdapter(); // 그래픽카드 정보 가져오기
+	static COMPTR<IDXGIAdapter> GetHighPerformanceAdapter(); // 그래픽카드 정보 가져오기
 	static void CreateSwapChain(); // 스왑체인 생성하기
 
-	static ID3D11Device* Device;				  // GPU를 제어할 수 있는 인터페이스
-	static ID3D11DeviceContext* Context;  // GPU를 제어할 수 있는 인터페이스이지만 추가 기능이 있음(렌더링 관련 연산)
-	static IDXGISwapChain* SwapChain;    // 화면을 표시하는 스왑체인 기능을 다룸
+	static COMPTR<ID3D11Device> Device;				// GPU를 제어할 수 있는 인터페이스
+	static COMPTR<ID3D11DeviceContext> Context;   // GPU를 제어할 수 있는 인터페이스이지만 추가 기능이 있음(렌더링 관련 연산)
+	static COMPTR<IDXGISwapChain> SwapChain;     // 화면을 표시하는 스왑체인 기능을 다룸
 	static std::shared_ptr<class Ext_DirectXRenderTarget> MainRenderTarget; // BackBuffer RenderTarget
 	
 };

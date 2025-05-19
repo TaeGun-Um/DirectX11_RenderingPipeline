@@ -3,7 +3,7 @@
 #include "Ext_DirectXDevice.h"
 
 // 백버퍼 렌더타겟뷰 생성을 위해 호출됨
-void Ext_DirectXTexture::CreateRenderTargetView(ID3D11Texture2D* _Texture)
+void Ext_DirectXTexture::CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture)
 {
 	Texture2D = _Texture;
 	Texture2D->GetDesc(&Desc); // Desc(D3D11_TEXTURE2D_DESC)에 값 복사
@@ -15,7 +15,7 @@ void Ext_DirectXTexture::CreateView(const D3D11_TEXTURE2D_DESC& _Value)
 {
 	Desc = _Value;
 
-	Ext_DirectXDevice::GetDevice()->CreateTexture2D(&Desc, nullptr, &Texture2D);
+	Ext_DirectXDevice::GetDevice()->CreateTexture2D(&Desc, nullptr, Texture2D.GetAddressOf());
 
 	if (D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET & Desc.BindFlags)
 	{
@@ -47,8 +47,8 @@ void Ext_DirectXTexture::CreateRenderTargetView()
 		return;
 	}
 
-	ID3D11RenderTargetView* NewRTV = nullptr;
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateRenderTargetView(Texture2D, nullptr, &NewRTV))
+	COMPTR<ID3D11RenderTargetView> NewRTV = nullptr;
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateRenderTargetView(Texture2D, nullptr, NewRTV.GetAddressOf()))
 	{
 		MsgAssert("랜더타겟 뷰 생성에 실패했습니다.");
 		return;
@@ -70,7 +70,7 @@ void Ext_DirectXTexture::CreateDepthStencilView()
 		return;
 	}
 
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateDepthStencilView(Texture2D, nullptr, &DSV))
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateDepthStencilView(Texture2D, nullptr, DSV.GetAddressOf()))
 	{
 		MsgAssert("뎁스 스텐실 뷰 생성에 실패했습니다.");
 		return;
@@ -90,7 +90,7 @@ void Ext_DirectXTexture::CreateShaderResourcesView()
 		return;
 	}
 
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D, nullptr, &SRV))
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D, nullptr, SRV.GetAddressOf()))
 	{
 		MsgAssert("쉐이더 리소스 뷰 생성에 실패했습니다.");
 		return;

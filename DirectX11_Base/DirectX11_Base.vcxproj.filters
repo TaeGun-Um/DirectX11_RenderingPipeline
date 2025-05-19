@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="PrecompileHeader.h">
-      <Filter>00.PrecompileHeader</Filter>
-    </ClInclude>
     <ClInclude Include="Base_Debug.h">
       <Filter>02.Debug</Filter>
     </ClInclude>
@@ -16,11 +13,11 @@
     <ClInclude Include="Base_String.h">
       <Filter>04.String</Filter>
     </ClInclude>
+    <ClInclude Include="PrecompileHeader.h">
+      <Filter>00.Base\00. PrecompileHeader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>00.PrecompileHeader</Filter>
-    </ClCompile>
     <ClCompile Include="Base_Debug.cpp">
       <Filter>02.Debug</Filter>
     </ClCompile>
@@ -33,11 +30,11 @@
     <ClCompile Include="Base_String.cpp">
       <Filter>04.String</Filter>
     </ClCompile>
+    <ClCompile Include="PrecompileHeader.cpp">
+      <Filter>00.Base\00. PrecompileHeader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="00.PrecompileHeader">
-      <UniqueIdentifier>{351c7f57-00af-4ad3-bb7e-eaa3513693e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Debug">
       <UniqueIdentifier>{c4fce596-bbce-4c8d-a8a8-15ff26e13e1d}</UniqueIdentifier>
     </Filter>
@@ -49,6 +46,15 @@
     </Filter>
     <Filter Include="04.String">
       <UniqueIdentifier>{55493ae7-21e0-4931-9afb-640e05b98bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Base">
+      <UniqueIdentifier>{351c7f57-00af-4ad3-bb7e-eaa3513693e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Base\01. Enum">
+      <UniqueIdentifier>{5975bba5-0bba-4fff-93d0-3b33982dd31c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Base\00. PrecompileHeader">
+      <UniqueIdentifier>{36e25dc9-196f-4f09-924c-b60c51180ba0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
