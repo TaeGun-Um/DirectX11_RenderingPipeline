@@ -43,6 +43,12 @@
     <ClCompile Include="PrecompileHeader.cpp">
       <Filter>00.Base\00. PrecompileHeader</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXVertexBuffer.cpp">
+      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXIndexBuffer.cpp">
+      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -92,6 +98,12 @@
     </ClInclude>
     <ClInclude Include="Ext_BaseHeader.h">
       <Filter>00.Base\01. Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXVertexBuffer.h">
+      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXIndexBuffer.h">
+      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

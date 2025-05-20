@@ -6,6 +6,10 @@
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXResourceLoader.h"
 
+#include "Ext_DirectXVertex.h"
+#include "Ext_DirectXVertexBuffer.h"
+#include "Ext_DirectXIndexBuffer.h"
+
 void Ext_Core::Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
 {
 	Base_Debug::LeakCheck();
@@ -53,7 +57,29 @@ void Ext_Core::RenderTest()
 	Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
 	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	// 4. 화면 출력
+	// 4. ==========렌더링==============
+	std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Triangle");
+	COMPTR<ID3D11Buffer>& TriangleVertexBuffer = VB->GetBuffer();  // 직접 getter 필요 시 만들어야 함
+
+	UINT Size = sizeof(TriangleVertexBuffer);
+	UINT Offset = 0;
+	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, TriangleVertexBuffer.GetAddressOf(), &Size, &Offset); // vertexBuffer는 전역/멤버 등으로 생성해 둔 상태여야 함
+
+
+
+	// 4-2. 입력 레이아웃 및 프리미티브 타입 설정
+	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get()); // 생성된 input layout
+	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// 4-3. 셰이더 바인딩
+	Ext_DirectXDevice::GetContext()->VSSetShader(Ext_DirectXResourceLoader::GetVertexShader(), nullptr, 0);
+	Ext_DirectXDevice::GetContext()->PSSetShader(Ext_DirectXResourceLoader::GetPixelShader(), nullptr, 0);
+
+	// 4-4. 실제 드로우
+	Ext_DirectXDevice::GetContext()->Draw(3, 0);
+	// ==========렌더링 끝==============
+
+	// 5. 화면 출력
 	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
 }
 

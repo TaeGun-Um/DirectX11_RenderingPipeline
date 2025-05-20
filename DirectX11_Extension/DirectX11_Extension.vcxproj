@@ -185,6 +185,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXIndexBuffer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXMaterial.cpp">
       <SubType>
       </SubType>
@@ -214,6 +218,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXVertexBuffer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <SubType>
       </SubType>
@@ -236,6 +244,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_DirectXDevice.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXIndexBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -265,6 +277,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_DirectXVertex.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXVertexBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>

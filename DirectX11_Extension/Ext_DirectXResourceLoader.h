@@ -12,6 +12,10 @@ public:
 
 	static void Initialize();
 
+	static COMPTR<ID3D11VertexShader>& GetVertexShader() { return BaseVertexShader; }
+	static COMPTR<ID3D11PixelShader>& GetPixelShader() { return BasePixelShader; }
+	static COMPTR<ID3D11InputLayout>& GetInputLayout() { return InputLayout; }
+
 protected:
 	
 private:
@@ -23,4 +27,7 @@ private:
 	static void MakeRasterizer();
 	static void MakeMaterial();
 
+	static COMPTR<ID3D11VertexShader> BaseVertexShader;
+	static COMPTR<ID3D11PixelShader> BasePixelShader;
+	static COMPTR<ID3D11InputLayout> InputLayout;
 };

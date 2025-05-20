@@ -34,22 +34,12 @@ private:
 	struct VertexData
 	{
 		float4 POSITION;
-		float4 TEXCOORD;
 		float4 COLOR;
+		float4 TEXCOORD;
 		float4 NORMAL;
 	};
 
 public:
-	// constrcuter destructer
-	Ext_DirectXVertex() {};
-	~Ext_DirectXVertex() {};
-
-	// delete Function
-	Ext_DirectXVertex(const Ext_DirectXVertex& _Other) = delete;
-	Ext_DirectXVertex(Ext_DirectXVertex&& _Other) noexcept = delete;
-	Ext_DirectXVertex& operator=(const Ext_DirectXVertex& _Other) = delete;
-	Ext_DirectXVertex& operator=(Ext_DirectXVertex&& _Other) noexcept = delete;
-
 	// Getter
 	static InputLayoutElement& GetInputLayoutElement() { return IAElement; }
 	VertexData& GetVertexData() { return VData; }
