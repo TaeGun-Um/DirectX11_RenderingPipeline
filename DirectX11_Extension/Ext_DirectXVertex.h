@@ -1,13 +1,5 @@
 #pragma once
 
-struct VertexData
-{
-	float4 POSITION;
-	float4 TEXCOORD;
-	float4 COLOR;
-	float4 NORMAL;
-};
-
 // 입력된 레이아웃 데이터 관리
 class InputLayoutElement
 {
@@ -25,12 +17,12 @@ public:
 	);
 
 	// Getter
-	const std::vector<D3D11_INPUT_ELEMENT_DESC>& GetElementDescsDescs() { return LayOutDescs;  }
+	const std::vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutDescs() { return InputLayoutDescs;  }
 
 private:
-	static UINT FormatSize(DXGI_FORMAT _Format);
+	static UINT FormatSize(DXGI_FORMAT _Format); // 포멧 크기 확인용
 
-	std::vector<D3D11_INPUT_ELEMENT_DESC> LayOutDescs;
+	std::vector<D3D11_INPUT_ELEMENT_DESC> InputLayoutDescs;
 	int Offset = 0;
 
 };
@@ -38,6 +30,15 @@ private:
 // 정점(Vertex)을 생성하기 위한 클래스
 class Ext_DirectXVertex
 {
+private:
+	struct VertexData
+	{
+		float4 POSITION;
+		float4 TEXCOORD;
+		float4 COLOR;
+		float4 NORMAL;
+	};
+
 public:
 	// constrcuter destructer
 	Ext_DirectXVertex() {};

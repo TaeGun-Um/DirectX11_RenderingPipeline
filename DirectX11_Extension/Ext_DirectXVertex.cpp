@@ -33,9 +33,10 @@ void InputLayoutElement::AddInputLayoutElement
 	Data.SemanticIndex = _SemanticIndex;
 
 	Offset += FormatSize(Data.Format);
-	LayOutDescs.push_back(Data);
+	InputLayoutDescs.push_back(Data);
 }
 
+// 포멧 크기 확인용
 UINT InputLayoutElement::FormatSize(DXGI_FORMAT _Format)
 {
 	switch (_Format)
