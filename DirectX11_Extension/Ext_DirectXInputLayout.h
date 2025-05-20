@@ -1,11 +1,11 @@
 #pragma once
 
-// 입력된 레이아웃 데이터 관리
-class InputLayoutElement
+// 입력된 레이아웃 데이터 정보
+class InputLayoutData
 {
 public:
 	// IAData 입력
-	void AddInputLayoutElement
+	void AddInputLayoutDesc
 	(
 		LPCSTR _SemanticName,
 		DXGI_FORMAT _Format,
@@ -27,8 +27,8 @@ private:
 
 };
 
-// 정점(Vertex)을 생성하기 위한 클래스
-class Ext_DirectXVertex
+// 입력 레이아웃을 생성하기 위한 클래스, 
+class Ext_DirectXInputLayout
 {
 public:
 	float4 POSITION;
@@ -37,12 +37,15 @@ public:
 	float4 NORMAL;
 
 	// Getter
-	static InputLayoutElement& GetInputLayoutElement() { return IAElement; }
+	static InputLayoutData& GetInputLayoutData() { return ILData; }
 
 protected:
 	
 private:
-	static InputLayoutElement IAElement; // 입력된 레이아웃 데이터 관리
+	static InputLayoutData ILData; // 입력된 레이아웃 데이터 관리
 	
 };
-
+// [D3D11_INPUT_ELEMENT_DESC]
+// DirectX11에서 입력 레이아웃(Input Layout)을 정의할 때 사용하는 구조체
+// 구조체는 정점 데이터가 어떤 구조로 되어있는지를 GPU에 알려주기 위한 것
+// 정점 버퍼 안의 데이터가 어떤 의미를 갖는지 설명하는 설명서 역할 수행

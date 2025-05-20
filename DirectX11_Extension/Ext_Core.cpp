@@ -6,7 +6,7 @@
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXResourceLoader.h"
 
-#include "Ext_DirectXVertex.h"
+#include "Ext_DirectXInputLayout.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 
@@ -59,19 +59,21 @@ void Ext_Core::RenderTest()
 
 	// 4. ==========렌더링==============
 	std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Triangle");
-	COMPTR<ID3D11Buffer>& VertexBuffer = VB->GetBuffer();
+	std::shared_ptr<Ext_DirectXIndexBuffer> IB = Ext_DirectXIndexBuffer::Find("Triangle");
+	COMPTR<ID3D11Buffer>& VertexBuffer = VB->GetVertexBuffer();
 	UINT stride = VB->GetVertexSize();
 	UINT Offset = 0;
 
 	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &Offset);
-	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(Ext_DirectXIndexBuffer::Find("Triangle")->GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get());
 	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	Ext_DirectXDevice::GetContext()->VSSetShader(Ext_DirectXResourceLoader::GetVertexShader(), nullptr, 0);
 	Ext_DirectXDevice::GetContext()->PSSetShader(Ext_DirectXResourceLoader::GetPixelShader(), nullptr, 0);
 
-	Ext_DirectXDevice::GetContext()->DrawIndexed(6, 0, 0);
+	Ext_DirectXDevice::GetContext()->DrawIndexed(IB->GetVertexCount(), 0, 0);
 	// ==========렌더링 끝==============
 
 	// 5. 화면 출력

@@ -19,7 +19,7 @@
     <ClCompile Include="Ext_DirectXResourceLoader.cpp">
       <Filter>02.DirectX\03.Resource\00. Loader</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_DirectXVertex.cpp">
+    <ClCompile Include="Ext_DirectXInputLayout.cpp">
       <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXSampler.cpp">
@@ -69,7 +69,7 @@
     <ClInclude Include="Ext_DirectXResourceLoader.h">
       <Filter>02.DirectX\03.Resource\00. Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_DirectXVertex.h">
+    <ClInclude Include="Ext_DirectXInputLayout.h">
       <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXSampler.h">

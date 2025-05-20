@@ -214,7 +214,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Ext_DirectXVertex.cpp">
+    <ClCompile Include="Ext_DirectXInputLayout.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -276,7 +276,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Ext_DirectXVertex.h">
+    <ClInclude Include="Ext_DirectXInputLayout.h">
       <SubType>
       </SubType>
     </ClInclude>

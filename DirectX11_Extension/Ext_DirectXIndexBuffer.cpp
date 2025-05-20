@@ -2,11 +2,12 @@
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXDevice.h"
 
+// IndexBuffer 생성
 void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSize, UINT _IndexCount)
 {
-	IndexSize = _IndexSize;
+	VertexSize = _IndexSize;
 
-	switch (IndexSize)
+	switch (VertexSize)
 	{
 	case 2:
 		Format = DXGI_FORMAT_R16_UINT;
@@ -18,25 +19,24 @@ void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSiz
 		break;
 	}
 
-	IndexCount = _IndexCount;
+	VertexCount = _IndexCount;
+
+	IndexBufferInfo.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	IndexBufferInfo.ByteWidth = VertexSize * VertexCount;
+	IndexBufferInfo.CPUAccessFlags = 0;
+	if (0 == IndexBufferInfo.CPUAccessFlags)
+	{
+		IndexBufferInfo.Usage = D3D11_USAGE_DEFAULT;
+	}
+	else 
+	{
+		IndexBufferInfo.Usage = D3D11_USAGE_DYNAMIC;
+	}
 
 	D3D11_SUBRESOURCE_DATA Data;
 	Data.pSysMem = _Data;
 
-	BufferInfo.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	BufferInfo.ByteWidth = IndexSize * IndexCount;
-
-	BufferInfo.CPUAccessFlags = 0;
-	if (0 == BufferInfo.CPUAccessFlags)
-	{
-		BufferInfo.Usage = D3D11_USAGE_DEFAULT;
-	}
-	else 
-	{
-		BufferInfo.Usage = D3D11_USAGE_DYNAMIC;
-	}
-
-	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateBuffer(&BufferInfo, &Data, Buffer.GetAddressOf()))
+	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateBuffer(&IndexBufferInfo, &Data, IndexBuffer.GetAddressOf()))
 	{
 		MsgAssert("버텍스 버퍼 생성에 실패했습니다.");
 	}

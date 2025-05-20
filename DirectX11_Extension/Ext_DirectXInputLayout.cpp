@@ -1,17 +1,17 @@
 #include "PrecompileHeader.h"
-#include "Ext_DirectXVertex.h"
+#include "Ext_DirectXInputLayout.h"
 
-InputLayoutElement Ext_DirectXVertex::IAElement;
+InputLayoutData Ext_DirectXInputLayout::ILData;
 
-void InputLayoutElement::AddInputLayoutElement
+void InputLayoutData::AddInputLayoutDesc
 (
 	/*1*/LPCSTR _SemanticName, 
-	/*3*/DXGI_FORMAT _Format, 
-	/*4*/D3D11_INPUT_CLASSIFICATION _InputSlotClass, 
-	/*5*/UINT _InstanceDataStepRate, 
-	/*6*/UINT _AlignedByteOffset, 
-	/*7*/UINT _InputSlot,
-	/*2*/UINT _SemanticIndex
+	/*2*/DXGI_FORMAT _Format, 
+	/*3*/D3D11_INPUT_CLASSIFICATION _InputSlotClass, 
+	/*4*/UINT _InstanceDataStepRate, 
+	/*5*/UINT _AlignedByteOffset, 
+	/*6*/UINT _InputSlot,
+	/*7*/UINT _SemanticIndex
 )
 {
 	// <<인자 설명>>
@@ -37,7 +37,7 @@ void InputLayoutElement::AddInputLayoutElement
 }
 
 // 포멧 크기 확인용
-UINT InputLayoutElement::FormatSize(DXGI_FORMAT _Format)
+UINT InputLayoutData::FormatSize(DXGI_FORMAT _Format)
 {
 	switch (_Format)
 	{
