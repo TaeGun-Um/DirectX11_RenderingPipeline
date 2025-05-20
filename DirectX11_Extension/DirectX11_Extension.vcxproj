@@ -172,6 +172,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ext_Actor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_Component.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_Core.cpp" />
     <ClCompile Include="Ext_DirectXBlend.cpp">
       <SubType>
@@ -222,6 +230,22 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_Object.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_Renderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_Scene.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_Transform.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <SubType>
       </SubType>
@@ -232,8 +256,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ext_Actor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_BaseEnum.h" />
     <ClInclude Include="Ext_BaseHeader.h" />
+    <ClInclude Include="Ext_Component.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_Core.h" />
     <ClInclude Include="Ext_DirectXBlend.h">
       <SubType>
@@ -281,6 +313,22 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_DirectXVertexBuffer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_Object.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_Renderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_Scene.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_Transform.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -2,6 +2,7 @@
 #include "Ext_Core.h"
 #include <DirectX11_Base/Base_Windows.h>
 #include <DirectX11_Base/Base_Debug.h>
+#include "Ext_Scene.h"
 #include "Ext_DirectXDevice.h"
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXResourceLoader.h"
@@ -9,6 +10,9 @@
 #include "Ext_DirectXInputLayout.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
+
+std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
+std::shared_ptr<class Ext_Scene> Ext_Core::CurrentScenes;
 
 void Ext_Core::Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
 {
@@ -78,5 +82,16 @@ void Ext_Core::RenderTest()
 
 	// 5. 화면 출력
 	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
+}
+
+void Ext_Core::SetSceneName(std::shared_ptr<Ext_Scene> Level, std::string _Name)
+{
+	Level->SetName(_Name);
+}
+
+void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level)
+{
+	CurrentScenes = _Level;
+	_Level->Start();
 }
 
