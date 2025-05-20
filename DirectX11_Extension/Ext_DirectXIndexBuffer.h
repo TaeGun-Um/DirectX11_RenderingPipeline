@@ -24,6 +24,8 @@ public:
 		return NewIndexBuffer;
 	}
 
+	COMPTR<ID3D11Buffer>& GetBuffer() { return Buffer; }
+
 protected:
 	
 private:

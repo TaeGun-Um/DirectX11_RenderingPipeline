@@ -29,18 +29,42 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertex::GetInputLayoutElement().AddInputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertex::GetInputLayoutElement().AddInputLayoutElement("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	// { DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), DirectX::XMFLOAT4(1, 0, 0, 1) }, // 상단 (빨강)
-	// { DirectX::XMFLOAT3(0.5f, -0.5f, 0.0f), DirectX::XMFLOAT4(0, 1, 0, 1) }, // 우하단 (초록)
-	// { DirectX::XMFLOAT3(-0.5f, -0.5f, 0.0f),DirectX::XMFLOAT4(0, 0, 1, 1) }  // 좌하단 (파랑)
-	std::vector<Ext_DirectXVertex> Vertices;
-	Vertices.resize(3);
+	// 삼각형
+	{
+		std::vector<Ext_DirectXVertex> Vertices;
+		Vertices.resize(3);
 
-	Vertices[0].GetVertexData() = { { 0.0f, 0.5f, 0.0 }, { 1, 0, 0, 1 } };
-	Vertices[1].GetVertexData() = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
-	Vertices[2].GetVertexData() = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
+		Vertices[0] = { { 0.0f, 0.5f, 0.0 }, { 1, 0, 0, 1 } };
+		Vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
+		Vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
 
-	Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
-	Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", Vertices);
+		std::vector<UINT> ArrIndex = { 0, 1, 2 };
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
+	}
+
+	// 기본 메쉬 생성, Rect
+	{
+		std::vector<Ext_DirectXVertex> ArrVertex;
+		ArrVertex.resize(4);
+
+		ArrVertex[0] = { { -0.5f,  0.5f, 0.0f, 1.0f }, { 1, 0, 0, 1 }, { 0.0f, 0.0f } };
+		ArrVertex[1] = { {  0.5f,  0.5f, 0.0f, 1.0f }, { 0, 1, 0, 1 }, { 1.0f, 0.0f } };
+		ArrVertex[2] = { { -0.5f, -0.5f, 0.0f, 1.0f }, { 0, 0, 1, 1 }, { 1.0f, 1.0f } };
+		ArrVertex[3] = { {  0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 0, 1 }, { 0.0f, 1.0f } };
+
+		//std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3 };
+		std::vector<UINT> ArrIndex = { 0, 1, 2, 2, 1, 3 };
+		//std::vector<UINT> ArrIndex = { 0, 1, 2, 1, 3, 2 };
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
+	}
+
+	// 네모
+	{
+
+	}
 }
 
 void Ext_DirectXResourceLoader::MakeSampler() 

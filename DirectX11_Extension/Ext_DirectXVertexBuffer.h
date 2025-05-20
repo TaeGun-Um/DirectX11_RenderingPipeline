@@ -28,6 +28,7 @@ public:
 
 	// Getter
 	COMPTR<ID3D11Buffer>& GetBuffer() { return Buffer; }
+	UINT GetVertexSize() { return VertexSize; }
 
 protected:
 	

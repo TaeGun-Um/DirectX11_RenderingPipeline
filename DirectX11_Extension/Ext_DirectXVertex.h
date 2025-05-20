@@ -30,25 +30,19 @@ private:
 // 정점(Vertex)을 생성하기 위한 클래스
 class Ext_DirectXVertex
 {
-private:
-	struct VertexData
-	{
-		float4 POSITION;
-		float4 COLOR;
-		float4 TEXCOORD;
-		float4 NORMAL;
-	};
-
 public:
+	float4 POSITION;
+	float4 COLOR;
+	float4 TEXCOORD;
+	float4 NORMAL;
+
 	// Getter
 	static InputLayoutElement& GetInputLayoutElement() { return IAElement; }
-	VertexData& GetVertexData() { return VData; }
 
 protected:
 	
 private:
 	static InputLayoutElement IAElement; // 입력된 레이아웃 데이터 관리
-	VertexData VData;
 	
 };
 
