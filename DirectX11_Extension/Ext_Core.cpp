@@ -97,7 +97,7 @@ void Ext_Core::SetSceneName(std::shared_ptr<Ext_Scene> Level, std::string _Name)
 void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level)
 {
 	CurrentScenes = _Level;
-	_Level->CreateActor<Ext_Camera>("MainCamera");
+	_Level->SetMainCamera(_Level->CreateActor<Ext_Camera>("MainCamera"));
 	_Level->Start();
 }
 

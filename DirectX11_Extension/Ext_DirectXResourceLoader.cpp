@@ -4,12 +4,21 @@
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 
+#include "Ext_DirectXConstantBuffer.h"
 #include "Ext_DirectXDevice.h"
 #include <sstream>
 #include <fstream>
+#include <d3dcompiler.h> // 
+#include <D3D11Shader.h>
 COMPTR<ID3D11VertexShader> Ext_DirectXResourceLoader::BaseVertexShader = nullptr;
 COMPTR<ID3D11PixelShader> Ext_DirectXResourceLoader::BasePixelShader = nullptr;
 COMPTR<ID3D11InputLayout> Ext_DirectXResourceLoader::InputLayout = nullptr;
+std::multimap<std::string, Setter> Ext_DirectXResourceLoader::ConstantBufferSetters;
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler")
+#pragma comment(lib, "dxguid")
+#pragma comment(lib, "DXGI")
 
 void Ext_DirectXResourceLoader::Initialize()
 {
@@ -132,6 +141,89 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 	// static COMPTR<ID3D11VertexShader> BaseVertexShader;
 	// static COMPTR<ID3D11PixelShader> BasePixelShader;
 	// static COMPTR<ID3D11InputLayout> InputLayout;
+
+	// 임시로 상수 버퍼 생성
+	ID3D11ShaderReflection* CompileInfo = nullptr;
+
+	// VSBlob, PSBlob : 바이너리코드
+	{
+		if (S_OK != D3DReflect(VSBlob->GetBufferPointer(), VSBlob->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&CompileInfo)))
+		{
+			MsgAssert("셰이더 리플렉션 실패");
+			return;
+		}
+
+		D3D11_SHADER_DESC ShaderDesc;
+		CompileInfo->GetDesc(&ShaderDesc);
+		D3D11_SHADER_INPUT_BIND_DESC ResDesc;
+
+		for (UINT i = 0; i < ShaderDesc.BoundResources; i++)
+		{
+			CompileInfo->GetResourceBindingDesc(i, &ResDesc);
+			std::string Name = ResDesc.Name;
+			D3D_SHADER_INPUT_TYPE Type = ResDesc.Type;
+			std::string UpperName = Base_String::ToUpper(ResDesc.Name);
+
+			if (Type == D3D_SIT_CBUFFER)
+			{
+				ID3D11ShaderReflectionConstantBuffer* CBufferPtr = CompileInfo->GetConstantBufferByName(ResDesc.Name);
+
+				D3D11_SHADER_BUFFER_DESC BufferDesc;
+				CBufferPtr->GetDesc(&BufferDesc);
+
+				std::shared_ptr<Ext_DirectXConstantBuffer> Res = Ext_DirectXConstantBuffer::CreateConstantBuffer(UpperName, BufferDesc, BufferDesc.Size);
+
+				Setter Set;
+				// Set.ParentShader = this;
+				Set.Name = UpperName;
+				Set.BindPoint = ResDesc.BindPoint;
+				Set.Res = Res;
+
+				// std::multimap<std::string, GameEngineConstantBufferSetter> ConstantBufferSetters;에 저장 // ResHelper.CreateConstantBufferSetter(Setter);
+				ConstantBufferSetters.insert(std::make_pair(Set.Name, Set));
+			}
+		}
+	}
+	{
+		if (S_OK != D3DReflect(PSBlob->GetBufferPointer(), PSBlob->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&CompileInfo)))
+		{
+			MsgAssert("셰이더 리플렉션 실패");
+			return;
+		}
+
+		D3D11_SHADER_DESC ShaderDesc;
+		CompileInfo->GetDesc(&ShaderDesc);
+		D3D11_SHADER_INPUT_BIND_DESC ResDesc;
+
+		for (UINT i = 0; i < ShaderDesc.BoundResources; i++)
+		{
+			CompileInfo->GetResourceBindingDesc(i, &ResDesc);
+			std::string Name = ResDesc.Name;
+			D3D_SHADER_INPUT_TYPE Type = ResDesc.Type;
+			std::string UpperName = Base_String::ToUpper(ResDesc.Name);
+
+			if (Type == D3D_SIT_CBUFFER)
+			{
+				ID3D11ShaderReflectionConstantBuffer* CBufferPtr = CompileInfo->GetConstantBufferByName(ResDesc.Name);
+
+				D3D11_SHADER_BUFFER_DESC BufferDesc;
+				CBufferPtr->GetDesc(&BufferDesc);
+
+				std::shared_ptr<Ext_DirectXConstantBuffer> Res = Ext_DirectXConstantBuffer::CreateConstantBuffer(UpperName, BufferDesc, BufferDesc.Size);
+
+				Setter Set;
+				// Set.ParentShader = this;
+				Set.Name = UpperName;
+				Set.BindPoint = ResDesc.BindPoint;
+				Set.Res = Res;
+
+				// std::multimap<std::string, GameEngineConstantBufferSetter> ConstantBufferSetters;에 저장 // ResHelper.CreateConstantBufferSetter(Setter);
+				ConstantBufferSetters.insert(std::make_pair(Set.Name, Set));
+			}
+		}
+	}
+
+	//Set.Res->VS
 }
 
 void Ext_DirectXResourceLoader::MakeRasterizer() 
@@ -142,4 +234,32 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
 
+}
+
+void Setter::Setting()
+{
+	//Res->ChangeData(CPUData, CPUDataSize);
+
+	//// ShaderType Type = ParentShader->GetType();
+
+	//switch (Type)
+	//{
+	//case ShaderType::None:
+	//{
+	//	MsgAssert("어떤 쉐이더에 세팅될지 알수없는 상수버퍼 입니다.");
+	//	break;
+	//}
+	//case ShaderType::Vertex:
+	//{
+	//	Res->VSSetting(BindPoint);
+	//	break;
+	//}
+	//case ShaderType::Pixel:
+	//{
+	//	Res->PSSetting(BindPoint);
+	//	break;
+	//}
+	//default:
+	//	break;
+	//}
 }

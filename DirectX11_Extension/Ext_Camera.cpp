@@ -11,11 +11,6 @@ Ext_Camera::~Ext_Camera()
 {
 }
 
-float4x4 Ext_Camera::GetViewMatrix()
-{
-	return float4x4();
-}
-
 void Ext_Camera::Start()
 {
 	ViewPortData.TopLeftX = 0;
@@ -34,7 +29,7 @@ void Ext_Camera::CameraTransformUpdate()
 	float4 EyeDir = GetTransform()->GetLocalForwardVector();
 	float4 EyeUp = GetTransform()->GetLocalUpVector();
 	float4 EyePos = GetTransform()->GetWorldPosition();
-	View.LookToLH(EyePos, EyeDir, EyeUp);
+	ViewMatrix.LookToLH(EyePos, EyeDir, EyeUp);
 
 	switch (ProjectionType)
 	{
@@ -44,7 +39,7 @@ void Ext_Camera::CameraTransformUpdate()
 		break;
 	}
 	case CameraType::Perspective:
-		Projection.PerspectiveFovLH(FOV, Width / Height, Near, Far);
+		ProjectionMatrix.PerspectiveFovLH(FOV, Width / Height, Near, Far);
 		break;
 	case CameraType::Orthogonal:
 		// Projection.OrthographicLH(Width * ZoomRatio, Height * ZoomRatio, Near, Far);
@@ -54,5 +49,5 @@ void Ext_Camera::CameraTransformUpdate()
 		break;
 	}
 
-	ViewPort.ViewPort(Width, Height, 0.0f, 0.0f);
+	ViewPortMatrix.ViewPort(Width, Height, 0.0f, 0.0f);
 }

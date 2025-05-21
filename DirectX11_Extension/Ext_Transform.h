@@ -102,6 +102,11 @@ public:
 		return TFData;
 	}
 
+	float4x4 GetWorldMatrix()
+	{
+		return TFData->WorldMatrix;
+	}
+
 	float4 GetWorldPosition()
 	{
 		return TFData->Position;

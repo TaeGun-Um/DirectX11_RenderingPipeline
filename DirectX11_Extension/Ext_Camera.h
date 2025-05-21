@@ -17,8 +17,9 @@ public:
 	Ext_Camera& operator=(const Ext_Camera& _Other) = delete;
 	Ext_Camera& operator=(Ext_Camera&& _Other) noexcept = delete;
 
-
-	float4x4 GetViewMatrix();
+	float4x4 GetViewMatrix() { return ViewMatrix; }
+	float4x4 GetProjectionMatrix() { return ProjectionMatrix; }
+	float4x4 GetViewPortMatrix() { return ViewPortMatrix; }
 
 protected:
 	void Start() override;
@@ -30,9 +31,9 @@ private:
 
 	D3D11_VIEWPORT ViewPortData;
 	CameraType ProjectionType = CameraType::Perspective;
-	float4x4 View;
-	float4x4 Projection;
-	float4x4 ViewPort;
+	float4x4 ViewMatrix;
+	float4x4 ProjectionMatrix;
+	float4x4 ViewPortMatrix;
 	float FOV = 90.0f;
 	float Near = 10.f;
 	float Far = 100000.0f;
