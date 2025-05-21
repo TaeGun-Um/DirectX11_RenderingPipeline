@@ -104,11 +104,14 @@ void Ext_Scene::RenderTest()
 	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// 4. ==========렌더링==============
-	std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Triangle");
-	std::shared_ptr<Ext_DirectXIndexBuffer> IB = Ext_DirectXIndexBuffer::Find("Triangle");
+	std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Rect");
+	std::shared_ptr<Ext_DirectXIndexBuffer> IB = Ext_DirectXIndexBuffer::Find("Rect");
 	COMPTR<ID3D11Buffer>& VertexBuffer = VB->GetVertexBuffer();
 	UINT stride = VB->GetVertexSize();
 	UINT Offset = 0;
+
+	assert(VB != nullptr && "Rect VB가 없습니다.");
+	assert(IB != nullptr && "Rect IB가 없습니다.");
 
 	Setter CBTransformSetter;
 
@@ -130,6 +133,7 @@ void Ext_Scene::RenderTest()
 		if ("RectActor" == Actor->GetName())
 		{
 			TransformData.WorldMatrix = Actor->GetTransform()->GetWorldMatrix();
+			float4 Temp = Actor->GetTransform()->GetWorldPosition();
 		}
 	}
 
@@ -144,18 +148,20 @@ void Ext_Scene::RenderTest()
 	Ext_DirectXDevice::GetContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &Mapped);
 	memcpy(Mapped.pData, &TransformData, sizeof(CBTransform));
 	Ext_DirectXDevice::GetContext()->Unmap(Buffer, 0);
+	CBTransformSetter.Res->VSSetting(0); // ? 바인딩
+	CBTransformSetter.Res->PSSetting(0); // ? 바인딩
 
 	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &Offset);
 	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get());
 	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get());
 
 	Ext_DirectXDevice::GetContext()->VSSetShader(Ext_DirectXResourceLoader::GetVertexShader(), nullptr, 0);
+	// Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(0, 1, &Buffer);
 	Ext_DirectXDevice::GetContext()->PSSetShader(Ext_DirectXResourceLoader::GetPixelShader(), nullptr, 0);
 
 	Ext_DirectXDevice::GetContext()->DrawIndexed(IB->GetVertexCount(), 0, 0);
-	// ==========렌더링 끝==============
 
 	// 5. 화면 출력
 	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);

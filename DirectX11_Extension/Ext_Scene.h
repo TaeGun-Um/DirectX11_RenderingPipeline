@@ -42,7 +42,11 @@ public:
 
 	// Getter, Setter
 	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera;  };
-	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) { MainCamera = _MainCamera; };
+	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) 
+	{ 
+		MainCamera = _MainCamera; 
+		Cameras.insert(std::make_pair("MainCamera", MainCamera));
+	};
 
 protected:
 	virtual void SceneChangeInitialize();

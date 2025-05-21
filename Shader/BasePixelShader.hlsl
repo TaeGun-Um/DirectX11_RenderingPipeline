@@ -6,5 +6,6 @@ struct PSInput
 
 float4 main(PSInput _Input) : SV_TARGET
 {
-    return _Input.Color;
+    //return _Input.Color;
+    return float4(1, 0, 0, 1); // 무조건 빨간색 출력
 }

@@ -20,15 +20,15 @@ void RectActor::Start()
 {
 	Ext_Actor::Start();
 	// CreateComponent<Ext_Component>("TestComp", true);
-	GetTransform()->SetWorldPosition({ 100.f, 50.f, 0.0f });
+	GetTransform()->SetWorldPosition({ 0.f, 0.f, 100.0f });
 }
 
 void RectActor::Update(float _DeltaTime)
 {
 	std::shared_ptr<Ext_Transform> Transform = GetTransform();
-	/*WorldMatrix*/Transform->GetWorldMatrix();
-	/*ViewMatrix*/GetOwnerScene().lock()->GetMainCamera()->GetViewMatrix();
-	/*ProjMatrix*/GetOwnerScene().lock()->GetMainCamera()->GetProjectionMatrix();
+	// /*WorldMatrix*/Transform->GetWorldMatrix();
+	// /*ViewMatrix*/GetOwnerScene().lock()->GetMainCamera()->GetViewMatrix();
+	// /*ProjMatrix*/GetOwnerScene().lock()->GetMainCamera()->GetProjectionMatrix();
 
 
 }
