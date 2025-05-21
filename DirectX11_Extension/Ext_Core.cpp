@@ -10,6 +10,7 @@
 #include "Ext_DirectXInputLayout.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
+#include "Ext_Camera.h"
 
 std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
 std::shared_ptr<class Ext_Scene> Ext_Core::CurrentScenes = nullptr;
@@ -96,6 +97,7 @@ void Ext_Core::SetSceneName(std::shared_ptr<Ext_Scene> Level, std::string _Name)
 void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level)
 {
 	CurrentScenes = _Level;
+	_Level->CreateActor<Ext_Camera>("MainCamera");
 	_Level->Start();
 }
 

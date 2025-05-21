@@ -17,37 +17,37 @@
       <Filter>01.Process\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXResourceLoader.cpp">
-      <Filter>02.DirectX\03.Resource\00. Loader</Filter>
+      <Filter>02.DirectX\03. Resource\00. Loader</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXInputLayout.cpp">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXSampler.cpp">
-      <Filter>02.DirectX\03.Resource\02. Sampler</Filter>
+      <Filter>02.DirectX\03. Resource\03. Sampler</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXBlend.cpp">
-      <Filter>02.DirectX\03.Resource\03. Blend</Filter>
+      <Filter>02.DirectX\03. Resource\04. Blend</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXDepth.cpp">
-      <Filter>02.DirectX\03.Resource\04. Depth</Filter>
+      <Filter>02.DirectX\03. Resource\05. Depth</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXShader.cpp">
-      <Filter>02.DirectX\03.Resource\05. Shader</Filter>
+      <Filter>02.DirectX\03. Resource\06. Shader</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXRasterizer.cpp">
-      <Filter>02.DirectX\03.Resource\06. Rasterizer</Filter>
+      <Filter>02.DirectX\03. Resource\07. Rasterizer</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXMaterial.cpp">
-      <Filter>02.DirectX\03.Resource\07. Material</Filter>
+      <Filter>02.DirectX\03. Resource\08. Material</Filter>
     </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <Filter>00.Base\00. PrecompileHeader</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXVertexBuffer.cpp">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXIndexBuffer.cpp">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Ext_Object.cpp">
       <Filter>01.Process\Object</Filter>
@@ -70,6 +70,9 @@
     <ClCompile Include="Ext_MeshComponent.cpp">
       <Filter>01.Process\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXConstantBuffer.cpp">
+      <Filter>02.DirectX\03. Resource\02. Constant</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -88,28 +91,28 @@
       <Filter>01.Process\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXResourceLoader.h">
-      <Filter>02.DirectX\03.Resource\00. Loader</Filter>
+      <Filter>02.DirectX\03. Resource\00. Loader</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXInputLayout.h">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXSampler.h">
-      <Filter>02.DirectX\03.Resource\02. Sampler</Filter>
+      <Filter>02.DirectX\03. Resource\03. Sampler</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXBlend.h">
-      <Filter>02.DirectX\03.Resource\03. Blend</Filter>
+      <Filter>02.DirectX\03. Resource\04. Blend</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXDepth.h">
-      <Filter>02.DirectX\03.Resource\04. Depth</Filter>
+      <Filter>02.DirectX\03. Resource\05. Depth</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXShader.h">
-      <Filter>02.DirectX\03.Resource\05. Shader</Filter>
+      <Filter>02.DirectX\03. Resource\06. Shader</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXRasterizer.h">
-      <Filter>02.DirectX\03.Resource\06. Rasterizer</Filter>
+      <Filter>02.DirectX\03. Resource\07. Rasterizer</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXMaterial.h">
-      <Filter>02.DirectX\03.Resource\07. Material</Filter>
+      <Filter>02.DirectX\03. Resource\08. Material</Filter>
     </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
       <Filter>00.Base\00. PrecompileHeader</Filter>
@@ -121,10 +124,10 @@
       <Filter>00.Base\01. Enum</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXVertexBuffer.h">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXIndexBuffer.h">
-      <Filter>02.DirectX\03.Resource\01. Vertex</Filter>
+      <Filter>02.DirectX\03. Resource\01. Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Ext_Object.h">
       <Filter>01.Process\Object</Filter>
@@ -147,6 +150,9 @@
     <ClInclude Include="Ext_MeshComponent.h">
       <Filter>01.Process\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_DirectXConstantBuffer.h">
+      <Filter>02.DirectX\03. Resource\02. Constant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02.DirectX">
@@ -167,33 +173,6 @@
     <Filter Include="02.DirectX\02. Texture&amp;View">
       <UniqueIdentifier>{876cba7e-de67-434f-9c8f-1987e56c41bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.DirectX\03.Resource">
-      <UniqueIdentifier>{2ceadb03-672a-4f59-85e1-71557e98dc54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\00. Loader">
-      <UniqueIdentifier>{42b31d88-f3ec-4905-a0e5-d4ae90d3b620}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\01. Vertex">
-      <UniqueIdentifier>{159b1534-c789-419e-8cd1-86fac72cbfd9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\02. Sampler">
-      <UniqueIdentifier>{79ece089-1cf7-471c-9f9c-26406e093638}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\03. Blend">
-      <UniqueIdentifier>{ffae5058-980e-486c-aebd-29e51d3d3a4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\04. Depth">
-      <UniqueIdentifier>{c9ec14ed-b6fe-41f0-a4d8-0e525ff176c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\05. Shader">
-      <UniqueIdentifier>{83accf1d-4925-4dae-bdc8-13abbdeea680}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\06. Rasterizer">
-      <UniqueIdentifier>{1f41fdb7-b57c-4526-b9d4-20d47b8ef0e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.DirectX\03.Resource\07. Material">
-      <UniqueIdentifier>{dda38edc-c0a9-4279-a0ac-f41cbaa415fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.Base">
       <UniqueIdentifier>{95d3a607-fde2-4ae1-86ea-5b40f4f85733}</UniqueIdentifier>
     </Filter>
@@ -208,6 +187,36 @@
     </Filter>
     <Filter Include="01.Process\Transform">
       <UniqueIdentifier>{dc03775a-d1c2-4f90-95bd-ee815ab14ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource">
+      <UniqueIdentifier>{2ceadb03-672a-4f59-85e1-71557e98dc54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\00. Loader">
+      <UniqueIdentifier>{42b31d88-f3ec-4905-a0e5-d4ae90d3b620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\01. Vertex">
+      <UniqueIdentifier>{159b1534-c789-419e-8cd1-86fac72cbfd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\02. Constant">
+      <UniqueIdentifier>{75674812-3180-4e75-8932-8d0170f11555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\03. Sampler">
+      <UniqueIdentifier>{79ece089-1cf7-471c-9f9c-26406e093638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\04. Blend">
+      <UniqueIdentifier>{ffae5058-980e-486c-aebd-29e51d3d3a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\05. Depth">
+      <UniqueIdentifier>{c9ec14ed-b6fe-41f0-a4d8-0e525ff176c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\06. Shader">
+      <UniqueIdentifier>{83accf1d-4925-4dae-bdc8-13abbdeea680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\07. Rasterizer">
+      <UniqueIdentifier>{1f41fdb7-b57c-4526-b9d4-20d47b8ef0e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\03. Resource\08. Material">
+      <UniqueIdentifier>{dda38edc-c0a9-4279-a0ac-f41cbaa415fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -189,6 +189,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXConstantBuffer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXDepth.cpp">
       <SubType>
       </SubType>
@@ -276,6 +280,10 @@
     </ClInclude>
     <ClInclude Include="Ext_Core.h" />
     <ClInclude Include="Ext_DirectXBlend.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXConstantBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>

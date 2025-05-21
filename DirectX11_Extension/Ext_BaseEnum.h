@@ -19,3 +19,10 @@ struct Comptr
 
     void Reset() { Ptr.Reset(); }
 };
+
+enum class CameraType
+{
+    None,
+    Perspective,
+    Orthogonal,
+};

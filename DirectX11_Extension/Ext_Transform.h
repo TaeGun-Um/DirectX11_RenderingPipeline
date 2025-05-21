@@ -19,6 +19,7 @@ struct TransformData
 	float4x4 RotationMatrix;
 	float4x4 PositionMatrix;
 	float4x4 WorldMatrix;
+	float4x4 LocalMatrix;
 
 	//float4 LocalScale;
 	//float4 LocalRotation;
@@ -47,8 +48,11 @@ struct TransformData
 	void CalculateWorldMatrix();
 };
 
+// 기하학 구조를 위한 클래스, World는 Scene 전체 데카르트좌표계 기준, Local은 자기 자신 기준
 class Ext_Transform
 {
+	friend class Ext_Camera;
+
 public:
 	// constrcuter destructer
 	Ext_Transform();
@@ -60,6 +64,63 @@ public:
 	Ext_Transform& operator=(const Ext_Transform& _Other) = delete;
 	Ext_Transform& operator=(Ext_Transform&& _Other) noexcept = delete;
 
+	void SetWorldScale(const float4& _Value)
+	{
+		TFData->Scale = _Value;
+		TransformUpdate();
+	}
+
+	void SetWorldRotation(const float4& _Value)
+	{
+		TFData->Rotation = _Value;
+		TransformUpdate();
+	}
+
+	void SetWorldPosition(const float4& _Value)
+	{
+		TFData->Position = _Value;
+		TransformUpdate();
+	}
+
+	void AddWorldScale(const float4& _Value)
+	{
+		SetWorldScale(TFData->Scale + _Value);
+	}
+
+	void AddWorldRotation(const float4& _Value)
+	{
+		SetWorldRotation(TFData->Rotation + _Value);
+	}
+
+	void AddWorldPosition(const float4& _Value)
+	{
+		SetWorldPosition(TFData->Position + _Value);
+	}
+
+	std::shared_ptr<TransformData> GetTransformData()
+	{
+		return TFData;
+	}
+
+	float4 GetWorldPosition()
+	{
+		return TFData->Position;
+	}
+
+	float4 GetWorldScale()
+	{
+		return TFData->Scale;
+	}
+
+	float4 GetWorldRotation()
+	{
+		return TFData->Rotation;
+	}
+
+	float4 GetWorldQuaternion()
+	{
+		return TFData->Quaternion;
+	}
 
 protected:
 	
@@ -70,4 +131,19 @@ private:
 	std::shared_ptr<Ext_Transform> Parent = nullptr;
 	std::shared_ptr<TransformData> TFData = nullptr;
 
+	// For Camera
+	float4 GetLocalForwardVector()
+	{
+		return TFData->WorldMatrix.ArrVector[2].NormalizeReturn();
+	}
+
+	float4 GetLocalUpVector()
+	{
+		return TFData->WorldMatrix.ArrVector[1].NormalizeReturn();
+	}
+
+	float4 GetLocalRightVector()
+	{
+		return TFData->WorldMatrix.ArrVector[0].NormalizeReturn();
+	}
 };

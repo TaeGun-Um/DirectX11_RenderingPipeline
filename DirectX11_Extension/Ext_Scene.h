@@ -40,6 +40,9 @@ public:
 	// 테스트용
 	void RenderTest();
 
+	// Getter, Setter
+	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera;  };
+
 protected:
 	virtual void SceneChangeInitialize();
 	virtual void SceneChangeEnd();
@@ -49,9 +52,12 @@ protected:
 	
 private:
 	void Rendering(float _DeltaTime); // 렌더링 업데이트
+	void CameraInit();
 
 	void SetActorName(std::shared_ptr<class Ext_Actor> _Actor, std::string_view _Name);
 	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, int _Order = 0);
 
 	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors; // Scene에 저장된 Actor들
+	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras; // Scene에 저장된 Camera들
+	std::shared_ptr<class Ext_Camera> MainCamera; // 현재 Scene의 MainCamera
 };

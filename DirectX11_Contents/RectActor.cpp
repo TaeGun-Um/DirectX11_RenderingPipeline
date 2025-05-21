@@ -23,6 +23,8 @@ void RectActor::Update(float _DeltaTime)
 	
 	std::shared_ptr<Ext_MeshComponent> Mesh1 = FindComponent<Ext_MeshComponent>("BasicMesh");
 	std::shared_ptr<Ext_Transform> Trans2 = Mesh1->GetTransform();
+
+
 }
 
 void RectActor::Destroy()

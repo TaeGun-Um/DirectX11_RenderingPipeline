@@ -8,13 +8,20 @@
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXResourceLoader.h"
 #include "Ext_MeshComponent.h"
+#include "Ext_Camera.h"
 
 Ext_Scene::Ext_Scene()
 {
+	
 }
 
 Ext_Scene::~Ext_Scene()
 {
+}
+
+void Ext_Scene::CameraInit()
+{
+
 }
 
 void Ext_Scene::SetActorName(std::shared_ptr<Ext_Actor> _Actor, std::string_view _Name)
@@ -41,7 +48,7 @@ void Ext_Scene::SceneChangeEnd()
 
 void Ext_Scene::Start()
 {
-
+	
 }
 
 void Ext_Scene::Update(float _DeltaTime)
@@ -59,6 +66,15 @@ void Ext_Scene::Update(float _DeltaTime)
 void Ext_Scene::Rendering(float _DeltaTime)
 {
 	// Rendering 업데이트
+	for (auto& Iter : Cameras)
+	{
+		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
+		if (false == CurCamera->GetIsDeath())
+		{
+			CurCamera->CameraTransformUpdate();
+		}
+	}
+
 	RenderTest();
 }
 

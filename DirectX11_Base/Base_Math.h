@@ -189,6 +189,19 @@ public:
 	float4 QuaternionToEulerRadiation();
 	float4 EulerDegreeToQuaternion();
 
+	void Normalize()
+	{
+		DirectVector = DirectX::XMVector3Normalize(*this);
+	}
+
+	// 자기가 길이 1로 줄어든 애를 리턴해주는것.
+	float4 NormalizeReturn()
+	{
+		float4 Result = *this;
+		Result.Normalize();
+		return Result;
+	}
+
 private:
 
 };
@@ -327,7 +340,90 @@ public:
 		return Return;
 	}
 
+	//                                           1280 / 720
+	//                         수직시야각        화면의 종횡비   근평면      원평면
+	// 3D를 2D로 투영시키기 위한 퍼스펙티브 행렬 구성
+	void PerspectiveFovLH(float _FovAngle, float _AspectRatio, float _NearZ = 10.0f, float _FarZ = 10000.0f)
+	{
+		Identity();
 
+		DirectMatrix = DirectX::XMMatrixPerspectiveFovLH(_FovAngle * Base_Math::DegreeToRadiation, _AspectRatio, _NearZ, _FarZ);
+
+		//// 수직시야각이라면
+		//float FOV = _FovAngle * GameEngineMath::DegToRad;
+		////  _FovAngle * _AspectRatio;// 수평시야각 구하는법
+
+		//// [0] [] [] []
+		//// [] [0] [] []
+		//// [] [] [0][1]
+		//// [] [] [] [0]
+		//Arr2D[2][3] = 1.0f;
+		//Arr2D[3][3] = 0.0f;
+
+		//Arr2D[0][0] = 1 / (tanf(FOV / 2.0f) * _AspectRatio);
+
+		//// y 300
+		//// z 5000
+		//Arr2D[1][1] = 1 / tanf(FOV / 2.0f); // y / z
+
+		//Arr2D[2][2] = _FarZ / (_FarZ - _NearZ);
+
+		//Arr2D[3][2] = -( _NearZ * _FarZ) / (_FarZ - _NearZ);
+	}
+
+	//            화면의 너비
+	void ViewPort(float _Width, float _Height, float _Left, float _Right, float _ZMin = 0.0f, float _ZMax = 1.0f)
+	{
+		Identity();
+
+		// 모니터의 공간으로 변환시키는 행렬
+		Arr2D[0][0] = _Width * 0.5f;
+		Arr2D[1][1] = -_Height * 0.5f;
+		Arr2D[2][2] = _ZMax != 0.0f ? 1.0f : _ZMin / _ZMax;
+
+		Arr2D[3][0] = Arr2D[0][0] + _Left;
+		Arr2D[3][1] = _Height * 0.5f + _Right;
+		Arr2D[3][2] = _ZMax != 0.0f ? 0.0f : _ZMin / _ZMax;
+		Arr2D[3][3] = 1.0f;
+	}
+
+	void LookToLH(const float4& _EyePos, const float4& _EyeDir, const float4& _EyeUp)
+	{
+		Identity();
+
+		DirectMatrix = DirectX::XMMatrixLookToLH(_EyePos, _EyeDir, _EyeUp);
+
+
+		//float4 EyePos = _EyePos;
+
+		//// 합쳐져서 회전행렬이 된다.
+		//float4 EyeDir = _EyeDir.NormalizeReturn();
+		//float4 EyeUp = _EyeUp;
+		//float4 Right = float4::Cross3DReturn(EyeUp, EyeDir);
+		//Right.Normalize();
+
+		//float4 UpVector = float4::Cross3DReturn(_EyeDir, Right);
+		//Right.Normalize();
+
+		//float4 NegEyePos = -_EyePos;
+
+		//float D0Value = float4::DotProduct3D(Right, NegEyePos);
+		//float D1Value = float4::DotProduct3D(UpVector, NegEyePos);
+		//float D2Value = float4::DotProduct3D(EyeDir, NegEyePos);
+
+		//// 여기서 내적을 사용합니다.
+		//// x + 1;
+		//// 역함수 혹은 역행렬이라고 부릅니다.
+		//// x - 1;
+
+		//ArrVector[0] = Right;
+		//ArrVector[1] = UpVector;
+		//ArrVector[2] = EyeDir;
+
+		//Transpose();
+
+		//ArrVector[3] = { D0Value, D1Value, D2Value, 0 };
+	}
 
 
 
@@ -429,37 +525,6 @@ public:
 
 	// z -x _EyeDir
 
-	//                                           1280 / 720
-	//                         수직시야각        화면의 종횡비   근평면      원평면
-	//void PerspectiveFovLH(float _FovAngle, float _AspectRatio, float _NearZ = 10.0f, float _FarZ = 10000.0f)
-	//{
-	//	Identity();
-
-	//	DirectMatrix = DirectX::XMMatrixPerspectiveFovLH(_FovAngle * Base_Math::DegToRad, _AspectRatio, _NearZ, _FarZ);
-
-	//	//// 수직시야각이라면
-	//	//float FOV = _FovAngle * GameEngineMath::DegToRad;
-	//	////  _FovAngle * _AspectRatio;// 수평시야각 구하는법
-
-	//	//// [0] [] [] []
-	//	//// [] [0] [] []
-	//	//// [] [] [0][1]
-	//	//// [] [] [] [0]
-	//	//Arr2D[2][3] = 1.0f;
-	//	//Arr2D[3][3] = 0.0f;
-
-	//	//Arr2D[0][0] = 1 / (tanf(FOV / 2.0f) * _AspectRatio);
-
-	//	//// y 300
-	//	//// z 5000
-	//	//Arr2D[1][1] = 1 / tanf(FOV / 2.0f); // y / z
-
-	//	//Arr2D[2][2] = _FarZ / (_FarZ - _NearZ);
-
-	//	//Arr2D[3][2] = -( _NearZ * _FarZ) / (_FarZ - _NearZ);
-	//}
-
-
 
 	//void OrthographicLH(float _ScreenWidth, float _ScreenHeight, float _NearZ = 0.1f, float _FarZ = 10000.0f)
 	//{
@@ -516,45 +581,6 @@ public:
 	//	DirectX::XMMatrixDecompose(&_Scale.DirectVector, &Temp0.DirectVector, &Temp1.DirectVector, DirectMatrix);
 	//}
 
-
-
-	//void LookToLH(const float4& _EyePos, const float4& _EyeDir, const float4& _EyeUp)
-	//{
-	//	Identity();
-
-	//	DirectMatrix = DirectX::XMMatrixLookToLH(_EyePos, _EyeDir, _EyeUp);
-
-
-	//	//float4 EyePos = _EyePos;
-
-	//	//// 합쳐져서 회전행렬이 된다.
-	//	//float4 EyeDir = _EyeDir.NormalizeReturn();
-	//	//float4 EyeUp = _EyeUp;
-	//	//float4 Right = float4::Cross3DReturn(EyeUp, EyeDir);
-	//	//Right.Normalize();
-
-	//	//float4 UpVector = float4::Cross3DReturn(_EyeDir, Right);
-	//	//Right.Normalize();
-
-	//	//float4 NegEyePos = -_EyePos;
-
-	//	//float D0Value = float4::DotProduct3D(Right, NegEyePos);
-	//	//float D1Value = float4::DotProduct3D(UpVector, NegEyePos);
-	//	//float D2Value = float4::DotProduct3D(EyeDir, NegEyePos);
-
-	//	//// 여기서 내적을 사용합니다.
-	//	//// x + 1;
-	//	//// 역함수 혹은 역행렬이라고 부릅니다.
-	//	//// x - 1;
-
-	//	//ArrVector[0] = Right;
-	//	//ArrVector[1] = UpVector;
-	//	//ArrVector[2] = EyeDir;
-
-	//	//Transpose();
-
-	//	//ArrVector[3] = { D0Value, D1Value, D2Value, 0 };
-	//}
 
 
 
