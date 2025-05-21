@@ -20,8 +20,6 @@ Contents_Core::~Contents_Core()
 void Contents_Core::Start()
 {
 	Ext_Core::CreateScene<TestScene>("TestScene");
-	Ext_Core::CreateScene<TestScene>("TempScene");
-
 	Ext_Core::ChangeScene("TestScene");
 }
 

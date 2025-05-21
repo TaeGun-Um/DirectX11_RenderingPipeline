@@ -140,6 +140,10 @@ void Ext_Scene::RenderTest()
 	TransformData.ViewMatrix = MainCamera->GetViewMatrix();
 	TransformData.ProjectionMatrix = MainCamera->GetProjectionMatrix();
 
+	TransformData.WorldMatrix.Transpose();
+	TransformData.ViewMatrix.Transpose();
+	TransformData.ProjectionMatrix.Transpose();
+
 	// GPU 상수 버퍼에 데이터 업데이트
 	ID3D11Buffer* Buffer = CBTransformSetter.Res->GetConstantBuffer().Get(); // 버퍼 포인터 획득
 
