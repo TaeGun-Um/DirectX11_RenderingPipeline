@@ -24,7 +24,7 @@
     <ProjectGuid>{37d025ec-bf84-4453-8d53-c4c7c974ecd2}</ProjectGuid>
     <RootNamespace>DirectX11Extension</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>DirectX11_Extension</ProjectName>
+    <ProjectName>01. DirectX11_Extension</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -176,6 +176,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_Camera.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_Component.cpp">
       <SubType>
       </SubType>
@@ -234,7 +238,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Ext_Renderer.cpp">
+    <ClCompile Include="Ext_RendererComponent.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -262,6 +266,10 @@
     </ClInclude>
     <ClInclude Include="Ext_BaseEnum.h" />
     <ClInclude Include="Ext_BaseHeader.h" />
+    <ClInclude Include="Ext_Camera.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_Component.h">
       <SubType>
       </SubType>
@@ -320,7 +328,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Ext_Renderer.h">
+    <ClInclude Include="Ext_RendererComponent.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Ext_Object.h"
 
+// Component 속성을 담당하는 클래스
 class Ext_Component : public Ext_Object
 {
 	friend class Ext_Actor;
@@ -22,11 +23,12 @@ public:
 	void SetOwnerActor(std::shared_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
 
 protected:
-	virtual void Start() {}
-	virtual void Update(float _DeltaTime) {}
-	virtual void Destroy() {}
+	virtual void Start() override {}
+	virtual void Update(float _DeltaTime) override {}
+	virtual void Destroy() override {}
 	
 private:
-	std::shared_ptr<class Ext_Transform> Transform = nullptr;
-	std::shared_ptr<class Ext_Actor> OwnerActor = nullptr;
+	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
+	std::shared_ptr<class Ext_Actor> OwnerActor = nullptr; // 자신을 소유한 액터 정보
+
 };

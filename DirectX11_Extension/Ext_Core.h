@@ -10,6 +10,7 @@ public:
 	Ext_Core& operator=(const Ext_Core& _Other) = delete;
 	Ext_Core& operator=(Ext_Core&& _Other) noexcept = delete;
 
+	// Scene 생성 후 저장
 	template<typename SceneType>
 	static std::shared_ptr<SceneType> CreateScene(std::string_view _Name)
 	{
@@ -27,7 +28,7 @@ public:
 
 		if (Scenes.end() != Scenes.find(NewName))
 		{
-			MsgAssert("같은 이름의 레벨을 2개 만들수는 없습니다.");
+			MsgAssert("같은 이름의 Scene을 2개 만들수는 없습니다.");
 		}
 
 		SetSceneName(NewLevel, NewName.c_str());
@@ -37,8 +38,20 @@ public:
 		return std::dynamic_pointer_cast<SceneType>(NewLevel);
 	}
 
-	static void Run(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen);
-	static void RenderTest();
+	// Scene 변경 실시
+	static void ChangeScene(std::string_view _Name)
+	{
+		std::string Name = _Name.data();
+
+		if (Scenes.end() != Scenes.find(Name))
+		{
+			MsgAssert("없는 Scene은 찾을 수 없습니다.");
+		}
+
+		NextScenes = Scenes[Name];
+	}
+
+	static void Run(HINSTANCE _hInstance, std::function<void()> _Run, std::function<void()> _End, const float4& _ScreenSize, bool _IsFullScreen);
 
 protected:
 	
@@ -50,10 +63,11 @@ private:
 	Ext_Core() {};
 	~Ext_Core() {};
 	
-	static void Start();
+	static void Start(std::function<void()> _ContentsCoreStart);
 	static void Update();
-	static void End();
+	static void End(std::function<void()> _ContentsCoreEnd);
 
-	static std::map<std::string, std::shared_ptr<class Ext_Scene>> Scenes;
-	static std::shared_ptr<class Ext_Scene> CurrentScenes;
+	static std::map<std::string, std::shared_ptr<class Ext_Scene>> Scenes; // 저장된 Scene들
+	static std::shared_ptr<class Ext_Scene> CurrentScenes; // 현재 지정된 Scene
+	static std::shared_ptr<class Ext_Scene> NextScenes; // 다음에 변경될 Scene
 };

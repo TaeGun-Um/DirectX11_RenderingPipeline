@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX11_RenderingPipeline", "DirectX11_RenderingPipeline\DirectX11_RenderingPipeline.vcxproj", "{8E794C0D-CBB4-4BE9-AB2D-C515E9441390}"
 	ProjectSection(ProjectDependencies) = postProject
 		{37D025EC-BF84-4453-8D53-C4C7C974ECD2} = {37D025EC-BF84-4453-8D53-C4C7C974ECD2}
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97} = {A92E1C61-0778-4F30-B78D-8560AE35EC97}
 		{E1528C55-AABA-4B28-A5E6-60471CFF73DB} = {E1528C55-AABA-4B28-A5E6-60471CFF73DB}
 	EndProjectSection
 EndProject
@@ -17,6 +18,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX11_Base", "DirectX11_Base\DirectX11_Base.vcxproj", "{E1528C55-AABA-4B28-A5E6-60471CFF73DB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shader", "Shader\Shader.vcxproj", "{2C0F57BD-2087-4790-A566-E38B6CD217FA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX11_Contents", "DirectX11_Contents\DirectX11_Contents.vcxproj", "{A92E1C61-0778-4F30-B78D-8560AE35EC97}"
+	ProjectSection(ProjectDependencies) = postProject
+		{37D025EC-BF84-4453-8D53-C4C7C974ECD2} = {37D025EC-BF84-4453-8D53-C4C7C974ECD2}
+		{E1528C55-AABA-4B28-A5E6-60471CFF73DB} = {E1528C55-AABA-4B28-A5E6-60471CFF73DB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +65,14 @@ Global
 		{2C0F57BD-2087-4790-A566-E38B6CD217FA}.Release|x64.Build.0 = Release|x64
 		{2C0F57BD-2087-4790-A566-E38B6CD217FA}.Release|x86.ActiveCfg = Release|Win32
 		{2C0F57BD-2087-4790-A566-E38B6CD217FA}.Release|x86.Build.0 = Release|Win32
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Debug|x64.ActiveCfg = Debug|x64
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Debug|x64.Build.0 = Debug|x64
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Debug|x86.ActiveCfg = Debug|Win32
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Debug|x86.Build.0 = Debug|Win32
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Release|x64.ActiveCfg = Release|x64
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Release|x64.Build.0 = Release|x64
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Release|x86.ActiveCfg = Release|Win32
+		{A92E1C61-0778-4F30-B78D-8560AE35EC97}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

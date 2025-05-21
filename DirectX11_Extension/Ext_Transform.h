@@ -15,32 +15,36 @@ struct TransformData
 	float4 Quaternion;
 	float4 Position;
 
-	float4 LocalScale;
-	float4 LocalRotation;
-	float4 LocalQuaternion;
-	float4 LocalPosition;
-
-	float4 WorldScale;
-	float4 WorldRotation;
-	float4 WorldQuaternion;
-	float4 WorldPosition;
-
-	float4x4 View;
-	float4x4 Projection;
-	float4x4 ViewPort;
-
 	float4x4 ScaleMatrix;
 	float4x4 RotationMatrix;
 	float4x4 PositionMatrix;
-	float4x4 LocalWorldMatrix;
 	float4x4 WorldMatrix;
-	float4x4 WorldView;
-	float4x4 WorldViewProjectionMatrix;
+
+	//float4 LocalScale;
+	//float4 LocalRotation;
+	//float4 LocalQuaternion;
+	//float4 LocalPosition;
+
+	//float4 WorldScale;
+	//float4 WorldRotation;
+	//float4 WorldQuaternion;
+	//float4 WorldPosition;
+
+	//float4x4 View;
+	//float4x4 Projection;
+	//float4x4 ViewPort;
+
+
+	//float4x4 LocalWorldMatrix;
+	
+	//float4x4 WorldView;
+	//float4x4 WorldViewProjectionMatrix;
 
 	//void WorldCalculation(const TransformData& _Parent, bool AbsoluteScale, bool AbsoluteRotation, bool AbsolutePosition);
 	//void LocalCalculation();
 	//void SetViewAndProjection(const float4x4& _View, const float4x4& _Projection);
-
+	
+	void CalculateWorldMatrix();
 };
 
 class Ext_Transform
@@ -64,6 +68,6 @@ private:
 
 	std::list<std::shared_ptr<Ext_Transform>> Childs;
 	std::shared_ptr<Ext_Transform> Parent = nullptr;
-	std::shared_ptr<TransformData> TransData;
+	std::shared_ptr<TransformData> TFData = nullptr;
 
 };

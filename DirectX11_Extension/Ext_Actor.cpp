@@ -1,9 +1,11 @@
 #include "PrecompileHeader.h"
 #include "Ext_Actor.h"
 #include "Ext_Component.h"
+#include "Ext_Transform.h"
 
 Ext_Actor::Ext_Actor()
 {
+	Transform = std::make_shared<Ext_Transform>();
 }
 
 Ext_Actor::~Ext_Actor()

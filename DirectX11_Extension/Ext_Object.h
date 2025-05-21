@@ -1,11 +1,12 @@
 #pragma once
 
+// Object 속성을 담당하는 클래스
 class Ext_Object
 {
 public:
 	// constrcuter destructer
 	Ext_Object();
-	~Ext_Object();
+	virtual ~Ext_Object() = 0;
 
 	// delete Function
 	Ext_Object(const Ext_Object& _Other) = delete;
@@ -28,7 +29,7 @@ protected:
 	virtual void Destroy() {}
 	
 private:
-	std::shared_ptr<class Ext_Scene> OwnerScene = nullptr;
+	std::shared_ptr<class Ext_Scene> OwnerScene = nullptr; // 자신이 속한 Scene 정보
 	std::string Name = "";
 	
 	bool IsUpdate = true;

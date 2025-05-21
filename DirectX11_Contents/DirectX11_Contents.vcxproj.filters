@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. Base">
+      <UniqueIdentifier>{2055584f-6c26-4809-a561-072fdf72ae67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Base\00. PrecompileHeader">
+      <UniqueIdentifier>{0cf3cf20-acac-4a17-8534-31920ea9e718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Base\01. Enum">
+      <UniqueIdentifier>{685cb6b7-08af-4ef9-b383-8050474fb042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01, Process">
+      <UniqueIdentifier>{e0a0a9e5-c02f-47e8-85e3-dea02cac9412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object">
+      <UniqueIdentifier>{886db13d-b447-4d0e-a7f4-fd51b0016059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\Scene">
+      <UniqueIdentifier>{6d031e4b-218c-41f7-8348-d3c7006413d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\Actor">
+      <UniqueIdentifier>{50d754b1-2bd0-42ed-906d-a3900809fe3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PrecompileHeader.cpp">
+      <Filter>00. Base\00. PrecompileHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleActor.cpp">
+      <Filter>02. Object\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="RectActor.cpp">
+      <Filter>02. Object\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>02. Object\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TempScene.cpp">
+      <Filter>02. Object\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Contents_Core.cpp">
+      <Filter>01, Process</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PrecompileHeader.h">
+      <Filter>00. Base\00. PrecompileHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleActor.h">
+      <Filter>02. Object\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="RectActor.h">
+      <Filter>02. Object\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>02. Object\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TempScene.h">
+      <Filter>02. Object\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Contents_Core.h">
+      <Filter>01, Process</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

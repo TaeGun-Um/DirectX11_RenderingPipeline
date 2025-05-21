@@ -1,6 +1,7 @@
 #pragma once
 #include "Ext_Object.h"
 
+// Scene 속성을 담당하는 클래스
 class Ext_Scene : public Ext_Object
 {
 	friend class Ext_Core;
@@ -35,14 +36,21 @@ public:
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
 
+	// 테스트용
+	void RenderTest();
+
 protected:
-	virtual void Start() {}
-	virtual void Update(float _DeltaTime) {}
-	virtual void Destroy() {}
+	virtual void SceneChangeInitialize();
+	virtual void SceneChangeEnd();
+	virtual void Start() override;
+	virtual void Update(float _DeltaTime) override;
+	virtual void Destroy() override;
 	
 private:
+	void Rendering(float _DeltaTime); // 렌더링 업데이트
+
 	void SetActorName(std::shared_ptr<class Ext_Actor> _Actor, std::string_view _Name);
 	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::shared_ptr<Ext_Scene> _Level, int _Order = 0);
 
-	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors;
+	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors; // Scene에 저장된 Actor들
 };
