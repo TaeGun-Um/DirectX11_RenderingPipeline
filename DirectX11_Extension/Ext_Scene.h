@@ -31,8 +31,9 @@ public:
 		}
 
 		SetActorName(NewActor, NewName.c_str());
-		ActorInitialize(NewActor, this, 0);
-
+		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), 0);
+		Actors.insert(std::make_pair(NewName, NewActor));
+		
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
 
@@ -50,7 +51,7 @@ private:
 	void Rendering(float _DeltaTime); // 렌더링 업데이트
 
 	void SetActorName(std::shared_ptr<class Ext_Actor> _Actor, std::string_view _Name);
-	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::shared_ptr<Ext_Scene> _Level, int _Order = 0);
+	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, int _Order = 0);
 
 	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors; // Scene에 저장된 Actor들
 };

@@ -29,6 +29,7 @@ public:
 		if (Scenes.end() != Scenes.find(NewName))
 		{
 			MsgAssert("같은 이름의 Scene을 2개 만들수는 없습니다.");
+			return nullptr;
 		}
 
 		SetSceneName(NewLevel, NewName.c_str());
@@ -42,13 +43,15 @@ public:
 	static void ChangeScene(std::string_view _Name)
 	{
 		std::string Name = _Name.data();
+		std::string NextName = Base_String::ToUpper(Name);
 
-		if (Scenes.end() != Scenes.find(Name))
+		if (Scenes.end() == Scenes.find(NextName))
 		{
 			MsgAssert("없는 Scene은 찾을 수 없습니다.");
+			return;
 		}
 
-		NextScenes = Scenes[Name];
+		NextScenes = Scenes[NextName];
 	}
 
 	static void Run(HINSTANCE _hInstance, std::function<void()> _Run, std::function<void()> _End, const float4& _ScreenSize, bool _IsFullScreen);

@@ -1,7 +1,7 @@
 #pragma once
 
 // Object 속성을 담당하는 클래스
-class Ext_Object
+class Ext_Object : public std::enable_shared_from_this<Ext_Object>
 {
 public:
 	// constrcuter destructer
@@ -19,9 +19,16 @@ public:
 	void UpdateOff() { IsUpdate = false; }
 	void SetName(std::string_view _Name) { Name = _Name; }
 	bool GetIsDeath() { return IsDeath; }
-	
-	void SetOwnerScene(std::shared_ptr<class Ext_Scene> _OwnerScene) { OwnerScene = _OwnerScene; }
-	std::shared_ptr<class Ext_Scene> GetOwnerScene() { return OwnerScene; }
+
+	void SetOwnerScene(std::weak_ptr<class Ext_Scene> _OwnerScene) { OwnerScene = _OwnerScene; }
+	std::weak_ptr<class Ext_Scene> GetOwnerScene() { return OwnerScene; }
+
+	// this 가져오기
+	template<typename Type>
+	std::shared_ptr<Type> GetSharedFromThis()
+	{
+		return std::dynamic_pointer_cast<Type>(shared_from_this());
+	}
 
 protected:
 	virtual void Start() {}
@@ -29,7 +36,7 @@ protected:
 	virtual void Destroy() {}
 	
 private:
-	std::shared_ptr<class Ext_Scene> OwnerScene = nullptr; // 자신이 속한 Scene 정보
+	std::weak_ptr<class Ext_Scene> OwnerScene; // 자신이 속한 Scene 정보
 	std::string Name = "";
 	
 	bool IsUpdate = true;

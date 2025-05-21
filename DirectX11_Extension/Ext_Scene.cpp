@@ -21,7 +21,7 @@ void Ext_Scene::SetActorName(std::shared_ptr<Ext_Actor> _Actor, std::string_view
 	_Actor->SetName(_Name);
 }
 
-void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::shared_ptr<Ext_Scene> _Level, int _Order)
+void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, int _Order)
 {
 	_Actor->SetOwnerScene(_Level);
 	_Actor->Start();
@@ -44,11 +44,19 @@ void Ext_Scene::Start()
 
 void Ext_Scene::Update(float _DeltaTime)
 {
-	
+	for (auto& Iter : Actors)
+	{
+		std::shared_ptr<Ext_Actor> CurActor = Iter.second;
+		if (false == CurActor->GetIsDeath())
+		{
+			CurActor->Update(_DeltaTime);
+		}
+	}
 }
 
 void Ext_Scene::Rendering(float _DeltaTime)
 {
+	// Rendering 업데이트
 	RenderTest();
 }
 
