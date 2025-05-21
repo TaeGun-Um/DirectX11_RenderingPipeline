@@ -28,6 +28,8 @@ public:
 	static COMPTR<ID3D11PixelShader>& GetPixelShader() { return BasePixelShader; }
 	static COMPTR<ID3D11InputLayout>& GetInputLayout() { return InputLayout; }
 
+	static std::multimap<std::string, Setter> ConstantBufferSetters;
+
 protected:
 	
 private:
@@ -43,5 +45,5 @@ private:
 	static COMPTR<ID3D11PixelShader> BasePixelShader;
 	static COMPTR<ID3D11InputLayout> InputLayout;
 
-	static std::multimap<std::string, Setter> ConstantBufferSetters;
+
 };

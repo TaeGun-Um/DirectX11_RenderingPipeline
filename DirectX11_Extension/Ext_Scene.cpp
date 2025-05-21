@@ -9,6 +9,8 @@
 #include "Ext_DirectXResourceLoader.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
+#include "Ext_Transform.h"
+#include "Ext_DirectXConstantBuffer.h"
 
 Ext_Scene::Ext_Scene()
 {
@@ -108,11 +110,46 @@ void Ext_Scene::RenderTest()
 	UINT stride = VB->GetVertexSize();
 	UINT Offset = 0;
 
+	Setter CBTransformSetter;
+
+	// 상수 버퍼에서 "TRANSFORMDATA" 찾기
+	auto Range = Ext_DirectXResourceLoader::ConstantBufferSetters.equal_range("TRANSFORMDATA");
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		CBTransformSetter = Iter->second;
+		break; // 첫 번째만 사용
+	}
+
+	// CBTransform 구조체 채우기
+	CBTransform TransformData;
+
+	for (auto& Pair : Actors)
+	{
+		std::shared_ptr<Ext_Actor>& Actor = Pair.second;
+
+		if ("RectActor" == Actor->GetName())
+		{
+			TransformData.WorldMatrix = Actor->GetTransform()->GetWorldMatrix();
+		}
+	}
+
+	TransformData.ViewMatrix = MainCamera->GetViewMatrix();
+	TransformData.ProjectionMatrix = MainCamera->GetProjectionMatrix();
+
+	// GPU 상수 버퍼에 데이터 업데이트
+	ID3D11Buffer* Buffer = CBTransformSetter.Res->GetConstantBuffer().Get(); // 버퍼 포인터 획득
+
+	// GPU 상수 버퍼에 업데이트
+	D3D11_MAPPED_SUBRESOURCE Mapped = {};
+	Ext_DirectXDevice::GetContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &Mapped);
+	memcpy(Mapped.pData, &TransformData, sizeof(CBTransform));
+	Ext_DirectXDevice::GetContext()->Unmap(Buffer, 0);
+
 	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &Offset);
 	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get());
-	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	Ext_DirectXDevice::GetContext()->VSSetShader(Ext_DirectXResourceLoader::GetVertexShader(), nullptr, 0);
 	Ext_DirectXDevice::GetContext()->PSSetShader(Ext_DirectXResourceLoader::GetPixelShader(), nullptr, 0);

@@ -30,6 +30,8 @@ public:
 		return std::dynamic_pointer_cast<Type>(shared_from_this());
 	}
 
+	std::string GetName() { return Name; }
+
 protected:
 	virtual void Start() {}
 	virtual void Update(float _DeltaTime) {}
