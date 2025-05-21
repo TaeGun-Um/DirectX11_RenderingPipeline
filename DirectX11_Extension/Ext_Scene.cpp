@@ -7,6 +7,7 @@
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXResourceLoader.h"
+#include "Ext_MeshComponent.h"
 
 Ext_Scene::Ext_Scene()
 {
@@ -25,6 +26,7 @@ void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr
 {
 	_Actor->SetOwnerScene(_Level);
 	_Actor->Start();
+	_Actor->CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 }
 
 void Ext_Scene::SceneChangeInitialize()

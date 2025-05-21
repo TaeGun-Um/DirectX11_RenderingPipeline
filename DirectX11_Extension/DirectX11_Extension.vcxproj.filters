@@ -64,10 +64,10 @@
     <ClCompile Include="Ext_Scene.cpp">
       <Filter>01.Process\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_RendererComponent.cpp">
+    <ClCompile Include="Ext_Camera.cpp">
       <Filter>01.Process\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_Camera.cpp">
+    <ClCompile Include="Ext_MeshComponent.cpp">
       <Filter>01.Process\Object</Filter>
     </ClCompile>
   </ItemGroup>
@@ -141,10 +141,10 @@
     <ClInclude Include="Ext_Scene.h">
       <Filter>01.Process\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_RendererComponent.h">
+    <ClInclude Include="Ext_Camera.h">
       <Filter>01.Process\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_Camera.h">
+    <ClInclude Include="Ext_MeshComponent.h">
       <Filter>01.Process\Object</Filter>
     </ClInclude>
   </ItemGroup>

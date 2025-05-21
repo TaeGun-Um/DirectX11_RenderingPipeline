@@ -17,8 +17,9 @@ void Ext_Actor::SetComponentName(std::shared_ptr<Ext_Component> _Component, std:
 	_Component->SetName(_Name);
 }
 
-void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, std::shared_ptr<Ext_Actor> _Actor, int _Order)
+void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, bool __IsTransformShare /*= false*/)
 {
 	_Component->SetOwnerActor(_Actor);
+	_Component->IsTransformShare = __IsTransformShare;
 	_Component->Start();
 }

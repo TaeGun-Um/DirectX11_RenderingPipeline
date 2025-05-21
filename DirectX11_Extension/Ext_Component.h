@@ -19,16 +19,18 @@ public:
 
 	// Getter, Setter
 	std::shared_ptr<class Ext_Transform> GetTransform() { return Transform; }
-	std::shared_ptr<class Ext_Actor> GetOwnerActor() { return OwnerActor; }
-	void SetOwnerActor(std::shared_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
+	std::weak_ptr<class Ext_Actor> GetOwnerActor() { return OwnerActor; }
+	void SetOwnerActor(std::weak_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
 
 protected:
-	virtual void Start() override {}
+	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override {}
 	virtual void Destroy() override {}
 	
-private:
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
-	std::shared_ptr<class Ext_Actor> OwnerActor = nullptr; // 자신을 소유한 액터 정보
+	std::weak_ptr<class Ext_Actor> OwnerActor; // 자신을 소유한 액터 정보
+	bool IsTransformShare = false; // 생성 시 트랜스폼을 Actor와 공유할 것인지 설정
+
+private:
 
 };

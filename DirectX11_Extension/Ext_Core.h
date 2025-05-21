@@ -54,6 +54,22 @@ public:
 		NextScenes = Scenes[NextName];
 	}
 
+	// Scene 찾기
+	template<typename SceneType>
+	static std::shared_ptr<SceneType> FindScene(std::string_view _Name)
+	{
+		std::string Name = _Name.data();
+		std::string FindName = Base_String::ToUpper(Name);
+
+		if (Scenes.end() == Scenes.find(FindName))
+		{
+			MsgAssert("없는 Scene은 찾을 수 없습니다.");
+			return;
+		}
+
+		return std::dynamic_pointer_cast<SceneType>(Scenes[FindName]);
+	}
+
 	static void Run(HINSTANCE _hInstance, std::function<void()> _Run, std::function<void()> _End, const float4& _ScreenSize, bool _IsFullScreen);
 
 protected:

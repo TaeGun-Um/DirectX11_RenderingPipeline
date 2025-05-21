@@ -19,7 +19,7 @@ public:
 
 	// 컴포넌트 생성 후 저장
 	template<typename ComponentType>
-	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name)
+	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, bool _IsTransformShare = false)
 	{
 		std::shared_ptr<Ext_Component> NewComponent = std::make_shared<ComponentType>();
 		std::string NewName = _Name.data();
@@ -31,9 +31,25 @@ public:
 		}
 
 		SetComponentName(NewComponent, NewName.c_str());
-		ComponentInitialize(NewComponent, this, 0);
+		ComponentInitialize(NewComponent, GetSharedFromThis<Ext_Actor>(), _IsTransformShare);
+		Components.insert(std::make_pair(NewName, NewComponent));
 
 		return std::dynamic_pointer_cast<ComponentType>(NewComponent);
+	}
+
+	// Component 찾기
+	template<typename ComponentType>
+	std::shared_ptr<ComponentType> FindComponent(std::string_view _Name)
+	{
+		std::string Name = _Name.data();
+
+		if (Components.end() == Components.find(Name))
+		{
+			MsgAssert("없는 Scene은 찾을 수 없습니다.");
+			return nullptr;
+		}
+
+		return std::dynamic_pointer_cast<ComponentType>(Components[Name]);
 	}
 
 	std::shared_ptr<class Ext_Transform> GetTransform() { return Transform; }
@@ -46,7 +62,7 @@ protected:
 	
 private:
 	void SetComponentName(std::shared_ptr<class Ext_Component> _Component, std::string_view _Name);
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::shared_ptr<Ext_Actor> _Actor, int _Order = 0);
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, bool __IsTransformShare = false);
 
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
