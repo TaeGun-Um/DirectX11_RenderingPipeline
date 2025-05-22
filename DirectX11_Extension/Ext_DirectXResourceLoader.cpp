@@ -17,7 +17,7 @@
 #pragma comment(lib, "dxguid")  // 임시
 #pragma comment(lib, "DXGI")  // 임시
 
-ID3D11InputLayout* Ext_DirectXResourceLoader::InputLayOut; // 임시
+COMPTR<ID3D11InputLayout> Ext_DirectXResourceLoader::InputLayOut; // 임시
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
@@ -98,7 +98,7 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 		static_cast<UINT>(Ext_DirectXInputLayout::GetInputLayoutData().GetInputLayoutDescs().size()),
 		VS->GetBinaryCode()->GetBufferPointer(),
 		VS->GetBinaryCode()->GetBufferSize(),
-		&InputLayOut
+		InputLayOut.GetAddressOf()
 	);
 }
 
