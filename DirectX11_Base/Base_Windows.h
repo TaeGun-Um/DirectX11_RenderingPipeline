@@ -20,8 +20,10 @@ public:
 	
 	// Getter, Setter
 	static HWND GetHWnd()	 { return HWnd;	}
-	static void SetWindowsEnd() { IsWindowUpdate = false; };
 	static float4 GetScreenSize() { return ScreenSize; };
+	static bool GetIsWindowUpdate() { return IsWindowUpdate; };
+	static bool GetIsWindowFocus() { return IsWindowFocus; };
+	static void SetWindowsEnd() { IsWindowUpdate = false; };
 
 protected:
 	
@@ -33,8 +35,9 @@ private:
 	static WNDCLASSEX wcex;
 	static HWND HWnd;
 	static HDC WindowBackBufferHdc;
-	static bool IsWindowUpdate;
 	static float4 ScreenSize;
 	static float4 WindowSize;
 	static float4 WindowPosition;
+	static bool IsWindowUpdate;
+	static bool IsWindowFocus;
 };

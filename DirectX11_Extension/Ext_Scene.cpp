@@ -21,18 +21,10 @@ Ext_Scene::~Ext_Scene()
 {
 }
 
-void Ext_Scene::CameraInit()
-{
-
-}
-
-void Ext_Scene::SetActorName(std::shared_ptr<Ext_Actor> _Actor, std::string_view _Name)
+// Actor 생성 시 자동 호출, 이름 설정, Owner설정, Renderer 자동 생성
+void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order)
 {
 	_Actor->SetName(_Name);
-}
-
-void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, int _Order)
-{
 	_Actor->SetOwnerScene(_Level);
 	_Actor->Start();
 	_Actor->CreateComponent<Ext_MeshComponent>("BasicMesh", true);
@@ -65,7 +57,7 @@ void Ext_Scene::Update(float _DeltaTime)
 	}
 }
 
-void Ext_Scene::Rendering(float _DeltaTime)
+void Ext_Scene::Rendering()
 {
 	// Rendering 업데이트
 	for (auto& Iter : Cameras)
@@ -78,11 +70,6 @@ void Ext_Scene::Rendering(float _DeltaTime)
 	}
 
 	RenderTest();
-}
-
-void Ext_Scene::Destroy()
-{
-
 }
 
 void Ext_Scene::RenderTest()

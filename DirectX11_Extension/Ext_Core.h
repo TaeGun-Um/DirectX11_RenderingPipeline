@@ -32,8 +32,7 @@ public:
 			return nullptr;
 		}
 
-		SetSceneName(NewLevel, NewName.c_str());
-		SceneInitialize(NewLevel);
+		SceneInitialize(NewLevel, NewName.c_str());
 		Scenes.insert(std::make_pair(NewName, NewLevel));
 
 		return std::dynamic_pointer_cast<SceneType>(NewLevel);
@@ -75,8 +74,8 @@ public:
 protected:
 	
 private:
-	static void SetSceneName(std::shared_ptr<class Ext_Scene> Level, std::string _Name);
-	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level);
+	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level, std::string_view _Name);
+	static bool TimeCheck();
 
 	// constrcuter destructer
 	Ext_Core() {};

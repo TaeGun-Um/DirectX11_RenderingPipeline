@@ -30,8 +30,7 @@ public:
 			NewName.replace(0, 6, "");
 		}
 
-		SetComponentName(NewComponent, NewName.c_str());
-		ComponentInitialize(NewComponent, GetSharedFromThis<Ext_Actor>(), _IsTransformShare);
+		ComponentInitialize(NewComponent, GetSharedFromThis<Ext_Actor>(), NewName.c_str(), _IsTransformShare);
 		Components.insert(std::make_pair(NewName, NewComponent));
 
 		return std::dynamic_pointer_cast<ComponentType>(NewComponent);
@@ -61,8 +60,7 @@ protected:
 	virtual void Destroy() override {}
 	
 private:
-	void SetComponentName(std::shared_ptr<class Ext_Component> _Component, std::string_view _Name);
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, bool __IsTransformShare = false);
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, bool __IsTransformShare = false);
 
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보

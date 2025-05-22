@@ -7,10 +7,11 @@ std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 WNDCLASSEX  Base_Windows::wcex;
 HWND             Base_Windows::HWnd = nullptr;
 HDC                Base_Windows::WindowBackBufferHdc = nullptr;
-bool                Base_Windows::IsWindowUpdate = true;
 float4              Base_Windows::ScreenSize = { 0.f, 0.f, 0.f, 0.f };
 float4              Base_Windows::WindowSize = { 0.f, 0.f, 0.f, 0.f };
 float4              Base_Windows::WindowPosition = { 0.f, 0.f, 0.f, 0.f };
+bool                Base_Windows::IsWindowUpdate = true;
+bool                Base_Windows::IsWindowFocus = true;
 
 LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
@@ -24,20 +25,26 @@ LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM
 
     switch (_message)
     {
-    case WM_SETFOCUS:
+    case WM_SETFOCUS: 
     {
+        // 사용자가 Alt+Tab으로 이 창으로 돌아오거나, 마우스로 클릭하여 활성화된 경우
+        IsWindowFocus = true;
         break;
     }
     case WM_KILLFOCUS:
     {
+        // 다른 창으로 전환되거나 최소화 등으로 비활성화되는 순간
+        IsWindowFocus = false;
         break;
     }
     case WM_KEYDOWN:
     {
+        // 사용자가 키보드 눌렀을 때 활성화
         break;
     }
     case WM_DESTROY:
     {
+        // 윈도우가 파괴될 때 활성화
         Base_Windows::SetWindowsEnd();
         break;
     }

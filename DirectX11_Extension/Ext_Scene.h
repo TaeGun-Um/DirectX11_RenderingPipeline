@@ -30,37 +30,32 @@ public:
 			NewName.replace(0, 6, "");
 		}
 
-		SetActorName(NewActor, NewName.c_str());
-		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), 0);
+		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), NewName.c_str(), 0);
 		Actors.insert(std::make_pair(NewName, NewActor));
 		
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
 
-	// 테스트용
-	void RenderTest();
-
 	// Getter, Setter
-	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera;  };
+	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; };
 	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) 
 	{ 
 		MainCamera = _MainCamera; 
 		Cameras.insert(std::make_pair("MainCamera", MainCamera));
 	};
 
+	// 렌더링 테스트용, 지울 예정/////////////////////////////////////////////////////
+	void RenderTest();
+
 protected:
 	virtual void SceneChangeInitialize();
 	virtual void SceneChangeEnd();
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override;
-	virtual void Destroy() override;
 	
 private:
-	void Rendering(float _DeltaTime); // 렌더링 업데이트
-	void CameraInit();
-
-	void SetActorName(std::shared_ptr<class Ext_Actor> _Actor, std::string_view _Name);
-	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, int _Order = 0);
+	void Rendering(); // 렌더링 업데이트
+	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order = 0);
 
 	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors; // Scene에 저장된 Actor들
 	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras; // Scene에 저장된 Camera들

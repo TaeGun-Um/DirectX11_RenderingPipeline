@@ -17,6 +17,7 @@ int APIENTRY wWinMain
 	_In_ int       nCmdShow
 )
 {
+	// Contents_Core가 Ext_Cor의 상속은 받지 않지만, 이런 식으로 전달해서 상위가 하위를 사용할 수 있도록 함
 	Ext_Core::Run(hInstance, Contents_Core::Start, Contents_Core::End, StartScreenSize, IsStartFullScreen);
 	return 0;
 }

@@ -2,59 +2,68 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Base_Debug.h">
-      <Filter>02.Debug</Filter>
+      <Filter>01.Debug</Filter>
     </ClInclude>
     <ClInclude Include="Base_Windows.h">
-      <Filter>01.Platform</Filter>
+      <Filter>03.Platform</Filter>
     </ClInclude>
     <ClInclude Include="Base_Math.h">
-      <Filter>03.Math</Filter>
+      <Filter>02.Math</Filter>
     </ClInclude>
     <ClInclude Include="Base_String.h">
       <Filter>04.String</Filter>
     </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
-      <Filter>00.Base\00. PrecompileHeader</Filter>
+      <Filter>00.Header\00.PrecompileHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_Deltatime.h">
+      <Filter>05.Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base_Debug.cpp">
-      <Filter>02.Debug</Filter>
+      <Filter>01.Debug</Filter>
     </ClCompile>
     <ClCompile Include="Base_Windows.cpp">
-      <Filter>01.Platform</Filter>
+      <Filter>03.Platform</Filter>
     </ClCompile>
     <ClCompile Include="Base_Math.cpp">
-      <Filter>03.Math</Filter>
+      <Filter>02.Math</Filter>
     </ClCompile>
     <ClCompile Include="Base_String.cpp">
       <Filter>04.String</Filter>
     </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>00.Base\00. PrecompileHeader</Filter>
+      <Filter>00.Header\00.PrecompileHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_Deltatime.cpp">
+      <Filter>05.Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="02.Debug">
-      <UniqueIdentifier>{c4fce596-bbce-4c8d-a8a8-15ff26e13e1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Platform">
-      <UniqueIdentifier>{d72a76c4-d6c7-44f9-801c-854fee3a58f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Math">
-      <UniqueIdentifier>{726ec14b-a9f7-4d74-a47b-a2746737339c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.String">
       <UniqueIdentifier>{55493ae7-21e0-4931-9afb-640e05b98bb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Base">
+    <Filter Include="01.Debug">
+      <UniqueIdentifier>{c4fce596-bbce-4c8d-a8a8-15ff26e13e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Platform">
+      <UniqueIdentifier>{d72a76c4-d6c7-44f9-801c-854fee3a58f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Header">
       <UniqueIdentifier>{351c7f57-00af-4ad3-bb7e-eaa3513693e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Base\01. Enum">
+    <Filter Include="00.Header\00.PrecompileHeader">
+      <UniqueIdentifier>{36e25dc9-196f-4f09-924c-b60c51180ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Header\01.Enum">
       <UniqueIdentifier>{5975bba5-0bba-4fff-93d0-3b33982dd31c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Base\00. PrecompileHeader">
-      <UniqueIdentifier>{36e25dc9-196f-4f09-924c-b60c51180ba0}</UniqueIdentifier>
+    <Filter Include="02.Math">
+      <UniqueIdentifier>{726ec14b-a9f7-4d74-a47b-a2746737339c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Event">
+      <UniqueIdentifier>{2b662098-5e49-43dc-ae99-33ba7b4036ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

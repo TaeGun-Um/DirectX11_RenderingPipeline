@@ -1,7 +1,7 @@
 #pragma once
 #include "Ext_Actor.h"
 
-// 렌더링을 담당하는 Actor
+// 화면의 렌더링을 담당하는 Actor
 class Ext_Camera : public Ext_Actor
 {
 	friend class Ext_Scene;

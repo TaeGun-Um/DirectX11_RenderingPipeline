@@ -6,8 +6,6 @@
 class Base_Math final
 {
 public:
-	// static std::vector<unsigned int> GetDigits(int _Value);
-	// static unsigned int GetLenth(int _Value);
 	static const float PIE, PIE2, DegreeToRadiation, RadiationToDegree;
 
 	static float Lerp(float p1, float p2, float Time)
@@ -29,6 +27,7 @@ private:
 	virtual ~Base_Math() = 0;
 };
 
+// float 4개를 활용할 수 있는 클래스
 class float4 final
 {
 public:
@@ -208,7 +207,8 @@ private:
 
 typedef float4 Quaternion;
 
-class float4x4
+// float 16개를 2차원 배열 형태로 활용할 수 있는 클래스
+class float4x4 final
 {
 public:
 	static const float4x4 Zero;

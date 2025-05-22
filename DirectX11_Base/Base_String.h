@@ -1,5 +1,6 @@
 #pragma once
 
+// string 속성 변환 헬퍼 클래스
 class Base_String
 {
 public:
