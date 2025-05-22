@@ -20,9 +20,11 @@ Base_Deltatime::~Base_Deltatime()
 
 float Base_Deltatime::TimeCheck()
 {
+	// 포커스 잃으면 기준 시간 강제 갱신 (시간 흐름 무시)
 	if (false == Base_Windows::GetIsWindowFocus())
 	{
 		QueryPerformanceCounter(&Before);
+		floatDeltaTime = 0.0f;
 		return 0.0f;
 	}
 

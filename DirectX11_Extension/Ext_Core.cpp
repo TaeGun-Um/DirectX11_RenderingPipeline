@@ -82,9 +82,8 @@ void Ext_Core::Update()
 
 	//////////////////////////////    업데이트    //////////////////////////////
 	if (!TimeCheck()) return;
-	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetFrameTime()); // Actor 행렬 업데이트
+	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Actor 행렬 업데이트
 	CurrentScenes->Rendering(); // Rendering 업데이트
-
 	////////////////////////////// 업데이트 종료 //////////////////////////////
 }
 
@@ -110,24 +109,28 @@ void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_vi
 	_Level->Start();
 }
 
+// 델타타임 체크, 60프레임 기준으로 설정함
 bool Ext_Core::TimeCheck()
 {
 	Base_Deltatime& Deta = Base_Deltatime::GetGlobalTime();
 	bool IsPass = true;
 
-	float Detatime = Deta.TimeCheck();
-	float FrameTime = Deta.GetFrameTime();
-	Deta.AddFrameTime(Detatime);
-	float FrameLimit = Deta.GetFrameLimit(); // 60프레임으로 제한
-	if (FrameLimit > FrameTime)
+	float DeltaTime = Deta.TimeCheck(); // 1프레임 기준 경과 시간
+	Deta.AddFrameTime(DeltaTime);       // 누적
+
+	float FrameTime = Deta.GetFrameTime();  // 누적 시간 확인
+	float FrameLimit = Deta.GetFrameLimit(); // 1 / 60 = 0.016666..
+
+	if (FrameTime < FrameLimit)
 	{
 		IsPass = false;
 	}
 	else
 	{
+		Deta.SetDeltaTime(FrameTime);
 		Deta.SetFrameRate(1.0f / FrameTime);
 		Deta.SetFPS(static_cast<int>(1.0f / FrameTime + 0.5f));
-		Deta.ResetFrameTime();
+		Deta.ResetFrameTime(); // 누적 시간 초기화
 	}
 
 	return IsPass;

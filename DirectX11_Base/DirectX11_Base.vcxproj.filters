@@ -10,14 +10,17 @@
     <ClInclude Include="Base_Math.h">
       <Filter>02.Math</Filter>
     </ClInclude>
-    <ClInclude Include="Base_String.h">
-      <Filter>04.String</Filter>
-    </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
       <Filter>00.Header\00.PrecompileHeader</Filter>
     </ClInclude>
     <ClInclude Include="Base_Deltatime.h">
       <Filter>05.Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_String.h">
+      <Filter>04.String\00.String</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_Path.h">
+      <Filter>04.String\Path</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -30,14 +33,17 @@
     <ClCompile Include="Base_Math.cpp">
       <Filter>02.Math</Filter>
     </ClCompile>
-    <ClCompile Include="Base_String.cpp">
-      <Filter>04.String</Filter>
-    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <Filter>00.Header\00.PrecompileHeader</Filter>
     </ClCompile>
     <ClCompile Include="Base_Deltatime.cpp">
       <Filter>05.Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_String.cpp">
+      <Filter>04.String\00.String</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_Path.cpp">
+      <Filter>04.String\Path</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +70,12 @@
     </Filter>
     <Filter Include="05.Event">
       <UniqueIdentifier>{2b662098-5e49-43dc-ae99-33ba7b4036ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.String\00.String">
+      <UniqueIdentifier>{53548435-8899-4241-ba71-1c31c06b8c49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.String\Path">
+      <UniqueIdentifier>{869f3d7a-78f6-4ad0-a122-8f161a5fe75c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

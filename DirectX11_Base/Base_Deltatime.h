@@ -21,11 +21,13 @@ public:
 
 	// Getter, Setter
 	static Base_Deltatime& GetGlobalTime() { return GlobalTime; }
-	static float& GetFrameTime() { return GlobalTime.FrameTime; }
-	static float& GetFrameLimit() { return GlobalTime.FrameLimit; }
-	static void AddFrameTime(float _FrameTime) { GlobalTime.FrameTime += _FrameTime; }
-	static void SetFrameRate(float _FrameRate) { GlobalTime.FrameRate = _FrameRate; }
-	static void SetFPS(int _FPS) { GlobalTime.FPS = _FPS; }
+	float& GetFrameTime() { return GlobalTime.FrameTime; }
+	float& GetFrameLimit() { return GlobalTime.FrameLimit; }
+	float GetDeltaTime() const { return min(GlobalTime.floatDeltaTime, 0.1f); } // 프레임 드랍 시, clamp를 위한 리턴 방식
+	void SetDeltaTime(float _DeltaTime) { GlobalTime.floatDeltaTime = _DeltaTime; }
+	void AddFrameTime(float _FrameTime) { GlobalTime.FrameTime += _FrameTime; }
+	void SetFrameRate(float _FrameRate) { GlobalTime.FrameRate = _FrameRate; }
+	void SetFPS(int _FPS) { GlobalTime.FPS = _FPS; }
 
 protected:
 	
