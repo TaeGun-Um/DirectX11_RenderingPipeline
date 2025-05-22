@@ -1,6 +1,13 @@
 #pragma once
 #include "Ext_Actor.h"
 
+enum class SortType
+{
+	ZSort,
+	YSort,
+	UnKnown
+};
+
 // 화면의 렌더링을 담당하는 Actor
 class Ext_Camera : public Ext_Actor
 {
@@ -17,9 +24,9 @@ public:
 	Ext_Camera& operator=(const Ext_Camera& _Other) = delete;
 	Ext_Camera& operator=(Ext_Camera&& _Other) noexcept = delete;
 
-	float4x4 GetViewMatrix() { return ViewMatrix; }
-	float4x4 GetProjectionMatrix() { return ProjectionMatrix; }
-	float4x4 GetViewPortMatrix() { return ViewPortMatrix; }
+	const float4x4& GetViewMatrix() { return ViewMatrix; }
+	const float4x4& GetProjectionMatrix() { return ProjectionMatrix; }
+	const float4x4& GetViewPortMatrix() { return ViewPortMatrix; }
 
 	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent);
 
@@ -30,6 +37,8 @@ protected:
 	
 private:
 	void CameraTransformUpdate();
+	void MeshComponentTransformUpdate(std::shared_ptr<Ext_Camera> _Camera);
+	void Rendering(float _Deltatime);
 
 	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents;
 

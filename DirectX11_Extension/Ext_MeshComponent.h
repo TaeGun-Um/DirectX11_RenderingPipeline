@@ -25,6 +25,8 @@ protected:
 	virtual void Destroy() override {}
 
 private:
+	void Rendering(float _Deltatime);
+
 	void PushMeshToCamera(std::string_view _CameraName);
 	std::weak_ptr<class Ext_Camera> OwnerCamera;
 	

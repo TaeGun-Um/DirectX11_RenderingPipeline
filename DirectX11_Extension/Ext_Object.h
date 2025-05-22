@@ -17,8 +17,9 @@ public:
 	// Getter, Setter
 	void UpdateOn() { IsUpdate = true; }
 	void UpdateOff() { IsUpdate = false; }
-	void SetName(std::string_view _Name) { Name = _Name; }
+	bool GetIsUpdate() { return IsUpdate; }
 	bool GetIsDeath() { return IsDeath; }
+	void SetName(std::string_view _Name) { Name = _Name; }
 
 	void SetOwnerScene(std::weak_ptr<class Ext_Scene> _OwnerScene) { OwnerScene = _OwnerScene; }
 	std::weak_ptr<class Ext_Scene> GetOwnerScene() { return OwnerScene; }

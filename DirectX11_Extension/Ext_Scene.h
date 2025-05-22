@@ -58,7 +58,7 @@ protected:
 	virtual void Update(float _DeltaTime) override;
 	
 private:
-	void Rendering(); // 렌더링 업데이트
+	void Rendering(float _DeltaTime); // 렌더링 업데이트
 	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order);
 	
 	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors; // Scene에 저장된 Actor들

@@ -84,7 +84,8 @@ void Ext_Scene::Update(float _DeltaTime)
 	{
 		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
 		{
-			if (false == CurActor->GetIsDeath())
+			if (!CurActor->GetIsUpdate()) continue;
+			else
 			{
 				CurActor->Update(_DeltaTime);
 			}
@@ -92,16 +93,16 @@ void Ext_Scene::Update(float _DeltaTime)
 	}
 }
 
-void Ext_Scene::Rendering()
+void Ext_Scene::Rendering(float _DeltaTime)
 {
 	// Rendering 업데이트
 	for (auto& Iter : Cameras)
 	{
 		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
-		if (false == CurCamera->GetIsDeath())
-		{
-			CurCamera->CameraTransformUpdate();
-		}
+
+		CurCamera->CameraTransformUpdate(); // 뷰, 프로젝션, 뷰포트 matrix 최신화
+		// 뷰포트 세팅 해야함 CurCamera->v();
+		CurCamera->Rendering(_DeltaTime);
 	}
 
 	RenderTest();
