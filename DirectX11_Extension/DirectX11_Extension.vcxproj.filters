@@ -44,7 +44,7 @@
       <Filter>02.DirectX\02.Resource\02.Constant</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXInputLayout.cpp">
-      <Filter>02.DirectX\02.Resource\01.Vertex\00.InputLayout</Filter>
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexLayout</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXIndexBuffer.cpp">
       <Filter>02.DirectX\02.Resource\01.Vertex\01.Buffer</Filter>
@@ -72,6 +72,15 @@
     </ClCompile>
     <ClCompile Include="Ext_MeshComponent.cpp">
       <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXVertexShader.cpp">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXPixelShader.cpp">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXComputeShader.cpp">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +133,7 @@
       <Filter>02.DirectX\02.Resource\02.Constant</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXInputLayout.h">
-      <Filter>02.DirectX\02.Resource\01.Vertex\00.InputLayout</Filter>
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexLayout</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXIndexBuffer.h">
       <Filter>02.DirectX\02.Resource\01.Vertex\01.Buffer</Filter>
@@ -152,6 +161,15 @@
     </ClInclude>
     <ClInclude Include="Ext_MeshComponent.h">
       <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXVertexShader.h">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXPixelShader.h">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXComputeShader.h">
+      <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +224,6 @@
     <Filter Include="02.DirectX\02.Resource\03.Shader\01.Buffer">
       <UniqueIdentifier>{460dc544-60ce-45a8-87d4-f00180d20490}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.DirectX\02.Resource\01.Vertex\00.InputLayout">
-      <UniqueIdentifier>{2a9ca916-dde8-45cb-aeb5-fc077101b346}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.DirectX\02.Resource\01.Vertex\01.Buffer">
       <UniqueIdentifier>{dbe032c0-1f6f-4249-963a-27e7020050c3}</UniqueIdentifier>
     </Filter>
@@ -250,6 +265,9 @@
     </Filter>
     <Filter Include="01.Process\02.Object\04.Component\01.Rendering">
       <UniqueIdentifier>{bf71c5b7-49bc-4be3-9dd3-b1ef55508208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DirectX\02.Resource\01.Vertex\00.VertexLayout">
+      <UniqueIdentifier>{2a9ca916-dde8-45cb-aeb5-fc077101b346}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

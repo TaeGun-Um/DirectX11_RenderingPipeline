@@ -17,7 +17,7 @@ struct VSOut
     float4 Color : COLOR;
 };
 
-VSOut main(VSInput _Input)
+VSOut Basic_VS(VSInput _Input)
 {
     VSOut Output;
     float4 WorldPosition = mul(WorldMatrix, _Input.Position);

@@ -10,6 +10,10 @@
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
 #include "Ext_Transform.h"
+
+#include "Ext_DirectXVertexShader.h" // 임시
+#include "Ext_DirectXPixelShader.h" // 임시
+#include "Ext_DirectXShader.h"
 #include "Ext_DirectXConstantBuffer.h"
 
 Ext_Scene::Ext_Scene()
@@ -103,7 +107,7 @@ void Ext_Scene::RenderTest()
 	Setter CBTransformSetter;
 
 	// 상수 버퍼에서 "TRANSFORMDATA" 찾기
-	auto Range = Ext_DirectXResourceLoader::ConstantBufferSetters.equal_range("TRANSFORMDATA");
+	auto Range = Ext_DirectXShader::ConstantBufferSetters.equal_range("TRANSFORMDATA");
 	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
 	{
 		CBTransformSetter = Iter->second;
@@ -146,11 +150,14 @@ void Ext_Scene::RenderTest()
 	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::GetInputLayout().Get());
+	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::InputLayOut);
 
-	Ext_DirectXDevice::GetContext()->VSSetShader(Ext_DirectXResourceLoader::GetVertexShader(), nullptr, 0);
+	std::shared_ptr<Ext_DirectXVertexShader> VS = Ext_DirectXVertexShader::Find("Basic_VS");
+	std::shared_ptr<Ext_DirectXPixelShader> PS = Ext_DirectXPixelShader::Find("Basic_PS");
+
+	Ext_DirectXDevice::GetContext()->VSSetShader(VS->GetVertexShader(), nullptr, 0);
 	// Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(0, 1, &Buffer);
-	Ext_DirectXDevice::GetContext()->PSSetShader(Ext_DirectXResourceLoader::GetPixelShader(), nullptr, 0);
+	Ext_DirectXDevice::GetContext()->PSSetShader(PS->GetPixelShader(), nullptr, 0);
 
 	Ext_DirectXDevice::GetContext()->DrawIndexed(IB->GetVertexCount(), 0, 0);
 

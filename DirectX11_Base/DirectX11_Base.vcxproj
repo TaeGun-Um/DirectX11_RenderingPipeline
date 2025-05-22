@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Base_BaseEnum.h" />
     <ClInclude Include="Base_Debug.h">
       <SubType>
       </SubType>

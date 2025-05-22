@@ -16,6 +16,8 @@ public:
 
 	std::string MakePath(std::string_view _RelativePath, std::string_view _ThisFile = __FILE__);
 	std::vector<std::string> GetAllFile(std::initializer_list<std::string> _Extensions);
+	std::string FindEntryPoint(std::string_view _Path);
+
 	const std::string& GetPath() { return Path; }
 
 protected:

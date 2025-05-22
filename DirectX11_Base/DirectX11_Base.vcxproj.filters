@@ -22,6 +22,9 @@
     <ClInclude Include="Base_Directory.h">
       <Filter>04.String\Path</Filter>
     </ClInclude>
+    <ClInclude Include="Base_BaseEnum.h">
+      <Filter>00.Header\01.Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base_Debug.cpp">

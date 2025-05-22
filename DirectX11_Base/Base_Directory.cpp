@@ -52,3 +52,33 @@ std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::s
 
 	return Result;
 }
+
+std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
+{
+	std::string FileName = std::filesystem::path(_FilePath).stem().string();
+
+	std::ifstream File(_FilePath.data());
+	if (!File.is_open())
+	{
+		MsgAssert(std::string("파일 열기 실패 : ") + _FilePath.data());
+		return "";
+	}
+
+	std::string Line;
+	while (std::getline(File, Line))
+	{
+		// 공백 제거
+		Line.erase(remove_if(Line.begin(), Line.end(), isspace), Line.end());
+
+		// "Basic_VS(" 혹은 "Basic_VS(" 형태로 함수 시작 찾기
+		std::string Signature = FileName + "(";
+
+		if (Line.find(Signature) != std::string::npos)
+		{
+			return FileName;
+		}
+	}
+
+	// 못 찾으면 기본값
+	return "";
+}

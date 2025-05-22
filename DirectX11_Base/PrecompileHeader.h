@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <functional>
 #include <algorithm>
@@ -17,6 +18,8 @@
 #include <vector>
 #include <string>
 #include <string_view>
+
+#include "Base_BaseEnum.h"
 
 // DirectX11
 #include <d3d11.h> // Direct3D 11 디바이스를 위한 헤더

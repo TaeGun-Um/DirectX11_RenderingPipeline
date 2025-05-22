@@ -20,13 +20,6 @@ struct Comptr
     void Reset() { Ptr.Reset(); }
 };
 
-enum class CameraType
-{
-    None,
-    Perspective,
-    Orthogonal,
-};
-
 struct CBTransform
 {
     float4x4 WorldMatrix;
@@ -34,11 +27,9 @@ struct CBTransform
     float4x4 ProjectionMatrix;
 };
 
-enum class ShaderType
+enum class CameraType
 {
     None,
-    Vertex,
-    Geometry,
-    Pixel,
-    Compute,
+    Perspective,
+    Orthogonal,
 };
