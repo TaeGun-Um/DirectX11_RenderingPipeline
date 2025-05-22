@@ -12,10 +12,12 @@ Ext_Actor::~Ext_Actor()
 {
 }
 
-void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, bool __IsTransformShare /*= false*/)
+void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare /*= false*/)
 {
 	_Component->SetOwnerActor(_Actor);
+	_Component->SetOwnerScene(GetOwnerScene());
 	_Component->IsTransformShare = __IsTransformShare;
 	_Component->SetName(_Name);
+	_Component->SetOrder(_Order);
 	_Component->Start();
 }

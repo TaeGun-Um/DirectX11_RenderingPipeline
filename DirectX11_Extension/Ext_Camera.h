@@ -21,6 +21,8 @@ public:
 	float4x4 GetProjectionMatrix() { return ProjectionMatrix; }
 	float4x4 GetViewPortMatrix() { return ViewPortMatrix; }
 
+	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent);
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override {}
@@ -28,6 +30,8 @@ protected:
 	
 private:
 	void CameraTransformUpdate();
+
+	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents;
 
 	D3D11_VIEWPORT ViewPortData;
 	CameraType ProjectionType = CameraType::Perspective;

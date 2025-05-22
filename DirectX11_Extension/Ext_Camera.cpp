@@ -1,7 +1,10 @@
 #include "PrecompileHeader.h"
 #include "Ext_Camera.h"
+
 #include <DirectX11_Base/Base_Windows.h>
+
 #include "Ext_Transform.h"
+#include "Ext_MeshComponent.h"
 
 Ext_Camera::Ext_Camera()
 {
@@ -50,4 +53,16 @@ void Ext_Camera::CameraTransformUpdate()
 	}
 
 	ViewPortMatrix.ViewPort(Width, Height, 0.0f, 0.0f);
+}
+
+void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshComponent)
+{
+	if (nullptr == _MeshComponent)
+	{
+		MsgAssert("MeshComponent가 nullptr 입니다");
+		return;
+	}
+
+	_MeshComponent->SetOwnerCamera(GetSharedFromThis<Ext_Camera>());
+	MeshComponents[GetOrder()].push_back(_MeshComponent);
 }

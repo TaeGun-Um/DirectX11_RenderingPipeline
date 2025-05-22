@@ -25,13 +25,42 @@ Ext_Scene::~Ext_Scene()
 {
 }
 
-// Actor 생성 시 자동 호출, 이름 설정, Owner설정, Renderer 자동 생성
-void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order)
+// Actor 생성 시 자동 호출, 이름 설정, Owner설정
+void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order /*= 0*/)
 {
 	_Actor->SetName(_Name);
 	_Actor->SetOwnerScene(_Level);
+	_Actor->SetOrder(_Order);
 	_Actor->Start();
-	_Actor->CreateComponent<Ext_MeshComponent>("BasicMesh", true);
+}
+
+// 카메라 찾아서 그 카메라에 MeshComponent 저장
+void Ext_Scene::PushMeshToCamera(std::shared_ptr<Ext_MeshComponent> _MeshComponent, std::string_view _CameraName)
+{
+	std::shared_ptr<Ext_Camera> FindCam = FindCamera(_CameraName);
+
+	if (nullptr == FindCam)
+	{
+		MsgAssert("존재하지 않는 카메라에 랜더러를 넣을수는 없습니다.");
+		return;
+	}
+
+	FindCam->PushMeshComponent(_MeshComponent);
+}
+
+// 이름으로 카메라 찾기
+std::shared_ptr<Ext_Camera> Ext_Scene::FindCamera(std::string_view _CameraName)
+{
+	std::map<std::string, std::shared_ptr<Ext_Camera>>::iterator FindIter = Cameras.find(_CameraName.data());
+
+	if (FindIter == Cameras.end())
+	{
+		return nullptr;
+	}
+
+	std::shared_ptr<Ext_Camera> FindCam = FindIter->second;
+
+	return FindCam;
 }
 
 void Ext_Scene::SceneChangeInitialize()
@@ -51,12 +80,14 @@ void Ext_Scene::Start()
 
 void Ext_Scene::Update(float _DeltaTime)
 {
-	for (auto& Iter : Actors)
+	for (auto& [Key, ActorList] : Actors)
 	{
-		std::shared_ptr<Ext_Actor> CurActor = Iter.second;
-		if (false == CurActor->GetIsDeath())
+		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
 		{
-			CurActor->Update(_DeltaTime);
+			if (false == CurActor->GetIsDeath())
+			{
+				CurActor->Update(_DeltaTime);
+			}
 		}
 	}
 }
@@ -117,16 +148,21 @@ void Ext_Scene::RenderTest()
 	// CBTransform 구조체 채우기
 	CBTransform TransformData;
 
-	for (auto& Pair : Actors)
+	for (auto& [Key, ActorList] : Actors)
 	{
-		std::shared_ptr<Ext_Actor>& Actor = Pair.second;
-
-		if ("RectActor" == Actor->GetName())
+		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
 		{
-			TransformData.WorldMatrix = Actor->GetTransform()->GetWorldMatrix();
-			float4 Temp = Actor->GetTransform()->GetWorldPosition();
+			if (false == CurActor->GetIsDeath())
+			{
+				if ("RectActor" == CurActor->GetName())
+				{
+					TransformData.WorldMatrix = CurActor->GetTransform()->GetWorldMatrix();
+					float4 Temp = CurActor->GetTransform()->GetWorldPosition();
+				}
+			}
 		}
 	}
+
 
 	TransformData.ViewMatrix = MainCamera->GetViewMatrix();
 	TransformData.ProjectionMatrix = MainCamera->GetProjectionMatrix();

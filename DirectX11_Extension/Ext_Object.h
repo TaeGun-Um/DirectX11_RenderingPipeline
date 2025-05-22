@@ -31,6 +31,8 @@ public:
 	}
 
 	std::string GetName() { return Name; }
+	int GetOrder() { return Order; }
+	void SetOrder(int _Order) { Order = _Order; }
 
 protected:
 	virtual void Start() {}
@@ -43,4 +45,6 @@ private:
 	
 	bool IsUpdate = true;
 	bool IsDeath = false;
+
+	int Order = 0;
 };

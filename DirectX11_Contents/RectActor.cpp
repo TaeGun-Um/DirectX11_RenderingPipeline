@@ -22,6 +22,7 @@ void RectActor::Start()
 	// CreateComponent<Ext_Component>("TestComp", true);
 	GetTransform()->SetWorldPosition({ 0.f, 0.f, 10.0f });
 	GetTransform()->SetWorldScale({ 10.f, 10.f, 1.f }); // 크기 확대
+	CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 }
 
 void RectActor::Update(float _DeltaTime)

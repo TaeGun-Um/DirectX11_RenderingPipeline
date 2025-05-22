@@ -16,6 +16,8 @@ public:
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
 	// Getter, Setter
+	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
+	void SetOwnerCamera(std::shared_ptr<class Ext_Camera> _Camera) { OwnerCamera = _Camera; }
 
 protected:
 	virtual void Start() override;
@@ -23,5 +25,7 @@ protected:
 	virtual void Destroy() override {}
 
 private:
+	void PushMeshToCamera(std::string_view _CameraName);
+	std::weak_ptr<class Ext_Camera> OwnerCamera;
 	
 };

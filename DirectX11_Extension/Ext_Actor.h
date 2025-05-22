@@ -19,7 +19,7 @@ public:
 
 	// 컴포넌트 생성 후 저장
 	template<typename ComponentType>
-	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, bool _IsTransformShare = false)
+	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, int _Order = 0, bool _IsTransformShare = false)
 	{
 		std::shared_ptr<Ext_Component> NewComponent = std::make_shared<ComponentType>();
 		std::string NewName = _Name.data();
@@ -60,7 +60,7 @@ protected:
 	virtual void Destroy() override {}
 	
 private:
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, bool __IsTransformShare = false);
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare = false);
 
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보

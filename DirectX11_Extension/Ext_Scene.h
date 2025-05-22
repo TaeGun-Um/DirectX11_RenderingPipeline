@@ -19,7 +19,7 @@ public:
 
 	// Actor 생성 및 저장
 	template<typename ActorType>
-	std::shared_ptr<ActorType> CreateActor(std::string_view _Name)
+	std::shared_ptr<ActorType> CreateActor(std::string_view _Name, int _Order = 0)
 	{
 		std::shared_ptr<Ext_Actor> NewActor = std::make_shared<ActorType>();
 		std::string NewName = _Name.data();
@@ -30,8 +30,8 @@ public:
 			NewName.replace(0, 6, "");
 		}
 
-		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), NewName.c_str(), 0);
-		Actors.insert(std::make_pair(NewName, NewActor));
+		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), NewName.c_str(), _Order);
+		Actors[GetOrder()].push_back(NewActor);
 		
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
@@ -44,6 +44,10 @@ public:
 		Cameras.insert(std::make_pair("MainCamera", MainCamera));
 	};
 
+	// MeshComponent를 MainCamera의 MeshComponents에 push
+	void PushMeshToCamera(std::shared_ptr<class Ext_MeshComponent> _MeshComponent, std::string_view _CameraName);
+	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName);
+
 	// 렌더링 테스트용, 지울 예정/////////////////////////////////////////////////////
 	void RenderTest();
 
@@ -55,9 +59,9 @@ protected:
 	
 private:
 	void Rendering(); // 렌더링 업데이트
-	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order = 0);
-
-	std::map<std::string, std::shared_ptr<class Ext_Actor>> Actors; // Scene에 저장된 Actor들
+	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order);
+	
+	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors; // Scene에 저장된 Actor들
 	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras; // Scene에 저장된 Camera들
 	std::shared_ptr<class Ext_Camera> MainCamera; // 현재 Scene의 MainCamera
 };
