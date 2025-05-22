@@ -172,7 +172,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Base_Path.h">
+    <ClInclude Include="Base_Directory.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -202,7 +202,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Base_Path.cpp">
+    <ClCompile Include="Base_Directory.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -10,7 +10,7 @@
 #include <fstream>
 #include <d3dcompiler.h> // 
 #include <D3D11Shader.h>
-#include <DirectX11_Base/Base_Path.h>
+#include <DirectX11_Base/Base_Directory.h>
 COMPTR<ID3D11VertexShader> Ext_DirectXResourceLoader::BaseVertexShader = nullptr;
 COMPTR<ID3D11PixelShader> Ext_DirectXResourceLoader::BasePixelShader = nullptr;
 COMPTR<ID3D11InputLayout> Ext_DirectXResourceLoader::InputLayout = nullptr;
@@ -99,7 +99,8 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 	COMPTR<ID3DBlob> ErrorBlob = nullptr;
 	COMPTR<ID3DBlob> VSBlob = nullptr;
 
-	std::string Path = Base_Path::MakePath("../Shader/BaseVertexShader.hlsl");
+	Base_Directory Dir;
+	std::string Path = Dir.MakePath("../Shader/BaseVertexShader.hlsl");
 	std::wstring wPath = Base_String::StringToWString(Path);
 
 	if (S_OK != D3DCompileFromFile(wPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", Flag, 0, VSBlob.GetAddressOf(), ErrorBlob.GetAddressOf()))
