@@ -20,6 +20,7 @@ void TempScene::Start()
 
 void TempScene::Update(float _DeltaTime)
 {
+	
 	Ext_Scene::Update(_DeltaTime);
 }
 

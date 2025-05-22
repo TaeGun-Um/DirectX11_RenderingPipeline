@@ -11,6 +11,7 @@ public:
 	Base_String& operator=(Base_String&& _Other) noexcept = delete;
 
 	static std::string ToUpper(std::string_view _Str);
+	static std::wstring StringToWString(const std::string& str) { return std::wstring(str.begin(), str.end()); }
 
 protected:
 	

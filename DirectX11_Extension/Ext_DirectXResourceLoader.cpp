@@ -10,6 +10,7 @@
 #include <fstream>
 #include <d3dcompiler.h> // 
 #include <D3D11Shader.h>
+#include <DirectX11_Base/Base_Path.h>
 COMPTR<ID3D11VertexShader> Ext_DirectXResourceLoader::BaseVertexShader = nullptr;
 COMPTR<ID3D11PixelShader> Ext_DirectXResourceLoader::BasePixelShader = nullptr;
 COMPTR<ID3D11InputLayout> Ext_DirectXResourceLoader::InputLayout = nullptr;
@@ -97,7 +98,11 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 	// ID3DBlob : 셰이더 바이트코드를 담는 인터페이스
 	COMPTR<ID3DBlob> ErrorBlob = nullptr;
 	COMPTR<ID3DBlob> VSBlob = nullptr;
-	if (S_OK != D3DCompileFromFile(L"../Shader/BaseVertexShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", Flag, 0, VSBlob.GetAddressOf(), ErrorBlob.GetAddressOf()))
+
+	std::string Path = Base_Path::MakePath("../Shader/BaseVertexShader.hlsl");
+	std::wstring wPath = Base_String::StringToWString(Path);
+
+	if (S_OK != D3DCompileFromFile(wPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", Flag, 0, VSBlob.GetAddressOf(), ErrorBlob.GetAddressOf()))
 	{
 		MsgAssert("VertexShader 컴파일 실패");
 		return;
