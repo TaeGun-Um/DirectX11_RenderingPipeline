@@ -43,8 +43,8 @@
     <ClCompile Include="Ext_DirectXConstantBuffer.cpp">
       <Filter>02.DirectX\02.Resource\02.Constant</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_DirectXInputLayout.cpp">
-      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexLayout</Filter>
+    <ClCompile Include="Ext_DirectXVertexData.cpp">
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexData</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXIndexBuffer.cpp">
       <Filter>02.DirectX\02.Resource\01.Vertex\01.Buffer</Filter>
@@ -81,6 +81,18 @@
     </ClCompile>
     <ClCompile Include="Ext_DirectXComputeShader.cpp">
       <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_MeshComponentUnit.cpp">
+      <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXMesh.cpp">
+      <Filter>02.DirectX\02.Resource\08.Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXInputLayout.cpp">
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexData</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXBufferSetter.cpp">
+      <Filter>02.DirectX\02.Resource\03.Shader\01.Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -132,8 +144,8 @@
     <ClInclude Include="Ext_DirectXConstantBuffer.h">
       <Filter>02.DirectX\02.Resource\02.Constant</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_DirectXInputLayout.h">
-      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexLayout</Filter>
+    <ClInclude Include="Ext_DirectXVertexData.h">
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexData</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXIndexBuffer.h">
       <Filter>02.DirectX\02.Resource\01.Vertex\01.Buffer</Filter>
@@ -170,6 +182,18 @@
     </ClInclude>
     <ClInclude Include="Ext_DirectXComputeShader.h">
       <Filter>02.DirectX\02.Resource\03.Shader\00.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_MeshComponentUnit.h">
+      <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXMesh.h">
+      <Filter>02.DirectX\02.Resource\08.Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXInputLayout.h">
+      <Filter>02.DirectX\02.Resource\01.Vertex\00.VertexData</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXBufferSetter.h">
+      <Filter>02.DirectX\02.Resource\03.Shader\01.Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +290,7 @@
     <Filter Include="01.Process\02.Object\04.Component\01.Rendering">
       <UniqueIdentifier>{bf71c5b7-49bc-4be3-9dd3-b1ef55508208}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.DirectX\02.Resource\01.Vertex\00.VertexLayout">
+    <Filter Include="02.DirectX\02.Resource\01.Vertex\00.VertexData">
       <UniqueIdentifier>{2a9ca916-dde8-45cb-aeb5-fc077101b346}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

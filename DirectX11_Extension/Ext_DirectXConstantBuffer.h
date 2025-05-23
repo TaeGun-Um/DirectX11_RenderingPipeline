@@ -31,12 +31,15 @@ public:
 		return NewIndexBuffer;
 	}
 
-	COMPTR<ID3D11Buffer>& GetConstantBuffer() { return ConstantBuffer; }
-
 	void ChangeData(const void* _Data, UINT _Size);
 	void VSSetting(UINT _Slot);
 	void PSSetting(UINT _Slot);
 	void CSSetting(UINT _Slot);
+
+
+	// Getter, Setter
+	COMPTR<ID3D11Buffer>& GetConstantBuffer() { return ConstantBuffer; }
+	UINT GetBufferSize() { return ConstantBufferInfo.ByteWidth; }
 
 protected:
 	

@@ -28,8 +28,8 @@ void TransformData::CalculateWorldMatrix()
 
 void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
 {
-    ViewMatirx = _View;
-    ProjectionMatirx = _Projection;
-    WorldViewMatirx = WorldMatrix * ViewMatirx;
-    WorldViewProjectionMatrix = WorldMatrix * ViewMatirx * ProjectionMatirx;
+    ViewMatrix = _View;
+    ProjectionMatrix = _Projection;
+    WorldViewMatrix = WorldMatrix * ViewMatrix;
+    WorldViewProjectionMatrix = WorldMatrix * ViewMatrix * ProjectionMatrix;
 }

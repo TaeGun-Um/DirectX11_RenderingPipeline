@@ -11,7 +11,6 @@ public:
 	Ext_DirectXResourceLoader& operator=(Ext_DirectXResourceLoader&& _Other) noexcept = delete;
 
 	static void Initialize();
-	static COMPTR<ID3D11InputLayout> InputLayOut;
 
 protected:
 	

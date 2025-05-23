@@ -172,6 +172,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ext_DirectXBufferSetter.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_Actor.cpp">
       <SubType>
       </SubType>
@@ -209,6 +213,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_DirectXInputLayout.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_DirectXMesh.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXMaterial.cpp">
       <SubType>
       </SubType>
@@ -238,7 +250,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Ext_DirectXInputLayout.cpp">
+    <ClCompile Include="Ext_DirectXVertexData.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -251,6 +263,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Ext_MeshComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_MeshComponentUnit.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -280,6 +296,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ext_DirectXBufferSetter.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_Actor.h">
       <SubType>
       </SubType>
@@ -319,6 +339,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_DirectXInputLayout.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_DirectXMesh.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_DirectXMaterial.h">
       <SubType>
       </SubType>
@@ -348,7 +376,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Ext_DirectXInputLayout.h">
+    <ClInclude Include="Ext_DirectXVertexData.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -361,6 +389,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_MeshComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_MeshComponentUnit.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -110,94 +110,94 @@ void Ext_Scene::Rendering(float _DeltaTime)
 
 void Ext_Scene::RenderTest()
 {
-	// 1. 메인 렌더 타겟 가져오기
-	std::shared_ptr<Ext_DirectXRenderTarget> MainRenderTarget = Ext_DirectXDevice::GetMainRenderTarget();
+	//// 1. 메인 렌더 타겟 가져오기
+	//std::shared_ptr<Ext_DirectXRenderTarget> MainRenderTarget = Ext_DirectXDevice::GetMainRenderTarget();
 
-	// 2. 렌더 타겟 및 뷰포트 바인딩
-	COMPTR<ID3D11RenderTargetView> RTV = MainRenderTarget->GetTexture(0)->GetRTV();
-	COMPTR<ID3D11DepthStencilView> DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
-	D3D11_VIEWPORT* ViewPort = MainRenderTarget->GetViewPort(0);
+	//// 2. 렌더 타겟 및 뷰포트 바인딩
+	//COMPTR<ID3D11RenderTargetView> RTV = MainRenderTarget->GetTexture(0)->GetRTV();
+	//COMPTR<ID3D11DepthStencilView> DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
+	//D3D11_VIEWPORT* ViewPort = MainRenderTarget->GetViewPort(0);
 
-	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
-	Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
+	//// Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
+	//// Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
 
-	// 3. 렌더 타겟 및 뎁스 클리어
-	float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파란색
-	Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
-	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//// 3. 렌더 타겟 및 뎁스 클리어
+	//float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파란색
+	//// Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
+	//// Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	// 4. ==========렌더링==============
-	std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Rect");
-	std::shared_ptr<Ext_DirectXIndexBuffer> IB = Ext_DirectXIndexBuffer::Find("Rect");
-	COMPTR<ID3D11Buffer>& VertexBuffer = VB->GetVertexBuffer();
-	UINT stride = VB->GetVertexSize();
-	UINT Offset = 0;
+	//// 4. ==========렌더링==============
+	//std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Rect");
+	//std::shared_ptr<Ext_DirectXIndexBuffer> IB = Ext_DirectXIndexBuffer::Find("Rect");
+	//COMPTR<ID3D11Buffer>& VertexBuffer = VB->GetVertexBuffer();
+	//UINT stride = VB->GetVertexSize();
+	//UINT Offset = 0;
 
-	assert(VB != nullptr && "Rect VB가 없습니다.");
-	assert(IB != nullptr && "Rect IB가 없습니다.");
+	//assert(VB != nullptr && "Rect VB가 없습니다.");
+	//assert(IB != nullptr && "Rect IB가 없습니다.");
 
-	Setter CBTransformSetter;
+	//Setter CBTransformSetter;
 
-	// 상수 버퍼에서 "TRANSFORMDATA" 찾기
-	auto Range = Ext_DirectXShader::ConstantBufferSetters.equal_range("TRANSFORMDATA");
-	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
-	{
-		CBTransformSetter = Iter->second;
-		break; // 첫 번째만 사용
-	}
+	//// 상수 버퍼에서 "TRANSFORMDATA" 찾기
+	//auto Range = Ext_DirectXShader::ConstantBufferSetters.equal_range("TRANSFORMDATA");
+	//for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	//{
+	//	CBTransformSetter = Iter->second;
+	//	break; // 첫 번째만 사용
+	//}
 
-	// CBTransform 구조체 채우기
-	CBTransform TransformData;
+	//// CBTransform 구조체 채우기
+	//CBTransform TransformData;
 
-	for (auto& [Key, ActorList] : Actors)
-	{
-		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
-		{
-			if (false == CurActor->GetIsDeath())
-			{
-				if ("RectActor" == CurActor->GetName())
-				{
-					TransformData.WorldMatrix = CurActor->GetTransform()->GetWorldMatrix();
-					float4 Temp = CurActor->GetTransform()->GetWorldPosition();
-				}
-			}
-		}
-	}
+	//for (auto& [Key, ActorList] : Actors)
+	//{
+	//	for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
+	//	{
+	//		if (false == CurActor->GetIsDeath())
+	//		{
+	//			if ("RectActor" == CurActor->GetName())
+	//			{
+	//				TransformData.WorldMatrix = CurActor->GetTransform()->GetWorldMatrix();
+	//				float4 Temp = CurActor->GetTransform()->GetWorldPosition();
+	//			}
+	//		}
+	//	}
+	//}
 
 
-	TransformData.ViewMatrix = MainCamera->GetViewMatrix();
-	TransformData.ProjectionMatrix = MainCamera->GetProjectionMatrix();
+	//TransformData.ViewMatrix = MainCamera->GetViewMatrix();
+	//TransformData.ProjectionMatrix = MainCamera->GetProjectionMatrix();
 
-	TransformData.WorldMatrix.Transpose();
-	TransformData.ViewMatrix.Transpose();
-	TransformData.ProjectionMatrix.Transpose();
+	//TransformData.WorldMatrix.Transpose();
+	//TransformData.ViewMatrix.Transpose();
+	//TransformData.ProjectionMatrix.Transpose();
 
-	// GPU 상수 버퍼에 데이터 업데이트
-	ID3D11Buffer* Buffer = CBTransformSetter.Res->GetConstantBuffer().Get(); // 버퍼 포인터 획득
+	//// GPU 상수 버퍼에 데이터 업데이트
+	//ID3D11Buffer* Buffer = CBTransformSetter.Res->GetConstantBuffer().Get(); // 버퍼 포인터 획득
 
-	// GPU 상수 버퍼에 업데이트
-	D3D11_MAPPED_SUBRESOURCE Mapped = {};
-	Ext_DirectXDevice::GetContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &Mapped);
-	memcpy(Mapped.pData, &TransformData, sizeof(CBTransform));
-	Ext_DirectXDevice::GetContext()->Unmap(Buffer, 0);
-	CBTransformSetter.Res->VSSetting(0); // ? 바인딩
-	CBTransformSetter.Res->PSSetting(0); // ? 바인딩
+	//// GPU 상수 버퍼에 업데이트
+	//D3D11_MAPPED_SUBRESOURCE Mapped = {};
+	//Ext_DirectXDevice::GetContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &Mapped);
+	//memcpy(Mapped.pData, &TransformData, sizeof(CBTransform));
+	//Ext_DirectXDevice::GetContext()->Unmap(Buffer, 0);
+	//CBTransformSetter.Res->VSSetting(0); // ? 바인딩
+	//CBTransformSetter.Res->PSSetting(0); // ? 바인딩
 
-	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &Offset);
-	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	//Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &Offset);
+	//Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IB->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::InputLayOut);
+	//Ext_DirectXDevice::GetContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	////Ext_DirectXDevice::GetContext()->IASetInputLayout(Ext_DirectXResourceLoader::InputLayOut);
 
-	std::shared_ptr<Ext_DirectXVertexShader> VS = Ext_DirectXVertexShader::Find("Basic_VS");
-	std::shared_ptr<Ext_DirectXPixelShader> PS = Ext_DirectXPixelShader::Find("Basic_PS");
+	//std::shared_ptr<Ext_DirectXVertexShader> VS = Ext_DirectXVertexShader::Find("Basic_VS");
+	//std::shared_ptr<Ext_DirectXPixelShader> PS = Ext_DirectXPixelShader::Find("Basic_PS");
 
-	Ext_DirectXDevice::GetContext()->VSSetShader(VS->GetVertexShader(), nullptr, 0);
-	// Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(0, 1, &Buffer);
-	Ext_DirectXDevice::GetContext()->PSSetShader(PS->GetPixelShader(), nullptr, 0);
+	//Ext_DirectXDevice::GetContext()->VSSetShader(VS->GetVertexShader(), nullptr, 0);
+	//Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(0, 1, &Buffer);
+	//Ext_DirectXDevice::GetContext()->PSSetShader(PS->GetPixelShader(), nullptr, 0);
 
-	Ext_DirectXDevice::GetContext()->DrawIndexed(IB->GetVertexCount(), 0, 0);
+	//Ext_DirectXDevice::GetContext()->DrawIndexed(IB->GetVertexCount(), 0, 0);
 
-	// 5. 화면 출력
-	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
+	//// 5. 화면 출력
+	//Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
 }

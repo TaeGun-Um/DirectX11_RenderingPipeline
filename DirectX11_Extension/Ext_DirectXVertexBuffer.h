@@ -1,6 +1,5 @@
 #pragma once
 #include "Ext_ResourceManager.h"
-#include "Ext_DirectXInputLayout.h"
 
 // 버텍스 버퍼(Vertex Buffer) 생성을 위한 클래스
 class Ext_DirectXVertexBuffer : public Ext_ResourceManager<Ext_DirectXVertexBuffer>
@@ -21,28 +20,32 @@ public:
 	static std::shared_ptr<Ext_DirectXVertexBuffer> CreateVertexBuffer(std::string_view _Name, const std::vector<VertexLayout>& _Vertexs)
 	{
 		std::shared_ptr<Ext_DirectXVertexBuffer> NewVertexBuffer = Ext_ResourceManager::CreateNameResource(_Name);
-		NewVertexBuffer->InputLayout = &VertexLayout::GetInputLayoutData();
+		NewVertexBuffer->InputLayout = std::shared_ptr<InputLayoutData>(&VertexLayout::GetInputLayoutData(), [](InputLayoutData*) {});
 		NewVertexBuffer->CreateVertexBuffer(&_Vertexs[0], sizeof(VertexLayout), static_cast<UINT>(_Vertexs.size()));
 
 		return NewVertexBuffer;
 	}
 
+	void VertexBufferSetting();
+
 	// Getter
+	std::shared_ptr<class InputLayoutData> GetInputLayout() { return InputLayout; }
 	COMPTR<ID3D11Buffer>& GetVertexBuffer() { return VertexBuffer; }
 	UINT GetVertexSize() { return VertexSize; }
 	UINT GetVertexCount() { return VertexCount; }
+	UINT GetBufferSize() { return VertexBufferInfo.ByteWidth; }
 
 protected:
 	
 private:
 	void CreateVertexBuffer(const void* _Data, UINT _VertexSize, UINT _VertexCount); // Vertex Buffer 생성 및 저장
-
-	InputLayoutData* InputLayout = nullptr;			     // 생성된 입력 레이아웃 정보 저장용
+	std::shared_ptr<class InputLayoutData> InputLayout = nullptr;			     // 생성된 입력 레이아웃 정보 저장용
 	D3D11_BUFFER_DESC VertexBufferInfo = { 0, };  // 버텍스 버퍼 DESC 저장용
 	COMPTR<ID3D11Buffer> VertexBuffer = nullptr;   // 버텍스 버퍼 인터페이스 저장용
 	UINT VertexSize = 0;											 // 버텍스 사이즈
 	UINT VertexCount = 0;										 // 버텍스 갯수
 	
+	UINT Offset = 0;
 };
 // [ID3D11Buffer]
 // 버퍼 리소스를 나타내는 인터페이스

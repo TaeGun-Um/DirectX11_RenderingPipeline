@@ -4,6 +4,7 @@
 
 Ext_DirectXComputeShader::Ext_DirectXComputeShader()
 {
+	Type = ShaderType::Compute;
 }
 
 Ext_DirectXComputeShader::~Ext_DirectXComputeShader()

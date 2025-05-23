@@ -4,6 +4,7 @@
 
 Ext_DirectXVertexShader::Ext_DirectXVertexShader()
 {
+	Type = ShaderType::Vertex;
 }
 
 Ext_DirectXVertexShader::~Ext_DirectXVertexShader()

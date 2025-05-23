@@ -30,6 +30,7 @@ public:
 	// Getter, Setter
 	int GetWidth() {	return Desc.Width; }
 	int GetHeight() { return Desc.Height; }
+	size_t GetRTVSize() {	return RTVs.size(); } // ·»´õÅ¸°Ùºä Å¬¸®¾î¿ë
 	float4 GetScale() {	return float4(static_cast<float>(Desc.Width), static_cast<float>(Desc.Height)); }
 	COMPTR<ID3D11Texture2D>& GetTexture2D() { return Texture2D; }
 	COMPTR<ID3D11RenderTargetView>& GetRTV(size_t _Index = 0) { return RTVs[_Index]; }

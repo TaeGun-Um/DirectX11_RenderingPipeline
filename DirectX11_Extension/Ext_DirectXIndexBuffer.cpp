@@ -41,3 +41,14 @@ void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSiz
 		MsgAssert("버텍스 버퍼 생성에 실패했습니다.");
 	}
 }
+
+void Ext_DirectXIndexBuffer::IndexBufferSetting()
+{
+	if (nullptr == IndexBuffer)
+	{
+		MsgAssert("ID3DBuffer가 만들어지지 않은 버텍스 버퍼 입니다.");
+		return;
+	}
+
+	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IndexBuffer.Get(), Format, Offset);
+}

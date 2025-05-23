@@ -3,8 +3,12 @@
 
 #include <DirectX11_Base/Base_Windows.h>
 
+#include "Ext_DirectXDevice.h"
+#include "Ext_DirectXRenderTarget.h"
 #include "Ext_Transform.h"
 #include "Ext_MeshComponent.h"
+#include "Ext_MeshComponentUnit.h"
+#include "Ext_DirectXMaterial.h"
 
 Ext_Camera::Ext_Camera()
 {
@@ -12,19 +16,6 @@ Ext_Camera::Ext_Camera()
 
 Ext_Camera::~Ext_Camera()
 {
-}
-
-void Ext_Camera::Start()
-{
-	ViewPortData.TopLeftX = 0;
-	ViewPortData.TopLeftY = 0;
-	ViewPortData.Width = Base_Windows::GetScreenSize().x;
-	ViewPortData.Height = Base_Windows::GetScreenSize().y;
-	ViewPortData.MinDepth = 0.0f;
-	ViewPortData.MaxDepth = 1.0f;
-
-	Width = ViewPortData.Width;
-	Height = ViewPortData.Height;
 }
 
 // 현재 카메라 기준 뷰, 프로젝션, 뷰포트 세팅
@@ -56,6 +47,30 @@ void Ext_Camera::CameraTransformUpdate()
 	ViewPortMatrix.ViewPort(Width, Height, 0.0f, 0.0f);
 }
 
+// MeshComponents에 생성된 MeshComponent 넣기
+void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshComponent)
+{
+	if (nullptr == _MeshComponent)
+	{
+		MsgAssert("MeshComponent가 nullptr 입니다");
+		return;
+	}
+
+	_MeshComponent->SetOwnerCamera(GetSharedFromThis<Ext_Camera>());
+	MeshComponents[GetOrder()].push_back(_MeshComponent);
+}
+
+// 생성된 MeshComponentUnit을 카메라의 MeshComponentUnits에 넣기
+void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _Unit, RenderPath _Path /*= RenderPath::None*/)
+{
+	int Order = _Unit->GetOwnerMeshComponent().lock()->GetOrder();
+	// RenderPath Path = _Unit->GetMaterial()->GetPixelShader()->GetRenderPath();
+	MeshComponentUnits[_Path][Order].push_back(_Unit);
+
+	// 여기서 동적, 정적으로 나눌 수도 있다.
+}
+
+// 뷰, 프로젝션행렬을 MeshComponent의 Transform에 적용
 void Ext_Camera::MeshComponentTransformUpdate(std::shared_ptr<Ext_Camera> _Camera)
 {
 	if (nullptr == _Camera)
@@ -67,14 +82,30 @@ void Ext_Camera::MeshComponentTransformUpdate(std::shared_ptr<Ext_Camera> _Camer
 	GetTransform()->SetCameraMatrix(_Camera->GetViewMatrix(), _Camera->GetProjectionMatrix());
 }
 
-// 카메라의 MeshComponents들에 대한 업데이트
+void Ext_Camera::ViewPortSetting()
+{
+	Ext_DirectXDevice::GetContext()->RSSetViewports(1, &ViewPortData);
+}
+
+void Ext_Camera::Start()
+{
+	ViewPortData.TopLeftX = 0;
+	ViewPortData.TopLeftY = 0;
+	ViewPortData.Width = Base_Windows::GetScreenSize().x;
+	ViewPortData.Height = Base_Windows::GetScreenSize().y;
+	ViewPortData.MinDepth = 0.0f;
+	ViewPortData.MaxDepth = 1.0f;
+
+	Width = ViewPortData.Width;
+	Height = ViewPortData.Height;
+}
+
+// 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	// 1. 렌더 타겟(백버퍼) Clear(), Ext_RenderTarget에서 실시
-	// Ext_Device::GetContext()->ClearRenderTargetView(RTV, Color[i].Arr1D);
-	// Ext_Device::GetContext()->ClearDepthStencilView(DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetClear(); // [1] 메인 렌더 타겟(백 버퍼) Clear 실시, 렌더타겟뷰와 뎁스스텐실뷰를 클리어한다.
 
-	// 2. MeshComponents 렌더링 업데이트
+	// MeshComponents 렌더링 업데이트 시작
 	for (auto& [Key, MeshComponentList] : MeshComponents)
 	{
 		// [!] 필요하면 ZSort 실시(나중에)
@@ -84,33 +115,52 @@ void Ext_Camera::Rendering(float _Deltatime)
 			if (!CurMeshComponent->GetIsUpdate()) continue;
 			else
 			{
-				// 3. 현재 메시에게 카메라의 View, Projection 곱해주기
-				MeshComponentTransformUpdate(GetSharedFromThis<Ext_Camera>());
-				// 4. BaseValue 업데이트(나중에 픽셀 셰이더에 쓸거면 활용)
+				MeshComponentTransformUpdate(GetSharedFromThis<Ext_Camera>()); // [2] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
+				// [!] 필요하면 픽셀 셰이더에서 활용할 Value들 업데이트
 			}
 		}
+
 	}
 
-	// 렌더 유닛들 순회, 렌더러는 렌더유닛이 있다.
+	// 컴포넌트 메시의 유닛들 순회
+	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
 	{
-		// 5. 렌더 타겟 세팅, Ext_RenderTarget에서 실시
-		//ID3D11RenderTargetView** RTV = &RTVs[0];
-		
-		//if (nullptr == RTV)
-		//{
-		//	MsgAssert("랜더타겟 뷰가 존재하지 않아서 클리어가 불가능합니다.");
-		//}
-		
-		//ID3D11DepthStencilView* DSV = DepthTexture != nullptr ? DepthTexture->GetDSV() : nullptr;
-		
-		//if (false == DepthSetting)
-		//{
-		//	DSV = nullptr;
-		//}
-		
-		//Ext_Device::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV, DSV);
-		//Ext_Device::GetContext()->RSSetViewports(static_cast<UINT>(ViewPortDatas.size()), &ViewPortDatas[0]);
+		switch (RenderPathKey)
+		{
+		case RenderPath::Forward:
+		{
 
+			break;
+		}
+		case RenderPath::Deferred:
+		{
+
+			break;
+		}
+		case RenderPath::Alpha:
+		{
+
+			break;
+		}
+		case RenderPath::Unknown:
+		{
+			Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // [3] 메인 렌더 타겟 세팅(백 버퍼) Setting 실시
+			break;
+		}
+		default:
+		{
+			MsgAssert("what?");
+			break;
+		}
+		}
+
+		for (auto& [IndexKey, UnitList] : UnitMap)
+		{
+			for (auto& Unit : UnitList)
+			{
+				Unit->Rendering(_Deltatime); // 예시
+			}
+		}
 
 		// 6. MeshComponents의 Render(_Deltatime); 호출
 		// <<하는것>>
@@ -130,26 +180,11 @@ void Ext_Camera::Rendering(float _Deltatime)
 		// 렌더유닛에서 실시
 		// 	UINT IndexCount = Mesh->IndexBufferPtr->GetIndexCount();
 		// GameEngineDevice::GetContext()->DrawIndexed(IndexCount, 0, 0);
-
 	}
+
 	// 끝
-
-
-
+	Ext_DirectXDevice::GetSwapChain()->Present(1, 0);
 }
-
-void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshComponent)
-{
-	if (nullptr == _MeshComponent)
-	{
-		MsgAssert("MeshComponent가 nullptr 입니다");
-		return;
-	}
-
-	_MeshComponent->SetOwnerCamera(GetSharedFromThis<Ext_Camera>());
-	MeshComponents[GetOrder()].push_back(_MeshComponent);
-}
-
 
 
 

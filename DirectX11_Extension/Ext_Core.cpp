@@ -7,10 +7,6 @@
 #include "Ext_DirectXDevice.h"
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXResourceLoader.h"
-
-#include "Ext_DirectXInputLayout.h"
-#include "Ext_DirectXVertexBuffer.h"
-#include "Ext_DirectXIndexBuffer.h"
 #include "Ext_Camera.h"
 
 std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
@@ -35,7 +31,7 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 	// After Create Window, EngineStart
 	Ext_DirectXDevice::Initialize(); // 디바이스, 컨텍스트, 스왑체인, 렌더타겟 생성
 	Ext_DirectXResourceLoader::Initialize(); // DirectX에 활용할 리소스 생성
-	
+
 	if (nullptr == _ContentsCoreStart)
 	{
 		MsgAssert("Contents_Core Start is nullptr");

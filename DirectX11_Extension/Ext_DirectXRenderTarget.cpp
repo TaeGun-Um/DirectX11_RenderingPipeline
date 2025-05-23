@@ -1,5 +1,6 @@
 #include "PrecompileHeader.h"
 #include "Ext_DirectXRenderTarget.h"
+#include "Ext_DirectXDevice.h"
 
 // View를 기반으로 렌더타겟 생성
 void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color)
@@ -25,10 +26,13 @@ void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXText
 	Textures.push_back(_Texture); // Ext_DirectXTexture 저장
 	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT 저장
 	
+	RTVs.push_back(_Texture->GetRTV());
+	
 	//SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView 저장
 	//RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView 저장
 }
 
+// 뎁스텍스쳐 생성(기본 형식)
 void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)
 {
 	D3D11_TEXTURE2D_DESC Desc = { 0, };
@@ -61,3 +65,63 @@ void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)
 	// 위의 두 가지 목적을 위하여 생성한다.
 }
 
+// Textures에 저장된 렌더 타겟 뷰들을 모두 클리어
+void Ext_DirectXRenderTarget::RenderTargetViewsClear()
+{
+	for (size_t i = 0; i < Textures.size(); i++)
+	{
+		for (size_t j = 0; j < Textures[i]->GetRTVSize(); j++)
+		{
+			COMPTR<ID3D11RenderTargetView> RTV = Textures[i]->GetRTV(j);
+
+			if (nullptr == RTV)
+			{
+				MsgAssert("존재하지 않는 랜더타겟뷰를 클리어할 수는 없음");
+				return;
+			}
+
+			Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), Colors[i].Arr1D); // 기본 컬러(파란색)으로 클리어
+		}
+	}
+}
+
+// 뎁스스텐실뷰 클리어
+void Ext_DirectXRenderTarget::DepthStencilViewClear()
+{
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
+
+	if (nullptr == DSV)
+	{
+		MsgAssert("존재하지 않는 뎁스스텐실뷰를 클리어할 수는 없음");
+		return;
+	}
+
+	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
+// 렌더타겟뷰, 뎁스스텐실뷰 클리어
+void Ext_DirectXRenderTarget::RenderTargetClear()
+{
+	RenderTargetViewsClear();
+	DepthStencilViewClear();
+}
+
+void Ext_DirectXRenderTarget::RenderTargetSetting()
+{
+	COMPTR<ID3D11RenderTargetView> RTV = Textures[0]->GetRTV(0);
+
+	if (nullptr == RTV)
+	{
+		MsgAssert("랜더타겟 뷰가 존재하지 않아서 클리어가 불가능합니다.");
+	}
+
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
+
+	//if (false == DepthSetting)
+	//{
+	//	DSV = nullptr;
+	//}
+
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get());
+	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]);
+}

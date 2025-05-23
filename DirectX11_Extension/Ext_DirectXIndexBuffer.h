@@ -25,9 +25,12 @@ public:
 		return NewIndexBuffer;
 	}
 
+	void IndexBufferSetting();
+
 	COMPTR<ID3D11Buffer>& GetIndexBuffer() { return IndexBuffer; }
 	UINT GetVertexSize() { return VertexSize; }
 	UINT GetVertexCount() { return VertexCount; }
+	UINT GetBufferSize() { return IndexBufferInfo.ByteWidth; }
 
 protected:
 	
@@ -40,4 +43,5 @@ private:
 	UINT VertexCount = 0;										// 버텍스 갯수
 	DXGI_FORMAT Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
 
+	UINT Offset = 0;
 };

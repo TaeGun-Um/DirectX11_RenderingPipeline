@@ -42,3 +42,14 @@ void Ext_DirectXVertexBuffer::CreateVertexBuffer(const void* _Data, UINT _Vertex
 	/*2. D3D11_SUBRESOURCE_DATA 전달*/
 	/*3. ID3D11Buffer 전달*/
 }
+
+void Ext_DirectXVertexBuffer::VertexBufferSetting()
+{
+	if (nullptr == VertexBuffer)
+	{
+		MsgAssert("버텍스 버퍼가 없어 세팅 불가");
+		return;
+	}
+
+	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &VertexSize, &Offset);
+}

@@ -1,8 +1,21 @@
 cbuffer TransformData : register(b0)
 {
+    float4 Scale;
+    float4 Rotation;
+    float4 Quaternion;
+    float4 Position;
+
+    float4x4 ScaleMatrix;
+    float4x4 RotationMatrix;
+    float4x4 PositionMatrix;
     float4x4 WorldMatrix;
+
     float4x4 ViewMatrix;
     float4x4 ProjectionMatrix;
+    float4x4 ViewPortMatrix;
+
+    float4x4 WorldViewMatrix;
+    float4x4 WorldViewProjectionMatrix;
 }
 
 struct VSInput

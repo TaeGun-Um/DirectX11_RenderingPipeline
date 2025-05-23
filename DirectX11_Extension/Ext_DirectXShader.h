@@ -1,20 +1,8 @@
 #pragma once
-
-// 임시
-struct Setter
-{
-	std::string Name;
-	// class GameEngineShader* ParentShader;
-	int BindPoint = -1; // b0 t0 같은 몇번째 슬롯에 세팅되어야 하는지에 대한 정보.
-	std::shared_ptr<class Ext_DirectXConstantBuffer> Res;
-	const void* CPUData;
-	UINT CPUDataSize;
-
-	void Setting();
-};
+#include "Ext_DirectXBufferSetter.h"
 
 // DirectX의 셰이더 컴파일 담당
-class Ext_DirectXShader
+class Ext_DirectXShader : public std::enable_shared_from_this<Ext_DirectXShader>
 {
 public:
 	// constrcuter destructer
@@ -29,13 +17,21 @@ public:
 
 	static void ShaderAutoCompile(std::string_view _Path, std::string_view _EntryPoint);
 
+	// this 가져오기
+	template<typename Type>
+	std::shared_ptr<Type> GetSharedFromThis()
+	{
+		return std::dynamic_pointer_cast<Type>(shared_from_this());
+	}
 
-	static std::multimap<std::string, Setter> ConstantBufferSetters; // 임시
+	Ext_DirectXBufferSetter& GetBufferSetter() { return BufferSetter; }
+	ShaderType GetType() { return Type; }
+
 	COMPTR<ID3DBlob>& GetBinaryCode() { return BinaryCode; } // 임시
 
 protected:
 	void CreateVersion(std::string_view _ShaderType, UINT _VersionHigt /*= 5*/, UINT _VersionLow /*= 0*/);
-	void ShaderResourceSetting();
+	void ShaderResourceSetting(); // 상수 버퍼 세팅
 
 	COMPTR<ID3DBlob> BinaryCode = nullptr; // ID3DBlob 정보 저장
 	std::string Version = ""; // 셰이더 버전 저장
@@ -44,6 +40,7 @@ protected:
 
 private:
 	static ShaderType FindShaderType(std::string_view _EntryPoint);
+	Ext_DirectXBufferSetter BufferSetter;
 
 };
 // [ID3DBlob]

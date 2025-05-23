@@ -4,6 +4,7 @@
 
 Ext_DirectXPixelShader::Ext_DirectXPixelShader()
 {
+	Type = ShaderType::Pixel;
 }
 
 Ext_DirectXPixelShader::~Ext_DirectXPixelShader()

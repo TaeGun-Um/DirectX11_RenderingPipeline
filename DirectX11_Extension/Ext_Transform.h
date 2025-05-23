@@ -19,13 +19,12 @@ struct TransformData
 	float4x4 RotationMatrix;
 	float4x4 PositionMatrix;
 	float4x4 WorldMatrix;
-	float4x4 LocalMatrix;
 
-	float4x4 ViewMatirx;
-	float4x4 ProjectionMatirx;
-	float4x4 ViewPortMatirx;
+	float4x4 ViewMatrix;
+	float4x4 ProjectionMatrix;
+	float4x4 ViewPortMatrix;
 
-	float4x4 WorldViewMatirx;
+	float4x4 WorldViewMatrix;
 	float4x4 WorldViewProjectionMatrix;
 	
 	//float4 LocalScale;

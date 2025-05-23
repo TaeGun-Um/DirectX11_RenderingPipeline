@@ -26,6 +26,8 @@ public:
 	}
 
 	void CreateDepthTexture(int _Index = 0);
+	void RenderTargetClear(); // 렌더타겟뷰, 뎁스스텐실뷰 클리어
+	void RenderTargetSetting(); // 
 
 	// Getter, Setter
 	std::shared_ptr<Ext_DirectXTexture> GetTexture(int _Index) { return Textures[_Index]; }
@@ -36,11 +38,14 @@ protected:
 	
 private:
 	void CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
+	void RenderTargetViewsClear(); // Textures에 저장된 렌더타겟뷰들을 모두 클리어
+	void DepthStencilViewClear(); // 뎁스스텐실뷰 클리어
 
 	std::vector<float4> Colors; // 생성된 렌더타겟 색상 저장
 	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(생성 주체) 포인터 저장 컨테이너
 	std::shared_ptr<Ext_DirectXTexture> DepthTexture = {};
 	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // 생성 주체의 ViewPort 정보 저장 컨테이너
+	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // 렌더타겟뷰들 저장
 
 	// std::vector<ID3D11RenderTargetView*> RTVs = {}; // 생성 주체의 렌더타겟뷰 정보 저장 컨테이너
 	// std::vector<ID3D11ShaderResourceView*> SRVs = {}; // 생성 주체의 셰이더리소스뷰 정보 저장 컨테이너

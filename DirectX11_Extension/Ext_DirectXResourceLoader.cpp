@@ -3,45 +3,36 @@
 
 #include <DirectX11_Base/Base_Directory.h>
 
-#include "Ext_DirectXInputLayout.h"
+#include "Ext_DirectXVertexData.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
+#include "Ext_DirectXMesh.h"
 #include "Ext_DirectXShader.h"
-
-#include "Ext_DirectXDevice.h" // 임시
-#include "Ext_DirectXVertexShader.h" // 임시
-#include <d3dcompiler.h> // 임시
-#include <D3D11Shader.h>  // 임시
-#pragma comment(lib, "d3d11.lib")  // 임시
-#pragma comment(lib, "d3dcompiler")  // 임시
-#pragma comment(lib, "dxguid")  // 임시
-#pragma comment(lib, "DXGI")  // 임시
-
-COMPTR<ID3D11InputLayout> Ext_DirectXResourceLoader::InputLayOut; // 임시
+#include "Ext_DirectXMaterial.h"
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
 {
-	MakeVertex(); // Ext_DirectXInputLayout 클래스의 InputLayoutElement에 SemanticName, Format 결정
+	MakeVertex(); // Ext_DirectXVertexData 클래스의 InputLayoutElement에 SemanticName, Format 결정
 	MakeSampler();
 	MakeBlend();
 	MakeDepth();
-	ShaderCompile();
 	MakeRasterizer();
-	MakeMaterial();
+	ShaderCompile(); // 셰이더 컴파일 후 상수버퍼 생성
+	MakeMaterial(); // 머티리얼(파이프라인) 생성
 }
 
 // 정점 정보 생성(InputLayout, VertexBuffer, IndexBuffer)
 void Ext_DirectXResourceLoader::MakeVertex() 
 {
-	Ext_DirectXInputLayout::GetInputLayoutData().AddInputLayoutDesc("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	Ext_DirectXInputLayout::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	// Ext_DirectXInputLayout::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	// Ext_DirectXInputLayout::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	// Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	// Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	// 삼각형
 	{
-		std::vector<Ext_DirectXInputLayout> Vertices;
+		std::vector<Ext_DirectXVertexData> Vertices;
 		Vertices.resize(3);
 
 		Vertices[0] = { { 0.0f, 0.5f, 0.0 }, { 1, 0, 0, 1 } };
@@ -52,11 +43,12 @@ void Ext_DirectXResourceLoader::MakeVertex()
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
+		Ext_DirectXMesh::CreateMesh("Triangle");
 	}
 
 	// 기본 메쉬 생성, Rect
 	{
-		std::vector<Ext_DirectXInputLayout> ArrVertex;
+		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
 
 		ArrVertex[0] = { { -0.5f,  0.5f, 0.0f, 1.0f }, { 1, 0, 0, 1 }, /*{ 0.0f, 0.0f }*/ };
@@ -68,6 +60,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
+		Ext_DirectXMesh::CreateMesh("Rect");
 	}
 }
 
@@ -85,21 +78,6 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 		std::string EntryPoint = Dir.FindEntryPoint(ShaderPath);
 		Ext_DirectXShader::ShaderAutoCompile(ShaderPath, EntryPoint.c_str());
 	}
-
-	// CreateInputLayout은 정점 버퍼 구조와 셰이더 입력 구조 간의 매핑을 정의
-	// 일단 생성해야되서 적음, 구조 잡으면서 나중에 옮길 예정
-
-	// Ext_DirectXVertexShader
-	std::shared_ptr<Ext_DirectXVertexShader> VS = Ext_DirectXVertexShader::Find("Basic_VS");
-
-	Ext_DirectXDevice::GetDevice()->CreateInputLayout
-	(
-		Ext_DirectXInputLayout::GetInputLayoutData().GetInputLayoutDescs().data(),
-		static_cast<UINT>(Ext_DirectXInputLayout::GetInputLayoutData().GetInputLayoutDescs().size()),
-		VS->GetBinaryCode()->GetBufferPointer(),
-		VS->GetBinaryCode()->GetBufferSize(),
-		InputLayOut.GetAddressOf()
-	);
 }
 
 void Ext_DirectXResourceLoader::MakeSampler() 
@@ -122,35 +100,13 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 
 }
 
+// 렌더링 파이프라인 생성
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
-
-}
-
-void Setter::Setting()
-{
-	//Res->ChangeData(CPUData, CPUDataSize);
-
-	//// ShaderType Type = ParentShader->GetType();
-
-	//switch (Type)
-	//{
-	//case ShaderType::None:
-	//{
-	//	MsgAssert("어떤 쉐이더에 세팅될지 알수없는 상수버퍼 입니다.");
-	//	break;
-	//}
-	//case ShaderType::Vertex:
-	//{
-	//	Res->VSSetting(BindPoint);
-	//	break;
-	//}
-	//case ShaderType::Pixel:
-	//{
-	//	Res->PSSetting(BindPoint);
-	//	break;
-	//}
-	//default:
-	//	break;
-	//}
+	std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");
+	NewRenderingPipeline->SetVertexShader("Basic_VS");
+	NewRenderingPipeline->SetPixelShader("Basic_PS");
+	// NewRenderingPipeline->SetBlendState("BaseBlend");
+	// NewRenderingPipeline->SetDepthState("EngineDepth");
+	// NewRenderingPipeline->SetRasterizer("Engine2DBase");
 }

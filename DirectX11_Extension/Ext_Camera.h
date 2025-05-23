@@ -8,6 +8,14 @@ enum class SortType
 	UnKnown
 };
 
+enum class RenderPath
+{
+	Forward,
+	Deferred,
+	Alpha,
+	Unknown
+};
+
 // 화면의 렌더링을 담당하는 Actor
 class Ext_Camera : public Ext_Actor
 {
@@ -29,6 +37,7 @@ public:
 	const float4x4& GetViewPortMatrix() { return ViewPortMatrix; }
 
 	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent);
+	void PushMeshComponentUnit(std::shared_ptr<class Ext_MeshComponentUnit> _Unit, RenderPath _Path = RenderPath::Unknown);
 
 protected:
 	void Start() override;
@@ -38,9 +47,11 @@ protected:
 private:
 	void CameraTransformUpdate();
 	void MeshComponentTransformUpdate(std::shared_ptr<Ext_Camera> _Camera);
+	void ViewPortSetting();
 	void Rendering(float _Deltatime);
 
-	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents;
+	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents; // 생성된 메시 컴포넌트들
+	std::map<RenderPath, std::map<int, std::list<std::shared_ptr<class Ext_MeshComponentUnit>>>> MeshComponentUnits; // 생성된 메시 컴포넌트 유닛들
 
 	D3D11_VIEWPORT ViewPortData;
 	CameraType ProjectionType = CameraType::Perspective;
