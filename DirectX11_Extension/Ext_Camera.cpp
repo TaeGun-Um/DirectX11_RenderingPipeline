@@ -156,7 +156,6 @@ void Ext_Camera::Rendering(float _Deltatime)
 		// 1. Resterizer : RasterizerPtr->SetFILL_MODE(FILL_MODE);, GameEngineDevice::GetContext()->RSSetState(CurState);
 		// 2. OutputMerget : GameEngineDevice::GetContext()->OMSetBlendState(State, nullptr, Mask);, 
 		// 3. GameEngineDevice::GetContext()->OMSetDepthStencilState(State, 0);
-		// 4. GameEngineDevice::GetContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SettingResources);, memcpy_s(SettingResources.pData, BufferInfo.ByteWidth, _Data, BufferInfo.ByteWidth);, GameEngineDevice::GetContext()->Unmap(Buffer, 0); »£√‚
 }
 
 

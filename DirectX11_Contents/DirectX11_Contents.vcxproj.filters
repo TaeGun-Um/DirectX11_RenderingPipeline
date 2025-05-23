@@ -48,6 +48,12 @@
     <ClCompile Include="Contents_Core.cpp">
       <Filter>01.Process\00.Core</Filter>
     </ClCompile>
+    <ClCompile Include="CubeActor.cpp">
+      <Filter>02.Object\01.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateFace.cpp">
+      <Filter>02.Object\01.Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrecompileHeader.h">
@@ -67,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="Contents_Core.h">
       <Filter>01.Process\00.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeActor.h">
+      <Filter>02.Object\01.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateFace.h">
+      <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

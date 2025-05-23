@@ -14,8 +14,8 @@ TriangleActor::~TriangleActor()
 
 void TriangleActor::Start()
 {
-	GetTransform()->SetWorldPosition({ -100.f, 0.f, 10.0f });
-	GetTransform()->SetWorldScale({ 100.f, 100.f, 1.f }); // 크기 확대
+	GetTransform()->SetWorldPosition({ 0.f, 0.f, 0.0f });
+	GetTransform()->SetWorldScale({ 50.f, 50.f, 50.f }); // 크기 확대
 	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 	MeshComp->CreateMeshComponentUnit("Triangle", "Basic");
 }

@@ -10,6 +10,10 @@
 #include "Ext_DirectXShader.h"
 #include "Ext_DirectXMaterial.h"
 
+#include "Ext_DirectXDevice.h"// 임시
+
+COMPTR<ID3D11RasterizerState> Ext_DirectXResourceLoader::RasterState; // 임시
+
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
 {
@@ -27,8 +31,8 @@ void Ext_DirectXResourceLoader::MakeVertex()
 {
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	// Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	// Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	// 삼각형
 	{
@@ -39,7 +43,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
 		Vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
 
-		std::vector<UINT> ArrIndex = { 0, 1, 2 };
+		std::vector<UINT> ArrIndex = { 0, 2, 1 };
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
@@ -56,11 +60,108 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		ArrVertex[2] = { { -0.5f, -0.5f, 0.0f, 1.0f }, { 0, 0, 1, 1 }, /*{ 1.0f, 1.0f }*/ };
 		ArrVertex[3] = { {  0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 0, 1 }, /*{ 0.0f, 1.0f }*/ };
 
-		std::vector<UINT> ArrIndex = { 0, 1, 2, 2, 1, 3 };
+		std::vector<UINT> ArrIndex = { 0, 2, 1, 2, 3, 1 };
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
 		Ext_DirectXMesh::CreateMesh("Rect");
+	}
+
+	// 정육면체
+	{
+		std::vector<Ext_DirectXVertexData> Vertex =
+		{
+			// Front (+Z)
+			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {0, 0, 1} },
+			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {0, 0, 1} },
+			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {0, 0, 1} },
+			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {0, 0, 1} },
+
+			// Back (-Z)
+			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {0, 0, -1} },
+			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {0, 0, -1} },
+			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {0, 0, -1} },
+			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {0, 0, -1} },
+
+			// Left (-X)
+			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {-1, 0, 0} },
+			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {-1, 0, 0} },
+			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {-1, 0, 0} },
+			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {-1, 0, 0} },
+
+			// Right (+X)
+			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {1, 0, 0} },
+			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {1, 0, 0} },
+			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {1, 0, 0} },
+			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {1, 0, 0} },
+
+			// Top (+Y)
+			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {0, 1, 0} },
+			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {0, 1, 0} },
+			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {0, 1, 0} },
+			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {0, 1, 0} },
+
+			// Bottom (-Y)
+			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {0, 0}, {0, -1, 0} },
+			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {1, 0}, {0, -1, 0} },
+			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {1, 1}, {0, -1, 0} },
+			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {0, -1, 0} },
+		};
+
+		std::vector<UINT> Index;
+		for (int i = 0; i < 6; ++i)
+		{
+			int Base = i * 4;
+
+			Index.push_back(Base + 0);
+			Index.push_back(Base + 1);
+			Index.push_back(Base + 2);
+
+			Index.push_back(Base + 2);
+			Index.push_back(Base + 3);
+			Index.push_back(Base + 0);
+		}
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Box", Vertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Box", Index);
+		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("Box");
+	}
+
+	// 테스트용
+	{
+		float AngleDeg = 45.0f;
+		float AngleRad = AngleDeg * (3.14159265f / 180.0f);
+
+		float Cos = cosf(AngleRad); // ? 0.7071
+		float Sin = sinf(AngleRad); // ? 0.7071
+
+		auto RotateY = [&](float x, float y, float z)
+			{
+				return float4(
+					x * Cos - z * Sin,
+					y,
+					x * Sin + z * Cos,
+					1.0f
+				);
+			};
+
+		std::vector<Ext_DirectXVertexData> Vertex =
+		{
+			{ RotateY(-0.5f,  0.5f, 0.0f), {1, 0, 0, 1}, {0, 0}, {0, 0, 1} }, // LT
+			{ RotateY(0.5f,  0.5f, 0.0f), {0, 1, 0, 1}, {1, 0}, {0, 0, 1} }, // RT
+			{ RotateY(0.5f, -0.5f, 0.0f), {0, 0, 1, 1}, {1, 1}, {0, 0, 1} }, // RB
+			{ RotateY(-0.5f, -0.5f, 0.0f), {1, 1, 0, 1}, {0, 1}, {0, 0, 1} }, // LB
+		};
+
+		std::vector<UINT> Index =
+		{
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("RotateFace", Vertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("RotateFace", Index);
+		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("RotateFace");
 	}
 }
 
@@ -97,7 +198,11 @@ void Ext_DirectXResourceLoader::MakeDepth()
 
 void Ext_DirectXResourceLoader::MakeRasterizer() 
 {
-
+	D3D11_RASTERIZER_DESC RasterDesc = {};
+	RasterDesc.FillMode = D3D11_FILL_SOLID;
+	RasterDesc.CullMode = D3D11_CULL_NONE;  // 뒷면 제거
+	RasterDesc.FrontCounterClockwise = TRUE; // CCW를 앞면으로 인식
+	Ext_DirectXDevice::GetDevice()->CreateRasterizerState(&RasterDesc, RasterState.GetAddressOf());
 }
 
 // 렌더링 파이프라인 생성

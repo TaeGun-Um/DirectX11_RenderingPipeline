@@ -39,6 +39,21 @@ public:
 		return NewMesh;
 	}
 
+	// 3D Mesh
+	static std::shared_ptr<Ext_DirectXMesh> Create(std::string_view _Name, std::string_view _VBName, std::string_view _IBName)
+	{
+		std::shared_ptr<Ext_DirectXMesh> Res = Ext_ResourceManager::CreateNameResource(_Name);
+		Res->VertexBufferPtr = Ext_DirectXVertexBuffer::Find(_VBName);
+		Res->IndexBufferPtr = Ext_DirectXIndexBuffer::Find(_IBName);
+
+		if ((nullptr == Res->VertexBufferPtr) || (nullptr == Res->IndexBufferPtr))
+		{
+			MsgAssert("매쉬를 만드는데 실패했습니다.");
+		}
+
+		return Res;
+	}
+
 	void MeshSetting();
 
 	// Getter

@@ -3,6 +3,8 @@
 
 #include "TriangleActor.h"
 #include "RectActor.h"
+#include "CubeActor.h"
+#include "RotateFace.h"
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
@@ -22,6 +24,7 @@ void TestScene::Start()
 
 	CreateActor<TriangleActor>("TriangleActor");
 	CreateActor<RectActor>("RectActor");
+	CreateActor<CubeActor>("CubeActor");
 }
 
 void TestScene::Update(float _DeltaTime)

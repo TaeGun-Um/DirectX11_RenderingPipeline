@@ -33,8 +33,8 @@ class Ext_DirectXVertexData
 public:
 	float4 POSITION;
 	float4 COLOR;
-	// float4 TEXCOORD;
-	// float4 NORMAL;
+	float4 TEXCOORD;
+	float4 NORMAL;
 
 	// Getter
 	static InputLayoutData& GetInputLayoutData() { return ILData; }

@@ -12,6 +12,8 @@ public:
 
 	static void Initialize();
 
+	static COMPTR<ID3D11RasterizerState> RasterState; // юс╫ц
+
 protected:
 	
 private:

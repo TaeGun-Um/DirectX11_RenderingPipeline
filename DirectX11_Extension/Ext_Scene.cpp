@@ -102,6 +102,12 @@ void Ext_Scene::Rendering(float _DeltaTime)
 
 		CurCamera->CameraTransformUpdate(); // 뷰, 프로젝션, 뷰포트 matrix 최신화
 		CurCamera->ViewPortSetting();
+
+		// 임시
+		{
+			Ext_DirectXDevice::GetContext()->RSSetState(Ext_DirectXResourceLoader::RasterState);
+		}
+
 		CurCamera->Rendering(_DeltaTime);
 	}
 

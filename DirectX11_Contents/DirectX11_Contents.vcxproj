@@ -172,11 +172,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="CubeActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="RectActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="RotateFace.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -198,6 +206,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="CubeActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <SubType>
       </SubType>
@@ -207,6 +219,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RectActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="RotateFace.cpp">
       <SubType>
       </SubType>
     </ClCompile>

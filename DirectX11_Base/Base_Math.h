@@ -181,8 +181,8 @@ public:
 		return *this;
 	}
 
-	//float4 operator*(const class float4x4& _Other);
-	//float4& operator*=(const class float4x4& _Other);
+	float4 operator*(const class float4x4& _Other);
+	float4& operator*=(const class float4x4& _Other);
 
 	float4 QuaternionToEulerDegree();
 	float4 QuaternionToEulerRadiation();
@@ -199,6 +199,31 @@ public:
 		float4 Result = *this;
 		Result.Normalize();
 		return Result;
+	}
+
+	void RotationXRadiation(float _Rad);
+	void RotationYRadiation(float _Rad);
+	void RotationZRadiation(float _Rad);
+
+	float4 RotationXDegReturn(float _Deg)
+	{
+		float4 ReturnValue = *this;
+		ReturnValue.RotationXRadiation(_Deg * Base_Math::DegreeToRadiation);
+		return ReturnValue;
+	}
+
+	float4 RotationYDegReturn(float _Deg)
+	{
+		float4 ReturnValue = *this;
+		ReturnValue.RotationYRadiation(_Deg * Base_Math::DegreeToRadiation);
+		return ReturnValue;
+	}
+
+	float4 RotationZDegReturn(float _Deg)
+	{
+		float4 ReturnValue = *this;
+		ReturnValue.RotationZRadiation(_Deg * Base_Math::DegreeToRadiation);
+		return ReturnValue;
 	}
 
 private:
@@ -425,6 +450,59 @@ public:
 		//ArrVector[3] = { D0Value, D1Value, D2Value, 0 };
 	}
 
+	void RotationXDeg(const float _Deg)
+	{
+		RotationXRadiation(_Deg * Base_Math::DegreeToRadiation);
+	}
+
+	void RotationXRadiation(const float _Rad)
+	{
+		Identity();
+
+		DirectMatrix = DirectX::XMMatrixRotationX(_Rad);
+
+
+		//Arr2D[1][1] = cosf(_Rad);
+		//Arr2D[1][2] = sinf(_Rad);
+		//Arr2D[2][1] = -sinf(_Rad);
+		//Arr2D[2][2] = cosf(_Rad);
+	}
+
+	void RotationYDeg(const float _Deg)
+	{
+		RotationYRadiation(_Deg * Base_Math::DegreeToRadiation);
+	}
+
+	void RotationYRadiation(const float _Rad)
+	{
+		Identity();
+
+		DirectMatrix = DirectX::XMMatrixRotationY(_Rad);
+
+		//Arr2D[0][0] = cosf(_Rad);
+		//Arr2D[0][2] = -sinf(_Rad);
+		//Arr2D[2][0] = sinf(_Rad);
+		//Arr2D[2][2] = cosf(_Rad);
+	}
+
+	void RotationZDeg(const float _Deg)
+	{
+		RotationZRadiation(_Deg * Base_Math::DegreeToRadiation);
+	}
+
+	void RotationZRadiation(const float _Rad)
+	{
+		Identity();
+
+		DirectMatrix = DirectX::XMMatrixRotationZ(_Rad);
+
+		//Arr2D[0][0] = cosf(_Rad);
+		//Arr2D[0][1] = sinf(_Rad);
+		//Arr2D[1][0] = -sinf(_Rad);
+		//Arr2D[1][1] = cosf(_Rad);
+	}
+
+
 
 
 	//static float4x4 Transformation(float4 _Scale, float4 _RotQ, float4 _Pos)
@@ -624,58 +702,6 @@ public:
 		DirectMatrix = DirectX::XMMatrixRotationRollPitchYaw(Rot.x, Rot.y, Rot.z);
 	}
 
-	void RotationXDeg(const float _Deg)
-	{
-		RotationXRad(_Deg * Base_Math::DegreeToRadiation);
-	}
-
-	void RotationXRad(const float _Rad)
-	{
-		Identity();
-
-		DirectMatrix = DirectX::XMMatrixRotationX(_Rad);
-
-
-		//Arr2D[1][1] = cosf(_Rad);
-		//Arr2D[1][2] = sinf(_Rad);
-		//Arr2D[2][1] = -sinf(_Rad);
-		//Arr2D[2][2] = cosf(_Rad);
-	}
-
-
-	void RotationYDeg(const float _Deg)
-	{
-		RotationYRad(_Deg * Base_Math::DegreeToRadiation);
-	}
-
-	void RotationYRad(const float _Rad)
-	{
-		Identity();
-
-		DirectMatrix = DirectX::XMMatrixRotationY(_Rad);
-
-		//Arr2D[0][0] = cosf(_Rad);
-		//Arr2D[0][2] = -sinf(_Rad);
-		//Arr2D[2][0] = sinf(_Rad);
-		//Arr2D[2][2] = cosf(_Rad);
-	}
-
-	void RotationZDeg(const float _Deg)
-	{
-		RotationZRad(_Deg * Base_Math::DegreeToRadiation);
-	}
-
-	void RotationZRad(const float _Rad)
-	{
-		Identity();
-
-		DirectMatrix = DirectX::XMMatrixRotationZ(_Rad);
-
-		//Arr2D[0][0] = cosf(_Rad);
-		//Arr2D[0][1] = sinf(_Rad);
-		//Arr2D[1][0] = -sinf(_Rad);
-		//Arr2D[1][1] = cosf(_Rad);
-	}
 
 
 	float4x4 operator*(const float4x4& _Other)

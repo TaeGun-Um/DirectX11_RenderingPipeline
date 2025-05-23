@@ -65,3 +65,37 @@ float4 float4::EulerDegreeToQuaternion()
 	Return = DirectX::XMQuaternionRotationRollPitchYawFromVector(Return.DirectVector);
 	return Return;
 }
+
+float4 float4::operator*(const class float4x4& _Other)
+{
+	float4 ReturnValue = DirectX::XMVector4Transform(*this, _Other);
+
+	return ReturnValue;
+}
+
+float4& float4::operator*=(const class float4x4& _Other)
+{
+	DirectVector = DirectX::XMVector4Transform(*this, _Other);;
+	return *this;
+}
+
+void float4::RotationXRadiation(float _Rad)
+{
+	float4x4 Rot;
+	Rot.RotationXRadiation(_Rad);
+	*this = *this * Rot;
+}
+
+void float4::RotationYRadiation(float _Rad)
+{
+	float4x4 Rot;
+	Rot.RotationYRadiation(_Rad);
+	*this = *this * Rot;
+}
+
+void float4::RotationZRadiation(float _Rad)
+{
+	float4x4 Rot;
+	Rot.RotationZRadiation(_Rad);
+	*this = *this * Rot;
+}
