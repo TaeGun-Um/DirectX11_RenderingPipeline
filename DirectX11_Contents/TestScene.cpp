@@ -20,7 +20,7 @@ void TestScene::Start()
 	GetMainCamera()->GetTransform()->SetWorldPosition({ 0.f, 0.f, -100.0f });
 	GetMainCamera()->GetTransform()->SetWorldRotation({ 0.f, 0.f, 0.f }); // Z+ 방향 바라보게
 
-	//CreateActor<TriangleActor>("TriangleActor");
+	CreateActor<TriangleActor>("TriangleActor");
 	CreateActor<RectActor>("RectActor");
 }
 
