@@ -46,7 +46,7 @@ protected:
 	
 private:
 	void CameraTransformUpdate();
-	void MeshComponentTransformUpdate(std::shared_ptr<Ext_Camera> _Camera);
+	void MeshComponentTransformUpdate(std::shared_ptr<Ext_MeshComponent> _MeshComponent);
 	void ViewPortSetting();
 	void Rendering(float _Deltatime);
 

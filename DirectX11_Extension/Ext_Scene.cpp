@@ -101,7 +101,7 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
 
 		CurCamera->CameraTransformUpdate(); // ºä, ÇÁ·ÎÁ§¼Ç, ºäÆ÷Æ® matrix ÃÖ½ÅÈ­
-		// ºäÆ÷Æ® ¼¼ÆÃ ÇØ¾ßÇÔ CurCamera->v();
+		CurCamera->ViewPortSetting();
 		CurCamera->Rendering(_DeltaTime);
 	}
 
@@ -110,6 +110,8 @@ void Ext_Scene::Rendering(float _DeltaTime)
 
 void Ext_Scene::RenderTest()
 {
+	//// 4. ==========·»´õ¸µ==============
+
 	//// 1. ¸ÞÀÎ ·»´õ Å¸°Ù °¡Á®¿À±â
 	//std::shared_ptr<Ext_DirectXRenderTarget> MainRenderTarget = Ext_DirectXDevice::GetMainRenderTarget();
 
@@ -118,13 +120,13 @@ void Ext_Scene::RenderTest()
 	//COMPTR<ID3D11DepthStencilView> DSV = MainRenderTarget->GetDepthTexture()->GetDSV();
 	//D3D11_VIEWPORT* ViewPort = MainRenderTarget->GetViewPort(0);
 
-	//// Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
-	//// Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
+	//Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
+	//Ext_DirectXDevice::GetContext()->RSSetViewports(1, ViewPort);
 
 	//// 3. ·»´õ Å¸°Ù ¹× µª½º Å¬¸®¾î
 	//float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f }; // ÆÄ¶õ»ö
-	//// Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
-	//// Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), ClearColor);
+	//Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//// 4. ==========·»´õ¸µ==============
 	//std::shared_ptr<Ext_DirectXVertexBuffer> VB = Ext_DirectXVertexBuffer::Find("Rect");

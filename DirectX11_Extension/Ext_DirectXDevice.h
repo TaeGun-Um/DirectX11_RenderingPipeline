@@ -22,6 +22,9 @@ public:
 	static COMPTR<IDXGISwapChain>& GetSwapChain() { return SwapChain; };
 	static std::shared_ptr<class Ext_DirectXRenderTarget> GetMainRenderTarget() { return MainRenderTarget; };
 
+	static void RenderStart();
+	static void RenderEnd();
+
 protected:
 	
 private:

@@ -65,6 +65,8 @@ void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 	}
 	memcpy_s(SettingResources.pData, ConstantBufferInfo.ByteWidth, _Data, ConstantBufferInfo.ByteWidth);
 	Ext_DirectXDevice::GetContext()->Unmap(ConstantBuffer, 0);
+
+	int a = 0;
 }
 
 void Ext_DirectXConstantBuffer::VSSetting(UINT _Slot)

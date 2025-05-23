@@ -17,6 +17,7 @@ public:
 
 	// 메시 컴포넌트에 필요한 유닛 생성
 	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material);
+	void MeshComponentTransformUpdate(std::shared_ptr<class Ext_Camera> _Camera);
 
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }

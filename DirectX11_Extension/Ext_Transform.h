@@ -27,23 +27,6 @@ struct TransformData
 	float4x4 WorldViewMatrix;
 	float4x4 WorldViewProjectionMatrix;
 	
-	//float4 LocalScale;
-	//float4 LocalRotation;
-	//float4 LocalQuaternion;
-	//float4 LocalPosition;
-
-	//float4 WorldScale;
-	//float4 WorldRotation;
-	//float4 WorldQuaternion;
-	//float4 WorldPosition;
-
-	//float4x4 LocalWorldMatrix;
-	
-
-	//void WorldCalculation(const TransformData& _Parent, bool AbsoluteScale, bool AbsoluteRotation, bool AbsolutePosition);
-	//void LocalCalculation();
-	//void SetViewAndProjection(const float4x4& _View, const float4x4& _Projection);
-	
 	void CalculateWorldMatrix();
 	void SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection);
 };

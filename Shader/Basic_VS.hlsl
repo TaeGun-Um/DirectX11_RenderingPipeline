@@ -33,9 +33,16 @@ struct VSOut
 VSOut Basic_VS(VSInput _Input)
 {
     VSOut Output;
-    float4 WorldPosition = mul(WorldMatrix, _Input.Position);
-    float4 ViewPosition = mul(ViewMatrix, WorldPosition);
-    Output.Position = mul(ProjectionMatrix, ViewPosition);
+    _Input.Position.w = 1.0f;
+    //Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
+    //Output.Position = mul(_Input.Position, mul(WorldViewProjectionMatrix, ViewPortMatrix));
+    
+    Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
+    
+    //float4 WorldPosition = mul(WorldMatrix, _Input.Position);
+    //float4 ViewPosition = mul(ViewMatrix, WorldPosition);
+    //Output.Position = mul(ProjectionMatrix, ViewPosition);
     Output.Color = _Input.Color;
+   
     return Output;
 }

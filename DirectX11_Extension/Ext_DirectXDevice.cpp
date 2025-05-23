@@ -233,3 +233,20 @@ void Ext_DirectXDevice::CreateSwapChain()
 	MainRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
 	MainRenderTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
 }
+
+void Ext_DirectXDevice::RenderStart()
+{
+	MainRenderTarget->RenderTargetClear();
+	MainRenderTarget->RenderTargetSetting();
+}
+
+void Ext_DirectXDevice::RenderEnd()
+{
+	HRESULT Result = SwapChain->Present(0, 0);
+	if (Result == DXGI_ERROR_DEVICE_REMOVED || Result == DXGI_ERROR_DEVICE_RESET)
+	{
+		// 디바이스 다시만들기
+		MsgAssert("랜더타겟 생성에 실패했습니다.");
+		return;
+	}
+}

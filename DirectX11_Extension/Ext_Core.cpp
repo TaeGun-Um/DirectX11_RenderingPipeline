@@ -79,7 +79,10 @@ void Ext_Core::Update()
 	//////////////////////////////    업데이트    //////////////////////////////
 	if (!TimeCheck()) return;
 	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Actor 행렬 업데이트
+
+	Ext_DirectXDevice::RenderStart(); // 백버퍼 클리어 및 세팅
 	CurrentScenes->Rendering(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Rendering 업데이트
+	Ext_DirectXDevice::RenderEnd(); // Present 호출
 	////////////////////////////// 업데이트 종료 //////////////////////////////
 }
 
