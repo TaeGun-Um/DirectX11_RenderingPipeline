@@ -26,13 +26,9 @@ void TransformData::CalculateWorldMatrix()
     WorldMatrix.Compose(Scale, Quaternion, Position);
 }
 
+// 카메라 기준으로 월드, 뷰, 프로젝션 행렬 생성
 void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
 {
-    float4 Scalea = Scale;
-    float4 Rotationa = Rotation;
-    float4 Quaterniona = Quaternion;
-    float4 Positiona = Position;
-
     ViewMatrix = _View;
     ProjectionMatrix = _Projection;
     WorldViewMatrix = WorldMatrix * ViewMatrix;

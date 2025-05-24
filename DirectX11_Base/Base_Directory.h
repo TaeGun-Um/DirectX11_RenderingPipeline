@@ -1,6 +1,7 @@
 #pragma once
 #include "Base_Debug.h"
 
+// 경로 생성 클래스
 class Base_Directory
 {
 public:
@@ -14,9 +15,9 @@ public:
 	Base_Directory& operator=(const Base_Directory& _Other) = delete;
 	Base_Directory& operator=(Base_Directory&& _Other) noexcept = delete;
 
-	std::string MakePath(std::string_view _RelativePath, std::string_view _ThisFile = __FILE__);
-	std::vector<std::string> GetAllFile(std::initializer_list<std::string> _Extensions);
-	std::string FindEntryPoint(std::string_view _Path);
+	std::string MakePath(std::string_view _RelativePath, std::string_view _ThisFile = __FILE__); // 경로 생성
+	std::vector<std::string> GetAllFile(std::initializer_list<std::string> _Extensions); // 디렉터리 내에 파일들 검사 후 반환
+	std::string FindEntryPoint(std::string_view _Path); // 파일을 열어 특정 문자 검사
 
 	const std::string& GetPath() { return Path; }
 

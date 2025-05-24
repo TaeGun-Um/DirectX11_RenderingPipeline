@@ -20,7 +20,7 @@ std::string Base_Directory::MakePath(std::string_view _RelativePath, std::string
 	return Path;
 }
 
-// 여러 확장자 인자를 받아 해당 디렉터리의 파일 목록 반환
+// 디렉터리 내에 파일들 검사 후 반환, 인자로 전달받은 이름으로 검색하여 vector에 담아 반환
 std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::string> _Extensions)
 {
 	std::vector<std::string> Result;
@@ -53,6 +53,7 @@ std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::s
 	return Result;
 }
 
+// 파일을 열어 특정 문자 검사, 라인별로 확인함(한줄씩)
 std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 {
 	std::string FileName = std::filesystem::path(_FilePath).stem().string();

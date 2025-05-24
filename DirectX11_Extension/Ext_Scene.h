@@ -8,8 +8,8 @@ class Ext_Scene : public Ext_Object
 
 public:
 	// constrcuter destructer
-	Ext_Scene();
-	~Ext_Scene();
+	Ext_Scene() {}
+	~Ext_Scene() {}
 
 	// delete Function
 	Ext_Scene(const Ext_Scene& _Other) = delete;
@@ -36,32 +36,29 @@ public:
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
 
-	// Getter, Setter
+	// 카메라 Getter, Setter
 	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; };
 	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) 
 	{ 
 		MainCamera = _MainCamera; 
 		Cameras.insert(std::make_pair("MainCamera", MainCamera));
 	};
+	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName);
 
 	// MeshComponent를 MainCamera의 MeshComponents에 push
 	void PushMeshToCamera(std::shared_ptr<class Ext_MeshComponent> _MeshComponent, std::string_view _CameraName);
-	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName);
-
-	// 렌더링 테스트용, 지울 예정/////////////////////////////////////////////////////
-	void RenderTest();
 
 protected:
-	virtual void SceneChangeInitialize();
-	virtual void SceneChangeEnd();
-	virtual void Start() override;
-	virtual void Update(float _DeltaTime) override;
+	virtual void SceneChangeInitialize(); // Scene 변경 시 호출
+	virtual void SceneChangeEnd(); // Scene 변경 시 호출
+	virtual void Start() override; // Scene 생성 시 호출
+	virtual void Update(float _DeltaTime) override; // Actors내 Actor들의 Update 호출
 	
 private:
 	void Rendering(float _DeltaTime); // 렌더링 업데이트
-	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order);
+	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order); // Actor 생성 시 자동 호출, 이름 설정, Owner설정
 	
-	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors; // Scene에 저장된 Actor들
-	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras; // Scene에 저장된 Camera들
-	std::shared_ptr<class Ext_Camera> MainCamera; // 현재 Scene의 MainCamera
+	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;	// Scene에 저장된 Actor들, Order로 그룹화
+	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;		// Scene에 저장된 Camera들
+	std::shared_ptr<class Ext_Camera> MainCamera;									// 현재 Scene의 MainCamera
 };

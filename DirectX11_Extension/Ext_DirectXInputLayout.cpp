@@ -20,7 +20,7 @@ void Ext_DirectXInputLayout::Relase()
 
 void Ext_DirectXInputLayout::CreateInputLayout(std::shared_ptr<Ext_DirectXVertexBuffer> _VertexBuffer, std::shared_ptr< Ext_DirectXVertexShader> _VertexShader)
 {
-	Relase(); // ?? 해야 정상 동작함
+	Relase(); // 한번 해줘야 CreateInputLayout가 정상 동작함
 
 	if (nullptr == _VertexBuffer->GetInputLayout())
 	{

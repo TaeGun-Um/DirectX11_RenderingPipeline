@@ -51,6 +51,7 @@ public:
 		return std::dynamic_pointer_cast<ComponentType>(Components[Name]);
 	}
 
+	// Getter, Setter
 	std::shared_ptr<class Ext_Transform> GetTransform() { return Transform; }
 	std::map<std::string, std::shared_ptr<class Ext_Component>> GetComponents() { return Components; }
 
@@ -58,11 +59,11 @@ protected:
 	virtual void Start() override {}
 	virtual void Update(float _DeltaTime) override {}
 	virtual void Destroy() override {}
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare = false); 
 	
-private:
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare = false);
-
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
+
+private:
 
 };

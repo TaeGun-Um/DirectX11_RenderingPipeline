@@ -1,13 +1,15 @@
 #include "PrecompileHeader.h"
 #include "Ext_Core.h"
-#include "Ext_Scene.h"
+
 #include <DirectX11_Base/Base_Windows.h>
 #include <DirectX11_Base/Base_Debug.h>
 #include <DirectX11_Base/Base_Deltatime.h>
-#include "Ext_DirectXDevice.h"
-#include "Ext_DirectXRenderTarget.h"
-#include "Ext_DirectXResourceLoader.h"
+
+#include "Ext_Scene.h"
 #include "Ext_Camera.h"
+
+#include "Ext_DirectXDevice.h"
+#include "Ext_DirectXResourceLoader.h"
 
 std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
 std::shared_ptr<class Ext_Scene> Ext_Core::CurrentScenes = nullptr;
@@ -25,10 +27,45 @@ void Ext_Core::Run(HINSTANCE _hInstance, std::function<void()> _Start, std::func
 	Base_Windows::WindowLoop(std::bind(Ext_Core::Start, _Start), Ext_Core::Update, std::bind(Ext_Core::End, _End));
 }
 
+// Scene 생성 시 자동 호출, 메인 카메라 생성, 이름 세팅
+void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_view _Name)
+{
+	CurrentScenes = _Level;
+	_Level->SetName(_Name);
+	_Level->SetMainCamera(_Level->CreateActor<Ext_Camera>("MainCamera"));
+	_Level->Start();
+}
+
+// 델타타임 체크, 60프레임 기준으로 설정함
+bool Ext_Core::TimeCheck()
+{
+	Base_Deltatime& Deta = Base_Deltatime::GetGlobalTime();
+	bool IsPass = true;
+
+	float DeltaTime = Deta.TimeCheck(); // 1프레임 기준 경과 시간
+	Deta.AddFrameTime(DeltaTime);       // 누적
+
+	float FrameTime = Deta.GetFrameTime();  // 누적 시간 확인
+	float FrameLimit = Deta.GetFrameLimit(); // 1 / 60 = 0.016666..
+
+	if (FrameTime < FrameLimit)
+	{
+		IsPass = false;
+	}
+	else
+	{
+		Deta.SetDeltaTime(FrameTime);
+		Deta.SetFrameRate(1.0f / FrameTime);
+		Deta.SetFPS(static_cast<int>(1.0f / FrameTime + 0.5f));
+		Deta.ResetFrameTime(); // 누적 시간 초기화
+	}
+
+	return IsPass;
+}
+
 // 윈도우창 생성 후 프로젝트 세팅
 void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 {
-	// After Create Window, EngineStart
 	Ext_DirectXDevice::Initialize(); // 디바이스, 컨텍스트, 스왑체인, 렌더타겟 생성
 	Ext_DirectXResourceLoader::Initialize(); // DirectX에 활용할 리소스 생성
 
@@ -98,40 +135,3 @@ void Ext_Core::End(std::function<void()> _ContentsCoreEnd)
 	}
 	_ContentsCoreEnd();
 }
-
-// Scene 생성 시 자동 호출, 메인 카메라 생성, 이름 세팅
-void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_view _Name)
-{
-	CurrentScenes = _Level;
-	_Level->SetName(_Name);
-	_Level->SetMainCamera(_Level->CreateActor<Ext_Camera>("MainCamera"));
-	_Level->Start();
-}
-
-// 델타타임 체크, 60프레임 기준으로 설정함
-bool Ext_Core::TimeCheck()
-{
-	Base_Deltatime& Deta = Base_Deltatime::GetGlobalTime();
-	bool IsPass = true;
-
-	float DeltaTime = Deta.TimeCheck(); // 1프레임 기준 경과 시간
-	Deta.AddFrameTime(DeltaTime);       // 누적
-
-	float FrameTime = Deta.GetFrameTime();  // 누적 시간 확인
-	float FrameLimit = Deta.GetFrameLimit(); // 1 / 60 = 0.016666..
-
-	if (FrameTime < FrameLimit)
-	{
-		IsPass = false;
-	}
-	else
-	{
-		Deta.SetDeltaTime(FrameTime);
-		Deta.SetFrameRate(1.0f / FrameTime);
-		Deta.SetFPS(static_cast<int>(1.0f / FrameTime + 0.5f));
-		Deta.ResetFrameTime(); // 누적 시간 초기화
-	}
-
-	return IsPass;
-}
-

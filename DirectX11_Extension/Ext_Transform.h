@@ -1,5 +1,6 @@
 #pragma once
 
+// 행렬 정보(정점 셰이더랑 동일한 크기로 설정해야함)
 struct TransformData
 {
 	TransformData()
@@ -35,6 +36,7 @@ struct TransformData
 class Ext_Transform
 {
 	friend class Ext_Camera;
+	friend class Ext_MeshComponent;
 
 public:
 	// constrcuter destructer
@@ -81,17 +83,15 @@ public:
 	float4 GetLocalUpVector() { return TFData->WorldMatrix.ArrVector[1].NormalizeReturn(); }
 	float4 GetLocalRightVector() {	return TFData->WorldMatrix.ArrVector[0].NormalizeReturn(); }
 
-	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); }
-
 protected:
 	
 private:
-	void TransformUpdate();
-	
+	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
+	void TransformUpdate(); // 행렬 업데이트
 
-	std::list<std::shared_ptr<Ext_Transform>> Childs;
-	std::shared_ptr<Ext_Transform> Parent = nullptr;
-	std::shared_ptr<TransformData> TFData = nullptr;
+	std::shared_ptr<TransformData> TFData = nullptr; // TransformData 정보
 
+	std::shared_ptr<Ext_Transform> Parent = nullptr; // 부모 행렬(아직 안쓸듯)
+	std::list<std::shared_ptr<Ext_Transform>> Childs; // 자식 행렬(아직 안쓸듯)
 
 };

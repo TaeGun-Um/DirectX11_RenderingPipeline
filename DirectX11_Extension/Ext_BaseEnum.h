@@ -1,10 +1,10 @@
 #pragma once
 
-enum class CameraType
+enum class ProjectionType
 {
-    None,
     Perspective,
     Orthogonal,
+    Unknown
 };
 
 enum class ShaderType
@@ -13,5 +13,20 @@ enum class ShaderType
     Pixel,
     Geometry,
     Compute,
+    Unknown
+};
+
+enum class SortType
+{
+    ZSort,
+    YSort,
+    Unknown
+};
+
+enum class RenderPath
+{
+    Forward,
+    Deferred,
+    Alpha,
     Unknown
 };

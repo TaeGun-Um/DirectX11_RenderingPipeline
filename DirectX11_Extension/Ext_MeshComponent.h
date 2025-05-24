@@ -1,9 +1,11 @@
 #pragma once
 #include "Ext_Component.h"
 
-// 렌더링 컴포넌트
+// 렌더링을 위한 컴포넌트
 class Ext_MeshComponent : public Ext_Component
 {
+	friend class Ext_Camera;
+
 public:
 	// constrcuter destructer
 	Ext_MeshComponent();
@@ -15,10 +17,8 @@ public:
 	Ext_MeshComponent& operator=(const Ext_MeshComponent& _Other) = delete;
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
-	// 메시 컴포넌트에 필요한 유닛 생성
-	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material);
-	void MeshComponentTransformUpdate(std::shared_ptr<class Ext_Camera> _Camera);
-
+	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
+	
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
 	void SetOwnerCamera(std::shared_ptr<class Ext_Camera> _Camera) { OwnerCamera = _Camera; }
@@ -30,10 +30,11 @@ protected:
 
 private:
 	void PushMeshToCamera(std::string_view _CameraName); // 메시 컴포넌트는 생성하면 카메라에 넣기 진행(지금은 메인 카메라로 들어감)
-	void Rendering(float _Deltatime); // 메시 렌더링 업데이트
-	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(); // 메시 컴포넌트에 필요한 유닛 Units에 저장 
+	void Rendering(float _Deltatime, std::shared_ptr<class Ext_Camera> _Camera); // 메시 렌더링 업데이트
+	void MeshComponentTransformSetting(std::shared_ptr<class Ext_Camera> _Camera); // 메시 컴포넌트 행렬 업데이트
+
 	 
 	std::weak_ptr<class Ext_Camera> OwnerCamera; // 자신을 소유한 카메라
-	std::vector<std::shared_ptr<class Ext_MeshComponentUnit>> Units; // 필요 정보 모음집
+	std::vector<std::shared_ptr<class Ext_MeshComponentUnit>> Units; // Mesh와 Pipeline 정보 모음
 	
 };

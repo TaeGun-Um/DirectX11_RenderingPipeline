@@ -74,8 +74,8 @@ public:
 protected:
 	
 private:
-	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level, std::string_view _Name);
-	static bool TimeCheck();
+	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level, std::string_view _Name); // 씬 생성 후 기본 값 입력
+	static bool TimeCheck(); // 델타타임 체크
 
 	// constrcuter destructer
 	Ext_Core() {};

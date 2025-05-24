@@ -14,8 +14,8 @@ public:
 	Base_Deltatime& operator=(const Base_Deltatime& _Other) = delete;
 	Base_Deltatime& operator=(Base_Deltatime&& _Other) noexcept = delete;
 
-	float TimeCheck();
-	void TimeReset();
+	float TimeCheck(); // 시간 체크
+	void TimeReset(); // 시간 리셋
 
 	static void ResetFrameTime() { GlobalTime.FrameTime = 0.0f; }
 

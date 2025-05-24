@@ -4,21 +4,11 @@
 #include <DirectX11_Base/Base_Windows.h>
 
 #include "Ext_DirectXDevice.h"
-#include "Ext_DirectXRenderTarget.h"
 #include "Ext_Transform.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_MeshComponentUnit.h"
-#include "Ext_DirectXMaterial.h"
 
-Ext_Camera::Ext_Camera()
-{
-}
-
-Ext_Camera::~Ext_Camera()
-{
-}
-
-// 현재 카메라 기준 뷰, 프로젝션, 뷰포트 세팅
+// 현재 카메라 타입에 따라 뷰, 프로젝션, 뷰포트 행렬 세팅
 void Ext_Camera::CameraTransformUpdate()
 {
 	float4 EyeDir = GetTransform()->GetLocalForwardVector();
@@ -26,25 +16,33 @@ void Ext_Camera::CameraTransformUpdate()
 	float4 EyePos = GetTransform()->GetWorldPosition();
 	ViewMatrix.LookToLH(EyePos, EyeDir, EyeUp);
 
-	switch (ProjectionType)
+	switch (CameraType)
 	{
-	case CameraType::None:
+	case ProjectionType::Perspective:
+	{
+		ProjectionMatrix.PerspectiveFovLH(FOV, Width / Height, Near, Far);
+		break;
+	}
+	case ProjectionType::Orthogonal:
+	{
+		// Projection.OrthographicLH(Width * ZoomRatio, Height * ZoomRatio, Near, Far); 일단 패스
+		break;
+	}
+	case ProjectionType::Unknown:
 	{
 		MsgAssert("카메라 투영이 설정되지 않았습니다.");
 		break;
 	}
-	case CameraType::Perspective:
-		ProjectionMatrix.PerspectiveFovLH(FOV, Width / Height, Near, Far);
-		break;
-	case CameraType::Orthogonal:
-		// Projection.OrthographicLH(Width * ZoomRatio, Height * ZoomRatio, Near, Far);
-		// 직교는 일단 패스
-		break;
-	default:
-		break;
 	}
 
 	ViewPortMatrix.ViewPort(Width, Height, 0.0f, 0.0f);
+}
+
+// 뷰포트 세팅 ////////////////////////////////// 테스트용 /////////////////////////
+void Ext_Camera::ViewPortSetting()
+{
+	// 없어도 될듯
+	Ext_DirectXDevice::GetContext()->RSSetViewports(1, &ViewPortData);
 }
 
 // MeshComponents에 생성된 MeshComponent 넣기
@@ -70,11 +68,7 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 	// 여기서 동적, 정적으로 나눌 수도 있다.
 }
 
-void Ext_Camera::ViewPortSetting()
-{
-	Ext_DirectXDevice::GetContext()->RSSetViewports(1, &ViewPortData);
-}
-
+// 카메라 생성 시 호출
 void Ext_Camera::Start()
 {
 	ViewPortData.TopLeftX = 0;
@@ -101,9 +95,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 			if (!CurMeshComponent->GetIsUpdate()) continue;
 			else
 			{
-				std::string Name = CurMeshComponent->GetName();
-
-				CurMeshComponent->MeshComponentTransformUpdate(GetSharedFromThis<Ext_Camera>()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
+				CurMeshComponent->Rendering(_Deltatime, GetSharedFromThis<Ext_Camera>()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
 				// [!] 필요하면 픽셀 셰이더에서 활용할 Value들 업데이트
 			}
 		}

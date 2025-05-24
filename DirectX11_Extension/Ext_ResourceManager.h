@@ -1,6 +1,6 @@
 #pragma once
 
-// 동적할당된 리소스들을 관리해주는 클래스
+// 동적 할당된 DirectX 리소스들을 저장 및 탐색하기 위해 선언된 클래스
 template<typename ResourcesType>
 class Ext_ResourceManager
 {
@@ -17,6 +17,7 @@ public:
 	Ext_ResourceManager& operator=(const Ext_ResourceManager& _Other) = delete;
 	Ext_ResourceManager& operator=(Ext_ResourceManager&& _Other) noexcept = delete;
 
+	// 저장된 리소스를 이름으로 찾기
 	static std::shared_ptr<ResourcesType> Find(std::string_view _Name)
 	{
 		std::string UpperName = Base_String::ToUpper(_Name);
@@ -29,6 +30,7 @@ public:
 		return NameResources[UpperName];
 	}
 
+	// 리소스 생성(그냥 생성)
 	static std::shared_ptr<ResourcesType> CreateResource()
 	{
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
@@ -37,6 +39,7 @@ public:
 		return NewRes;
 	}
 
+	// 리소스 생성(이름으로 생성 후 저장)
 	static std::shared_ptr<ResourcesType> CreateNameResource(std::string_view _Name)
 	{
 		std::string UpperName = Base_String::ToUpper(_Name);
@@ -48,7 +51,6 @@ public:
 		}
 
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
-		//NewRes->SetName(UpperName);
 		NameResources.insert(std::map<std::string, std::shared_ptr<ResourcesType>>::value_type(UpperName, NewRes));
 
 		return NewRes;
@@ -57,7 +59,7 @@ public:
 protected:
 	
 private:
-	static std::vector<std::shared_ptr<ResourcesType>> Resources; // 그냥 저장할 리소스
+	static std::vector<std::shared_ptr<ResourcesType>> Resources; // 저장할 리소스
 	static std::map<std::string, std::shared_ptr<ResourcesType>> NameResources; // 이름으로 저장할 리소스
 	
 };
