@@ -1,8 +1,11 @@
 #pragma once
 #include "Ext_ResourceManager.h"
 
+// 렌더링 파이프라인 세팅 실시를 위한 클래스
 class Ext_DirectXMaterial : public Ext_ResourceManager<Ext_DirectXMaterial>
 {
+	friend class Ext_MeshComponentUnit;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXMaterial() {};
@@ -28,8 +31,15 @@ public:
 	void SetDepthState(std::string_view _Name);
 	void SetRasterizer(std::string_view _Name);
 
+	// Getter, Setter
+	std::shared_ptr<class Ext_DirectXVertexShader> GetVertexShader() { return VertexShader; }
+	std::shared_ptr<class Ext_DirectXPixelShader> GetPixelShader() { return PixelShader; }
+
+protected:
+	
+private:
 	// 렌더링 파이프라인 세팅
-	void MaterialSetting();
+	void MaterialSetting(); // 아래의 함수들 차례대로 실행
 	void VertexShaderSetting();
 	void HullShaderSetting();
 	void TessellatorSetting();
@@ -39,20 +49,8 @@ public:
 	void PixelShaderSetting();
 	void OutputMergerSetting();
 
-
-	// Getter, Setter
-	std::shared_ptr<class Ext_DirectXVertexBuffer> GetVertexBuffer() { return VertexBuffer; }
-	std::shared_ptr<class Ext_DirectXIndexBuffer> GetIndexBuffer() { return IndexBuffer; }
-	std::shared_ptr<class Ext_DirectXVertexShader> GetVertexShader() { return VertexShader; }
-	std::shared_ptr<class Ext_DirectXPixelShader> GetPixelShader() { return PixelShader; }
-
-protected:
-	
-private:
-	std::shared_ptr<class Ext_DirectXVertexBuffer> VertexBuffer;
-	std::shared_ptr<class Ext_DirectXIndexBuffer> IndexBuffer;
-	std::shared_ptr<class Ext_DirectXVertexShader> VertexShader;
-	std::shared_ptr<class Ext_DirectXPixelShader> PixelShader;
+	std::shared_ptr<class Ext_DirectXVertexShader> VertexShader; // 버텍스 셰이더 저장
+	std::shared_ptr<class Ext_DirectXPixelShader> PixelShader; // 픽셀 셰이더 저장
 	//std::shared_ptr<class Ext_DirectXDepthState> DepthStatePtr;
 	
 	

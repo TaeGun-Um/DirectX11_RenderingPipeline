@@ -5,6 +5,8 @@
 // DirectX의 Texture2D, View 담당
 class Ext_DirectXTexture : public Ext_ResourceManager<Ext_DirectXTexture>
 {
+	friend class Ext_DirectXDevice;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXTexture() {};
@@ -16,9 +18,6 @@ public:
 	Ext_DirectXTexture& operator=(const Ext_DirectXTexture& _Other) = delete;
 	Ext_DirectXTexture& operator=(Ext_DirectXTexture&& _Other) noexcept = delete;
 
-	// 백버퍼 렌더타겟뷰 생성을 위해 호출됨
-	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture);
-	
 	// 리소스 매니저에 값을 기록하고, Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
 	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Value)
 	{
@@ -40,6 +39,7 @@ public:
 protected:
 	
 private:
+	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture); // 백버퍼 렌더타겟뷰 생성을 위해 호출됨
 	void CreateView(const D3D11_TEXTURE2D_DESC& _Value); // Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
 	void CreateRenderTargetView(); // 렌더타겟뷰 생성
 	void CreateDepthStencilView(); // 뎁스스텐실뷰 생성

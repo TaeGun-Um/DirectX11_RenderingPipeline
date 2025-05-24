@@ -1,7 +1,7 @@
 #pragma once
 #include "Ext_DirectXBufferSetter.h"
 
-// DirectX의 셰이더 컴파일 담당
+// DirectX의 셰이더 컴파일 및 정보 저장을 위한 클래스(상속하여 사용)
 class Ext_DirectXShader : public std::enable_shared_from_this<Ext_DirectXShader>
 {
 public:

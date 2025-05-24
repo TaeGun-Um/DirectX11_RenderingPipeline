@@ -3,10 +3,11 @@
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 
-// 만들어진 버텍스 정보를 가지고 있는 클래스
+// 만들어진 버텍스들의 정보를 저장하기 위한 클래스
 class Ext_DirectXMesh : public Ext_ResourceManager<Ext_DirectXMesh>
 {
 	friend class Ext_MeshComponentUnit;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXMesh();
@@ -18,7 +19,7 @@ public:
 	Ext_DirectXMesh& operator=(const Ext_DirectXMesh& _Other) = delete;
 	Ext_DirectXMesh& operator=(Ext_DirectXMesh&& _Other) noexcept = delete;
 
-	// 버텍스 버퍼와 인덱스 버퍼 정보 입력 및 생성
+	// 버텍스 버퍼와 인덱스 버퍼 정보 입력 및 메시 생성
 	static std::shared_ptr<Ext_DirectXMesh> CreateMesh(std::string_view _Name)
 	{
 		return CreateMesh(_Name, _Name, _Name);
@@ -39,22 +40,6 @@ public:
 		return NewMesh;
 	}
 
-	// 3D Mesh
-	static std::shared_ptr<Ext_DirectXMesh> Create(std::string_view _Name, std::string_view _VBName, std::string_view _IBName)
-	{
-		std::shared_ptr<Ext_DirectXMesh> Res = Ext_ResourceManager::CreateNameResource(_Name);
-		Res->VertexBufferPtr = Ext_DirectXVertexBuffer::Find(_VBName);
-		Res->IndexBufferPtr = Ext_DirectXIndexBuffer::Find(_IBName);
-
-		if ((nullptr == Res->VertexBufferPtr) || (nullptr == Res->IndexBufferPtr))
-		{
-			MsgAssert("매쉬를 만드는데 실패했습니다.");
-		}
-
-		return Res;
-	}
-
-	void MeshSetting();
 
 	// Getter
 	std::shared_ptr<class Ext_DirectXVertexBuffer> GetVertexBuffer() { return VertexBufferPtr; }
@@ -64,9 +49,10 @@ protected:
 	
 private:
 	D3D11_PRIMITIVE_TOPOLOGY Topology = D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	std::shared_ptr<class Ext_DirectXVertexBuffer> VertexBufferPtr;
-	std::shared_ptr<class Ext_DirectXIndexBuffer> IndexBufferPtr;
+	std::shared_ptr<class Ext_DirectXVertexBuffer> VertexBufferPtr; // 상수버퍼 데이터 저장용
+	std::shared_ptr<class Ext_DirectXIndexBuffer> IndexBufferPtr; // 인덱스버퍼 데이터 저장용
 	
-	void InputAssembler1();
-	void InputAssembler2();
+	void MeshSetting(); // InputAssembler1(), InputAssembler2() 호출
+	void InputAssembler1(); // 인풋어셈블러 1단계 실시, IASetVertexBuffers(), IASetPrimitiveTopology() 실시
+	void InputAssembler2(); // 인풋어셈블러 2단계 실시, IndexBufferSetting() 호출
 };

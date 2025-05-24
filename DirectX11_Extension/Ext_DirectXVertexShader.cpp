@@ -7,10 +7,6 @@ Ext_DirectXVertexShader::Ext_DirectXVertexShader()
 	Type = ShaderType::Vertex;
 }
 
-Ext_DirectXVertexShader::~Ext_DirectXVertexShader()
-{
-}
-
 void Ext_DirectXVertexShader::CreateVertexShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh, UINT _VersionLow)
 {
 	CreateVersion("vs", _VersionHigh, _VersionLow);

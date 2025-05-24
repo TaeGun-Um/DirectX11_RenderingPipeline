@@ -126,7 +126,7 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 	{
 		MsgAssert("µª½º½ºÅÙ½Çºä ¿Ó");
 	}
-
+	
 	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get());
 	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]);
 }

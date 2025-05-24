@@ -234,12 +234,14 @@ void Ext_DirectXDevice::CreateSwapChain()
 	MainRenderTarget->CreateDepthTexture(); // 깊이와 스텐실 정보를 위한 뎁스텍스쳐 생성
 }
 
+// MeshComponent Render 업데이트 전 백버퍼 리소스 클리어 및 세팅
 void Ext_DirectXDevice::RenderStart()
 {
-	MainRenderTarget->RenderTargetClear();
-	MainRenderTarget->RenderTargetSetting();
+	MainRenderTarget->RenderTargetClear(); // ClearRenderTargetView(), ClearDepthStencilView() 실시
+	MainRenderTarget->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
 }
 
+// MeshComponent Render 업데이트 후 백버퍼에 Present 호출
 void Ext_DirectXDevice::RenderEnd()
 {
 	HRESULT Result = SwapChain->Present(0, 0);

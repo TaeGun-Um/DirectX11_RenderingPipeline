@@ -9,14 +9,9 @@
 #include "TriangleActor.h"
 #include "RectActor.h"
 
-Contents_Core::Contents_Core()
-{
-}
-
-Contents_Core::~Contents_Core()
-{
-}
-
+/// <summary>
+/// Scene 생성하는 곳
+/// </summary>
 void Contents_Core::Start()
 {
 	Ext_Core::CreateScene<TestScene>("TestScene");
@@ -25,5 +20,5 @@ void Contents_Core::Start()
 
 void Contents_Core::End()
 {
-	int b = 0;
+	// 프로세스 종료 시 무언가를 진행하면 됨
 }

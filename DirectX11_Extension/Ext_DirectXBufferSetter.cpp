@@ -11,7 +11,7 @@ Ext_DirectXBufferSetter::~Ext_DirectXBufferSetter()
 {
 }
 
-// 버퍼 복붙하기
+// 버퍼 세팅 복사/붙여넣기 실시
 void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter)
 {
 	for (const std::pair<std::string, ConstantBufferSetter>& Setter : _OtherBufferSetter.ConstantBufferSetters)
@@ -35,6 +35,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 	//}
 }
 
+// 상수 버퍼 데이터 저장
 void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size)
 {
 	std::string UpperName = Base_String::ToUpper(_Name);

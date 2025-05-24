@@ -4,10 +4,13 @@
 // 상수 버퍼(Constant Buffer) 생성을 위한 클래스
 class Ext_DirectXConstantBuffer : public Ext_ResourceManager<Ext_DirectXConstantBuffer>
 {
+	friend class Ext_DirectXBufferSetter;
+	friend struct ConstantBufferSetter;
+
 public:
 	// constrcuter destructer
-	Ext_DirectXConstantBuffer();
-	~Ext_DirectXConstantBuffer();
+	Ext_DirectXConstantBuffer() {}
+	~Ext_DirectXConstantBuffer() {}
 
 	// delete Function
 	Ext_DirectXConstantBuffer(const Ext_DirectXConstantBuffer& _Other) = delete;
@@ -31,12 +34,6 @@ public:
 		return NewIndexBuffer;
 	}
 
-	void ChangeData(const void* _Data, UINT _Size);
-	void VSSetting(UINT _Slot);
-	void PSSetting(UINT _Slot);
-	void CSSetting(UINT _Slot);
-
-
 	// Getter, Setter
 	COMPTR<ID3D11Buffer>& GetConstantBuffer() { return ConstantBuffer; }
 	UINT GetBufferSize() { return ConstantBufferInfo.ByteWidth; }
@@ -44,7 +41,11 @@ public:
 protected:
 	
 private:
-	void CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc);
+	void CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc); // CreateBuffer() 호출
+	void ChangeData(const void* _Data, UINT _Size); // Map() -> memcpy_s() -> Unmap() 실시
+	void VSSetting(UINT _Slot); // VSSetConstantBuffers() 호출
+	void PSSetting(UINT _Slot); // PSSetConstantBuffers() 호출
+	void CSSetting(UINT _Slot); // CSSetConstantBuffers() 호출
 
 	static std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> ConstantBuffers;
 	static std::string Name;

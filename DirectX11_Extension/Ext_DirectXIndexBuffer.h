@@ -4,6 +4,8 @@
 // 인덱스 버퍼(Index Buffer) 생성을 위한 클래스
 class Ext_DirectXIndexBuffer : public Ext_ResourceManager<Ext_DirectXIndexBuffer>
 {
+	friend class Ext_DirectXMesh;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXIndexBuffer() {}
@@ -25,8 +27,6 @@ public:
 		return NewIndexBuffer;
 	}
 
-	void IndexBufferSetting();
-
 	COMPTR<ID3D11Buffer>& GetIndexBuffer() { return IndexBuffer; }
 	UINT GetVertexSize() { return VertexSize; }
 	UINT GetVertexCount() { return VertexCount; }
@@ -36,6 +36,7 @@ protected:
 	
 private:
 	void CreateIndexBuffer(const void* _Data, UINT _IndexSize, UINT _IndexCount); // IndexBuffer 생성
+	void IndexBufferSetting(); // IASetIndexBuffer() 호출
 	
 	D3D11_BUFFER_DESC IndexBufferInfo = { 0, };  // 인덱스 버퍼 DESC 저장용
 	COMPTR<ID3D11Buffer> IndexBuffer = nullptr;   // 인덱스 버퍼 인터페이스 저장용

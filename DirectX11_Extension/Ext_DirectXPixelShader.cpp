@@ -7,10 +7,6 @@ Ext_DirectXPixelShader::Ext_DirectXPixelShader()
 	Type = ShaderType::Pixel;
 }
 
-Ext_DirectXPixelShader::~Ext_DirectXPixelShader()
-{
-}
-
 void Ext_DirectXPixelShader::CreatePixelShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh, UINT _VersionLow)
 {
 	CreateVersion("ps", _VersionHigh, _VersionLow);

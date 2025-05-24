@@ -3,6 +3,8 @@
 // DirectX Device, Context 담당 클래스
 class Ext_DirectXDevice
 {
+	friend class Ext_Core;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXDevice() {};
@@ -14,22 +16,20 @@ public:
 	Ext_DirectXDevice& operator=(const Ext_DirectXDevice& _Other) = delete;
 	Ext_DirectXDevice& operator=(Ext_DirectXDevice&& _Other) noexcept = delete;
 
-	static void Initialize(); // DirectX11 시작
-
 	// Getter, Setter
 	static COMPTR<ID3D11Device>& GetDevice() { return Device; };
 	static COMPTR<ID3D11DeviceContext>& GetContext() { return Context; };
 	static COMPTR<IDXGISwapChain>& GetSwapChain() { return SwapChain; };
 	static std::shared_ptr<class Ext_DirectXRenderTarget> GetMainRenderTarget() { return MainRenderTarget; };
 
-	static void RenderStart();
-	static void RenderEnd();
-
 protected:
 	
 private:
+	static void Initialize(); // DirectX11 시작
 	static COMPTR<IDXGIAdapter> GetHighPerformanceAdapter(); // 그래픽카드 정보 가져오기
 	static void CreateSwapChain(); // 스왑체인 생성하기
+	static void RenderStart(); // MeshComponent Render 업데이트 전 백버퍼 리소스 클리어 및 세팅
+	static void RenderEnd(); // MeshComponent Render 업데이트 후 백버퍼에 Present 호출
 
 	static COMPTR<ID3D11Device> Device;				// GPU를 제어할 수 있는 인터페이스
 	static COMPTR<ID3D11DeviceContext> Context;   // GPU를 제어할 수 있는 인터페이스이지만 추가 기능이 있음(렌더링 관련 연산)

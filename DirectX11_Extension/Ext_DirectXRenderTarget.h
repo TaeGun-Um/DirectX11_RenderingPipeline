@@ -6,6 +6,7 @@
 // 렌더 타겟 관리 클래스
 class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarget>
 {
+	friend class Ext_DirectXDevice;
 public:
 	// constrcuter destructer
 	Ext_DirectXRenderTarget() {};
@@ -26,8 +27,6 @@ public:
 	}
 
 	void CreateDepthTexture(int _Index = 0);
-	void RenderTargetClear(); // 렌더타겟뷰, 뎁스스텐실뷰 클리어
-	void RenderTargetSetting(); // 
 
 	// Getter, Setter
 	std::shared_ptr<Ext_DirectXTexture> GetTexture(int _Index) { return Textures[_Index]; }
@@ -38,8 +37,11 @@ protected:
 	
 private:
 	void CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
-	void RenderTargetViewsClear(); // Textures에 저장된 렌더타겟뷰들을 모두 클리어
-	void DepthStencilViewClear(); // 뎁스스텐실뷰 클리어
+	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
+	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
+	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
+	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
+
 
 	std::vector<float4> Colors; // 생성된 렌더타겟 색상 저장
 	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(생성 주체) 포인터 저장 컨테이너

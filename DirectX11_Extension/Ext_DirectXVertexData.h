@@ -27,7 +27,7 @@ private:
 
 };
 
-// 입력 레이아웃을 생성하기 위한 클래스, 
+// 입력 레이아웃을 생성 후 저장하기 위한 클래스(InputLayoutData 활용)
 class Ext_DirectXVertexData
 {
 public:

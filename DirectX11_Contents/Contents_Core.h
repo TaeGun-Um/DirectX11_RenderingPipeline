@@ -4,8 +4,8 @@ class Contents_Core
 {
 public:
 	// constrcuter destructer
-	Contents_Core();
-	~Contents_Core();
+	Contents_Core() {}
+	~Contents_Core() {}
 
 	// delete Function
 	Contents_Core(const Contents_Core& _Other) = delete;

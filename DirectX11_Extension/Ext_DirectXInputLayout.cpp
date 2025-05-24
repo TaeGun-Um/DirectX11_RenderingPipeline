@@ -5,14 +5,6 @@
 #include "Ext_DirectXVertexShader.h"
 #include "Ext_DirectXVertexData.h"
 
-Ext_DirectXInputLayout::Ext_DirectXInputLayout()
-{
-}
-
-Ext_DirectXInputLayout::~Ext_DirectXInputLayout()
-{
-}
-
 void Ext_DirectXInputLayout::Relase()
 {
 	InputLayout.Reset();
@@ -29,7 +21,6 @@ void Ext_DirectXInputLayout::CreateInputLayout(std::shared_ptr<Ext_DirectXVertex
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC>& LayOutInfo = _VertexBuffer->GetInputLayout()->GetInputLayoutDescs();
 
-	std::shared_ptr<Ext_DirectXVertexShader> VS = Ext_DirectXVertexShader::Find("Basic_VS");
 	// CreateInputLayout은 정점 버퍼 구조와 셰이더 입력 구조 간의 매핑을 정의
 	HRESULT hr = Ext_DirectXDevice::GetDevice()->CreateInputLayout
 	(

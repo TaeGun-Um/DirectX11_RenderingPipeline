@@ -5,14 +5,7 @@
 std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> Ext_DirectXConstantBuffer::ConstantBuffers;
 std::string Ext_DirectXConstantBuffer::Name = "";
 
-Ext_DirectXConstantBuffer::Ext_DirectXConstantBuffer()
-{
-}
-
-Ext_DirectXConstantBuffer::~Ext_DirectXConstantBuffer()
-{
-}
-
+// CreateBuffer()를 통해 상수 버퍼를 생성
 void Ext_DirectXConstantBuffer::CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc)
 {
 	ConstantBufferInfo.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -34,6 +27,7 @@ void Ext_DirectXConstantBuffer::CreateConstantBuffer(const D3D11_SHADER_BUFFER_D
 	}
 }
 
+// Map(), Unmap() 실시
 void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 {
 	// 머티리얼들은 상수버퍼나 이런걸 통일해 놓은 것이다.
@@ -69,16 +63,19 @@ void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 	int a = 0;
 }
 
+// VSSetConstantBuffers() 호출
 void Ext_DirectXConstantBuffer::VSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(_Slot, 1, &ConstantBuffer);
 }
 
+// PSSetConstantBuffers() 호출
 void Ext_DirectXConstantBuffer::PSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->PSSetConstantBuffers(_Slot, 1, &ConstantBuffer);
 }
 
+// CSSetConstantBuffers() 호출
 void Ext_DirectXConstantBuffer::CSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->CSSetConstantBuffers(_Slot, 1, &ConstantBuffer);

@@ -7,10 +7,7 @@ Ext_DirectXComputeShader::Ext_DirectXComputeShader()
 	Type = ShaderType::Compute;
 }
 
-Ext_DirectXComputeShader::~Ext_DirectXComputeShader()
-{
-}
-
+// 컴퓨트 셰이더 생성 및 저장
 void Ext_DirectXComputeShader::CreateComputeShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh, UINT _VersionLow)
 {
 	CreateVersion("cs", _VersionHigh, _VersionLow);

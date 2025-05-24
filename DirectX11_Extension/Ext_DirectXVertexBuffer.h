@@ -4,6 +4,8 @@
 // 버텍스 버퍼(Vertex Buffer) 생성을 위한 클래스
 class Ext_DirectXVertexBuffer : public Ext_ResourceManager<Ext_DirectXVertexBuffer>
 {
+	friend class Ext_DirectXMesh;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXVertexBuffer() {}
@@ -26,8 +28,6 @@ public:
 		return NewVertexBuffer;
 	}
 
-	void VertexBufferSetting();
-
 	// Getter
 	std::shared_ptr<class InputLayoutData> GetInputLayout() { return InputLayout; }
 	COMPTR<ID3D11Buffer>& GetVertexBuffer() { return VertexBuffer; }
@@ -39,6 +39,8 @@ protected:
 	
 private:
 	void CreateVertexBuffer(const void* _Data, UINT _VertexSize, UINT _VertexCount); // Vertex Buffer 생성 및 저장
+	void VertexBufferSetting(); // IASetVertexBuffers() 호출
+
 	std::shared_ptr<class InputLayoutData> InputLayout = nullptr;			     // 생성된 입력 레이아웃 정보 저장용
 	D3D11_BUFFER_DESC VertexBufferInfo = { 0, };  // 버텍스 버퍼 DESC 저장용
 	COMPTR<ID3D11Buffer> VertexBuffer = nullptr;   // 버텍스 버퍼 인터페이스 저장용
