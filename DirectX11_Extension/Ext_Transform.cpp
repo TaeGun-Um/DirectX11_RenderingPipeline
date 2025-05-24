@@ -22,7 +22,7 @@ void Ext_Transform::TransformUpdate()
 
 void TransformData::CalculateWorldMatrix()
 {
-    Quaternion = Rotation.EulerDegreeToQuaternion();
+    Quaternion = Rotation.DegreeToQuaternion();
     WorldMatrix.Compose(Scale, Quaternion, Position);
 }
 

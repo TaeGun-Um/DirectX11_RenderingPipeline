@@ -3,6 +3,8 @@
 #include "Base_Debug.h"
 #include "Base_Math.h"
 
+#include "Base_String.h"
+
 std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)> Base_Windows::UserMessageFunction;
 WNDCLASSEX  Base_Windows::wcex;
 HWND             Base_Windows::HWnd = nullptr;
@@ -95,7 +97,7 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize,
     HWnd = CreateWindow
     (
         /*1*/"WindowDefault", 
-        /*2*/"DirectX11", 
+        /*2*/"DirectX Framework",
         /*3*/_IsFullScreen ? (WS_VISIBLE | WS_POPUP) : WS_OVERLAPPEDWINDOW,
         /*4*/CW_USEDEFAULT, 
         /*5*/0, 
@@ -139,15 +141,6 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize,
     
     // 0을 넣어주면 기존의 크기를 유지한다.
     SetWindowPos(HWnd, nullptr, WindowPosition.ix(), WindowPosition.iy(), WindowSize.ix(), WindowSize.iy(), SWP_NOZORDER);
-
-    //if (nullptr != DoubleBufferImage)
-    //{
-    //    delete DoubleBufferImage;
-    //    DoubleBufferImage = nullptr;
-    //}
-
-    //DoubleBufferImage = new GameEngineImage();
-    //DoubleBufferImage->ImageCreate(ScreenSize);
 }
 
 int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()> _Loop, std::function<void()> _End)
@@ -187,15 +180,6 @@ int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()>
     {
         _End();
     }
-
-    //if (nullptr != BackBufferImage)
-    //{
-    //    delete DoubleBufferImage;
-    //    DoubleBufferImage = nullptr;
-
-    //    delete BackBufferImage;
-    //    BackBufferImage = nullptr;
-    //}
 
     return (int)msg.wParam;
 }

@@ -25,7 +25,7 @@ void Ext_DirectXVertexShader::CreateVertexShader(std::string_view _Path, std::st
 	Flag |= D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 	COMPTR<ID3DBlob> Error;
-	std::wstring UniCodePath = Base_String::StringToWString(_Path.data());
+	std::wstring UniCodePath = Base_String::AnsiToUniCode(_Path);
 	if (S_OK != D3DCompileFromFile(UniCodePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, EntryPoint.c_str(), Version.c_str(), Flag, 0, BinaryCode.GetAddressOf(), Error.GetAddressOf()))
 	{
 		// 에러를 텍스트로 출력

@@ -1,10 +1,13 @@
 #include "PrecompileHeader.h"
 #include "Base_Math.h"
 
+// 기본 수학 기호 지정
 const float Base_Math::PIE = 3.141592653589793238462643383279502884197169399375105820974944f;
 const float Base_Math::PIE2 = PIE * 2.0f;
-const float Base_Math::DegreeToRadiation = Base_Math::PIE / 180;
-const float Base_Math::RadiationToDegree = 180 / Base_Math::PIE;
+const float Base_Math::DegreeToRadian = Base_Math::PIE / 180;
+const float Base_Math::RadianToDegree = 180 / Base_Math::PIE;
+// Degree : 각도 단위
+// Radian : 라디안 단위(rad)
 
 const float4 float4::LEFT = { -1.0f, 0.0f, 0.0f, 1.0f };
 const float4 float4::RIGHT = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -21,12 +24,31 @@ const float4 float4::GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
 const float4 float4::WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
 const float4 float4::BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-float4 float4::QuaternionToEulerDegree()
+const float4x4 float4x4::ZEROMATRIX = float4x4(float4::ZERONULL, float4::ZERONULL, float4::ZERONULL, float4::ZERONULL);
+
+// float4랑 float4x4 곱하기
+float4 float4::operator*(const class float4x4& _Other)
 {
-	return QuaternionToEulerRadiation() * Base_Math::RadiationToDegree;
+	float4 ReturnValue = DirectX::XMVector4Transform(*this, _Other);
+
+	return ReturnValue;
 }
 
-float4 float4::QuaternionToEulerRadiation()
+// float4랑 float4x4 곱하기
+float4& float4::operator*=(const class float4x4& _Other)
+{
+	DirectVector = DirectX::XMVector4Transform(*this, _Other);;
+	return *this;
+}
+
+// 쿼터니언 값을 오일러 각(Degree)으로 변경
+float4 float4::QuaternionToDegree()
+{
+	return QuaternionToRadian() * Base_Math::RadianToDegree;
+}
+
+// 쿼터니언 값을 오일러 라디안(Radian)으로 변경
+float4 float4::QuaternionToRadian()
 {
 	float4 result;
 
@@ -58,44 +80,32 @@ float4 float4::QuaternionToEulerRadiation()
 	return result;
 }
 
-float4 float4::EulerDegreeToQuaternion()
+// 오일러 각(Degree)을 쿼터니언 값으로 변경
+float4 float4::DegreeToQuaternion()
 {
 	float4 Return = DirectVector;
-	Return *= Base_Math::DegreeToRadiation;
+	Return *= Base_Math::DegreeToRadian;
 	Return = DirectX::XMQuaternionRotationRollPitchYawFromVector(Return.DirectVector);
 	return Return;
 }
 
-float4 float4::operator*(const class float4x4& _Other)
-{
-	float4 ReturnValue = DirectX::XMVector4Transform(*this, _Other);
-
-	return ReturnValue;
-}
-
-float4& float4::operator*=(const class float4x4& _Other)
-{
-	DirectVector = DirectX::XMVector4Transform(*this, _Other);;
-	return *this;
-}
-
-void float4::RotationXRadiation(float _Rad)
+void float4::RotationXRadian(float _Radian)
 {
 	float4x4 Rot;
-	Rot.RotationXRadiation(_Rad);
+	Rot.RotationXRadian(_Radian);
 	*this = *this * Rot;
 }
 
-void float4::RotationYRadiation(float _Rad)
+void float4::RotationYRadian(float _Radian)
 {
 	float4x4 Rot;
-	Rot.RotationYRadiation(_Rad);
+	Rot.RotationYRadian(_Radian);
 	*this = *this * Rot;
 }
 
-void float4::RotationZRadiation(float _Rad)
+void float4::RotationZRadian(float _Radian)
 {
 	float4x4 Rot;
-	Rot.RotationZRadiation(_Rad);
+	Rot.RotationZRadian(_Radian);
 	*this = *this * Rot;
 }
