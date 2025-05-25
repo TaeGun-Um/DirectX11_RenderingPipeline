@@ -43,6 +43,7 @@ void Ext_DirectXVertexBuffer::CreateVertexBuffer(const void* _Data, UINT _Vertex
 	/*3. ID3D11Buffer 전달*/
 }
 
+// 정점 버퍼 종류 설정
 void Ext_DirectXVertexBuffer::VertexBufferSetting()
 {
 	if (nullptr == VertexBuffer)
@@ -52,4 +53,9 @@ void Ext_DirectXVertexBuffer::VertexBufferSetting()
 	}
 
 	Ext_DirectXDevice::GetContext()->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &VertexSize, &Offset);
+	// 1. 가본 정점 슬롯
+	// 2. 버퍼 하나만 사용
+	// 3. 버텍스 버퍼 주소
+	// 4. 정점 하나당 크기(Stride)
+	// 5. 버퍼 시작 오프셋(일반적으로 0)
 }

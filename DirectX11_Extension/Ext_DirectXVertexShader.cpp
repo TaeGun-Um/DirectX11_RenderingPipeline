@@ -50,13 +50,16 @@ void Ext_DirectXVertexShader::CreateVertexShader(std::string_view _Path, std::st
 	ShaderResourceSetting();
 }
 
-// PSSetShader 호출로 픽셀 셰이더 세팅
+// VSSetShader 호출로 정점 셰이더 세팅
 void Ext_DirectXVertexShader::VertexShaderSetting()
 {
 	if (nullptr == VertexShader.Get())
 	{
-		MsgAssert("픽셀 셰이더가 존재하지 않아 세팅에 실패");
+		MsgAssert("정점 셰이더가 존재하지 않아 세팅에 실패");
 	}
 
 	Ext_DirectXDevice::GetContext()->VSSetShader(VertexShader.Get(), nullptr, 0);
+	// 1. 바인디할 셰이더 객체
+	// 2. 셰이더에 사용할 클래스 배열 전달(보통 nullptr)
+	// 3. 클래스 개수(보통 0)
 }

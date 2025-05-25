@@ -30,8 +30,7 @@ protected:
 
 private:
 	void PushMeshToCamera(std::string_view _CameraName); // 메시 컴포넌트는 생성하면 카메라에 넣기 진행(지금은 메인 카메라로 들어감)
-	void Rendering(float _Deltatime, std::shared_ptr<class Ext_Camera> _Camera); // 메시 렌더링 업데이트
-	void MeshComponentTransformSetting(std::shared_ptr<class Ext_Camera> _Camera); // 메시 컴포넌트 행렬 업데이트
+	void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix); // 메시 렌더링 업데이트
 
 	 
 	std::weak_ptr<class Ext_Camera> OwnerCamera; // 자신을 소유한 카메라

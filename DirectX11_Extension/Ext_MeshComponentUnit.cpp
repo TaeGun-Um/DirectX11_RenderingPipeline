@@ -75,7 +75,10 @@ void Ext_MeshComponentUnit::RenderUnitSetting()
 void Ext_MeshComponentUnit::RenderUnitDraw()
 {
 	UINT IndexCount = Mesh->GetIndexBuffer()->GetVertexCount();
-	Ext_DirectXDevice::GetContext()->DrawIndexed(IndexCount, 0, 0);
+	Ext_DirectXDevice::GetContext()->DrawIndexed(IndexCount, 0, 0); // 파이프라인 설정 완료 후, GPU에게 그리라고 명령
+	// 1. 그릴 인덱스 갯수(Mesh가 가진 전체 인덱스 갯수)
+	// 2. 인덱스 버퍼 내에서 시작할 위치(보통 0부터 시작)
+	// 3. 정점 버퍼 내 정점 인덱스의 시작값 오프셋(주로 0)
 }
 
 void Ext_MeshComponentUnit::Rendering(float _Deltatime)

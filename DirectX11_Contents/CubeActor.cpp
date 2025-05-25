@@ -14,42 +14,19 @@ CubeActor::~CubeActor()
 
 void CubeActor::Start()
 {
-	Ext_Actor::Start();
-	// CreateComponent<Ext_Component>("TestComp", true);
-	GetTransform()->SetWorldPosition({ 150.f, 0.f, 100.0f });
-	GetTransform()->SetWorldScale({ 100.f, 100.f, 100.f }); // 크기 확대
-	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
-	MeshComp->CreateMeshComponentUnit("Box", "Basic");
+	GetTransform()->SetWorldPosition({ 0.f, 0.f, 20.0f }); // 위치 설정
+	GetTransform()->SetWorldScale({ 10.f, 10.f, 10.f }); // 크기 설정
+	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true); // 메시 생성
+	MeshComp->CreateMeshComponentUnit("Box", "Basic"); // 렌더링 세팅 설정
 }
 
 void CubeActor::Update(float _DeltaTime)
 {
-	static bool bUp = true;
+	float MoveSpeed = 100.0f; // 초당 10 단위 회전
 
-	AccTime += _DeltaTime;
-
-	float MoveSpeed = 100.0f; // 초당 100 단위 이동
-	float4 MoveDir = float4::ZERO;
-
-	if (bUp)
-	{
-		MoveDir = float4::UP * MoveSpeed * _DeltaTime;
-	}
-	else
-	{
-		MoveDir = float4::DOWN * MoveSpeed * _DeltaTime;
-	}
-
-	GetTransform()->AddWorldPosition(MoveDir);
-	GetTransform()->AddWorldRotation({ 1.f, 0.f, 0.f });
-	GetTransform()->AddWorldRotation({ 0.f, 1.f, 0.f });
-	GetTransform()->AddWorldRotation({ 0.f, 0.f, 1.f });
-
-	if (AccTime >= 1.5f)
-	{
-		AccTime = 0.0f;
-		bUp = !bUp; // 방향 반전
-	}
+	GetTransform()->AddWorldRotation({ MoveSpeed * _DeltaTime, 0.f, 0.f });
+	GetTransform()->AddWorldRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
+	GetTransform()->AddWorldRotation({ 0.f, 0.f, MoveSpeed * _DeltaTime });
 }
 
 void CubeActor::Destroy()

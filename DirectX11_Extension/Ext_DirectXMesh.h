@@ -10,8 +10,8 @@ class Ext_DirectXMesh : public Ext_ResourceManager<Ext_DirectXMesh>
 
 public:
 	// constrcuter destructer
-	Ext_DirectXMesh();
-	~Ext_DirectXMesh();
+	Ext_DirectXMesh() {}
+	~Ext_DirectXMesh() {}
 
 	// delete Function
 	Ext_DirectXMesh(const Ext_DirectXMesh& _Other) = delete;
@@ -39,7 +39,6 @@ public:
 
 		return NewMesh;
 	}
-
 
 	// Getter
 	std::shared_ptr<class Ext_DirectXVertexBuffer> GetVertexBuffer() { return VertexBufferPtr; }

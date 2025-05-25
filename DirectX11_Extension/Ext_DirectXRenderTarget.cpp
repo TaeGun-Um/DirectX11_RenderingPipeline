@@ -68,11 +68,11 @@ void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)
 // Textures에 저장된 렌더 타겟 뷰들을 모두 클리어
 void Ext_DirectXRenderTarget::RenderTargetViewsClear()
 {
-	for (size_t i = 0; i < Textures.size(); i++)
+	for (size_t i = 0; i < Textures.size(); i++) 
 	{
 		for (size_t j = 0; j < Textures[i]->GetRTVSize(); j++)
 		{
-			COMPTR<ID3D11RenderTargetView> RTV = Textures[i]->GetRTV(j);
+			COMPTR<ID3D11RenderTargetView> RTV = Textures[i]->GetRTV(j); // 하나의 텍스쳐가 여러 개를 가지고 있을 수 있음
 
 			if (nullptr == RTV)
 			{
@@ -81,14 +81,16 @@ void Ext_DirectXRenderTarget::RenderTargetViewsClear()
 			}
 
 			Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), Colors[i].Arr1D); // 기본 컬러(파란색)으로 클리어
+			// 1. 클리어 대상
+			// 2. 무슨 색으로 클리어 할것인가
 		}
 	}
 }
 
-// 뎁스스텐실뷰 클리어
+// 렌더링 시작 시 깊이 및 스텐실 버퍼를 초기화하여, 이전 프레임에 남아있는 데이터 제거
 void Ext_DirectXRenderTarget::DepthStencilViewClear()
 {
-	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV(); // 깊이/스텐실 텍스쳐를 담고 있는 객체
 
 	if (nullptr == DSV)
 	{
@@ -97,6 +99,10 @@ void Ext_DirectXRenderTarget::DepthStencilViewClear()
 	}
 
 	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	// 1. 클리어 대상
+	// 2. 어떻게 클리어 할것인가
+	// 3. 깊이 클리어값(가장 멀리)
+	// 4. 스텐실 클리어값(일반적인 0을 넣음)
 }
 
 // 렌더타겟뷰, 뎁스스텐실뷰 클리어
@@ -106,16 +112,17 @@ void Ext_DirectXRenderTarget::RenderTargetClear()
 	DepthStencilViewClear();
 }
 
+// 렌더 타겟 바인딩 담당, Draw(), Clear(), Shader Binding 등이 올바른 렌더 타겟에 수행될 수 있도록 설정
 void Ext_DirectXRenderTarget::RenderTargetSetting()
 {
-	COMPTR<ID3D11RenderTargetView> RTV = Textures[0]->GetRTV(0);
+	COMPTR<ID3D11RenderTargetView> RTV = Textures[0]->GetRTV(0); // 첫 번째 RTV(RenderTargetView) 를 가져옴(백 버퍼임)
 
 	if (nullptr == RTV)
 	{
 		MsgAssert("랜더타겟 뷰가 존재하지 않아서 클리어가 불가능합니다.");
 	}
 
-	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV(); // 깊이 텍스처에서 DSV(DepthStencilView) 획득
 
 	//if (false == DepthSetting)
 	//{
@@ -127,6 +134,9 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 		MsgAssert("뎁스스텐실뷰 왓");
 	}
 	
-	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get());
-	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]);
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
+	// 1. 바인딩할 렌더타겟뷰 갯수
+	// 2. RTV의 시작 주소
+	// 3. 깊이/스텐실 뷰 포인터(딱히 없으면nullptr 가능)
+	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]); // Rasterizer 스테이지에 현재 프레임에서 사용할 ViewPort 영역 설정, 이게 있어야 NDC > 픽셀 공간 변환이 올바르게 수행됨
 }

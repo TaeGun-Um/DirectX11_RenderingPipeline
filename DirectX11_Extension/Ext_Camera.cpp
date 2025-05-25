@@ -11,9 +11,9 @@
 // 현재 카메라 타입에 따라 뷰, 프로젝션, 뷰포트 행렬 세팅
 void Ext_Camera::CameraTransformUpdate()
 {
+	float4 EyePos = GetTransform()->GetWorldPosition();
 	float4 EyeDir = GetTransform()->GetLocalForwardVector();
 	float4 EyeUp = GetTransform()->GetLocalUpVector();
-	float4 EyePos = GetTransform()->GetWorldPosition();
 	ViewMatrix.LookToLH(EyePos, EyeDir, EyeUp);
 
 	switch (CameraType)
@@ -95,7 +95,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 			if (!CurMeshComponent->GetIsUpdate()) continue;
 			else
 			{
-				CurMeshComponent->Rendering(_Deltatime, GetSharedFromThis<Ext_Camera>()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
+				CurMeshComponent->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
 				// [!] 필요하면 픽셀 셰이더에서 활용할 Value들 업데이트
 			}
 		}

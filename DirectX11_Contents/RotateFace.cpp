@@ -17,7 +17,7 @@ void RotateFace::Start()
 	Ext_Actor::Start();
 	// CreateComponent<Ext_Component>("TestComp", true);
 	GetTransform()->SetWorldPosition({ 0.f, 0.f, 10.0f });
-	GetTransform()->SetWorldScale({ 200.f, 200.f, 1.f }); // 크기 확대
+	GetTransform()->SetWorldScale({ 100.f, 100.f, 1.f }); // 크기 확대
 	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 	MeshComp->CreateMeshComponentUnit("RotateFace", "Basic");
 }

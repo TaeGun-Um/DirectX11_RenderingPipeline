@@ -86,7 +86,6 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
 
 		CurCamera->CameraTransformUpdate(); // 카메라에 대한 뷰, 프로젝션, 뷰포트 행렬 최신화
-		CurCamera->ViewPortSetting(); // 뷰포트 세팅
 
 		// 임시
 		{

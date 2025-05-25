@@ -42,6 +42,7 @@ void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSiz
 	}
 }
 
+// 인덱스 버퍼 종류 설정
 void Ext_DirectXIndexBuffer::IndexBufferSetting()
 {
 	if (nullptr == IndexBuffer)
@@ -51,4 +52,7 @@ void Ext_DirectXIndexBuffer::IndexBufferSetting()
 	}
 
 	Ext_DirectXDevice::GetContext()->IASetIndexBuffer(IndexBuffer.Get(), Format, Offset);
+	// 1. 인덱스 버퍼
+	// 2. 인덱스 데이터 타입, DXGI_FORMAT_R32_UINT 전달
+	// 3. Offset 전달, 보통 0부터 시작
 }

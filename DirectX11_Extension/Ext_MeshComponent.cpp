@@ -38,15 +38,9 @@ void Ext_MeshComponent::Start()
 	PushMeshToCamera("MainCamera");
 }
 
-// 뷰, 프로젝션행렬을 MeshComponent의 Transform에 적용
-void Ext_MeshComponent::MeshComponentTransformSetting(std::shared_ptr<Ext_Camera> _Camera)
+// 각 메시들의 Rendering() 함수를 매틱 실행
+void Ext_MeshComponent::Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
 {
-	GetTransform()->SetCameraMatrix(_Camera->GetViewMatrix(), _Camera->GetProjectionMatrix());
-}
-
-// 카메라 Rendering에서 여기로 온다음, 각 메시들의 Rendering() 함수를 매틱 실행
-void Ext_MeshComponent::Rendering(float _Deltatime, std::shared_ptr<Ext_Camera> _Camera)
-{
-	MeshComponentTransformSetting(_Camera);
+	GetTransform()->SetCameraMatrix(_ViewMatrix, _ProjectionMatrix); // 뷰, 프로젝션 세팅
 }
 

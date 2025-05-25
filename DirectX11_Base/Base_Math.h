@@ -443,7 +443,6 @@ public:
 	// 카메라의 위치, 바라보는 방향, 위쪽 방향을 기준으로 월드 -> 뷰 변환 행렬(View Matrix) 생성
 	void LookToLH(const float4& _EyePos, const float4& _EyeDir, const float4& _EyeUp)
 	{
-		Identity();
 		DirectMatrix = DirectX::XMMatrixLookToLH(_EyePos, _EyeDir, _EyeUp);
 	}
 
@@ -469,7 +468,6 @@ public:
 		// 2. _AspectRatio : 종횡비 (가로/세로)
 		// 3. _NearZ : 근평면(z최솟값)
 		// 4. _FarZ : 원평면(z최댓값)
-		Identity();
 		DirectMatrix = DirectX::XMMatrixPerspectiveFovLH(_FovAngle * Base_Math::DegreeToRadian, _AspectRatio, _NearZ, _FarZ);
 		
 		// [Z압축]

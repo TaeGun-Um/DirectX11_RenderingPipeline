@@ -59,4 +59,7 @@ void Ext_DirectXPixelShader::PixelShaderSetting()
 	}
 
 	Ext_DirectXDevice::GetContext()->PSSetShader(PixelShader.Get(), nullptr, 0);
+	// 1. 바인디할 셰이더 객체
+	// 2. 셰이더에 사용할 클래스 배열 전달(보통 nullptr)
+	// 3. 클래스 개수(보통 0)
 }

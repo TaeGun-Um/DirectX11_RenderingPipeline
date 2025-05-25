@@ -76,47 +76,50 @@ void Ext_DirectXShader::ShaderResourceSetting()
 	}
 
 	// Reflection 
-	// RTTI의 비슷한 개념으로 
 	ID3D11ShaderReflection* CompileInfo = nullptr;
 
+	// 셰이더 바이트코드를 리플렉션하여 셰이더 내부의 입력 구조/상수버퍼/리소스 슬롯 등을 추출할 수 있는 객체를 반환
 	if (S_OK != D3DReflect(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&CompileInfo)))
 	{
 		MsgAssert("쉐이더 리플렉션에 실패했습니다.");
 		return;
 	}
+	// <<설명>>
+	/*1. 컴파일된 HLSL 셰이더의 시작 주소*/
+	/*2. 바이트코드의 크기*/
+	/*3. 리플렉션 인터페이스 ID(직접 __uuidof(ID3D11ShaderReflection) 써도 됨)*/
+	/*4. 결과로 생성될 리플렉션 인터페이스 포인터*/
 
 	D3D11_SHADER_DESC Info;
-	CompileInfo->GetDesc(&Info);
+	CompileInfo->GetDesc(&Info); // 이 셰이더가 몇 개의 상수버퍼, 텍스처, 샘플러를 쓰는지 등의 총괄 정보를 Info 구조체에 채움
 	D3D11_SHADER_INPUT_BIND_DESC ResDesc;
 
 	// 내가 사용한 상수버퍼 텍스처 샘플러등의 총합입니다.
 	for (UINT i = 0; i < Info.BoundResources; i++)
 	{
-		// 리소스 정보를 얻어오게 되고
-		CompileInfo->GetResourceBindingDesc(i, &ResDesc);
-		std::string Name = ResDesc.Name;
-		D3D_SHADER_INPUT_TYPE Type = ResDesc.Type;
-		std::string UpperName = Base_String::ToUpper(ResDesc.Name);
+		CompileInfo->GetResourceBindingDesc(i, &ResDesc); // i번째 리소스의 이름, 바인딩 슬롯, 타입 등을 ResDesc에 채움
+		std::string Name = ResDesc.Name; // 원본 이름
+		D3D_SHADER_INPUT_TYPE Type = ResDesc.Type; // 리소스 타입 파싱
+		std::string UpperName = Base_String::ToUpper(ResDesc.Name); // 엔진 내부 대문자로 통일 처리
 
 		switch (Type)
 		{
 		case D3D_SIT_CBUFFER:
 		{
-			ID3D11ShaderReflectionConstantBuffer* CBufferPtr = CompileInfo->GetConstantBufferByName(ResDesc.Name);
+			ID3D11ShaderReflectionConstantBuffer* CBufferPtr = CompileInfo->GetConstantBufferByName(ResDesc.Name); // ID3D11ShaderReflectionConstantBuffer 획득
 
-			D3D11_SHADER_BUFFER_DESC BufferDesc;
+			D3D11_SHADER_BUFFER_DESC BufferDesc; // CBuffer 메타 정보 획득
 			CBufferPtr->GetDesc(&BufferDesc);
 
-			std::shared_ptr<Ext_DirectXConstantBuffer> ConstantBuffer = Ext_DirectXConstantBuffer::CreateConstantBuffer(UpperName, BufferDesc, BufferDesc.Size);
+			std::shared_ptr<Ext_DirectXConstantBuffer> ConstantBuffer = Ext_DirectXConstantBuffer::CreateConstantBuffer(UpperName, BufferDesc, BufferDesc.Size); // 상수버퍼 클래스 생성
 
-			ConstantBufferSetter Set;
-			Set.OwnerShader = GetSharedFromThis<Ext_DirectXShader>();
-			Set.Name = UpperName;
-			Set.BindPoint = ResDesc.BindPoint;
-			Set.ConstantBuffer = ConstantBuffer;
+			ConstantBufferSetter Set; 
+			Set.OwnerShader = GetSharedFromThis<Ext_DirectXShader>(); // 현재 셰이더
+			Set.Name = UpperName; // 이름 저장
+			Set.BindPoint = ResDesc.BindPoint; // GPU에 바인딩할 슬롯 정보 register(b0)
+			Set.ConstantBuffer = ConstantBuffer; // 상수 버퍼 저장
 
-			// std::multimap<std::string, GameEngineConstantBufferSetter> ConstantBufferSetters;에 저장
-			BufferSetter.InsertConstantBufferSetter(Set);
+			BufferSetter.InsertConstantBufferSetter(Set); // 세터에 저장
 
 			break;
 		}
