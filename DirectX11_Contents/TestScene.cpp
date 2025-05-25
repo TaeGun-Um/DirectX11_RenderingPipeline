@@ -30,7 +30,6 @@ void TestScene::Start()
 void TestScene::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
-	Ext_Scene::Update(_DeltaTime);
 }
 
 void TestScene::Destroy()

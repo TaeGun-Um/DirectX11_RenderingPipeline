@@ -183,3 +183,43 @@ int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()>
 
     return (int)msg.wParam;
 }
+
+// 콘솔 이벤트 핸들러 (전역 함수)
+BOOL WINAPI ConsoleHandler(DWORD CtrlType)
+{
+    switch (CtrlType)
+    {
+    case CTRL_CLOSE_EVENT:
+        std::cout << "[Console] 닫기 시도됨. 윈도우 종료 유도." << std::endl;
+
+        // 콘솔 닫기 대신 윈도우 종료 유도
+        PostMessage(Base_Windows::GetHWnd(), WM_CLOSE, 0, 0);
+        return TRUE;
+
+    case CTRL_C_EVENT:
+        std::cout << "[Console] CTRL+C 입력됨" << std::endl;
+        return TRUE;
+
+    default:
+        return FALSE;
+    }
+}
+
+void Base_Windows::CreateConsole()
+{
+    AllocConsole();
+
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+    freopen_s(&fp, "CONIN$", "r", stdin);
+
+    std::cout.clear();
+    std::clog.clear();
+    std::cerr.clear();
+    std::cin.clear();
+
+    std::cout << "[Console Initialized]" << std::endl;
+
+    SetConsoleCtrlHandler(ConsoleHandler, TRUE);
+}

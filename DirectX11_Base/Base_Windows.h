@@ -17,6 +17,7 @@ public:
 	static std::function<LRESULT(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)> UserMessageFunction;
 	static void WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen);
 	static int WindowLoop(std::function<void()> _Start, std::function<void()> _Loop, std::function<void()> _End);
+	static void CreateConsole();
 	
 	// Getter, Setter
 	static HWND GetHWnd()	 { return HWnd;	}
