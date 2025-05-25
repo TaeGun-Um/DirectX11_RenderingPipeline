@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ÇÁ·ÎÁ§Æ®ÀÇ Deltatime »êÃâÀ» À§ÇÑ Å¬·¡½º
+// í”„ë¡œì íŠ¸ì˜ Deltatime ì‚°ì¶œì„ ìœ„í•œ í´ë˜ìŠ¤
 class Base_Deltatime
 {
 public:
@@ -14,8 +14,8 @@ public:
 	Base_Deltatime& operator=(const Base_Deltatime& _Other) = delete;
 	Base_Deltatime& operator=(Base_Deltatime&& _Other) noexcept = delete;
 
-	float TimeCheck(); // ½Ã°£ Ã¼Å©
-	void TimeReset(); // ½Ã°£ ¸®¼Â
+	float TimeCheck(); // ì‹œê°„ ì²´í¬
+	void TimeReset(); // ì‹œê°„ ë¦¬ì…‹
 
 	static void ResetFrameTime() { GlobalTime.FrameTime = 0.0f; }
 
@@ -23,7 +23,7 @@ public:
 	static Base_Deltatime& GetGlobalTime() { return GlobalTime; }
 	float& GetFrameTime() { return GlobalTime.FrameTime; }
 	float& GetFrameLimit() { return GlobalTime.FrameLimit; }
-	float GetDeltaTime() const { return min(GlobalTime.floatDeltaTime, 0.1f); } // ÇÁ·¹ÀÓ µå¶ø ½Ã, clamp¸¦ À§ÇÑ ¸®ÅÏ ¹æ½Ä
+	float GetDeltaTime() const { return min(GlobalTime.floatDeltaTime, 0.1f); } // í”„ë ˆì„ ë“œë ì‹œ, clampë¥¼ ìœ„í•œ ë¦¬í„´ ë°©ì‹
 	void SetDeltaTime(float _DeltaTime) { GlobalTime.floatDeltaTime = _DeltaTime; }
 	void AddFrameTime(float _FrameTime) { GlobalTime.FrameTime += _FrameTime; }
 	void SetFrameRate(float _FrameRate) { GlobalTime.FrameRate = _FrameRate; }
@@ -32,11 +32,11 @@ public:
 protected:
 	
 private:
-	static Base_Deltatime GlobalTime; // ÇÁ·ÎÁ§Æ®ÀÇ µ¨Å¸ Å¸ÀÓÀ» ´ã´Â º¯¼ö
-	static float FrameTime; // ÇÁ·¹ÀÓ »êÃâÀ» À§ÇÑ º¯¼ö
-	static float FrameLimit; // ÇÁ·¹ÀÓ »óÇÑÀ» À§ÇÑ º¯¼ö
-	static float FrameRate; // ÇÁ·¹ÀÓ ºñÀ² ÀúÀå º¯¼ö(float)
-	static int FPS; // ÇÁ·¹ÀÓ ºñÀ² ÀúÀå º¯¼ö(int)
+	static Base_Deltatime GlobalTime; // í”„ë¡œì íŠ¸ì˜ ë¸íƒ€ íƒ€ì„ì„ ë‹´ëŠ” ë³€ìˆ˜
+	static float FrameTime; // í”„ë ˆì„ ì‚°ì¶œì„ ìœ„í•œ ë³€ìˆ˜
+	static float FrameLimit; // í”„ë ˆì„ ìƒí•œì„ ìœ„í•œ ë³€ìˆ˜
+	static float FrameRate; // í”„ë ˆì„ ë¹„ìœ¨ ì €ì¥ ë³€ìˆ˜(float)
+	static int FPS; // í”„ë ˆì„ ë¹„ìœ¨ ì €ì¥ ë³€ìˆ˜(int)
 
 	LARGE_INTEGER Current = LARGE_INTEGER();
 	LARGE_INTEGER Before = LARGE_INTEGER();

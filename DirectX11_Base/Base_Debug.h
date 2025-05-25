@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <crtdbg.h>
 #include <cassert>
@@ -6,14 +6,14 @@
 #define MsgAssert(MsgText) {std::string ErrorText = MsgText; MessageBoxA(nullptr, ErrorText.c_str(), "Error", MB_OK); assert(false);}
 #define MsgTextBox(MsgText) {std::string ErrorText = MsgText; MessageBoxA(nullptr, ErrorText.c_str(), "Text", MB_OK);}
 
-// µğ¹ö±ë ÇïÆÛ Å¬·¡½º
+// ë””ë²„ê¹… í—¬í¼ í´ë˜ìŠ¤
 class Base_Debug
 {
 public:
-	// ¸¯ Ã¼Å© ÇÔ¼ö ½ÇÇà
+	// ë¦­ ì²´í¬ í•¨ìˆ˜ ì‹¤í–‰
 	static void LeakCheck() { _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); }
 
-	// ¸¯ ¹ß»ı ÁöÁ¡ È®ÀÎ ÇÔ¼ö
+	// ë¦­ ë°œìƒ ì§€ì  í™•ì¸ í•¨ìˆ˜
 	static void LeakPointBreak(int _Point) { _CrtSetBreakAlloc(_Point); }
 	
 };

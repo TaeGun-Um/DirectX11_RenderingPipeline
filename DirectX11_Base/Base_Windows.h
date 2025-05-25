@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base_Math.h"
 
-// Windows Ã¢ »ı¼º¿ë Å¬·¡½º
+// Windows ì°½ ìƒì„±ìš© í´ë˜ìŠ¤
 class Base_Windows
 {
 public:

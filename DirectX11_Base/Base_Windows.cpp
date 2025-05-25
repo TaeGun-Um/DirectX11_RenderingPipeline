@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_Windows.h"
 #include "Base_Debug.h"
 #include "Base_Math.h"
@@ -15,7 +15,7 @@ float4              Base_Windows::WindowPosition = { 0.f, 0.f, 0.f, 0.f };
 bool                Base_Windows::IsWindowUpdate = true;
 bool                Base_Windows::IsWindowFocus = true;
 
-LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
+LRESULT CALLBACK Base_Windows::MessageFunction(HWND _ã…hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
     if (nullptr != UserMessageFunction)
     {
@@ -29,24 +29,24 @@ LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM
     {
     case WM_SETFOCUS: 
     {
-        // »ç¿ëÀÚ°¡ Alt+TabÀ¸·Î ÀÌ Ã¢À¸·Î µ¹¾Æ¿À°Å³ª, ¸¶¿ì½º·Î Å¬¸¯ÇÏ¿© È°¼ºÈ­µÈ °æ¿ì
+        // ì‚¬ìš©ìžê°€ Alt+Tabìœ¼ë¡œ ì´ ì°½ìœ¼ë¡œ ëŒì•„ì˜¤ê±°ë‚˜, ë§ˆìš°ìŠ¤ë¡œ í´ë¦­í•˜ì—¬ í™œì„±í™”ëœ ê²½ìš°
         IsWindowFocus = true;
         break;
     }
     case WM_KILLFOCUS:
     {
-        // ´Ù¸¥ Ã¢À¸·Î ÀüÈ¯µÇ°Å³ª ÃÖ¼ÒÈ­ µîÀ¸·Î ºñÈ°¼ºÈ­µÇ´Â ¼ø°£
+        // ë‹¤ë¥¸ ì°½ìœ¼ë¡œ ì „í™˜ë˜ê±°ë‚˜ ìµœì†Œí™” ë“±ìœ¼ë¡œ ë¹„í™œì„±í™”ë˜ëŠ” ìˆœê°„
         IsWindowFocus = false;
         break;
     }
     case WM_KEYDOWN:
     {
-        // »ç¿ëÀÚ°¡ Å°º¸µå ´­·¶À» ¶§ È°¼ºÈ­
+        // ì‚¬ìš©ìžê°€ í‚¤ë³´ë“œ ëˆŒë €ì„ ë•Œ í™œì„±í™”
         break;
     }
     case WM_DESTROY:
     {
-        // À©µµ¿ì°¡ ÆÄ±«µÉ ¶§ È°¼ºÈ­
+        // ìœˆë„ìš°ê°€ íŒŒê´´ë  ë•Œ í™œì„±í™”
         Base_Windows::SetWindowsEnd();
         break;
     }
@@ -59,7 +59,7 @@ LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM
 
 void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize, bool _IsFullScreen)
 {
-    // À©µµ¿ì Å¬·¡½ºÀÇ ¿ÜÇü°ú µ¿ÀÛ ¹æ½Ä µî·Ï
+    // ìœˆë„ìš° í´ëž˜ìŠ¤ì˜ ì™¸í˜•ê³¼ ë™ìž‘ ë°©ì‹ ë“±ë¡
     /*1*/wcex.cbSize = sizeof(WNDCLASSEX);
     /*2*/wcex.style = CS_HREDRAW | CS_VREDRAW;
     /*3*/wcex.lpfnWndProc = &Base_Windows::MessageFunction;
@@ -72,28 +72,28 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize,
     /*10*/wcex.lpszMenuName = nullptr;
     /*11*/wcex.lpszClassName = "WindowDefault";
     /*12*/wcex.hIconSm = nullptr;
-    // <<¼³¸í>>
-    // [1] ±¸Á¶Ã¼ÀÇ Å©±â ¼³Á¤, Ç×»ó sizeof(WNDCLASSEX)·Î ÁöÁ¤ÇØ¾ßÇÔ
+    // <<ì„¤ëª…>>
+    // [1] êµ¬ì¡°ì²´ì˜ í¬ê¸° ì„¤ì •, í•­ìƒ sizeof(WNDCLASSEX)ë¡œ ì§€ì •í•´ì•¼í•¨
     // [2] 
-    // [3] À©µµ¿ì ÇÁ·Î½ÃÀú ÇÔ¼ö Æ÷ÀÎÅÍ ¼³Á¤(¸Þ½ÃÁöÃ³¸® ÇÔ¼ö)
-    // [4] Å¬·¡½º ¿©ºÐ ¸Þ¸ð¸®, 0Àº »ç¿ë ¾ÈÇÔÀÌ¶ó´Â ¶æ
-    // [5] ÀÎ½ºÅÏ½º ¿©ºÐ ¸Þ¸ð¸®, 0Àº »ç¿ë ¾ÈÇÔÀÌ¶ó´Â ¶æ
-    // [6] ÇöÀç ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ ÇÚµé
-    // [7] Å« ¾ÆÀÌÄÜ ÇÚµé, nullptr Àü´Þ ½Ã ±âº» ¿É¼Ç »ç¿ë
-    // [8] ¸¶¿ì½º Ä¿¼­ ¼³Á¤, IDC_ARROW´Â ±âº» È­»ìÇ¥ÀÌ´Ù.
-    // [9] ¹è°æ ºê·¯½Ã ¼³Á¤, COLOR_WINDOW´Â ±âº» Èò»öÀÌ´Ù.
-    // [10] ¿¬°áµÈ ¸Þ´º ¸®¼Ò½º°¡ ÀÖ´ÂÁö? ¿©±â¼­´Â ¾øÀ½À¸·Î ¼³Á¤
-    // [11] »ý¼ºÇÒ À©µµ¿ì Å¬·¡½º ÀÌ¸§À» ÁöÁ¤, ÀÌ¸§Àº °íÀ¯ÇÏ°Ô »ç¿ëµÊ
-    // [12] ÀÛÀº ¾ÆÀÌÄÜ ÇÚµé, nullptr Àü´Þ ½Ã ±âº» ¿É¼Ç »ç¿ë
+    // [3] ìœˆë„ìš° í”„ë¡œì‹œì € í•¨ìˆ˜ í¬ì¸í„° ì„¤ì •(ë©”ì‹œì§€ì²˜ë¦¬ í•¨ìˆ˜)
+    // [4] í´ëž˜ìŠ¤ ì—¬ë¶„ ë©”ëª¨ë¦¬, 0ì€ ì‚¬ìš© ì•ˆí•¨ì´ë¼ëŠ” ëœ»
+    // [5] ì¸ìŠ¤í„´ìŠ¤ ì—¬ë¶„ ë©”ëª¨ë¦¬, 0ì€ ì‚¬ìš© ì•ˆí•¨ì´ë¼ëŠ” ëœ»
+    // [6] í˜„ìž¬ ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ í•¸ë“¤
+    // [7] í° ì•„ì´ì½˜ í•¸ë“¤, nullptr ì „ë‹¬ ì‹œ ê¸°ë³¸ ì˜µì…˜ ì‚¬ìš©
+    // [8] ë§ˆìš°ìŠ¤ ì»¤ì„œ ì„¤ì •, IDC_ARROWëŠ” ê¸°ë³¸ í™”ì‚´í‘œì´ë‹¤.
+    // [9] ë°°ê²½ ë¸ŒëŸ¬ì‹œ ì„¤ì •, COLOR_WINDOWëŠ” ê¸°ë³¸ í°ìƒ‰ì´ë‹¤.
+    // [10] ì—°ê²°ëœ ë©”ë‰´ ë¦¬ì†ŒìŠ¤ê°€ ìžˆëŠ”ì§€? ì—¬ê¸°ì„œëŠ” ì—†ìŒìœ¼ë¡œ ì„¤ì •
+    // [11] ìƒì„±í•  ìœˆë„ìš° í´ëž˜ìŠ¤ ì´ë¦„ì„ ì§€ì •, ì´ë¦„ì€ ê³ ìœ í•˜ê²Œ ì‚¬ìš©ë¨
+    // [12] ìž‘ì€ ì•„ì´ì½˜ í•¸ë“¤, nullptr ì „ë‹¬ ì‹œ ê¸°ë³¸ ì˜µì…˜ ì‚¬ìš©
 
-    // À§¿¡ »ý¼ºÇÑ wcex Å¬·¡½º¸¦ ½Ã½ºÅÛ¿¡ µî·Ï
+    // ìœ„ì— ìƒì„±í•œ wcex í´ëž˜ìŠ¤ë¥¼ ì‹œìŠ¤í…œì— ë“±ë¡
     if (!RegisterClassEx(&wcex))
     {
-        MsgAssert("À©µµ¿ì Å¬·¡½º µî·Ï¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+        MsgAssert("ìœˆë„ìš° í´ëž˜ìŠ¤ ë“±ë¡ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
         return;
     }
 
-    // ¸¸µé¾î³½ Å¬·¡½º ±â¹ÝÀ¸·Î ½ÇÁ¦ À©µµ¿ì Ã¢ »ý¼º
+    // ë§Œë“¤ì–´ë‚¸ í´ëž˜ìŠ¤ ê¸°ë°˜ìœ¼ë¡œ ì‹¤ì œ ìœˆë„ìš° ì°½ ìƒì„±
     HWnd = CreateWindow
     (
         /*1*/"WindowDefault", 
@@ -108,38 +108,38 @@ void Base_Windows::WindowCreate(HINSTANCE _hInstance, const float4& _ScreenSize,
         /*10*/_hInstance, 
         /*11*/nullptr
     );
-    // <<¼³¸í>>
-    // [1] µî·ÏÇÑ Å¬·¡½º ÀÌ¸§À» ³Ö¾îÁÜ, À§¿¡¼­ WindowDefault·Î µî·ÏÇÔ
-    // [2] À©µµ¿ì Á¦¸ñ Ç¥½ÃÁÙ¿¡ ¶ç¿ï ÅØ½ºÆ®, Ã¢ÀÇ ÀÌ¸§ÀÌ µÈ´Ù.
+    // <<ì„¤ëª…>>
+    // [1] ë“±ë¡í•œ í´ëž˜ìŠ¤ ì´ë¦„ì„ ë„£ì–´ì¤Œ, ìœ„ì—ì„œ WindowDefaultë¡œ ë“±ë¡í•¨
+    // [2] ìœˆë„ìš° ì œëª© í‘œì‹œì¤„ì— ë„ìš¸ í…ìŠ¤íŠ¸, ì°½ì˜ ì´ë¦„ì´ ëœë‹¤.
     // [3] 
-    // [4] À©µµ¿ì X ÁÂÇ¥, CW_USEDEFAULT´Â ±âº» ¿É¼Ç
-    // [5] À©µµ¿ì Y ÁÂÇ¥, CW_USEDEFAULT´Â ±âº» ¿É¼Ç, ¿É¼Ç ¼³Á¤ÀÌ ¹«½ÃµÊ(±âº»À¸·Î ¼³Á¤µÊ)
-    // [6] ³Êºñ ¼³Á¤, CW_USEDEFAULT´Â ÀÚµ¿ ¼³Á¤
-    // [7] ³ôÀÌ ¼³Á¤, CW_USEDEFAULT´Â ÀÚµ¿ ¼³Á¤, ¿É¼Ç ¼³Á¤ÀÌ ¹«½ÃµÊ(±âº»À¸·Î ¼³Á¤µÊ)
-    // [8] ºÎ¸ð À©µµ¿ì ÇÚµé ¿©ºÎ, ¾øÀ¸¸é nullptrÀ» Àü´ÞÇÏ¿© ÃÖ»óÀ§ À©µµ¿ì·Î »ý¼ºµÊ
-    // [9] ¸Þ´º ÇÚµé ¿©ºÎ, ¾øÀ¸¸é nullptr
-    // [10] ¾îÇÃ¸®ÄÉÀÌ¼Ç ÇÚµé ¿©ºÎ, ¿©±â¿¡ ÇØ´ç ÇÁ·Î¼¼½ºÀÇ ÇÚµéÀ» µî·ÏÇØÁÜ
-    // [11] Ãß°¡ µ¥ÀÌÅÍ ¿©ºÎ, ¾øÀ¸¸é nullptrÀ» Àü´Þ
+    // [4] ìœˆë„ìš° X ì¢Œí‘œ, CW_USEDEFAULTëŠ” ê¸°ë³¸ ì˜µì…˜
+    // [5] ìœˆë„ìš° Y ì¢Œí‘œ, CW_USEDEFAULTëŠ” ê¸°ë³¸ ì˜µì…˜, ì˜µì…˜ ì„¤ì •ì´ ë¬´ì‹œë¨(ê¸°ë³¸ìœ¼ë¡œ ì„¤ì •ë¨)
+    // [6] ë„ˆë¹„ ì„¤ì •, CW_USEDEFAULTëŠ” ìžë™ ì„¤ì •
+    // [7] ë†’ì´ ì„¤ì •, CW_USEDEFAULTëŠ” ìžë™ ì„¤ì •, ì˜µì…˜ ì„¤ì •ì´ ë¬´ì‹œë¨(ê¸°ë³¸ìœ¼ë¡œ ì„¤ì •ë¨)
+    // [8] ë¶€ëª¨ ìœˆë„ìš° í•¸ë“¤ ì—¬ë¶€, ì—†ìœ¼ë©´ nullptrì„ ì „ë‹¬í•˜ì—¬ ìµœìƒìœ„ ìœˆë„ìš°ë¡œ ìƒì„±ë¨
+    // [9] ë©”ë‰´ í•¸ë“¤ ì—¬ë¶€, ì—†ìœ¼ë©´ nullptr
+    // [10] ì–´í”Œë¦¬ì¼€ì´ì…˜ í•¸ë“¤ ì—¬ë¶€, ì—¬ê¸°ì— í•´ë‹¹ í”„ë¡œì„¸ìŠ¤ì˜ í•¸ë“¤ì„ ë“±ë¡í•´ì¤Œ
+    // [11] ì¶”ê°€ ë°ì´í„° ì—¬ë¶€, ì—†ìœ¼ë©´ nullptrì„ ì „ë‹¬
 
     if (true == _IsFullScreen)
     {
-        // GWL_STYLEÀº À©µµ¿ì ÀÏ¹Ý ½ºÅ¸ÀÏÀÌ¸ç, 0À» Àü´ÞÇÏ¸é ¸ðµç ½ºÅ¸ÀÏÀ» Á¦°ÅÇÑ´Ù. -> À©µµ¿ì Å¸ÀÌÆ²¹Ù, ´Ý±â¹öÆ° Á¦°ÅµÇ°í Å©±âÁ¶Àý ºÒ°¡·Î º¯°æ
+        // GWL_STYLEì€ ìœˆë„ìš° ì¼ë°˜ ìŠ¤íƒ€ì¼ì´ë©°, 0ì„ ì „ë‹¬í•˜ë©´ ëª¨ë“  ìŠ¤íƒ€ì¼ì„ ì œê±°í•œë‹¤. -> ìœˆë„ìš° íƒ€ì´í‹€ë°”, ë‹«ê¸°ë²„íŠ¼ ì œê±°ë˜ê³  í¬ê¸°ì¡°ì ˆ ë¶ˆê°€ë¡œ ë³€ê²½
         SetWindowLong(HWnd, GWL_STYLE, 0);
     }
 
     WindowBackBufferHdc = GetDC(HWnd);
 
-    ShowWindow(HWnd, SW_SHOW); // Ã¢ Ç¥½Ã ¹æ¹ý Á¦¾î, SW_SHOW´Â Ã¢À» È°¼ºÈ­ÇÏ°í ÇöÀç Å©±â¿Í À§Ä¡¿¡ Ç¥½Ã
-    UpdateWindow(HWnd);                 // Ã¢ÀÇ ¾÷µ¥ÀÌÆ® ¿µ¿ªÀÌ ºñ¾î ÀÖÁö ¾ÊÀº °æ¿ì Ã¢¿¡ WM_PAINT ¸Þ½ÃÁö¸¦ º¸³» ÁöÁ¤µÈ Ã¢ÀÇ Å¬¶óÀÌ¾ðÆ® ¿µ¿ªÀ» ¾÷µ¥ÀÌÆ®
+    ShowWindow(HWnd, SW_SHOW); // ì°½ í‘œì‹œ ë°©ë²• ì œì–´, SW_SHOWëŠ” ì°½ì„ í™œì„±í™”í•˜ê³  í˜„ìž¬ í¬ê¸°ì™€ ìœ„ì¹˜ì— í‘œì‹œ
+    UpdateWindow(HWnd);                 // ì°½ì˜ ì—…ë°ì´íŠ¸ ì˜ì—­ì´ ë¹„ì–´ ìžˆì§€ ì•Šì€ ê²½ìš° ì°½ì— WM_PAINT ë©”ì‹œì§€ë¥¼ ë³´ë‚´ ì§€ì •ëœ ì°½ì˜ í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì„ ì—…ë°ì´íŠ¸
 
-    RECT Rc = { 0, 0, _ScreenSize.ix(), _ScreenSize .iy() }; // À©µµ¿ì Ã¢ ¼³Á¤Àº Å¸ÀÌÆ²¹Ù, ÇÁ·¹ÀÓÀÇ Å©±â¸¦ °í·ÁÇÏ¿© ¼³Á¤ÇÑ´Ù.
-    AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE); // ³»°¡ ¿øÇÏ´Â Å©±â¸¦ ³ÖÀ¸¸é Å¸ÀÌÆ²¹Ù±îÁö °í·ÁÇÑ Å©±â¸¦ ¸®ÅÏÁÖ´Â ÇÔ¼ö.
+    RECT Rc = { 0, 0, _ScreenSize.ix(), _ScreenSize .iy() }; // ìœˆë„ìš° ì°½ ì„¤ì •ì€ íƒ€ì´í‹€ë°”, í”„ë ˆìž„ì˜ í¬ê¸°ë¥¼ ê³ ë ¤í•˜ì—¬ ì„¤ì •í•œë‹¤.
+    AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE); // ë‚´ê°€ ì›í•˜ëŠ” í¬ê¸°ë¥¼ ë„£ìœ¼ë©´ íƒ€ì´í‹€ë°”ê¹Œì§€ ê³ ë ¤í•œ í¬ê¸°ë¥¼ ë¦¬í„´ì£¼ëŠ” í•¨ìˆ˜.
     
     ScreenSize = _ScreenSize;
     WindowSize = { static_cast<float>(Rc.right - Rc.left), static_cast<float>(Rc.bottom - Rc.top) };
     WindowPosition = { 0.f, 0.f, 0.f, 0.f };
     
-    // 0À» ³Ö¾îÁÖ¸é ±âÁ¸ÀÇ Å©±â¸¦ À¯ÁöÇÑ´Ù.
+    // 0ì„ ë„£ì–´ì£¼ë©´ ê¸°ì¡´ì˜ í¬ê¸°ë¥¼ ìœ ì§€í•œë‹¤.
     SetWindowPos(HWnd, nullptr, WindowPosition.ix(), WindowPosition.iy(), WindowSize.ix(), WindowSize.iy(), SWP_NOZORDER);
 }
 
@@ -154,7 +154,7 @@ int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()>
 
     while (IsWindowUpdate)
     {
-        // ºñµ¿±â ÇÔ¼ö
+        // ë¹„ë™ê¸° í•¨ìˆ˜
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
             if (nullptr != _Loop)
@@ -168,7 +168,7 @@ int Base_Windows::WindowLoop(std::function<void()> _Start, std::function<void()>
             continue;
         }
 
-        // µ¥µåÅ¸ÀÓ, ÀÌ¶§µµ °ÔÀÓÀ» ½ÇÇàÇÑ´Ù.
+        // ë°ë“œíƒ€ìž„, ì´ë•Œë„ ê²Œìž„ì„ ì‹¤í–‰í•œë‹¤.
         if (nullptr != _Loop)
         {
             _Loop();

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
@@ -10,13 +10,13 @@ public:
 
 };
 
-// float 4°³¸¦ È°¿ëÇÒ ¼ö ÀÖ´Â Å¬·¡½º
+// float 4ê°œë¥¼ í™œìš©í•  ìˆ˜ ìˆëŠ” í´ë˜ìŠ¤
 class float4 final
 {
 public:
 	static const float4 LEFT, RIGHT, UP, DOWN, FORWARD, BACK, ONE, ZERO, ZERONULL, RED, BLUE, GREEN, WHITE, BLACK;
 	
-	// »ı¼ºÀÚ
+	// ìƒì„±ì
 	float4()
 		: x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
 	float4(float _x, float _y)
@@ -28,7 +28,7 @@ public:
 	float4(DirectX::FXMVECTOR _Vector)
 		: DirectVector(_Vector) {}
 
-	// ¸Ş¸ğ¸® »ç¿ë Á¤ÀÇ
+	// ë©”ëª¨ë¦¬ ì‚¬ìš© ì •ì˜
 	union
 	{
 		struct { float x; float y; float z;	 float w; };
@@ -41,7 +41,7 @@ public:
 		DirectX::XMVECTOR DirectVector;
 	};
 
-	// °£´ÜÇÑ return ÇÔ¼ö
+	// ê°„ë‹¨í•œ return í•¨ìˆ˜
 	float hx() const { return x * 0.5f; }
 	float hy() const { return y * 0.5f; }
 	float hz() const { return z * 0.5f; }
@@ -71,11 +71,11 @@ public:
 	bool IsZero() const { return x == 0.0f && y == 0.0f && z == 0.0f; }
 	float Size() const {	return sqrtf(x * x + y * y + z * z); }
 
-	// ¿¬»êÀÚ Á¤ÀÇ
+	// ì—°ì‚°ì ì •ì˜
 	operator DirectX::FXMVECTOR() const
 	{
-		// float4ÀÇ DirectX::XMVECTOR(DirectVector)¿¡ ´ëÇÑ ¾Ï½ÃÀû Çüº¯È¯ Áö¿ø
-		// ÀÌ°Ô ÀÖ¾î¾ß float4·Î DirectXÀÇ MathÇÔ¼ö »ç¿ë °¡´É
+		// float4ì˜ DirectX::XMVECTOR(DirectVector)ì— ëŒ€í•œ ì•”ì‹œì  í˜•ë³€í™˜ ì§€ì›
+		// ì´ê²Œ ìˆì–´ì•¼ float4ë¡œ DirectXì˜ Mathí•¨ìˆ˜ ì‚¬ìš© ê°€ëŠ¥
 		return DirectVector; 
 	}
 
@@ -170,22 +170,22 @@ public:
 		return *this;
 	}
 
-	// float4x4´Â ¾Æ·¡¿¡ ÀÖ±â ¶§¹®¿¡, cpp·Î ±¸ÇöºÎ¸¦ ¿Å°Ü¼­ È°¿ë
+	// float4x4ëŠ” ì•„ë˜ì— ìˆê¸° ë•Œë¬¸ì—, cppë¡œ êµ¬í˜„ë¶€ë¥¼ ì˜®ê²¨ì„œ í™œìš©
 	float4 operator*(const class float4x4& _Other);
 	float4& operator*=(const class float4x4& _Other);
 
-	// °£´ÜÇÑ ¼öÇĞ °ü·Ã ÇÔ¼ö
-	float4 QuaternionToDegree();	// ÄõÅÍ´Ï¾ğ °ªÀ» ¿ÀÀÏ·¯ °¢(Degree)À¸·Î º¯°æ
-	float4 QuaternionToRadian();	// ÄõÅÍ´Ï¾ğ °ªÀ» ¿ÀÀÏ·¯ ¶óµğ¾È(Radian)À¸·Î º¯°æ
-	float4 DegreeToQuaternion();	// ¿ÀÀÏ·¯ °¢(Degree)À» ÄõÅÍ´Ï¾ğ °ªÀ¸·Î º¯°æ
+	// ê°„ë‹¨í•œ ìˆ˜í•™ ê´€ë ¨ í•¨ìˆ˜
+	float4 QuaternionToDegree();	// ì¿¼í„°ë‹ˆì–¸ ê°’ì„ ì˜¤ì¼ëŸ¬ ê°(Degree)ìœ¼ë¡œ ë³€ê²½
+	float4 QuaternionToRadian();	// ì¿¼í„°ë‹ˆì–¸ ê°’ì„ ì˜¤ì¼ëŸ¬ ë¼ë””ì•ˆ(Radian)ìœ¼ë¡œ ë³€ê²½
+	float4 DegreeToQuaternion();	// ì˜¤ì¼ëŸ¬ ê°(Degree)ì„ ì¿¼í„°ë‹ˆì–¸ ê°’ìœ¼ë¡œ ë³€ê²½
 
-	// º¤ÅÍ(float4)¸¦ ´ÜÀ§º¤ÅÍ·Î º¯°æ
+	// ë²¡í„°(float4)ë¥¼ ë‹¨ìœ„ë²¡í„°ë¡œ ë³€ê²½
 	void Normalize()
 	{
 		DirectVector = DirectX::XMVector3Normalize(*this);
 	}
 
-	// º¤ÅÍ(float4)¸¦ ´ÜÀ§º¤ÅÍ·Î º¯°æÈÄ ¸®ÅÏ
+	// ë²¡í„°(float4)ë¥¼ ë‹¨ìœ„ë²¡í„°ë¡œ ë³€ê²½í›„ ë¦¬í„´
 	float4 NormalizeReturn()
 	{
 		float4 Result = *this;
@@ -193,7 +193,7 @@ public:
 		return Result;
 	}
 
-	// Degree ´ÜÀ§·Î XÃà È¸Àü
+	// Degree ë‹¨ìœ„ë¡œ Xì¶• íšŒì „
 	float4 RotationXDegeree(float _Degree)
 	{
 		float4 ReturnValue = *this;
@@ -201,7 +201,7 @@ public:
 		return ReturnValue;
 	}
 
-	// Degree ´ÜÀ§·Î YÃà È¸Àü
+	// Degree ë‹¨ìœ„ë¡œ Yì¶• íšŒì „
 	float4 RotationYDegeree(float _Degree)
 	{
 		float4 ReturnValue = *this;
@@ -209,7 +209,7 @@ public:
 		return ReturnValue;
 	}
 
-	// Degree ´ÜÀ§·Î ZÃà È¸Àü
+	// Degree ë‹¨ìœ„ë¡œ Zì¶• íšŒì „
 	float4 RotationZDegeree(float _Degree)
 	{
 		float4 ReturnValue = *this;
@@ -217,22 +217,22 @@ public:
 		return ReturnValue;
 	}
 
-	void RotationXRadian(float _Radian); // Radian ´ÜÀ§·Î XÃà È¸Àü
-	void RotationYRadian(float _Radian); // Radian ´ÜÀ§·Î YÃà È¸Àü
-	void RotationZRadian(float _Radian); // Radian ´ÜÀ§·Î ZÃà È¸Àü
+	void RotationXRadian(float _Radian); // Radian ë‹¨ìœ„ë¡œ Xì¶• íšŒì „
+	void RotationYRadian(float _Radian); // Radian ë‹¨ìœ„ë¡œ Yì¶• íšŒì „
+	void RotationZRadian(float _Radian); // Radian ë‹¨ìœ„ë¡œ Zì¶• íšŒì „
 
 private:
 
 };
 // typedef float4 Quaternion;
 
-// float 16°³¸¦ 2Â÷¿ø ¹è¿­ ÇüÅÂ·Î È°¿ëÇÒ ¼ö ÀÖ´Â Å¬·¡½º
+// float 16ê°œë¥¼ 2ì°¨ì› ë°°ì—´ í˜•íƒœë¡œ í™œìš©í•  ìˆ˜ ìˆëŠ” í´ë˜ìŠ¤
 class float4x4 final
 {
 public:
 	static const float4x4 ZEROMATRIX;
 
-	// »ı¼ºÀÚ
+	// ìƒì„±ì
 	float4x4() 
 	{ 
 		Identity(); 
@@ -249,7 +249,7 @@ public:
 	float4x4(DirectX::FXMMATRIX _DirectMatrix)
 		: DirectMatrix(_DirectMatrix) { }
 
-	// ¸Ş¸ğ¸® »ç¿ë Á¤ÀÇ
+	// ë©”ëª¨ë¦¬ ì‚¬ìš© ì •ì˜
 	union
 	{
 		float Arr1D[16];
@@ -278,7 +278,7 @@ public:
 		};
 	};
 
-	// ¿¬»êÀÚ Á¤ÀÇ
+	// ì—°ì‚°ì ì •ì˜
 	operator DirectX::FXMMATRIX() const
 	{
 		return DirectMatrix;
@@ -296,7 +296,7 @@ public:
 		return *this;
 	}
 
-	// 4x4 ´ÜÀ§Çà·Ä(Identity Matrix) »ı¼º
+	// 4x4 ë‹¨ìœ„í–‰ë ¬(Identity Matrix) ìƒì„±
 	//	| 1  0  0  0 |
 	//	| 0  1  0  0 |
 	//	| 0  0  1  0 |
@@ -306,7 +306,7 @@ public:
 		DirectMatrix = DirectX::XMMatrixIdentity();
 	}
 
-	// ÁÖ¾îÁø Å©±â º¤ÅÍ ±â¹İÀ¸·Î 4x4 Å©±â(Scale) Çà·Ä »ı¼º
+	// ì£¼ì–´ì§„ í¬ê¸° ë²¡í„° ê¸°ë°˜ìœ¼ë¡œ 4x4 í¬ê¸°(Scale) í–‰ë ¬ ìƒì„±
 	//	| Sx  0   0   0 |
 	//	| 0   Sy  0   0 |
 	//	| 0   0   Sz  0 |
@@ -317,7 +317,7 @@ public:
 		DirectMatrix = DirectX::XMMatrixScalingFromVector(_Value);
 	}
 
-	// ÁÖ¾îÁø ÀÌµ¿ º¤ÅÍ ±â¹İÀ¸·Î 4x4 ÀÌµ¿(Translation) Çà·Ä »ı¼º
+	// ì£¼ì–´ì§„ ì´ë™ ë²¡í„° ê¸°ë°˜ìœ¼ë¡œ 4x4 ì´ë™(Translation) í–‰ë ¬ ìƒì„±
 	//	| 1   0   0   0 |
 	//	| 0   1   0   0 |
 	//	| 0   0   1   0 |
@@ -328,7 +328,7 @@ public:
 		DirectMatrix = DirectX::XMMatrixTranslationFromVector(_Value);
 	}
 
-	// X, Y, ZÃàÀ» ±âÁØÀ¸·Î È¸ÀüÇÏ´Â 4x4 È¸Àü(Ratation) Çà·Ä »ı¼º
+	// X, Y, Zì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ íšŒì „í•˜ëŠ” 4x4 íšŒì „(Ratation) í–‰ë ¬ ìƒì„±
 	void RotationXDegeree(const float _Degree)
 	{
 		RotationXRadian(_Degree * Base_Math::DegreeToRadian);
@@ -344,9 +344,9 @@ public:
 		RotationZRadian(_Degree * Base_Math::DegreeToRadian);
 	}
 
-	// 	| 1   0        0			0 | XÃàÀ» Áß½ÉÀ¸·Î Y, Z°¡ È¸Àü
-	// 	| 0  cos¥è    sin¥è		0 |
-	// 	| 0 -sin¥è    cos¥è		0 |
+	// 	| 1   0        0			0 | Xì¶•ì„ ì¤‘ì‹¬ìœ¼ë¡œ Y, Zê°€ íšŒì „
+	// 	| 0  cosÎ¸    sinÎ¸		0 |
+	// 	| 0 -sinÎ¸    cosÎ¸		0 |
 	// 	| 0   0        0			1 |
 	void RotationXRadian(const float _Radian)
 	{
@@ -354,9 +354,9 @@ public:
 		DirectMatrix = DirectX::XMMatrixRotationX(_Radian);
 	}
 
-	//	| cos¥è   0 - sin¥è		0 | YÃàÀ» Áß½ÉÀ¸·Î X, Z°¡ È¸Àü
+	//	| cosÎ¸   0 - sinÎ¸		0 | Yì¶•ì„ ì¤‘ì‹¬ìœ¼ë¡œ X, Zê°€ íšŒì „
 	//	|  0     1    0			0 |
-	//	| sin¥è   0   cos¥è		0 |
+	//	| sinÎ¸   0   cosÎ¸		0 |
 	//	|  0     0    0			1 |
 	void RotationYRadian(const float _Radian)
 	{
@@ -364,8 +364,8 @@ public:
 		DirectMatrix = DirectX::XMMatrixRotationY(_Radian);
 	}
 	
-	//	| cos¥è   sin¥è   0		0 | ZÃàÀ» Áß½ÉÀ¸·Î X, Y°¡ È¸Àü
-	//	| -sin¥è  cos¥è   0		0 |
+	//	| cosÎ¸   sinÎ¸   0		0 | Zì¶•ì„ ì¤‘ì‹¬ìœ¼ë¡œ X, Yê°€ íšŒì „
+	//	| -sinÎ¸  cosÎ¸   0		0 |
 	//	|  0      0        1		0 |
 	//	|  0      0        0		1 |
 	void RotationZRadian(const float _Radian)
@@ -374,14 +374,14 @@ public:
 		DirectMatrix = DirectX::XMMatrixRotationZ(_Radian);
 	}
 
-	// X, Y, Z¸¦ ¹Ş¾Æ È¸Àü, È¸Àü ¼ø¼­´Â Z->Y->X
+	// X, Y, Zë¥¼ ë°›ì•„ íšŒì „, íšŒì „ ìˆœì„œëŠ” Z->Y->X
 	void RotationDegree(const float4& _Degree)
 	{
 		float4 Rot = _Degree * Base_Math::DegreeToRadian;
 		DirectMatrix = DirectX::XMMatrixRotationRollPitchYaw(Rot.x, Rot.y, Rot.z);
 	}
 
-	// 4x4 Çà·ÄÀÇ ÀüÄ¡(Transpose) Çà·Ä »ı¼º
+	// 4x4 í–‰ë ¬ì˜ ì „ì¹˜(Transpose) í–‰ë ¬ ìƒì„±
 	//	| a00 a01 a02 a03 |		| a00 a10 a20 a30 |
 	//	| a10 a11 a12 a13 |		| a01 a11 a21 a31 |
 	//	| a20 a21 a22 a23 |  ->	| a02 a12 a22 a32 |
@@ -391,8 +391,8 @@ public:
 		DirectMatrix = DirectX::XMMatrixTranspose(*this);
 	}
 
-	// 4x4 Çà·ÄÀÇ ¿ªÇà·Ä(Inverse Matrix) »ı¼º
-	// ¾î¶² Çà·Ä ??¿¡ ´ëÇØ,  ??^(?1)ÀÌ Á¸ÀçÇÏ°í ??¡¿??^(?1) = ?? (´ÜÀ§ Çà·Ä)ÀÌ¸é, ??^(?1)Àº ??ÀÇ ¿ªÇà·Ä
+	// 4x4 í–‰ë ¬ì˜ ì—­í–‰ë ¬(Inverse Matrix) ìƒì„±
+	// ì–´ë–¤ í–‰ë ¬ ??ì— ëŒ€í•´,  ??^(?1)ì´ ì¡´ì¬í•˜ê³  ??Ã—??^(?1) = ?? (ë‹¨ìœ„ í–‰ë ¬)ì´ë©´, ??^(?1)ì€ ??ì˜ ì—­í–‰ë ¬
 	void Inverse()
 	{
 		DirectMatrix = DirectX::XMMatrixInverse(nullptr, *this);
@@ -405,7 +405,7 @@ public:
 		return Return;
 	}
 
-	// Å©±â, È¸Àü, ÀÌµ¿ º¤ÅÍ¸¦ Á¶ÇÕÇÏ¿© 4x4 ¾ÆÇÉ º¯È¯ Çà·Ä(Affine Transformation Matrix) »ı¼º
+	// í¬ê¸°, íšŒì „, ì´ë™ ë²¡í„°ë¥¼ ì¡°í•©í•˜ì—¬ 4x4 ì•„í•€ ë³€í™˜ í–‰ë ¬(Affine Transformation Matrix) ìƒì„±
 	void Compose(const float4& _Scale, const float4& _Quaternion, const float4& _Position)
 	{
 		float4 _Rot = _Quaternion;
@@ -413,81 +413,81 @@ public:
 		*this = DirectX::XMMatrixAffineTransformation(_Scale.DirectVector, _Rot.DirectVector, _Quaternion.DirectVector, _Position.DirectVector);
 	}
 
-	// 4x4 ¾ÆÇÉ º¯È¯ Çà·ÄÀ» Å©±â, È¸Àü, ÀÌµ¿ º¤ÅÍ·Î ºĞÇØÇØÁÜ
+	// 4x4 ì•„í•€ ë³€í™˜ í–‰ë ¬ì„ í¬ê¸°, íšŒì „, ì´ë™ ë²¡í„°ë¡œ ë¶„í•´í•´ì¤Œ
 	void Decompose(float4& _Scale, float4& _Quaternion, float4& _Pos) const
 	{
 		DirectX::XMMatrixDecompose(&_Scale.DirectVector, &_Quaternion.DirectVector, &_Pos.DirectVector, DirectMatrix);
 	}
 
-	// ÀÌµ¿¸¸ ºĞÇØ
+	// ì´ë™ë§Œ ë¶„í•´
 	void DecomposePosition(float4& _Position)
 	{
 		float4 Temp0; float4 Temp1;
 		DirectX::XMMatrixDecompose(&Temp0.DirectVector, &Temp1.DirectVector, &_Position.DirectVector, DirectMatrix);
 	}
 
-	// Å©±â¸¸ ºĞÇØ
+	// í¬ê¸°ë§Œ ë¶„í•´
 	void DecomposeScale(float4& _Scale)
 	{
 		float4 Temp0; float4 Temp1;
 		DirectX::XMMatrixDecompose(&_Scale.DirectVector, &Temp0.DirectVector, &Temp1.DirectVector, DirectMatrix);
 	}
 
-	// È¸Àü¸¸ ºĞÇØ
+	// íšŒì „ë§Œ ë¶„í•´
 	void DecomposeRotQuaternion(float4& _Quaternion)
 	{
 		float4 Temp0; float4 Temp1;
 		DirectX::XMMatrixDecompose(&Temp0.DirectVector, &_Quaternion.DirectVector, &Temp1.DirectVector, DirectMatrix);
 	}
 
-	// Ä«¸Ş¶óÀÇ À§Ä¡, ¹Ù¶óº¸´Â ¹æÇâ, À§ÂÊ ¹æÇâÀ» ±âÁØÀ¸·Î ¿ùµå -> ºä º¯È¯ Çà·Ä(View Matrix) »ı¼º
+	// ì¹´ë©”ë¼ì˜ ìœ„ì¹˜, ë°”ë¼ë³´ëŠ” ë°©í–¥, ìœ„ìª½ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ ì›”ë“œ -> ë·° ë³€í™˜ í–‰ë ¬(View Matrix) ìƒì„±
 	void LookToLH(const float4& _EyePos, const float4& _EyeDir, const float4& _EyeUp)
 	{
 		Identity();
 		DirectMatrix = DirectX::XMMatrixLookToLH(_EyePos, _EyeDir, _EyeUp);
 	}
 
-	// ÁÂ¼ö ÁÂÇ¥°è ±â¹İÀÇ Á÷±³ Åõ¿µ Çà·Ä »ı¼º
+	// ì¢Œìˆ˜ ì¢Œí‘œê³„ ê¸°ë°˜ì˜ ì§êµ íˆ¬ì˜ í–‰ë ¬ ìƒì„±
 	void OrthographicLH(float _ScreenWidth, float _ScreenHeight, float _NearZ = 0.1f, float _FarZ = 10000.0f)
 	{
-		// 1. _ScreenWidth : Åõ¿µ °ø°£ÀÇ °¡·Î Æø
-		// 2. _ScreenHeight : Åõ¿µ °ø°£ÀÇ ¼¼·Î ³ôÀÌ
-		// 3. _NearZ : ±ÙÆò¸é °Å¸®
-		// 4. _FarZ : ¿øÆò¸é °Å¸®
+		// 1. _ScreenWidth : íˆ¬ì˜ ê³µê°„ì˜ ê°€ë¡œ í­
+		// 2. _ScreenHeight : íˆ¬ì˜ ê³µê°„ì˜ ì„¸ë¡œ ë†’ì´
+		// 3. _NearZ : ê·¼í‰ë©´ ê±°ë¦¬
+		// 4. _FarZ : ì›í‰ë©´ ê±°ë¦¬
 		Identity();
 		DirectMatrix = DirectX::XMMatrixOrthographicLH(_ScreenWidth, _ScreenHeight, _NearZ, _FarZ);
 	}
 
-	// ÁÂ¼ö ÁÂÇ¥°è ±â¹İÀÇ ¿ø±Ù Åõ¿µ Çà·Ä »ı¼º
+	// ì¢Œìˆ˜ ì¢Œí‘œê³„ ê¸°ë°˜ì˜ ì›ê·¼ íˆ¬ì˜ í–‰ë ¬ ìƒì„±
 	//	| yScale       0          0			0      | -> yScale = 1 / tan(FovY / 2)
 	//	| 0          xScale       0			0      | -> xScale = yScale / AspectRatio
-	//	| 0              0         Z¾ĞÃà		1      | -> FarZ / (FarZ - NearZ)
-	//	| 0              0         Zº¸Á¤		0	  	| -> -NearZ * FarZ / (FarZ - NearZ)
+	//	| 0              0         Zì••ì¶•		1      | -> FarZ / (FarZ - NearZ)
+	//	| 0              0         Zë³´ì •		0	  	| -> -NearZ * FarZ / (FarZ - NearZ)
 	void PerspectiveFovLH(float _FovAngle, float _AspectRatio, float _NearZ = 10.0f, float _FarZ = 10000.0f)
 	{
-		// 1. _FovAngle : ¼¼·Î ¹æÇâ ½Ã¾ß°¢(radian)
-		// 2. _AspectRatio : Á¾È¾ºñ (°¡·Î/¼¼·Î)
-		// 3. _NearZ : ±ÙÆò¸é(zÃÖ¼Ú°ª)
-		// 4. _FarZ : ¿øÆò¸é(zÃÖ´ñ°ª)
+		// 1. _FovAngle : ì„¸ë¡œ ë°©í–¥ ì‹œì•¼ê°(radian)
+		// 2. _AspectRatio : ì¢…íš¡ë¹„ (ê°€ë¡œ/ì„¸ë¡œ)
+		// 3. _NearZ : ê·¼í‰ë©´(zìµœì†Ÿê°’)
+		// 4. _FarZ : ì›í‰ë©´(zìµœëŒ“ê°’)
 		Identity();
 		DirectMatrix = DirectX::XMMatrixPerspectiveFovLH(_FovAngle * Base_Math::DegreeToRadian, _AspectRatio, _NearZ, _FarZ);
 		
-		// [Z¾ĞÃà]
-		// ¿ø·¡ ºä °ø°£¿¡ ´ëÇØ z°ªÀÌ NearZÀÌ»ó, FarZÀÌÇÏ·Î Á¸ÀçÇÏ´Â ¿ä¼Ò¶ó¸é, ÀÌ°ÍÀ» NDC °ø°£ÀÇ 0ÀÌ»ó, 1ÀÌÇÏ z·Î ¸ÅÇÎÇØ¾ß ÇÔ
-		// ºñ¼±Çü ±íÀÌ º¯È¯À» ¼öÇàÇÏ´Â ºÎºĞ
+		// [Zì••ì¶•]
+		// ì›ë˜ ë·° ê³µê°„ì— ëŒ€í•´ zê°’ì´ NearZì´ìƒ, FarZì´í•˜ë¡œ ì¡´ì¬í•˜ëŠ” ìš”ì†Œë¼ë©´, ì´ê²ƒì„ NDC ê³µê°„ì˜ 0ì´ìƒ, 1ì´í•˜ zë¡œ ë§¤í•‘í•´ì•¼ í•¨
+		// ë¹„ì„ í˜• ê¹Šì´ ë³€í™˜ì„ ìˆ˜í–‰í•˜ëŠ” ë¶€ë¶„
 		
-		// [Zº¸Á¤]
-		// Åõ¿µ ÁÂÇ¥°è¿¡¼­ z¸¦ w·Î ³ª´­ ¶§ ±íÀÌ°ªÀÌ ¿ª¼ö ºñ·ÊµÇµµ·Ï ¼³°èµÇ¾î¾ßÇÔ
-		//  -> °¡±î¿î ¹°Ã¼´Â z°¡ ÀÛ°í, wµµ ÀÛ¾Æ¼­ ±íÀÌ Å¬¸®ÇÎ Åë°ú
-		//  -> ¸Ö¸® ÀÖ´Â ¹°Ã¼´Â z / w °¡ ¸Å¿ì ÀÛ¾ÆÁ® ¿ø±Ù°¨ ¹ß»ı
-		// °í·Î zÃà ¿ø±Ù ¿Ö°îÀ» Á¶Á¤ÇÏ´Â Ç×
+		// [Zë³´ì •]
+		// íˆ¬ì˜ ì¢Œí‘œê³„ì—ì„œ zë¥¼ wë¡œ ë‚˜ëˆŒ ë•Œ ê¹Šì´ê°’ì´ ì—­ìˆ˜ ë¹„ë¡€ë˜ë„ë¡ ì„¤ê³„ë˜ì–´ì•¼í•¨
+		//  -> ê°€ê¹Œìš´ ë¬¼ì²´ëŠ” zê°€ ì‘ê³ , wë„ ì‘ì•„ì„œ ê¹Šì´ í´ë¦¬í•‘ í†µê³¼
+		//  -> ë©€ë¦¬ ìˆëŠ” ë¬¼ì²´ëŠ” z / w ê°€ ë§¤ìš° ì‘ì•„ì ¸ ì›ê·¼ê° ë°œìƒ
+		// ê³ ë¡œ zì¶• ì›ê·¼ ì™œê³¡ì„ ì¡°ì •í•˜ëŠ” í•­
 		
-		// [(2, 3) ¿ä¼Ò°¡ 1ÀÎ ÀÌÀ¯]
-		// 3D¿¡¼­ Á¤Á¡Àº ( x, y, z, 1 ) ÇüÅÂ·Î Ç¥ÇöµÇ°í, Åõ¿µ Çà·ÄÀ» °öÇÏ¸é ( xp, yp, zp, w )°¡ µÊ
-		// ÀÌ¶§, zp / w ¸¦ ÅëÇØ ¿ø±Ù°¨À» Àû¿ëÇØ¾ß ÇÔ, ÀÌ¶§ z°ªÀ» Àû¿ëÇÏ¿© w¿¡ Æ÷ÇÔµÇµµ·Ï ÇÏ±â À§ÇØ ¿ø±Ù ³ª´°¼ÀÀ¸·Î È°¿ë
+		// [(2, 3) ìš”ì†Œê°€ 1ì¸ ì´ìœ ]
+		// 3Dì—ì„œ ì •ì ì€ ( x, y, z, 1 ) í˜•íƒœë¡œ í‘œí˜„ë˜ê³ , íˆ¬ì˜ í–‰ë ¬ì„ ê³±í•˜ë©´ ( xp, yp, zp, w )ê°€ ë¨
+		// ì´ë•Œ, zp / w ë¥¼ í†µí•´ ì›ê·¼ê°ì„ ì ìš©í•´ì•¼ í•¨, ì´ë•Œ zê°’ì„ ì ìš©í•˜ì—¬ wì— í¬í•¨ë˜ë„ë¡ í•˜ê¸° ìœ„í•´ ì›ê·¼ ë‚˜ëˆ—ì…ˆìœ¼ë¡œ í™œìš©
 	}
 
-	// ¸ğ´ÏÅÍÀÇ °ø°£À¸·Î º¯È¯½ÃÅ°´Â ºäÆ÷Æ® Çà·Ä(ViewPort Matrix) »ı¼º
+	// ëª¨ë‹ˆí„°ì˜ ê³µê°„ìœ¼ë¡œ ë³€í™˜ì‹œí‚¤ëŠ” ë·°í¬íŠ¸ í–‰ë ¬(ViewPort Matrix) ìƒì„±
 	void ViewPort(float _Width, float _Height, float _Left, float _Right, float _ZMin = 0.0f, float _ZMax = 1.0f)
 	{
 		Identity();
@@ -502,13 +502,13 @@ public:
 		Arr2D[3][3] = 1.0f;
 	}
 
-	// w °¡ 0ÀÎ °öÇÏ±â
+	// w ê°€ 0ì¸ ê³±í•˜ê¸°
 	float4 TransformNormal(const float4& _Value)
 	{
 		return DirectX::XMVector3TransformNormal(_Value, *this);
 	}
 
-	// w °¡ 1ÀÎ °öÇÏ±â
+	// w ê°€ 1ì¸ ê³±í•˜ê¸°
 	float4 TransformCoord(const float4& _Value)
 	{
 		return DirectX::XMVector3TransformCoord(_Value, *this);

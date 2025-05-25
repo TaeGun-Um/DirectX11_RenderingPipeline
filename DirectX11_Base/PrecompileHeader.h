@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 // DirectX11_Base PrecompileHeader
-// Base´Â DirectX¿Í´Â ¿¬°ü¾øÁö¸¸ ÇÁ·Î±×·¥¿¡ ÇÊ¿äÇÑ ±â´ÉÀ» Ãß°¡ÇÏ±â À§ÇØ ¸¸µç ÇÁ·ÎÁ§Æ®
+// BaseëŠ” DirectXì™€ëŠ” ì—°ê´€ì—†ì§€ë§Œ í”„ë¡œê·¸ë¨ì— í•„ìš”í•œ ê¸°ëŠ¥ì„ ì¶”ê°€í•˜ê¸° ìœ„í•´ ë§Œë“  í”„ë¡œì íŠ¸
 
 #include <Windows.h>
 #include <cmath>
@@ -22,12 +22,12 @@
 #include "Base_BaseEnum.h"
 
 // DirectX11
-#include <d3d11.h>				// Direct3D 11ÀÇ ÇÙ½É API ¼±¾ğÀÌ ´ã±ä Çì´õ(µğ¹ÙÀÌ½º, µğ¹ÙÀÌ½º ÄÁÅØ½ºÆ®, ·»´õ Å¸°Ù, ¼ÎÀÌ´õ ¸®¼Ò½º µî)
-#include <dxgi.h>					// DirectX Graphics Infrastructure. È­¸é Ãâ·Â(Ãâ·Â ¸ğµå), ½º¿Ò Ã¼ÀÎ, ¾î´ğÅÍ °ü¸® µî ½Ã½ºÅÛ °ü·Ã ±â´ÉÀÇ ¼±¾ğÀÌ ´ã±ä Çì´õ(¾î´ğÅÍ, ½º¿ÒÃ¼ÀÎ µî)
-#include <d3dcompiler.h>		// HLSL ¼ÎÀÌ´õ ÄÄÆÄÀÏ °ü·Ã API ¼±¾ğÀÌ ´ã±ä Çì´õ(¼ÎÀÌ´õ ÄÄÆÄÀÏ API ÀÎÅÍÆäÀÌ½º)
-#include <D3D11Shader.h>	// ¼ÎÀÌ´õ ¸®ÇÃ·º¼Ç(Shader Reflection) °ü·Ã ÀÎÅÍÆäÀÌ½º ¼±¾ğÀÌ ´ã±ä Çì´õ(¼ÎÀÌ´õ ¸®ÇÃ·º¼Ç API ÀÎÅÍÆäÀÌ½º)
+#include <d3d11.h>				// Direct3D 11ì˜ í•µì‹¬ API ì„ ì–¸ì´ ë‹´ê¸´ í—¤ë”(ë””ë°”ì´ìŠ¤, ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸, ë Œë” íƒ€ê²Ÿ, ì…°ì´ë” ë¦¬ì†ŒìŠ¤ ë“±)
+#include <dxgi.h>					// DirectX Graphics Infrastructure. í™”ë©´ ì¶œë ¥(ì¶œë ¥ ëª¨ë“œ), ìŠ¤ì™‘ ì²´ì¸, ì–´ëŒ‘í„° ê´€ë¦¬ ë“± ì‹œìŠ¤í…œ ê´€ë ¨ ê¸°ëŠ¥ì˜ ì„ ì–¸ì´ ë‹´ê¸´ í—¤ë”(ì–´ëŒ‘í„°, ìŠ¤ì™‘ì²´ì¸ ë“±)
+#include <d3dcompiler.h>		// HLSL ì…°ì´ë” ì»´íŒŒì¼ ê´€ë ¨ API ì„ ì–¸ì´ ë‹´ê¸´ í—¤ë”(ì…°ì´ë” ì»´íŒŒì¼ API ì¸í„°í˜ì´ìŠ¤)
+#include <D3D11Shader.h>	// ì…°ì´ë” ë¦¬í”Œë ‰ì…˜(Shader Reflection) ê´€ë ¨ ì¸í„°í˜ì´ìŠ¤ ì„ ì–¸ì´ ë‹´ê¸´ í—¤ë”(ì…°ì´ë” ë¦¬í”Œë ‰ì…˜ API ì¸í„°í˜ì´ìŠ¤)
 
-#pragma comment(lib, "d3d11.lib")				// d3d11.h ±â´É ¸µÅ©
-#pragma comment(lib, "dxgi.lib")				// dxgi.h ±â´É ¸µÅ©
-#pragma comment(lib, "d3dcompiler.lib")		// d3dcompiler.h ±â´É ¸µÅ©
-#pragma comment(lib, "dxguid")					// DirectX °ü·Ã GUID(Àü¿ª °íÀ¯ ½Äº°ÀÚ) »ó¼ö Á¤ÀÇ¸¦ Æ÷ÇÔÇÏ¸ç, COM ±â¹İ ÀÎÅÍÆäÀÌ½º »ç¿ë¿¡ ÇÊ¿ä(IID_ID3D11ShaderReflection : ¼ÎÀÌ´õ ¸®ÇÃ·º¼Ç¿¡ È°¿ë)
+#pragma comment(lib, "d3d11.lib")				// d3d11.h ê¸°ëŠ¥ ë§í¬
+#pragma comment(lib, "dxgi.lib")				// dxgi.h ê¸°ëŠ¥ ë§í¬
+#pragma comment(lib, "d3dcompiler.lib")		// d3dcompiler.h ê¸°ëŠ¥ ë§í¬
+#pragma comment(lib, "dxguid")					// DirectX ê´€ë ¨ GUID(ì „ì—­ ê³ ìœ  ì‹ë³„ì) ìƒìˆ˜ ì •ì˜ë¥¼ í¬í•¨í•˜ë©°, COM ê¸°ë°˜ ì¸í„°í˜ì´ìŠ¤ ì‚¬ìš©ì— í•„ìš”(IID_ID3D11ShaderReflection : ì…°ì´ë” ë¦¬í”Œë ‰ì…˜ì— í™œìš©)

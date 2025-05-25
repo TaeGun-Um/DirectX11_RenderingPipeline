@@ -1,8 +1,8 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_String.h"
 #include "Base_Debug.h"
 
-// ¸ğµÎ ´ë¹®ÀÚ·Î º¯È¯
+// ëª¨ë‘ ëŒ€ë¬¸ìë¡œ ë³€í™˜
 std::string Base_String::ToUpper(std::string_view _Str)
 {
 	std::string Text = _Str.data();
@@ -15,14 +15,14 @@ std::string Base_String::ToUpper(std::string_view _Str)
 	return Text;
 }
 
-// Ansi¸¦ UniCode·Î º¯È¯, string¿¡ ´ã°ÜÀÖ´Â ÇÑ±ÛÀ» wstringÀ¸·Î ¿Å°ÜÁÙ ¶§ »ç¿ë
+// Ansië¥¼ UniCodeë¡œ ë³€í™˜, stringì— ë‹´ê²¨ìˆëŠ” í•œê¸€ì„ wstringìœ¼ë¡œ ì˜®ê²¨ì¤„ ë•Œ ì‚¬ìš©
 std::wstring Base_String::AnsiToUniCode(std::string_view _Text)
 {
 	int Size = MultiByteToWideChar(CP_ACP, 0, _Text.data(), static_cast<int>(_Text.size()), nullptr, 0);
 
 	if (0 == Size)
 	{
-		MsgAssert("¹®ÀÚ¿­ º¯È¯¿¡ ½ÇÆĞÇß½À´Ï´Ù");
+		MsgAssert("ë¬¸ìì—´ ë³€í™˜ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
 		return L"";
 	}
 
@@ -33,21 +33,21 @@ std::wstring Base_String::AnsiToUniCode(std::string_view _Text)
 
 	if (0 == Size)
 	{
-		MsgAssert("¹®ÀÚ¿­ º¯È¯¿¡ ½ÇÆĞÇß½À´Ï´Ù");
+		MsgAssert("ë¬¸ìì—´ ë³€í™˜ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
 		return L"";
 	}
 
 	return Result;
 }
 
-// UniCode¸¦ Ansi·Î º¯È¯
+// UniCodeë¥¼ Ansië¡œ ë³€í™˜
 std::string Base_String::UniCodeToAnsi(std::wstring_view _Text)
 {
 	int Size = WideCharToMultiByte(CP_ACP, 0, _Text.data(), static_cast<int>(_Text.size()), nullptr, 0, nullptr, nullptr);
 
 	if (0 == Size)
 	{
-		MsgAssert("¹®ÀÚ¿­ º¯È¯¿¡ ½ÇÆĞÇß½À´Ï´Ù");
+		MsgAssert("ë¬¸ìì—´ ë³€í™˜ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
 		return "";
 	}
 
@@ -58,7 +58,7 @@ std::string Base_String::UniCodeToAnsi(std::wstring_view _Text)
 
 	if (0 == Size)
 	{
-		MsgAssert("¹®ÀÚ¿­ º¯È¯¿¡ ½ÇÆĞÇß½À´Ï´Ù");
+		MsgAssert("ë¬¸ìì—´ ë³€í™˜ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
 		return "";
 	}
 

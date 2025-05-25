@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_Deltatime.h"
 #include "Base_Windows.h"
 
@@ -10,8 +10,8 @@ int Base_Deltatime::FPS = 0;
 
 Base_Deltatime::Base_Deltatime()
 {
-	QueryPerformanceCounter(&Before); // Windows¿¡¼­ Á¤¹ĞÇÑ ½Ã°£ ÃøÁ¤À» À§ÇØ »ç¿ëµÇ´Â ÇÔ¼ö
-	QueryPerformanceFrequency(&Second); // °íÇØ»óµµ Ä«¿îÅÍÀÇ 1ÃÊ´ç È½¼ö(ÁÖÆÄ¼ö)¸¦ ±¸ÇÏ´Â ÇÔ¼ö
+	QueryPerformanceCounter(&Before); // Windowsì—ì„œ ì •ë°€í•œ ì‹œê°„ ì¸¡ì •ì„ ìœ„í•´ ì‚¬ìš©ë˜ëŠ” í•¨ìˆ˜
+	QueryPerformanceFrequency(&Second); // ê³ í•´ìƒë„ ì¹´ìš´í„°ì˜ 1ì´ˆë‹¹ íšŸìˆ˜(ì£¼íŒŒìˆ˜)ë¥¼ êµ¬í•˜ëŠ” í•¨ìˆ˜
 }
 
 Base_Deltatime::~Base_Deltatime()
@@ -20,7 +20,7 @@ Base_Deltatime::~Base_Deltatime()
 
 float Base_Deltatime::TimeCheck()
 {
-	// Æ÷Ä¿½º ÀÒÀ¸¸é ±âÁØ ½Ã°£ °­Á¦ °»½Å (½Ã°£ Èå¸§ ¹«½Ã)
+	// í¬ì»¤ìŠ¤ ìƒìœ¼ë©´ ê¸°ì¤€ ì‹œê°„ ê°•ì œ ê°±ì‹  (ì‹œê°„ íë¦„ ë¬´ì‹œ)
 	if (false == Base_Windows::GetIsWindowFocus())
 	{
 		QueryPerformanceCounter(&Before);

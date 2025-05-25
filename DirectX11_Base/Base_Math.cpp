@@ -1,13 +1,13 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_Math.h"
 
-// ±âº» ¼öÇĞ ±âÈ£ ÁöÁ¤
+// ê¸°ë³¸ ìˆ˜í•™ ê¸°í˜¸ ì§€ì •
 const float Base_Math::PIE = 3.141592653589793238462643383279502884197169399375105820974944f;
 const float Base_Math::PIE2 = PIE * 2.0f;
 const float Base_Math::DegreeToRadian = Base_Math::PIE / 180;
 const float Base_Math::RadianToDegree = 180 / Base_Math::PIE;
-// Degree : °¢µµ ´ÜÀ§
-// Radian : ¶óµğ¾È ´ÜÀ§(rad)
+// Degree : ê°ë„ ë‹¨ìœ„
+// Radian : ë¼ë””ì•ˆ ë‹¨ìœ„(rad)
 
 const float4 float4::LEFT = { -1.0f, 0.0f, 0.0f, 1.0f };
 const float4 float4::RIGHT = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -26,7 +26,7 @@ const float4 float4::BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 const float4x4 float4x4::ZEROMATRIX = float4x4(float4::ZERONULL, float4::ZERONULL, float4::ZERONULL, float4::ZERONULL);
 
-// float4¶û float4x4 °öÇÏ±â
+// float4ë‘ float4x4 ê³±í•˜ê¸°
 float4 float4::operator*(const class float4x4& _Other)
 {
 	float4 ReturnValue = DirectX::XMVector4Transform(*this, _Other);
@@ -34,20 +34,20 @@ float4 float4::operator*(const class float4x4& _Other)
 	return ReturnValue;
 }
 
-// float4¶û float4x4 °öÇÏ±â
+// float4ë‘ float4x4 ê³±í•˜ê¸°
 float4& float4::operator*=(const class float4x4& _Other)
 {
 	DirectVector = DirectX::XMVector4Transform(*this, _Other);;
 	return *this;
 }
 
-// ÄõÅÍ´Ï¾ğ °ªÀ» ¿ÀÀÏ·¯ °¢(Degree)À¸·Î º¯°æ
+// ì¿¼í„°ë‹ˆì–¸ ê°’ì„ ì˜¤ì¼ëŸ¬ ê°(Degree)ìœ¼ë¡œ ë³€ê²½
 float4 float4::QuaternionToDegree()
 {
 	return QuaternionToRadian() * Base_Math::RadianToDegree;
 }
 
-// ÄõÅÍ´Ï¾ğ °ªÀ» ¿ÀÀÏ·¯ ¶óµğ¾È(Radian)À¸·Î º¯°æ
+// ì¿¼í„°ë‹ˆì–¸ ê°’ì„ ì˜¤ì¼ëŸ¬ ë¼ë””ì•ˆ(Radian)ìœ¼ë¡œ ë³€ê²½
 float4 float4::QuaternionToRadian()
 {
 	float4 result;
@@ -80,7 +80,7 @@ float4 float4::QuaternionToRadian()
 	return result;
 }
 
-// ¿ÀÀÏ·¯ °¢(Degree)À» ÄõÅÍ´Ï¾ğ °ªÀ¸·Î º¯°æ
+// ì˜¤ì¼ëŸ¬ ê°(Degree)ì„ ì¿¼í„°ë‹ˆì–¸ ê°’ìœ¼ë¡œ ë³€ê²½
 float4 float4::DegreeToQuaternion()
 {
 	float4 Return = DirectVector;

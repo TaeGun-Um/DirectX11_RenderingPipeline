@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Base_Debug.h"
 
-// °æ·Î »ı¼º Å¬·¡½º
+// ê²½ë¡œ ìƒì„± í´ë˜ìŠ¤
 class Base_Directory
 {
 public:
@@ -15,9 +15,9 @@ public:
 	Base_Directory& operator=(const Base_Directory& _Other) = delete;
 	Base_Directory& operator=(Base_Directory&& _Other) noexcept = delete;
 
-	std::string MakePath(std::string_view _RelativePath, std::string_view _ThisFile = __FILE__); // °æ·Î »ı¼º
-	std::vector<std::string> GetAllFile(std::initializer_list<std::string> _Extensions); // µğ·ºÅÍ¸® ³»¿¡ ÆÄÀÏµé °Ë»ç ÈÄ ¹İÈ¯
-	std::string FindEntryPoint(std::string_view _Path); // ÆÄÀÏÀ» ¿­¾î Æ¯Á¤ ¹®ÀÚ °Ë»ç
+	std::string MakePath(std::string_view _RelativePath, std::string_view _ThisFile = __FILE__); // ê²½ë¡œ ìƒì„±
+	std::vector<std::string> GetAllFile(std::initializer_list<std::string> _Extensions); // ë””ë ‰í„°ë¦¬ ë‚´ì— íŒŒì¼ë“¤ ê²€ì‚¬ í›„ ë°˜í™˜
+	std::string FindEntryPoint(std::string_view _Path); // íŒŒì¼ì„ ì—´ì–´ íŠ¹ì • ë¬¸ì ê²€ì‚¬
 
 	const std::string& GetPath() { return Path; }
 

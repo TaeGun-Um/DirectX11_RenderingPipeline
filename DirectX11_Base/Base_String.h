@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// string ¼Ó¼º º¯È¯ ÇïÆÛ Å¬·¡½º
+// string ì†ì„± ë³€í™˜ í—¬í¼ í´ë˜ìŠ¤
 class Base_String
 {
 public:
@@ -10,9 +10,9 @@ public:
 	Base_String& operator=(const Base_String& _Other) = delete;
 	Base_String& operator=(Base_String&& _Other) noexcept = delete;
 
-	static std::string ToUpper(std::string_view _Str); // ¸ğµÎ ´ë¹®ÀÚ·Î º¯È¯
-	static std::wstring AnsiToUniCode(std::string_view _Text); // Ansi¸¦ UniCode·Î º¯È¯
-	static std::string UniCodeToAnsi(std::wstring_view _Text); // UniCode¸¦ Ansi·Î º¯È¯
+	static std::string ToUpper(std::string_view _Str); // ëª¨ë‘ ëŒ€ë¬¸ìë¡œ ë³€í™˜
+	static std::wstring AnsiToUniCode(std::string_view _Text); // Ansië¥¼ UniCodeë¡œ ë³€í™˜
+	static std::string UniCodeToAnsi(std::wstring_view _Text); // UniCodeë¥¼ Ansië¡œ ë³€í™˜
 
 protected:
 	

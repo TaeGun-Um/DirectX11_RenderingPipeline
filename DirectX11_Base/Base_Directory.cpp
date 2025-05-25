@@ -1,8 +1,8 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_Directory.h"
 #include "Base_Debug.h"
 
-// °æ·Î »ı¼º ¹× ³»ºÎ ÀúÀå
+// ê²½ë¡œ ìƒì„± ë° ë‚´ë¶€ ì €ì¥
 std::string Base_Directory::MakePath(std::string_view _RelativePath, std::string_view _ThisFile /*= __FILE__*/)
 {
 	std::filesystem::path CurrentPath(_ThisFile);
@@ -13,14 +13,14 @@ std::string Base_Directory::MakePath(std::string_view _RelativePath, std::string
 
 	if (!std::filesystem::exists(Path))
 	{
-		MsgAssert(Path + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+		MsgAssert(Path + " ê²½ë¡œê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		Path.clear();
 	}
 
 	return Path;
 }
 
-// µğ·ºÅÍ¸® ³»¿¡ ÆÄÀÏµé °Ë»ç ÈÄ ¹İÈ¯, ÀÎÀÚ·Î Àü´Ş¹ŞÀº ÀÌ¸§À¸·Î °Ë»öÇÏ¿© vector¿¡ ´ã¾Æ ¹İÈ¯
+// ë””ë ‰í„°ë¦¬ ë‚´ì— íŒŒì¼ë“¤ ê²€ì‚¬ í›„ ë°˜í™˜, ì¸ìë¡œ ì „ë‹¬ë°›ì€ ì´ë¦„ìœ¼ë¡œ ê²€ìƒ‰í•˜ì—¬ vectorì— ë‹´ì•„ ë°˜í™˜
 std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::string> _Extensions)
 {
 	std::vector<std::string> Result;
@@ -53,7 +53,7 @@ std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::s
 	return Result;
 }
 
-// ÆÄÀÏÀ» ¿­¾î Æ¯Á¤ ¹®ÀÚ °Ë»ç, ¶óÀÎº°·Î È®ÀÎÇÔ(ÇÑÁÙ¾¿)
+// íŒŒì¼ì„ ì—´ì–´ íŠ¹ì • ë¬¸ì ê²€ì‚¬, ë¼ì¸ë³„ë¡œ í™•ì¸í•¨(í•œì¤„ì”©)
 std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 {
 	std::string FileName = std::filesystem::path(_FilePath).stem().string();
@@ -61,17 +61,17 @@ std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 	std::ifstream File(_FilePath.data());
 	if (!File.is_open())
 	{
-		MsgAssert(std::string("ÆÄÀÏ ¿­±â ½ÇÆĞ : ") + _FilePath.data());
+		MsgAssert(std::string("íŒŒì¼ ì—´ê¸° ì‹¤íŒ¨ : ") + _FilePath.data());
 		return "";
 	}
 
 	std::string Line;
 	while (std::getline(File, Line))
 	{
-		// °ø¹é Á¦°Å
+		// ê³µë°± ì œê±°
 		Line.erase(remove_if(Line.begin(), Line.end(), isspace), Line.end());
 
-		// "Basic_VS(" È¤Àº "Basic_VS(" ÇüÅÂ·Î ÇÔ¼ö ½ÃÀÛ Ã£±â
+		// "Basic_VS(" í˜¹ì€ "Basic_VS(" í˜•íƒœë¡œ í•¨ìˆ˜ ì‹œì‘ ì°¾ê¸°
 		std::string Signature = FileName + "(";
 
 		if (Line.find(Signature) != std::string::npos)
@@ -80,6 +80,6 @@ std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 		}
 	}
 
-	// ¸ø Ã£À¸¸é ±âº»°ª
+	// ëª» ì°¾ìœ¼ë©´ ê¸°ë³¸ê°’
 	return "";
 }
