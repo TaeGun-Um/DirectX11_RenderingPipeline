@@ -13,9 +13,7 @@ void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor)
 	// [1] MeshComponents에서 해당 액터 소유 MeshComponent 제거
 	for (auto& [Order, List] : MeshComponents)
 	{
-		List.erase(
-			std::remove_if(List.begin(), List.end(),
-				[&](std::shared_ptr<Ext_MeshComponent>& MeshComp)
+		List.erase(std::remove_if(List.begin(), List.end(),	[&](std::shared_ptr<Ext_MeshComponent>& MeshComp)
 				{
 					return MeshComp && MeshComp->GetOwnerActor().lock() == DeadActor;
 				}),
@@ -28,8 +26,7 @@ void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor)
 	{
 		for (auto& [Order, UnitList] : MapByOrder)
 		{
-			UnitList.remove_if(
-				[&](std::shared_ptr<Ext_MeshComponentUnit>& Unit)
+			UnitList.remove_if([&](std::shared_ptr<Ext_MeshComponentUnit>& Unit)
 				{
 					auto MeshComp = Unit->GetOwnerMeshComponent().lock();
 					return MeshComp && MeshComp->GetOwnerActor().lock() == DeadActor;

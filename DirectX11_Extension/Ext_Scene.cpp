@@ -101,10 +101,7 @@ void Ext_Scene::Destroy()
 {
 	for (auto& [Key, ActorList] : Actors)
 	{
-		ActorList.erase(
-			std::remove_if(
-				ActorList.begin(), ActorList.end(),
-				[](const std::shared_ptr<Ext_Actor>& CurActor)
+		ActorList.erase(std::remove_if(ActorList.begin(), ActorList.end(), [](const std::shared_ptr<Ext_Actor>& CurActor)
 				{
 					if (!CurActor->GetIsDeath())
 					{
