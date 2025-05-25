@@ -101,25 +101,27 @@ void Ext_Scene::Destroy()
 {
 	for (auto& [Key, ActorList] : Actors)
 	{
+		// remove_if은 요소들을 뒤로 밀어버립니다. 이후 erase에서 remove_if가 반환한 새 끝부터 원래 끝까지 실제로 삭제 진행
 		ActorList.erase(std::remove_if(ActorList.begin(), ActorList.end(), [](const std::shared_ptr<Ext_Actor>& CurActor)
 				{
 					if (!CurActor->GetIsDeath())
 					{
-						return false;
+						return false; // 죽지 않은 Actor는 유지
 					}
 
 					// [1] 카메라에서 MeshComponent 제거 처리
 					for (const auto& [Name, Component] : CurActor->GetComponents())
 					{
 						// MeshComponent인지 확인
-						auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component);
+						auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component); // 가져온 것 중 MeshComponent인 것은 카메라에서 지워줌
 						if (MeshComp)
 						{
 							// 소유 카메라 얻기
 							std::shared_ptr<Ext_Camera> Camera = MeshComp->GetOwnerCamera().lock();
 							if (Camera)
 							{
-								Camera->RemoveMeshByActor(CurActor);
+								// 카메라에 포함된 메시 컴포넌트, 메시 컴포넌트 유닛 제거
+								Camera->RemoveMeshByActor(CurActor); 
 							}
 						}
 					}

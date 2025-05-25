@@ -41,6 +41,7 @@ void Ext_Component::Destroy()
 
 	// [2] Actor 연결 해제
 	OwnerActor.reset();
+	OwnerScene.reset();
 
 	// [3] 추가적인 공통 자원 해제 필요 시 여기에
 	// 예: 이벤트 핸들러 언바인딩 등

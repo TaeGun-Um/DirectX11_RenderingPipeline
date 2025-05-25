@@ -31,8 +31,7 @@ void Ext_Actor::Destroy()
 		Transform = nullptr;
 	}
 
-	// [3] 필요 시 MeshComponentUnit 등 부가 리소스도 해제
-	// 예: MeshUnits.clear();
+	OwnerScene.reset();
 
 	// [4] 기타 사용자 정의 자원 해제
 	// 예: 이벤트 핸들러 해제, 태그 초기화, 캐시된 포인터 null 처리 등
