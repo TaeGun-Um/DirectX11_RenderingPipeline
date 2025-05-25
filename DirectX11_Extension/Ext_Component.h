@@ -9,7 +9,7 @@ class Ext_Component : public Ext_Object
 public:
 	// constrcuter destructer
 	Ext_Component();
-	~Ext_Component();
+	~Ext_Component() {}
 
 	// delete Function
 	Ext_Component(const Ext_Component& _Other) = delete;
@@ -22,14 +22,16 @@ public:
 	std::weak_ptr<class Ext_Actor> GetOwnerActor() { return OwnerActor; }
 	void SetOwnerActor(std::weak_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
 
+	void SetIsDeath(bool Value, bool bIncludeChildren = false); // 특정 컴포넌트를 지우기 위한 구조
+
+
 protected:
 	virtual void Start() override;
-	virtual void Update(float _DeltaTime) override {}
+	void Update(float _DeltaTime) override;
 	virtual void Destroy() override;
 	
 	std::shared_ptr<class Ext_Transform> Transform = nullptr;	// 자신이 가진 트랜스폼 정보
 	std::weak_ptr<class Ext_Actor> OwnerActor;						// 자신을 소유한 액터 정보
-	bool IsTransformShare = false;											// 생성 시 트랜스폼을 Actor와 공유할 것인지 설정
 
 private:
 

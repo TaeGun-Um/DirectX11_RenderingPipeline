@@ -1,22 +1,28 @@
 ﻿#include "PrecompileHeader.h"
 #include "Ext_Transform.h"
 
-void Ext_Transform::Destroy()
+/////////////////////////////////////// TransformData ///////////////////////////////////////
+
+void TransformData::CalculateLocalMatrix()
 {
-	// [1] TransformData 제거
-	if (TFData)
-	{
-		TFData.reset();
-	}
+	LocalQuaternion = LocalRotation.DegreeToQuaternion();
+	LocalMatrix.Compose(LocalScale, LocalQuaternion, LocalPosition);
+}
 
-	// [2] 부모 관계 제거
-	if (Parent)
-	{
-		Parent = nullptr;
-	}
+void TransformData::CalculateWorldMatrix(const float4x4& _ParentMatrix)
+{
+	CalculateLocalMatrix();
+	WorldMatrix = LocalMatrix * _ParentMatrix;
+	WorldMatrix.Decompose(WorldScale, WorldQuaternion, WorldPosition);
+	WorldRotation = WorldQuaternion.QuaternionToDegree();
+}
 
-	// [3] 자식 리스트 제거
-	Childs.clear();
+void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
+{
+	ViewMatrix = _View;
+	ProjectionMatrix = _Projection;
+	WorldViewMatrix = WorldMatrix * ViewMatrix;
+	WorldViewProjectionMatrix = WorldMatrix * ViewMatrix * ProjectionMatrix;
 }
 
 /////////////////////////////////////// Ext_Transform ///////////////////////////////////////
@@ -24,31 +30,37 @@ void Ext_Transform::Destroy()
 Ext_Transform::Ext_Transform()
 {
     TFData = std::make_shared<TransformData>();
-    TFData->CalculateWorldMatrix();
+	TransformUpdate();
 }
 
-Ext_Transform::~Ext_Transform()
+void Ext_Transform::Destroy()
 {
+	if (TFData)
+	{
+		TFData.reset();
+	}
+	if (auto ParentTransform = Parent.lock())
+	{
+		ParentTransform->RemoveChild(GetSharedFromThis<Ext_Transform>());
+	}
+	Parent.reset();
+	Children.clear();
 }
 
 void Ext_Transform::TransformUpdate()
 {
-    TFData->CalculateWorldMatrix();
-}
+	float4x4 ParentMatrix;
+	ParentMatrix.Identity();
 
-/////////////////////////////////////// TransformData ///////////////////////////////////////
+	if (auto ParentTransform = Parent.lock())
+	{
+		ParentMatrix = ParentTransform->GetWorldMatrix();
+	}
 
-void TransformData::CalculateWorldMatrix()
-{
-    Quaternion = Rotation.DegreeToQuaternion();
-    WorldMatrix.Compose(Scale, Quaternion, Position);
-}
+	TFData->CalculateWorldMatrix(ParentMatrix);
 
-// 카메라 기준으로 월드, 뷰, 프로젝션 행렬 생성
-void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
-{
-    ViewMatrix = _View;
-    ProjectionMatrix = _Projection;
-    WorldViewMatrix = WorldMatrix * ViewMatrix;
-    WorldViewProjectionMatrix = WorldMatrix * ViewMatrix * ProjectionMatrix;
+	for (auto& Child : Children)
+	{
+		Child->TransformUpdate();
+	}
 }

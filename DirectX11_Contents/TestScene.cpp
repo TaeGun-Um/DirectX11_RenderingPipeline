@@ -19,7 +19,7 @@ TestScene::~TestScene()
 
 void TestScene::Start()
 {
-	GetMainCamera()->GetTransform()->SetWorldRotation({ 0.f, 0.f, 0.f }); // Z+ 방향 바라보게
+	GetMainCamera()->GetTransform()->SetLocalRotation({ 0.f, 0.f, 0.f }); // Z+ 방향 바라보게
 
 	CreateActor<CubeActor>("CubeActor");
 }
@@ -30,13 +30,5 @@ bool one = false;
 void TestScene::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
-
-	AccTime += _DeltaTime;
-
-	if (AccTime >= 4.0f && false == one)
-	{
-		one = true;
-		CreateActor<CubeActor>("CubeActor");
-	}
 }
 

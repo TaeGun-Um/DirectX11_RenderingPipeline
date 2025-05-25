@@ -51,7 +51,8 @@ private:
 
 	std::shared_ptr<class Ext_DirectXVertexShader> VertexShader; // 버텍스 셰이더 저장
 	std::shared_ptr<class Ext_DirectXPixelShader> PixelShader; // 픽셀 셰이더 저장
-	//std::shared_ptr<class Ext_DirectXDepthState> DepthStatePtr;
+	std::shared_ptr<class Ext_DirectXRasterizer> Rasterizer; // 레스터라이저 저장
+	std::shared_ptr<class Ext_DirectXDepth> DepthState;
 	
-	
+	D3D11_FILL_MODE FILL_MODE = D3D11_FILL_MODE::D3D11_FILL_SOLID;
 };

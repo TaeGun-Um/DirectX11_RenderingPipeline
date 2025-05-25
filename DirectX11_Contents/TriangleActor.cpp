@@ -14,14 +14,15 @@ TriangleActor::~TriangleActor()
 
 void TriangleActor::Start()
 {
-	GetTransform()->SetWorldPosition({ -200.f, 0.f, 200.0f });
-	GetTransform()->SetWorldScale({ 100.f, 100.f, 100.f }); // 크기 확대
-	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
+	GetTransform()->SetLocalPosition({ -200.f, 0.f, 200.0f });
+	GetTransform()->SetLocalScale({ 100.f, 100.f, 100.f }); // 크기 확대
+
+	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
 	MeshComp->CreateMeshComponentUnit("Triangle", "Basic");
 }
 
 void TriangleActor::Update(float _DeltaTime)
 {
-	std::shared_ptr<Ext_Transform> Transform = GetTransform();
-	GetTransform()->AddWorldRotation({ 0.f, 0.f, -1.f });
+	// 매프레임마다 Z축 기준 반시계 회전
+	GetTransform()->AddLocalRotation({ 0.f, 0.f, -1.f });
 }

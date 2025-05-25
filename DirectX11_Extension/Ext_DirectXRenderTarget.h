@@ -33,6 +33,16 @@ public:
 	std::shared_ptr<Ext_DirectXTexture> GetDepthTexture() { return DepthTexture; }
 	D3D11_VIEWPORT* GetViewPort(int _Index) { return &ViewPorts[_Index]; }
 
+	void DepthSettingOn()
+	{
+		DepthSetting = true;
+	}
+
+	void DepthSettingOff()
+	{
+		DepthSetting = false;
+	}
+
 protected:
 	
 private:
@@ -42,6 +52,7 @@ private:
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
 	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
 
+	bool DepthSetting = true;
 
 	std::vector<float4> Colors; // 생성된 렌더타겟 색상 저장
 	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(생성 주체) 포인터 저장 컨테이너

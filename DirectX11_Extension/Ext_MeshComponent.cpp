@@ -44,7 +44,7 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 
 void Ext_MeshComponent::Start()
 {
-	Transform = OwnerActor.lock()->GetTransform();
+	//GetTransform()->SetOwnerComponent(_Component);
 	PushMeshToCamera("MainCamera");
 }
 

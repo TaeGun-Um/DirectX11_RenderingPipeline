@@ -19,8 +19,10 @@ void RectActor::Start()
 
 void RectActor::Update(float _DeltaTime)
 {
+	__super::Update(_DeltaTime);
+
 	std::shared_ptr<Ext_Transform> Transform = GetTransform();
 
 	float MoveSpeed = 100.0f; // 초당 100 단위 회전
-	GetTransform()->AddWorldRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
+	GetTransform()->AddLocalRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
 }

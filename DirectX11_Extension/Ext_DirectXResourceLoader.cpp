@@ -9,10 +9,10 @@
 #include "Ext_DirectXMesh.h"
 #include "Ext_DirectXShader.h"
 #include "Ext_DirectXMaterial.h"
+#include "Ext_DirectXRasterizer.h"
+#include "Ext_DirectXDepth.h"
 
 #include "Ext_DirectXDevice.h"// 임시
-
-COMPTR<ID3D11RasterizerState> Ext_DirectXResourceLoader::RasterState; // 임시
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
@@ -108,19 +108,26 @@ void Ext_DirectXResourceLoader::MakeVertex()
 			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {0, 1}, {0, -1, 0} },
 		};
 
-		std::vector<UINT> Index;
-		for (int i = 0; i < 6; ++i)
+		std::vector<UINT> Index =
 		{
-			int Base = i * 4;
+			// Front (+Z)
+			0, 1, 2,    0, 2, 3,
 
-			Index.push_back(Base + 0);
-			Index.push_back(Base + 1);
-			Index.push_back(Base + 2);
+			// Back (-Z)
+			4, 5, 6,    4, 6, 7,
 
-			Index.push_back(Base + 2);
-			Index.push_back(Base + 3);
-			Index.push_back(Base + 0);
-		}
+			// Left (-X)
+			8, 9, 10,   8, 10, 11,
+
+			// Right (+X)
+			12, 13, 14, 12, 14, 15,
+
+			// Top (+Y)
+			16, 17, 18, 16, 18, 19,
+
+			// Bottom (-Y)
+			20, 21, 22, 20, 22, 23
+		};
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Box", Vertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Box", Index);
@@ -193,16 +200,27 @@ void Ext_DirectXResourceLoader::MakeBlend()
 
 void Ext_DirectXResourceLoader::MakeDepth() 
 {
+	D3D11_DEPTH_STENCIL_DESC Desc = { 0, };
 
+	Desc.DepthEnable = true;
+	Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+	Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+	Desc.StencilEnable = false;
+
+	// 스텐실 옵션은 꺼두고
+	Desc.StencilEnable = FALSE;
+
+	Ext_DirectXDepth::CreateDepth("EngineDepth", Desc);
 }
 
 void Ext_DirectXResourceLoader::MakeRasterizer() 
 {
-	D3D11_RASTERIZER_DESC RasterDesc = {};
-	RasterDesc.FillMode = D3D11_FILL_SOLID;
-	RasterDesc.CullMode = D3D11_CULL_NONE;  // 뒷면 제거
-	RasterDesc.FrontCounterClockwise = TRUE; // CCW를 앞면으로 인식
-	Ext_DirectXDevice::GetDevice()->CreateRasterizerState(&RasterDesc, RasterState.GetAddressOf());
+	D3D11_RASTERIZER_DESC Desc = {};
+
+	Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거
+	Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면
+
+	Ext_DirectXRasterizer::CreateRasterizer("EngineRasterizer", Desc);
 }
 
 // 렌더링 파이프라인 생성
@@ -212,6 +230,6 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 	NewRenderingPipeline->SetVertexShader("Basic_VS");
 	NewRenderingPipeline->SetPixelShader("Basic_PS");
 	// NewRenderingPipeline->SetBlendState("BaseBlend");
-	// NewRenderingPipeline->SetDepthState("EngineDepth");
-	// NewRenderingPipeline->SetRasterizer("Engine2DBase");
+	NewRenderingPipeline->SetDepthState("EngineDepth");
+	NewRenderingPipeline->SetRasterizer("EngineRasterizer");
 }

@@ -4,6 +4,8 @@
 
 #include "Ext_DirectXVertexShader.h"
 #include "Ext_DirectXPixelShader.h"
+#include "Ext_DirectXRasterizer.h"
+#include "Ext_DirectXDepth.h"
 
 void Ext_DirectXMaterial::SetVertexShader(std::string_view _Name)
 {
@@ -42,25 +44,25 @@ void Ext_DirectXMaterial::SetBlendState(std::string_view _Name)
 
 void Ext_DirectXMaterial::SetDepthState(std::string_view _Name)
 {
-	//std::string UpperName = Base_String::ToUpper(_Name);
-	//DepthState = Ext_DirectXDepthState::Find(UpperName);
+	std::string UpperName = Base_String::ToUpper(_Name);
+	DepthState = Ext_DirectXDepth::Find(UpperName);
 
-	//if (nullptr == DepthState)
-	//{
-	//	MsgAssert("존재하지 않는 깊이버퍼 스테이트를 세팅하려고 했습니다.");
-	//	return;
-	//}
+	if (nullptr == DepthState)
+	{
+		MsgAssert("존재하지 않는 깊이버퍼 스테이트를 세팅하려고 했습니다.");
+		return;
+	}
 }
 
 void Ext_DirectXMaterial::SetRasterizer(std::string_view _Name)
 {
-	//std::string UpperName = Base_String::ToUpper(_Name);
-	//Rasterizer = Ext_DirectXRasterizer::Find(UpperName);
+	std::string UpperName = Base_String::ToUpper(_Name);
+	Rasterizer = Ext_DirectXRasterizer::Find(UpperName);
 
-	//if (nullptr == Rasterizer)
-	//{
-	//	MsgAssert("존재하지 않는 레스터라이저를 사용하려고 했습니다.");
-	//}
+	if (nullptr == Rasterizer)
+	{
+		MsgAssert("존재하지 않는 레스터라이저를 사용하려고 했습니다.");
+	}
 }
 
 void Ext_DirectXMaterial::MaterialSetting()
@@ -70,7 +72,7 @@ void Ext_DirectXMaterial::MaterialSetting()
 	// Tessellator();
 	// DomainShader();
 	// GeometryShader();
-	// Rasterizer();
+	RasterizerSetting();
 	PixelShaderSetting();
 	OutputMergerSetting();
 }
@@ -110,14 +112,14 @@ void Ext_DirectXMaterial::GeometryShaderSetting()
 
 void Ext_DirectXMaterial::RasterizerSetting()
 {
-	//if (nullptr == Rasterizer)
-	//{
-	//	MsgAssert("레스터라이저가 존재하지 않아서 세팅이 불가능합니다.");
-	//	return;
-	//}
+	if (nullptr == Rasterizer)
+	{
+		MsgAssert("레스터라이저가 존재하지 않아서 세팅이 불가능합니다.");
+		return;
+	}
 
-	//Rasterizer->SetFILL_MODE(FILL_MODE);
-	//Rasterizer->Setting();
+	Rasterizer->SetFILL_MODE(FILL_MODE);
+	Rasterizer->Setting();
 }
 
 void Ext_DirectXMaterial::PixelShaderSetting()
@@ -141,11 +143,11 @@ void Ext_DirectXMaterial::OutputMergerSetting()
 
 	//BlendStatePtr->Setting();
 
-	//if (nullptr == DepthState)
-	//{
-	//	MsgAssert("블랜드가 존재하지 않아 아웃풋 머저 과정을 완료할수가 없습니다.");
-	//	return;
-	//}
+	if (nullptr == DepthState)
+	{
+		MsgAssert("블랜드가 존재하지 않아 아웃풋 머저 과정을 완료할수가 없습니다.");
+		return;
+	}
 
-	//DepthState->Setting();
+	DepthState->Setting();
 }

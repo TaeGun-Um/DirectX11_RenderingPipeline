@@ -8,6 +8,46 @@
 #include "Ext_DirectXResourceLoader.h" // 임시
 #include "Ext_DirectXDevice.h" // 임시
 
+// Actors내 Actor들의 Destroy 호출
+void Ext_Scene::Destroy()
+{
+	for (auto& [Key, ActorList] : Actors)
+	{
+		// remove_if은 요소들을 뒤로 밀어버립니다. 이후 erase에서 remove_if가 반환한 새 끝부터 원래 끝까지 실제로 삭제 진행
+		ActorList.erase(std::remove_if(ActorList.begin(), ActorList.end(), [](const std::shared_ptr<Ext_Actor>& CurActor)
+			{
+				if (!CurActor->IsDeath())
+				{
+					return false; // 죽지 않은 Actor는 유지
+				}
+
+				// [1] 카메라에서 MeshComponent 제거 처리
+				for (const auto& [Name, Component] : CurActor->GetComponents())
+				{
+					// MeshComponent인지 확인
+					auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component); // 가져온 것 중 MeshComponent인 것은 카메라에서 지워줌
+					if (MeshComp)
+					{
+						// 소유 카메라 얻기
+						std::shared_ptr<Ext_Camera> Camera = MeshComp->GetOwnerCamera().lock();
+						if (Camera)
+						{
+							// 카메라에 포함된 메시 컴포넌트, 메시 컴포넌트 유닛 제거
+							Camera->RemoveMeshByActor(CurActor);
+						}
+					}
+				}
+
+				// [2] Actor 자체 Destroy 처리
+				CurActor->Destroy();
+				return true;
+			}
+		),
+			ActorList.end()
+		);
+	}
+}
+
 // Actor 생성 시 자동 호출(이름 설정, 오너 신 설정, 오더 설정)
 void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order /*= 0*/)
 {
@@ -68,11 +108,12 @@ void Ext_Scene::Update(float _DeltaTime)
 	{
 		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
 		{
-			if (!CurActor->GetIsUpdate()) continue;
-			else
+			if (!CurActor->IsUpdate() || CurActor->IsDeath())
 			{
-				CurActor->Update(_DeltaTime);
+				continue;
 			}
+
+			CurActor->Update(_DeltaTime); // 내부에서 Component도 같이 호출됨
 		}
 	}
 }
@@ -86,52 +127,6 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
 
 		CurCamera->CameraTransformUpdate(); // 카메라에 대한 뷰, 프로젝션, 뷰포트 행렬 최신화
-
-		// 임시
-		{
-			Ext_DirectXDevice::GetContext()->RSSetState(Ext_DirectXResourceLoader::RasterState);
-		}
-
 		CurCamera->Rendering(_DeltaTime);
-	}
-}
-
-// Actors내 Actor들의 Destroy 호출
-void Ext_Scene::Destroy()
-{
-	for (auto& [Key, ActorList] : Actors)
-	{
-		// remove_if은 요소들을 뒤로 밀어버립니다. 이후 erase에서 remove_if가 반환한 새 끝부터 원래 끝까지 실제로 삭제 진행
-		ActorList.erase(std::remove_if(ActorList.begin(), ActorList.end(), [](const std::shared_ptr<Ext_Actor>& CurActor)
-				{
-					if (!CurActor->GetIsDeath())
-					{
-						return false; // 죽지 않은 Actor는 유지
-					}
-
-					// [1] 카메라에서 MeshComponent 제거 처리
-					for (const auto& [Name, Component] : CurActor->GetComponents())
-					{
-						// MeshComponent인지 확인
-						auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component); // 가져온 것 중 MeshComponent인 것은 카메라에서 지워줌
-						if (MeshComp)
-						{
-							// 소유 카메라 얻기
-							std::shared_ptr<Ext_Camera> Camera = MeshComp->GetOwnerCamera().lock();
-							if (Camera)
-							{
-								// 카메라에 포함된 메시 컴포넌트, 메시 컴포넌트 유닛 제거
-								Camera->RemoveMeshByActor(CurActor); 
-							}
-						}
-					}
-
-					// [2] Actor 자체 Destroy 처리
-					CurActor->Destroy();
-					return true;
-				}
-			),
-			ActorList.end()
-		);
 	}
 }

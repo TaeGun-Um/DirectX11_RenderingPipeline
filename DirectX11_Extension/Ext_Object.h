@@ -22,12 +22,12 @@ public:
 	}
 	
 	// Getter, Setter
-	bool GetIsUpdate() { return IsUpdate; }
-	void UpdateOn() { IsUpdate = true; }
-	void UpdateOff() { IsUpdate = false; }
+	bool IsUpdate() { return bIsUpdate; }
+	void UpdateOn() { bIsUpdate = true; }
+	void UpdateOff() { bIsUpdate = false; }
 
-	bool GetIsDeath() { return IsDeath; }
-	void SetIsDeath(bool _IsDeath) { IsDeath = _IsDeath; }
+	bool IsDeath() { return bIsDeath; }
+	void SetIsDeath(bool _IsDeath) { bIsDeath = _IsDeath; }
 
 	int GetOrder() { return Order; }
 	std::string GetName() { return Name; }
@@ -45,8 +45,8 @@ protected:
 	std::weak_ptr<class Ext_Scene> OwnerScene;	// 자신이 속한 Scene 정보
 	std::string Name = "";										// 오브젝트 이름
 	int Order = 0;													// Order 지정(저장 시 그룹화할 때 활용)
-	bool IsUpdate = true;											// 업데이트 할것인지 안할것인지 지정
-	bool IsDeath = false;											// Delete 할것인지 안할것인지 지정(아직 안씀)
+	bool bIsUpdate = true;										// 업데이트 할것인지 안할것인지 지정
+	bool bIsDeath = false;										// Delete 할것인지 안할것인지 지정(아직 안씀)
 
 private:
 

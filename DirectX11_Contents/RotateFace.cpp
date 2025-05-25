@@ -16,17 +16,19 @@ void RotateFace::Start()
 {
 	Ext_Actor::Start();
 	// CreateComponent<Ext_Component>("TestComp", true);
-	GetTransform()->SetWorldPosition({ 0.f, 0.f, 10.0f });
-	GetTransform()->SetWorldScale({ 100.f, 100.f, 1.f }); // 크기 확대
+	GetTransform()->SetLocalPosition({ 0.f, 0.f, 10.0f });
+	GetTransform()->SetLocalScale({ 100.f, 100.f, 1.f });
 	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 	MeshComp->CreateMeshComponentUnit("RotateFace", "Basic");
 }
 
 void RotateFace::Update(float _DeltaTime)
 {
+	__super::Update(_DeltaTime);
+
 	std::shared_ptr<Ext_Transform> Transform = GetTransform();
 
-	GetTransform()->AddWorldRotation({ 0.f, 5.f, 0.f });
+	GetTransform()->AddLocalRotation({ 0.f, 5.f, 0.f });
 	// GetTransform()->AddWorldRotation({ 5.f, 0.f, 0.f });
 	// GetTransform()->AddWorldRotation({ 0.f, 0.f, 5.f });
 	// GetTransform()->AddWorldPosition({ 0.f, 0.1f, 0.3f });

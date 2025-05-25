@@ -122,9 +122,10 @@ void Ext_Camera::Rendering(float _Deltatime)
 
 		for (const std::shared_ptr<Ext_MeshComponent>& CurMeshComponent : MeshComponentList)
 		{
-			if (!CurMeshComponent->GetIsUpdate()) continue;
+			if (!CurMeshComponent->IsUpdate() || CurMeshComponent->IsDeath()) continue;
 			else
 			{
+				std::string Name = CurMeshComponent->GetName();
 				CurMeshComponent->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
 				// [!] 필요하면 픽셀 셰이더에서 활용할 Value들 업데이트
 			}
@@ -168,6 +169,11 @@ void Ext_Camera::Rendering(float _Deltatime)
 		{
 			for (auto& Unit : UnitList)
 			{
+				auto OwnerMeshComponent = Unit->GetOwnerMeshComponent().lock();
+				if (!OwnerMeshComponent || OwnerMeshComponent->IsDeath() || !OwnerMeshComponent->IsUpdate())
+				{
+					continue; // 죽은 MeshComponent의 유닛은 렌더링하지 않음
+				}
 				Unit->Rendering(_Deltatime); // 예시
 			}
 		}

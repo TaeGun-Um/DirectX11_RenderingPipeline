@@ -20,5 +20,6 @@ protected:
 	
 private:
 	float AccTime = 0;
-	
+	std::shared_ptr<class Ext_MeshComponent> MeshComp;
+	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
 };

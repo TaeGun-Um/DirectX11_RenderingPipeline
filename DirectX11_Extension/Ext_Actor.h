@@ -19,7 +19,7 @@ public:
 
 	// 컴포넌트 생성 후 저장
 	template<typename ComponentType>
-	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, int _Order = 0, bool _IsTransformShare = false)
+	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, int _Order = 0)
 	{
 		std::shared_ptr<Ext_Component> NewComponent = std::make_shared<ComponentType>();
 		std::string NewName = _Name.data();
@@ -30,7 +30,13 @@ public:
 			NewName.replace(0, 6, "");
 		}
 
-		ComponentInitialize(NewComponent, GetSharedFromThis<Ext_Actor>(), NewName.c_str(), _IsTransformShare);
+		if (Components.find(NewName) != Components.end())
+		{
+			MsgAssert("이미 존재하는 이름의 Component가 있습니다.");
+			return nullptr;
+		}
+
+		ComponentInitialize(NewComponent, GetSharedFromThis<Ext_Actor>(), NewName.c_str(), _Order);
 		Components.insert(std::make_pair(NewName, NewComponent));
 
 		return std::dynamic_pointer_cast<ComponentType>(NewComponent);
@@ -55,14 +61,19 @@ public:
 	std::shared_ptr<class Ext_Transform> GetTransform() { return Transform; }
 	std::map<std::string, std::shared_ptr<class Ext_Component>> GetComponents() { return Components; }
 
+	void MarkDeadComponent() {	bHasDeadComponent = true; } // 지우기 위한 플래그 설정
+
 protected:
 	virtual void Start() override {}
-	virtual void Update(float _DeltaTime) override {}
+	virtual void Update(float _DeltaTime);
 	virtual void Destroy() override;
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare = false); 
+	void RemoveDeadComponents(); // 특정 컴포넌트만 제거
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order); 
 	
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
+
+	bool bHasDeadComponent = false; // 죽은 컴포넌트 존재 여부
 
 private:
 

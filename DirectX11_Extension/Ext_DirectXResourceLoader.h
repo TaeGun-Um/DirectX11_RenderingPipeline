@@ -12,8 +12,6 @@ public:
 	Ext_DirectXResourceLoader& operator=(const Ext_DirectXResourceLoader& _Other) = delete;
 	Ext_DirectXResourceLoader& operator=(Ext_DirectXResourceLoader&& _Other) noexcept = delete;
 
-	static COMPTR<ID3D11RasterizerState> RasterState; // 임시
-
 protected:
 	
 private:

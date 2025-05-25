@@ -3,37 +3,34 @@
 // 행렬 정보(정점 셰이더랑 동일한 크기로 설정해야함)
 struct TransformData
 {
-	TransformData()
-	{
-		Scale = float4::ONE;
-		Rotation = float4::ZERONULL;
-		Quaternion = float4::ZERONULL;
-		Position = float4::ZERO;
-	}
+	// ✅ 로컬 정보
+	float4 LocalPosition = float4::ZERO;
+	float4 LocalRotation = float4::ZERONULL;
+	float4 LocalScale = float4::ONE;
+	float4 LocalQuaternion = float4::ZERONULL;
+	float4x4 LocalMatrix;
 
-	float4 Scale;
-	float4 Rotation;
-	float4 Quaternion;
-	float4 Position;
-
-	float4x4 ScaleMatrix;
-	float4x4 RotationMatrix;
-	float4x4 PositionMatrix;
+	// ✅ 월드 정보 (최종 렌더링에 사용됨)
+	float4 WorldPosition = float4::ZERO;
+	float4 WorldRotation = float4::ZERONULL;
+	float4 WorldQuaternion = float4::ZERONULL;
+	float4 WorldScale = float4::ONE;
 	float4x4 WorldMatrix;
 
+	// 뷰, 프로젝션, 뷰포트
 	float4x4 ViewMatrix;
 	float4x4 ProjectionMatrix;
-	float4x4 ViewPortMatrix;
-
 	float4x4 WorldViewMatrix;
 	float4x4 WorldViewProjectionMatrix;
 	
-	void CalculateWorldMatrix();
+	void CalculateLocalMatrix();
+	void CalculateWorldMatrix(const float4x4& _ParentMatrix);
 	void SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection);
+
 };
 
-// 기하학 구조를 위한 클래스, World는 Scene 전체 데카르트좌표계 기준, Local은 자기 자신 기준
-class Ext_Transform
+// 기하학 구조를 위한 클래스, World는 Scene 전체 데카르트좌표계 기준, Local은 자신이 속한 부모 기준의 위치/회전/스케일
+class Ext_Transform : public std::enable_shared_from_this<Ext_Transform>
 {
 	friend class Ext_Camera;
 	friend class Ext_MeshComponent;
@@ -43,7 +40,7 @@ class Ext_Transform
 public:
 	// constrcuter destructer
 	Ext_Transform();
-	~Ext_Transform();
+	~Ext_Transform() {}
 
 	// delete Function
 	Ext_Transform(const Ext_Transform& _Other) = delete;
@@ -51,39 +48,99 @@ public:
 	Ext_Transform& operator=(const Ext_Transform& _Other) = delete;
 	Ext_Transform& operator=(Ext_Transform&& _Other) noexcept = delete;
 
-	void SetWorldScale(const float4& _Value) // 월드 크기 지정
+	// this 가져오기
+	template<typename Type>
+	std::shared_ptr<Type> GetSharedFromThis()
 	{
-		TFData->Scale = _Value;
-		TransformUpdate();
+		return std::dynamic_pointer_cast<Type>(shared_from_this());
 	}
-	
-	void SetWorldRotation(const float4& _Value) // 월드 각도 지정
+
+	void SetLocalPosition(const float4& _Value)
 	{
-		TFData->Rotation = _Value;
-		TransformUpdate();
-	}
-	
-	void SetWorldPosition(const float4& _Value) // 월드 위치 지정
-	{
-		TFData->Position = _Value;
+		TFData->LocalPosition = _Value;
 		TransformUpdate();
 	}
 
-	void AddWorldScale(const float4& _Value) { SetWorldScale(TFData->Scale + _Value); } // 입력값만큼 크기 변경
-	void AddWorldRotation(const float4& _Value) { SetWorldRotation(TFData->Rotation + _Value); } // 입력값만큼 회전
-	void AddWorldPosition(const float4& _Value) { SetWorldPosition(TFData->Position + _Value); } // 입력값만큼 이동
+	void SetLocalRotation(const float4& _Value)
+	{
+		TFData->LocalRotation = _Value;
+		TransformUpdate();
+	}
 
+	void SetLocalScale(const float4& _Value)
+	{
+		TFData->LocalScale = _Value;
+		TransformUpdate();
+	}
+
+	void AddLocalRotation(const float4& _Value)
+	{
+		TFData->LocalRotation += _Value;
+		TransformUpdate();
+	}
+
+	void AddLocalPosition(const float4& _Value)
+	{
+		TFData->LocalPosition += _Value;
+		TransformUpdate();
+	}
+
+	float4 GetLocalPosition() const { return TFData->LocalPosition; }
+	float4 GetLocalRotation() const { return TFData->LocalRotation; }
+	float4 GetLocalScale() const { return TFData->LocalScale; }
+
+	// 월드 Getter
+	float4 GetWorldPosition() const { return TFData->WorldPosition; }
+	float4 GetWorldRotation() const { return TFData->WorldRotation; }
+	float4 GetWorldScale() const { return TFData->WorldScale; }
+	float4x4 GetWorldMatrix() const { return TFData->WorldMatrix; }
 	std::shared_ptr<TransformData> GetTransformData() { return TFData; }
-	float4x4 GetWorldMatrix() { return TFData->WorldMatrix; }
-	float4 GetWorldPosition() { return TFData->Position; }
-	float4 GetWorldScale() {	return TFData->Scale; }
-	float4 GetWorldRotation() { return TFData->Rotation; }
-	float4 GetWorldQuaternion() { return TFData->Quaternion; }
 
-	// For Camera
 	float4 GetLocalForwardVector() { return TFData->WorldMatrix.ArrVector[2].NormalizeReturn(); }
 	float4 GetLocalUpVector() { return TFData->WorldMatrix.ArrVector[1].NormalizeReturn(); }
-	float4 GetLocalRightVector() {	return TFData->WorldMatrix.ArrVector[0].NormalizeReturn(); }
+	float4 GetLocalRightVector() { return TFData->WorldMatrix.ArrVector[0].NormalizeReturn(); }
+
+	/////////////////////////////// 부모자식
+	void SetParent(const std::shared_ptr<Ext_Transform>& InParent)
+	{
+		// [1] 기존 부모가 있다면 자신을 자식 목록에서 제거
+		if (auto OldParent = Parent.lock())
+		{
+			OldParent->RemoveChild(GetSharedFromThis<Ext_Transform>());
+		}
+
+		// [2] 새로운 부모 등록
+		Parent = InParent;
+
+		// [3] 부모가 유효하면, 자신을 자식 목록에 추가
+		if (InParent)
+		{
+			InParent->Children.push_back(GetSharedFromThis<Ext_Transform>());
+		}
+
+		// [4] 부모 변경되었으므로 위치 갱신
+		TransformUpdate();
+	}
+
+	void RemoveChild(const std::shared_ptr<Ext_Transform>& Child)
+	{
+		Children.erase(std::remove(Children.begin(), Children.end(), Child), Children.end());
+	}
+
+	const std::vector<std::shared_ptr<Ext_Transform>>& GetChildren() const
+	{
+		return Children;
+	}
+
+	void SetOwnerComponent(const std::shared_ptr<Ext_Component>& Comp)
+	{
+		OwnerComponent = Comp;
+	}
+
+	std::weak_ptr<Ext_Component> GetOwnerComponent() const
+	{
+		return OwnerComponent;
+	}
 
 protected:
 	
@@ -94,7 +151,9 @@ private:
 
 	std::shared_ptr<TransformData> TFData = nullptr; // TransformData 정보
 
-	std::shared_ptr<Ext_Transform> Parent = nullptr; // 부모 행렬(아직 안쓸듯)
-	std::list<std::shared_ptr<Ext_Transform>> Childs; // 자식 행렬(아직 안쓸듯)
+	////////////////////////////////// 부모자식 테스트중
+	std::weak_ptr<Ext_Transform> Parent;
+	std::vector<std::shared_ptr<Ext_Transform>> Children;
+	std::weak_ptr<Ext_Component> OwnerComponent;
 
 };
