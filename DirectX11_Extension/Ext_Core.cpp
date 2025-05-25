@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_Core.h"
 
 #include <DirectX11_Base/Base_Windows.h>
@@ -15,19 +15,19 @@ std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
 std::shared_ptr<class Ext_Scene> Ext_Core::CurrentScenes = nullptr;
 std::shared_ptr<class Ext_Scene> Ext_Core::NextScenes = nullptr;
 
-// ÃÖÃÊ ½ÇÇà ÈÄ À©µµ¿ìÃ¢ »ı¼º
+// ìµœì´ˆ ì‹¤í–‰ í›„ ìœˆë„ìš°ì°½ ìƒì„±
 void Ext_Core::Run(HINSTANCE _hInstance, std::function<void()> _Start, std::function<void()> _End, const float4& _ScreenSize, bool _IsFullScreen)
 {
 	Base_Debug::LeakCheck();
 	int* TrustLeak = new int;
 
-	// À©µµ¿ì Ã¢ »ı¼º ÈÄ ·çÇÁ¹® ½ÃÀÛ
+	// ìœˆë„ìš° ì°½ ìƒì„± í›„ ë£¨í”„ë¬¸ ì‹œì‘
 	Base_Windows::WindowCreate(_hInstance, _ScreenSize, _IsFullScreen);
-	// bind·Î Àü´ŞÇØ¼­ ContentsCoreÀÇ Start(), End() ÇÔ¼ö°¡ Ext_CoreÀÇ Start(), End() È£Ãâ ½Ã ½ÇÇàµÉ ¼ö ÀÖµµ·Ï ÇÔ
+	// bindë¡œ ì „ë‹¬í•´ì„œ ContentsCoreì˜ Start(), End() í•¨ìˆ˜ê°€ Ext_Coreì˜ Start(), End() í˜¸ì¶œ ì‹œ ì‹¤í–‰ë  ìˆ˜ ìˆë„ë¡ í•¨
 	Base_Windows::WindowLoop(std::bind(Ext_Core::Start, _Start), Ext_Core::Update, std::bind(Ext_Core::End, _End));
 }
 
-// Scene »ı¼º ½Ã ÀÚµ¿ È£Ãâ, ¸ŞÀÎ Ä«¸Ş¶ó »ı¼º, ÀÌ¸§ ¼¼ÆÃ
+// Scene ìƒì„± ì‹œ ìë™ í˜¸ì¶œ, ë©”ì¸ ì¹´ë©”ë¼ ìƒì„±, ì´ë¦„ ì„¸íŒ…
 void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_view _Name)
 {
 	CurrentScenes = _Level;
@@ -36,16 +36,16 @@ void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_vi
 	_Level->Start();
 }
 
-// µ¨Å¸Å¸ÀÓ Ã¼Å©, 60ÇÁ·¹ÀÓ ±âÁØÀ¸·Î ¼³Á¤ÇÔ
+// ë¸íƒ€íƒ€ì„ ì²´í¬, 60í”„ë ˆì„ ê¸°ì¤€ìœ¼ë¡œ ì„¤ì •í•¨
 bool Ext_Core::TimeCheck()
 {
 	Base_Deltatime& Deta = Base_Deltatime::GetGlobalTime();
 	bool IsPass = true;
 
-	float DeltaTime = Deta.TimeCheck(); // 1ÇÁ·¹ÀÓ ±âÁØ °æ°ú ½Ã°£
-	Deta.AddFrameTime(DeltaTime);       // ´©Àû
+	float DeltaTime = Deta.TimeCheck(); // 1í”„ë ˆì„ ê¸°ì¤€ ê²½ê³¼ ì‹œê°„
+	Deta.AddFrameTime(DeltaTime);       // ëˆ„ì 
 
-	float FrameTime = Deta.GetFrameTime();  // ´©Àû ½Ã°£ È®ÀÎ
+	float FrameTime = Deta.GetFrameTime();  // ëˆ„ì  ì‹œê°„ í™•ì¸
 	float FrameLimit = Deta.GetFrameLimit(); // 1 / 60 = 0.016666..
 
 	if (FrameTime < FrameLimit)
@@ -57,17 +57,17 @@ bool Ext_Core::TimeCheck()
 		Deta.SetDeltaTime(FrameTime);
 		Deta.SetFrameRate(1.0f / FrameTime);
 		Deta.SetFPS(static_cast<int>(1.0f / FrameTime + 0.5f));
-		Deta.ResetFrameTime(); // ´©Àû ½Ã°£ ÃÊ±âÈ­
+		Deta.ResetFrameTime(); // ëˆ„ì  ì‹œê°„ ì´ˆê¸°í™”
 	}
 
 	return IsPass;
 }
 
-// À©µµ¿ìÃ¢ »ı¼º ÈÄ ÇÁ·ÎÁ§Æ® ¼¼ÆÃ
+// ìœˆë„ìš°ì°½ ìƒì„± í›„ í”„ë¡œì íŠ¸ ì„¸íŒ…
 void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 {
-	Ext_DirectXDevice::Initialize(); // µğ¹ÙÀÌ½º, ÄÁÅØ½ºÆ®, ½º¿ÒÃ¼ÀÎ, ·»´õÅ¸°Ù »ı¼º
-	Ext_DirectXResourceLoader::Initialize(); // DirectX¿¡ È°¿ëÇÒ ¸®¼Ò½º »ı¼º
+	Ext_DirectXDevice::Initialize(); // ë””ë°”ì´ìŠ¤, ì»¨í…ìŠ¤íŠ¸, ìŠ¤ì™‘ì²´ì¸, ë Œë”íƒ€ê²Ÿ ìƒì„±
+	Ext_DirectXResourceLoader::Initialize(); // DirectXì— í™œìš©í•  ë¦¬ì†ŒìŠ¤ ìƒì„±
 
 	if (nullptr == _ContentsCoreStart)
 	{
@@ -77,10 +77,10 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 	_ContentsCoreStart();
 }
 
-// ÇÁ·ÎÁ§Æ® ¼¼ÆÃ ÈÄ WindowLoop
+// í”„ë¡œì íŠ¸ ì„¸íŒ… í›„ WindowLoop
 void Ext_Core::Update()
 {
-	//////////////////////////////  ·¹º§ º¯°æ ½Ã  //////////////////////////////
+	//////////////////////////////  ë ˆë²¨ ë³€ê²½ ì‹œ  //////////////////////////////
 	if (nullptr != NextScenes)
 	{
 		std::shared_ptr<Ext_Scene> PrevScene = CurrentScenes;
@@ -102,28 +102,28 @@ void Ext_Core::Update()
 			CurrentScenes->SceneChangeInitialize();
 		}
 		
-		Base_Deltatime::GetGlobalTime().TimeReset(); // ·¹º§ º¯°æ ½Ã ±Û·Î¹ú Å¸ÀÓ ÃÊ±âÈ­
+		Base_Deltatime::GetGlobalTime().TimeReset(); // ë ˆë²¨ ë³€ê²½ ì‹œ ê¸€ë¡œë²Œ íƒ€ì„ ì´ˆê¸°í™”
 	}
 
 	if (nullptr == CurrentScenes)
 	{
-		MsgAssert("ScenesÀÌ µ¿ÀÛÇÏ°í ÀÖÁö ¾Ê½À´Ï´Ù.");
+		MsgAssert("Scenesì´ ë™ì‘í•˜ê³  ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		return;
 	}
-	//////////////////////////////  ·¹º§ º¯°æ Á¾·á  //////////////////////////////
+	//////////////////////////////  ë ˆë²¨ ë³€ê²½ ì¢…ë£Œ  //////////////////////////////
 
 
-	//////////////////////////////    ¾÷µ¥ÀÌÆ®    //////////////////////////////
+	//////////////////////////////    ì—…ë°ì´íŠ¸    //////////////////////////////
 	if (!TimeCheck()) return;
-	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Actor Çà·Ä ¾÷µ¥ÀÌÆ®
+	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Actor í–‰ë ¬ ì—…ë°ì´íŠ¸
 
-	Ext_DirectXDevice::RenderStart(); // ¹é¹öÆÛ Å¬¸®¾î ¹× ¼¼ÆÃ
-	CurrentScenes->Rendering(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Rendering ¾÷µ¥ÀÌÆ®
-	Ext_DirectXDevice::RenderEnd(); // Present È£Ãâ
-	////////////////////////////// ¾÷µ¥ÀÌÆ® Á¾·á //////////////////////////////
+	Ext_DirectXDevice::RenderStart(); // ë°±ë²„í¼ í´ë¦¬ì–´ ë° ì„¸íŒ…
+	CurrentScenes->Rendering(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Rendering ì—…ë°ì´íŠ¸
+	Ext_DirectXDevice::RenderEnd(); // Present í˜¸ì¶œ
+	////////////////////////////// ì—…ë°ì´íŠ¸ ì¢…ë£Œ //////////////////////////////
 }
 
-// À©µµ¿ìÃ¢ Á¾·á ½Ã È£Ãâ, ÀÚ¿ø Release ½Ç½Ã
+// ìœˆë„ìš°ì°½ ì¢…ë£Œ ì‹œ í˜¸ì¶œ, ìì› Release ì‹¤ì‹œ
 void Ext_Core::End(std::function<void()> _ContentsCoreEnd)
 {
 	// After Window Destroy, Process ending

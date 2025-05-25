@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ProcessÀÇ Loop, shutdown process ´ã´ç
+// Processì˜ Loop, shutdown process ë‹´ë‹¹
 class Ext_Core
 {
 public:
@@ -10,7 +10,7 @@ public:
 	Ext_Core& operator=(const Ext_Core& _Other) = delete;
 	Ext_Core& operator=(Ext_Core&& _Other) noexcept = delete;
 
-	// Scene »ı¼º ÈÄ ÀúÀå
+	// Scene ìƒì„± í›„ ì €ì¥
 	template<typename SceneType>
 	static std::shared_ptr<SceneType> CreateScene(std::string_view _Name)
 	{
@@ -28,7 +28,7 @@ public:
 
 		if (Scenes.end() != Scenes.find(NewName))
 		{
-			MsgAssert("°°Àº ÀÌ¸§ÀÇ SceneÀ» 2°³ ¸¸µé¼ö´Â ¾ø½À´Ï´Ù.");
+			MsgAssert("ê°™ì€ ì´ë¦„ì˜ Sceneì„ 2ê°œ ë§Œë“¤ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.");
 			return nullptr;
 		}
 
@@ -38,7 +38,7 @@ public:
 		return std::dynamic_pointer_cast<SceneType>(NewLevel);
 	}
 
-	// Scene º¯°æ ½Ç½Ã
+	// Scene ë³€ê²½ ì‹¤ì‹œ
 	static void ChangeScene(std::string_view _Name)
 	{
 		std::string Name = _Name.data();
@@ -46,14 +46,14 @@ public:
 
 		if (Scenes.end() == Scenes.find(NextName))
 		{
-			MsgAssert("¾ø´Â SceneÀº Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+			MsgAssert("ì—†ëŠ” Sceneì€ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 			return;
 		}
 
 		NextScenes = Scenes[NextName];
 	}
 
-	// Scene Ã£±â
+	// Scene ì°¾ê¸°
 	template<typename SceneType>
 	static std::shared_ptr<SceneType> FindScene(std::string_view _Name)
 	{
@@ -62,7 +62,7 @@ public:
 
 		if (Scenes.end() == Scenes.find(FindName))
 		{
-			MsgAssert("¾ø´Â SceneÀº Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+			MsgAssert("ì—†ëŠ” Sceneì€ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 			return;
 		}
 
@@ -74,8 +74,8 @@ public:
 protected:
 	
 private:
-	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level, std::string_view _Name); // ¾À »ı¼º ÈÄ ±âº» °ª ÀÔ·Â
-	static bool TimeCheck(); // µ¨Å¸Å¸ÀÓ Ã¼Å©
+	static void SceneInitialize(std::shared_ptr<class Ext_Scene> _Level, std::string_view _Name); // ì”¬ ìƒì„± í›„ ê¸°ë³¸ ê°’ ì…ë ¥
+	static bool TimeCheck(); // ë¸íƒ€íƒ€ì„ ì²´í¬
 
 	// constrcuter destructer
 	Ext_Core() {};
@@ -85,7 +85,7 @@ private:
 	static void Update();
 	static void End(std::function<void()> _ContentsCoreEnd);
 
-	static std::map<std::string, std::shared_ptr<class Ext_Scene>> Scenes; // ÀúÀåµÈ Sceneµé
-	static std::shared_ptr<class Ext_Scene> CurrentScenes; // ÇöÀç ÁöÁ¤µÈ Scene
-	static std::shared_ptr<class Ext_Scene> NextScenes; // ´ÙÀ½¿¡ º¯°æµÉ Scene
+	static std::map<std::string, std::shared_ptr<class Ext_Scene>> Scenes; // ì €ì¥ëœ Sceneë“¤
+	static std::shared_ptr<class Ext_Scene> CurrentScenes; // í˜„ì¬ ì§€ì •ëœ Scene
+	static std::shared_ptr<class Ext_Scene> NextScenes; // ë‹¤ìŒì— ë³€ê²½ë  Scene
 };

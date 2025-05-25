@@ -19,8 +19,7 @@ void TempScene::Start()
 
 void TempScene::Update(float _DeltaTime)
 {
-	
-	Ext_Scene::Update(_DeltaTime);
+		Ext_Scene::Update(_DeltaTime);
 }
 
 void TempScene::Destroy()
