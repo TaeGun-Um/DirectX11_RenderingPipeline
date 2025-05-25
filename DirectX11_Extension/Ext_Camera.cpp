@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_Camera.h"
 
 #include <DirectX11_Base/Base_Windows.h>
@@ -8,7 +8,7 @@
 #include "Ext_MeshComponent.h"
 #include "Ext_MeshComponentUnit.h"
 
-// ÇöÀç Ä«¸Ş¶ó Å¸ÀÔ¿¡ µû¶ó ºä, ÇÁ·ÎÁ§¼Ç, ºäÆ÷Æ® Çà·Ä ¼¼ÆÃ
+// í˜„ì¬ ì¹´ë©”ë¼ íƒ€ì…ì— ë”°ë¼ ë·°, í”„ë¡œì ì…˜, ë·°í¬íŠ¸ í–‰ë ¬ ì„¸íŒ…
 void Ext_Camera::CameraTransformUpdate()
 {
 	float4 EyeDir = GetTransform()->GetLocalForwardVector();
@@ -25,12 +25,12 @@ void Ext_Camera::CameraTransformUpdate()
 	}
 	case ProjectionType::Orthogonal:
 	{
-		// Projection.OrthographicLH(Width * ZoomRatio, Height * ZoomRatio, Near, Far); ÀÏ´Ü ÆĞ½º
+		// Projection.OrthographicLH(Width * ZoomRatio, Height * ZoomRatio, Near, Far); ì¼ë‹¨ íŒ¨ìŠ¤
 		break;
 	}
 	case ProjectionType::Unknown:
 	{
-		MsgAssert("Ä«¸Ş¶ó Åõ¿µÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+		MsgAssert("ì¹´ë©”ë¼ íˆ¬ì˜ì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		break;
 	}
 	}
@@ -38,19 +38,19 @@ void Ext_Camera::CameraTransformUpdate()
 	ViewPortMatrix.ViewPort(Width, Height, 0.0f, 0.0f);
 }
 
-// ºäÆ÷Æ® ¼¼ÆÃ ////////////////////////////////// Å×½ºÆ®¿ë /////////////////////////
+// ë·°í¬íŠ¸ ì„¸íŒ… ////////////////////////////////// í…ŒìŠ¤íŠ¸ìš© /////////////////////////
 void Ext_Camera::ViewPortSetting()
 {
-	// ¾ø¾îµµ µÉµí
+	// ì—†ì–´ë„ ë ë“¯
 	Ext_DirectXDevice::GetContext()->RSSetViewports(1, &ViewPortData);
 }
 
-// MeshComponents¿¡ »ı¼ºµÈ MeshComponent ³Ö±â
+// MeshComponentsì— ìƒì„±ëœ MeshComponent ë„£ê¸°
 void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshComponent)
 {
 	if (nullptr == _MeshComponent)
 	{
-		MsgAssert("MeshComponent°¡ nullptr ÀÔ´Ï´Ù");
+		MsgAssert("MeshComponentê°€ nullptr ì…ë‹ˆë‹¤");
 		return;
 	}
 
@@ -58,17 +58,17 @@ void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshCompo
 	MeshComponents[GetOrder()].push_back(_MeshComponent);
 }
 
-// »ı¼ºµÈ MeshComponentUnitÀ» Ä«¸Ş¶óÀÇ MeshComponentUnits¿¡ ³Ö±â
+// ìƒì„±ëœ MeshComponentUnitì„ ì¹´ë©”ë¼ì˜ MeshComponentUnitsì— ë„£ê¸°
 void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _Unit, RenderPath _Path /*= RenderPath::None*/)
 {
 	int Order = _Unit->GetOwnerMeshComponent().lock()->GetOrder();
 	// RenderPath Path = _Unit->GetMaterial()->GetPixelShader()->GetRenderPath();
 	MeshComponentUnits[_Path][Order].push_back(_Unit);
 
-	// ¿©±â¼­ µ¿Àû, Á¤ÀûÀ¸·Î ³ª´­ ¼öµµ ÀÖ´Ù.
+	// ì—¬ê¸°ì„œ ë™ì , ì •ì ìœ¼ë¡œ ë‚˜ëˆŒ ìˆ˜ë„ ìˆë‹¤.
 }
 
-// Ä«¸Ş¶ó »ı¼º ½Ã È£Ãâ
+// ì¹´ë©”ë¼ ìƒì„± ì‹œ í˜¸ì¶œ
 void Ext_Camera::Start()
 {
 	ViewPortData.TopLeftX = 0;
@@ -82,27 +82,27 @@ void Ext_Camera::Start()
 	Height = ViewPortData.Height;
 }
 
-// Ä«¸Ş¶óÀÇ MeshComponentsµé¿¡ ´ëÇÑ ¾÷µ¥ÀÌÆ® ¹× ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ¸®¼Ò½º Á¤·Ä
+// ì¹´ë©”ë¼ì˜ MeshComponentsë“¤ì— ëŒ€í•œ ì—…ë°ì´íŠ¸ ë° ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ë¦¬ì†ŒìŠ¤ ì •ë ¬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	// MeshComponents ·»´õ¸µ ¾÷µ¥ÀÌÆ® ½ÃÀÛ
+	// MeshComponents ë Œë”ë§ ì—…ë°ì´íŠ¸ ì‹œì‘
 	for (auto& [Key, MeshComponentList] : MeshComponents)
 	{
-		// [!] ÇÊ¿äÇÏ¸é ZSort ½Ç½Ã(³ªÁß¿¡)
+		// [!] í•„ìš”í•˜ë©´ ZSort ì‹¤ì‹œ(ë‚˜ì¤‘ì—)
 
 		for (const std::shared_ptr<Ext_MeshComponent>& CurMeshComponent : MeshComponentList)
 		{
 			if (!CurMeshComponent->GetIsUpdate()) continue;
 			else
 			{
-				CurMeshComponent->Rendering(_Deltatime, GetSharedFromThis<Ext_Camera>()); // [3] ÇöÀç MeshComponent¿¡°Ô Ä«¸Ş¶óÀÇ View, Projection °öÇØÁÖ±â
-				// [!] ÇÊ¿äÇÏ¸é ÇÈ¼¿ ¼ÎÀÌ´õ¿¡¼­ È°¿ëÇÒ Valueµé ¾÷µ¥ÀÌÆ®
+				CurMeshComponent->Rendering(_Deltatime, GetSharedFromThis<Ext_Camera>()); // [3] í˜„ì¬ MeshComponentì—ê²Œ ì¹´ë©”ë¼ì˜ View, Projection ê³±í•´ì£¼ê¸°
+				// [!] í•„ìš”í•˜ë©´ í”½ì…€ ì…°ì´ë”ì—ì„œ í™œìš©í•  Valueë“¤ ì—…ë°ì´íŠ¸
 			}
 		}
 
 	}
 
-	// ÄÄÆ÷³ÍÆ® ¸Ş½ÃÀÇ À¯´Öµé ¼øÈ¸
+	// ì»´í¬ë„ŒíŠ¸ ë©”ì‹œì˜ ìœ ë‹›ë“¤ ìˆœíšŒ
 	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
 	{
 		//switch (RenderPathKey)
@@ -138,13 +138,13 @@ void Ext_Camera::Rendering(float _Deltatime)
 		{
 			for (auto& Unit : UnitList)
 			{
-				Unit->Rendering(_Deltatime); // ¿¹½Ã
+				Unit->Rendering(_Deltatime); // ì˜ˆì‹œ
 			}
 		}
 	}
 		
-		// <<Ãß°¡ ÇÊ¿ä>>
-		// ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎÀÇ °¢ ´Ü°è È£Ãâ, << Ext_Material¿¡¼­ ÁøÇà >>
+		// <<ì¶”ê°€ í•„ìš”>>
+		// ë Œë”ë§ íŒŒì´í”„ë¼ì¸ì˜ ê° ë‹¨ê³„ í˜¸ì¶œ, << Ext_Materialì—ì„œ ì§„í–‰ >>
 		// 1. Resterizer : RasterizerPtr->SetFILL_MODE(FILL_MODE);, GameEngineDevice::GetContext()->RSSetState(CurState);
 		// 2. OutputMerget : GameEngineDevice::GetContext()->OMSetBlendState(State, nullptr, Mask);, 
 		// 3. GameEngineDevice::GetContext()->OMSetDepthStencilState(State, 0);
@@ -159,7 +159,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 
 
 
-// Zsort ·ÎÁ÷(ÀúÀå)
+// Zsort ë¡œì§(ì €ì¥)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////int Order = RenderGroupStartIter->first;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////std::map<int, SortType>::iterator SortIter = SortValues.find(Order);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

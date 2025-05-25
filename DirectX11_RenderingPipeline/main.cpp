@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "PrecompileHeader.h"
 #include <DirectX11_Base/Base_Windows.h>
@@ -6,8 +6,8 @@
 #include <DirectX11_Extension/Ext_Core.h>
 #include <DirectX11_Contents/Contents_Core.h>
 
-float4 StartScreenSize = { 1280.f, 720.f }; // ¿øÇÏ´Â È­¸é Å©±â ÀÔ·Â
-bool IsStartFullScreen = false;				       // Ç®½ºÅ©¸°
+float4 StartScreenSize = { 1280.f, 720.f }; // ì›í•˜ëŠ” í™”ë©´ í¬ê¸° ì…ë ¥
+bool IsStartFullScreen = false;				       // í’€ìŠ¤í¬ë¦°
 
 int APIENTRY wWinMain
 (
@@ -17,7 +17,7 @@ int APIENTRY wWinMain
 	_In_ int       nCmdShow
 )
 {
-	// Contents_Core°¡ Ext_CorÀÇ »ó¼ÓÀº ¹ŞÁö ¾ÊÁö¸¸, ÀÌ·± ½ÄÀ¸·Î Àü´ŞÇØ¼­ »óÀ§°¡ ÇÏÀ§¸¦ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+	// Contents_Coreê°€ Ext_Corì˜ ìƒì†ì€ ë°›ì§€ ì•Šì§€ë§Œ, ì´ëŸ° ì‹ìœ¼ë¡œ ì „ë‹¬í•´ì„œ ìƒìœ„ê°€ í•˜ìœ„ë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ í•¨
 	Ext_Core::Run(hInstance, Contents_Core::Start, Contents_Core::End, StartScreenSize, IsStartFullScreen);
 	return 0;
 }

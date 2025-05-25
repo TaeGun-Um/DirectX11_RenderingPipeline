@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Ext_DirectXTexture.h"
 #include "Ext_ResourceManager.h"
 
-// ·»´õ Å¸°Ù °ü¸® Å¬·¡½º
+// ë Œë” íƒ€ê²Ÿ ê´€ë¦¬ í´ë˜ìŠ¤
 class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarget>
 {
 	friend class Ext_DirectXDevice;
@@ -18,7 +18,7 @@ public:
 	Ext_DirectXRenderTarget& operator=(const Ext_DirectXRenderTarget& _Other) = delete;
 	Ext_DirectXRenderTarget& operator=(Ext_DirectXRenderTarget&& _Other) noexcept = delete;
 
-	// ·»´õÅ¸°Ù »ı¼º, [1] ·»´õÅ¸°Ù ÀÌ¸§ ÁöÁ¤, [2] Ext_DirectXTexture Æ÷ÀÎÅÍ, [3] ·»´õÅ¸°Ù »ö»ó
+	// ë Œë”íƒ€ê²Ÿ ìƒì„±, [1] ë Œë”íƒ€ê²Ÿ ì´ë¦„ ì§€ì •, [2] Ext_DirectXTexture í¬ì¸í„°, [3] ë Œë”íƒ€ê²Ÿ ìƒ‰ìƒ
 	static std::shared_ptr<Ext_DirectXRenderTarget> CreateRenderTarget(std::string_view _Name, std::shared_ptr<class Ext_DirectXTexture> _Texture, const float4& _Color)
 	{
 		std::shared_ptr<Ext_DirectXRenderTarget> NewRenderTarget = Ext_ResourceManager::CreateNameResource(_Name);
@@ -36,43 +36,43 @@ public:
 protected:
 	
 private:
-	void CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View¸¦ ±â¹İÀ¸·Î ·»´õÅ¸°Ù »ı¼º
-	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() È£Ãâ
-	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() È£Ãâ
-	void RenderTargetViewsClear(); // ClearRenderTargetView() È£Ãâ
-	void DepthStencilViewClear(); // ClearDepthStencilView() È£Ãâ
+	void CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // Viewë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë Œë”íƒ€ê²Ÿ ìƒì„±
+	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() í˜¸ì¶œ
+	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() í˜¸ì¶œ
+	void RenderTargetViewsClear(); // ClearRenderTargetView() í˜¸ì¶œ
+	void DepthStencilViewClear(); // ClearDepthStencilView() í˜¸ì¶œ
 
 
-	std::vector<float4> Colors; // »ı¼ºµÈ ·»´õÅ¸°Ù »ö»ó ÀúÀå
-	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(»ı¼º ÁÖÃ¼) Æ÷ÀÎÅÍ ÀúÀå ÄÁÅ×ÀÌ³Ê
+	std::vector<float4> Colors; // ìƒì„±ëœ ë Œë”íƒ€ê²Ÿ ìƒ‰ìƒ ì €ì¥
+	std::vector<std::shared_ptr<Ext_DirectXTexture>> Textures = {}; // Ext_DirectXTexture(ìƒì„± ì£¼ì²´) í¬ì¸í„° ì €ì¥ ì»¨í…Œì´ë„ˆ
 	std::shared_ptr<Ext_DirectXTexture> DepthTexture = {};
-	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // »ı¼º ÁÖÃ¼ÀÇ ViewPort Á¤º¸ ÀúÀå ÄÁÅ×ÀÌ³Ê
-	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // ·»´õÅ¸°Ùºäµé ÀúÀå
+	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // ìƒì„± ì£¼ì²´ì˜ ViewPort ì •ë³´ ì €ì¥ ì»¨í…Œì´ë„ˆ
+	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // ë Œë”íƒ€ê²Ÿë·°ë“¤ ì €ì¥
 
-	// std::vector<ID3D11RenderTargetView*> RTVs = {}; // »ı¼º ÁÖÃ¼ÀÇ ·»´õÅ¸°Ùºä Á¤º¸ ÀúÀå ÄÁÅ×ÀÌ³Ê
-	// std::vector<ID3D11ShaderResourceView*> SRVs = {}; // »ı¼º ÁÖÃ¼ÀÇ ¼ÎÀÌ´õ¸®¼Ò½ººä Á¤º¸ ÀúÀå ÄÁÅ×ÀÌ³Ê
+	// std::vector<ID3D11RenderTargetView*> RTVs = {}; // ìƒì„± ì£¼ì²´ì˜ ë Œë”íƒ€ê²Ÿë·° ì •ë³´ ì €ì¥ ì»¨í…Œì´ë„ˆ
+	// std::vector<ID3D11ShaderResourceView*> SRVs = {}; // ìƒì„± ì£¼ì²´ì˜ ì…°ì´ë”ë¦¬ì†ŒìŠ¤ë·° ì •ë³´ ì €ì¥ ì»¨í…Œì´ë„ˆ
 };
 // [RenderTarget]
-// ·»´õ Å¸°ÙÀº ·»´õ¸µ °á°ú¸¦ ±â·ÏÇÏ´Â ÃÖÁ¾ ¸ñÀûÁö°¡ µÈ´Ù. Áï, ¼ÎÀÌ´õÀÇ Ãâ·Â °á°ú°¡ ±×·ÁÁö´Â °ø°£ÀÌ´Ù.
-// ÀÏ¹İÀûÀ¸·Î È­¸é¿¡ Ãâ·ÂµÇ´Â ÇÁ·¹ÀÓ ¹öÆÛ(¹é ¹öÆÛ, ÇÁ·ĞÆ® ¹öÆÛ)³ª ÈÄÃ³¸®¿ë ÅØ½ºÃÄ µîÀÌ ·»´õ Å¸°ÙÀÌ µÈ´Ù.
-// ÁÖ·Î ID3D11Texture2DÀÇ ÇüÅÂ°¡ µÈ´Ù.
+// ë Œë” íƒ€ê²Ÿì€ ë Œë”ë§ ê²°ê³¼ë¥¼ ê¸°ë¡í•˜ëŠ” ìµœì¢… ëª©ì ì§€ê°€ ëœë‹¤. ì¦‰, ì…°ì´ë”ì˜ ì¶œë ¥ ê²°ê³¼ê°€ ê·¸ë ¤ì§€ëŠ” ê³µê°„ì´ë‹¤.
+// ì¼ë°˜ì ìœ¼ë¡œ í™”ë©´ì— ì¶œë ¥ë˜ëŠ” í”„ë ˆì„ ë²„í¼(ë°± ë²„í¼, í”„ë¡ íŠ¸ ë²„í¼)ë‚˜ í›„ì²˜ë¦¬ìš© í…ìŠ¤ì³ ë“±ì´ ë Œë” íƒ€ê²Ÿì´ ëœë‹¤.
+// ì£¼ë¡œ ID3D11Texture2Dì˜ í˜•íƒœê°€ ëœë‹¤.
 
 // [D3D11_VIEWPORT]
-// ·»´õ¸µÇÒ Ãâ·Â ¿µ¿ª(ViewPort)À» Á¤ÀÇÇÏ´Â ±¸Á¶Ã¼ÀÌ´Ù. ÇÈ¼¿ÀÌ ½ÇÁ¦·Î ±×·ÁÁú È­¸é»óÀÇ »ç°¢Çü ¿µ¿ªÀ» ¼³Á¤ÇÏ´Âµ¥ »ç¿ëµÈ´Ù.
-// <<¼³¸í>>
-/*1. TopLeftX : ºäÆ÷Æ® ÁÂ»ó´Ü X À§Ä¡ (ÇÈ¼¿ ´ÜÀ§)*/
-/*2. TopLeftY : ºäÆ÷Æ® ÁÂ»ó´Ü Y À§Ä¡ (ÇÈ¼¿ ´ÜÀ§)*/
-/*3. Width : ºäÆ÷Æ® ³Êºñ (ÇÈ¼¿ ´ÜÀ§)*/
-/*4. Height : ºäÆ÷Æ® ³ôÀÌ (ÇÈ¼¿ ´ÜÀ§)*/
-/*5. MinDepth : ±íÀÌ°ª ÃÖ¼Ò (º¸Åë 0.0f)*/
-/*6. MaxDepth : ±íÀÌ°ª ÃÖ´ë (º¸Åë 1.0f)*/
+// ë Œë”ë§í•  ì¶œë ¥ ì˜ì—­(ViewPort)ì„ ì •ì˜í•˜ëŠ” êµ¬ì¡°ì²´ì´ë‹¤. í”½ì…€ì´ ì‹¤ì œë¡œ ê·¸ë ¤ì§ˆ í™”ë©´ìƒì˜ ì‚¬ê°í˜• ì˜ì—­ì„ ì„¤ì •í•˜ëŠ”ë° ì‚¬ìš©ëœë‹¤.
+// <<ì„¤ëª…>>
+/*1. TopLeftX : ë·°í¬íŠ¸ ì¢Œìƒë‹¨ X ìœ„ì¹˜ (í”½ì…€ ë‹¨ìœ„)*/
+/*2. TopLeftY : ë·°í¬íŠ¸ ì¢Œìƒë‹¨ Y ìœ„ì¹˜ (í”½ì…€ ë‹¨ìœ„)*/
+/*3. Width : ë·°í¬íŠ¸ ë„ˆë¹„ (í”½ì…€ ë‹¨ìœ„)*/
+/*4. Height : ë·°í¬íŠ¸ ë†’ì´ (í”½ì…€ ë‹¨ìœ„)*/
+/*5. MinDepth : ê¹Šì´ê°’ ìµœì†Œ (ë³´í†µ 0.0f)*/
+/*6. MaxDepth : ê¹Šì´ê°’ ìµœëŒ€ (ë³´í†µ 1.0f)*/
 
 // [std::shared_ptr<Ext_DirectXTexture> DepthTexture]
-// DepthTexture´Â GPU°¡ ±íÀÌ(Depth), ½ºÅÄ½Ç(Stencil) Á¤º¸¸¦ ÀúÀåÇÏ´Â Æ¯¼öÇÑ 2D ÅØ½ºÃÄÀÌ´Ù.
-// ÀÏ¹İ ÅØ½ºÃ³Ã³·³ »ö»óÀ» ÀúÀåÇÏ´Â °ÍÀÌ ¾Æ´Ï¶ó, °¢ ÇÈ¼¿ÀÌ ¾ó¸¶³ª Ä«¸Ş¶ó¿¡ ¸Ö¸® ÀÖ´ÂÁö¸¦ ºÎµ¿ ¼Ò¼ö°ªÀ¸·Î ÀúÀåÇÑ´Ù.
-// ·»´õ¸µ ½Ã ±íÀÌ Å×½ºÆ®(Z-test)¿¡ »ç¿ëµÈ´Ù.
-// <<±íÀÌ Å×½ºÆ®>>
-// 1. GPU´Â È­¸é¿¡ ÇÈ¼¿À» Âï±â Àü, ±âÁ¸ ÇÈ¼¿º¸´Ù ´õ °¡±î¿îÁö È®ÀÎÇØ¾ß ÇÔ
-// 2. ±× ±íÀÌ ºñ±³¸¦ À§ÇØ Depth Buffer(¿©±â¼­ÀÇ DepthTexture)°¡ ÇÊ¿ä
-// <<½ºÅÙ½Ç Å×½ºÆ®>>
-// ¸¶½ºÅ·, Å¬¸®ÇÎ È¿°ú¸¦ ¸¸µé ¶§ »ç¿ë(½Ç·ç¿§, ±×¸²ÀÚ ¿µ¿ª µî)
+// DepthTextureëŠ” GPUê°€ ê¹Šì´(Depth), ìŠ¤íƒ ì‹¤(Stencil) ì •ë³´ë¥¼ ì €ì¥í•˜ëŠ” íŠ¹ìˆ˜í•œ 2D í…ìŠ¤ì³ì´ë‹¤.
+// ì¼ë°˜ í…ìŠ¤ì²˜ì²˜ëŸ¼ ìƒ‰ìƒì„ ì €ì¥í•˜ëŠ” ê²ƒì´ ì•„ë‹ˆë¼, ê° í”½ì…€ì´ ì–¼ë§ˆë‚˜ ì¹´ë©”ë¼ì— ë©€ë¦¬ ìˆëŠ”ì§€ë¥¼ ë¶€ë™ ì†Œìˆ˜ê°’ìœ¼ë¡œ ì €ì¥í•œë‹¤.
+// ë Œë”ë§ ì‹œ ê¹Šì´ í…ŒìŠ¤íŠ¸(Z-test)ì— ì‚¬ìš©ëœë‹¤.
+// <<ê¹Šì´ í…ŒìŠ¤íŠ¸>>
+// 1. GPUëŠ” í™”ë©´ì— í”½ì…€ì„ ì°ê¸° ì „, ê¸°ì¡´ í”½ì…€ë³´ë‹¤ ë” ê°€ê¹Œìš´ì§€ í™•ì¸í•´ì•¼ í•¨
+// 2. ê·¸ ê¹Šì´ ë¹„êµë¥¼ ìœ„í•´ Depth Buffer(ì—¬ê¸°ì„œì˜ DepthTexture)ê°€ í•„ìš”
+// <<ìŠ¤í…ì‹¤ í…ŒìŠ¤íŠ¸>>
+// ë§ˆìŠ¤í‚¹, í´ë¦¬í•‘ íš¨ê³¼ë¥¼ ë§Œë“¤ ë•Œ ì‚¬ìš©(ì‹¤ë£¨ì—£, ê·¸ë¦¼ì ì˜ì—­ ë“±)

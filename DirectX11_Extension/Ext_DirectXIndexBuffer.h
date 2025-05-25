@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_ResourceManager.h"
 
-// ÀÎµ¦½º ¹öÆÛ(Index Buffer) »ı¼ºÀ» À§ÇÑ Å¬·¡½º
+// ì¸ë±ìŠ¤ ë²„í¼(Index Buffer) ìƒì„±ì„ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXIndexBuffer : public Ext_ResourceManager<Ext_DirectXIndexBuffer>
 {
 	friend class Ext_DirectXMesh;
@@ -17,7 +17,7 @@ public:
 	Ext_DirectXIndexBuffer& operator=(const Ext_DirectXIndexBuffer& _Other) = delete;
 	Ext_DirectXIndexBuffer& operator=(Ext_DirectXIndexBuffer&& _Other) noexcept = delete;
 
-	// IndexBuffer »ı¼º
+	// IndexBuffer ìƒì„±
 	template<typename Type>
 	static std::shared_ptr<Ext_DirectXIndexBuffer> CreateIndexBuffer(std::string_view _Name, const std::vector<Type>& _Vertexs)
 	{
@@ -35,13 +35,13 @@ public:
 protected:
 	
 private:
-	void CreateIndexBuffer(const void* _Data, UINT _IndexSize, UINT _IndexCount); // IndexBuffer »ı¼º
-	void IndexBufferSetting(); // IASetIndexBuffer() È£Ãâ
+	void CreateIndexBuffer(const void* _Data, UINT _IndexSize, UINT _IndexCount); // IndexBuffer ìƒì„±
+	void IndexBufferSetting(); // IASetIndexBuffer() í˜¸ì¶œ
 	
-	D3D11_BUFFER_DESC IndexBufferInfo = { 0, };  // ÀÎµ¦½º ¹öÆÛ DESC ÀúÀå¿ë
-	COMPTR<ID3D11Buffer> IndexBuffer = nullptr;   // ÀÎµ¦½º ¹öÆÛ ÀÎÅÍÆäÀÌ½º ÀúÀå¿ë
-	UINT VertexSize = 0;											// ¹öÅØ½º »çÀÌÁî
-	UINT VertexCount = 0;										// ¹öÅØ½º °¹¼ö
+	D3D11_BUFFER_DESC IndexBufferInfo = { 0, };  // ì¸ë±ìŠ¤ ë²„í¼ DESC ì €ì¥ìš©
+	COMPTR<ID3D11Buffer> IndexBuffer = nullptr;   // ì¸ë±ìŠ¤ ë²„í¼ ì¸í„°í˜ì´ìŠ¤ ì €ì¥ìš©
+	UINT VertexSize = 0;											// ë²„í…ìŠ¤ ì‚¬ì´ì¦ˆ
+	UINT VertexCount = 0;										// ë²„í…ìŠ¤ ê°¯ìˆ˜
 	DXGI_FORMAT Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
 
 	UINT Offset = 0;

@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_Object.h"
 
-// Actor ¼Ó¼ºÀ» ´ã´çÇÏ´Â Å¬·¡½º
+// Actor ì†ì„±ì„ ë‹´ë‹¹í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_Actor : public Ext_Object
 {
 	friend class Ext_Scene;
@@ -17,7 +17,7 @@ public:
 	Ext_Actor& operator=(const Ext_Actor& _Other) = delete;
 	Ext_Actor& operator=(Ext_Actor&& _Other) noexcept = delete;
 
-	// ÄÄÆ÷³ÍÆ® »ı¼º ÈÄ ÀúÀå
+	// ì»´í¬ë„ŒíŠ¸ ìƒì„± í›„ ì €ì¥
 	template<typename ComponentType>
 	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, int _Order = 0, bool _IsTransformShare = false)
 	{
@@ -36,7 +36,7 @@ public:
 		return std::dynamic_pointer_cast<ComponentType>(NewComponent);
 	}
 
-	// Component Ã£±â
+	// Component ì°¾ê¸°
 	template<typename ComponentType>
 	std::shared_ptr<ComponentType> FindComponent(std::string_view _Name)
 	{
@@ -44,7 +44,7 @@ public:
 
 		if (Components.end() == Components.find(Name))
 		{
-			MsgAssert("¾ø´Â SceneÀº Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+			MsgAssert("ì—†ëŠ” Sceneì€ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 			return nullptr;
 		}
 
@@ -61,8 +61,8 @@ protected:
 	virtual void Destroy() override {}
 	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order, bool __IsTransformShare = false); 
 	
-	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // ÀÚ½ÅÀÌ °¡Áø ÄÄÆ÷³ÍÆ®µé Á¤º¸
-	std::shared_ptr<class Ext_Transform> Transform = nullptr; // ÀÚ½ÅÀÌ °¡Áø Æ®·£½ºÆû Á¤º¸
+	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // ìì‹ ì´ ê°€ì§„ ì»´í¬ë„ŒíŠ¸ë“¤ ì •ë³´
+	std::shared_ptr<class Ext_Transform> Transform = nullptr; // ìì‹ ì´ ê°€ì§„ íŠ¸ëœìŠ¤í¼ ì •ë³´
 
 private:
 

@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 // DirectX11_Extension PrecompileHeader
-// Extension´Â DirectX¸¦ µ¹¸®±â À§ÇÑ ±â´ÉµéÀ» ¸ğ¾ÆµĞ ÇÁ·ÎÁ§Æ®
+// ExtensionëŠ” DirectXë¥¼ ëŒë¦¬ê¸° ìœ„í•œ ê¸°ëŠ¥ë“¤ì„ ëª¨ì•„ë‘” í”„ë¡œì íŠ¸
 
 #include <DirectX11_Base/PrecompileHeader.h>
 #include <DirectX11_Base/Base_Debug.h>

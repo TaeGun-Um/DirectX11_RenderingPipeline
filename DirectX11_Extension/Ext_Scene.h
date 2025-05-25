@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_Object.h"
 
-// Scene ¼Ó¼ºÀ» ´ã´çÇÏ´Â Å¬·¡½º
+// Scene ì†ì„±ì„ ë‹´ë‹¹í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_Scene : public Ext_Object
 {
 	friend class Ext_Core;
@@ -17,7 +17,7 @@ public:
 	Ext_Scene& operator=(const Ext_Scene& _Other) = delete;
 	Ext_Scene& operator=(Ext_Scene&& _Other) noexcept = delete;
 
-	// Actor »ı¼º ¹× ÀúÀå
+	// Actor ìƒì„± ë° ì €ì¥
 	template<typename ActorType>
 	std::shared_ptr<ActorType> CreateActor(std::string_view _Name, int _Order = 0)
 	{
@@ -36,7 +36,7 @@ public:
 		return std::dynamic_pointer_cast<ActorType>(NewActor);
 	}
 
-	// Ä«¸Ş¶ó Getter, Setter
+	// ì¹´ë©”ë¼ Getter, Setter
 	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; };
 	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) 
 	{ 
@@ -45,20 +45,20 @@ public:
 	};
 	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName);
 
-	// MeshComponent¸¦ MainCameraÀÇ MeshComponents¿¡ push
+	// MeshComponentë¥¼ MainCameraì˜ MeshComponentsì— push
 	void PushMeshToCamera(std::shared_ptr<class Ext_MeshComponent> _MeshComponent, std::string_view _CameraName);
 
 protected:
-	virtual void SceneChangeInitialize(); // Scene º¯°æ ½Ã È£Ãâ
-	virtual void SceneChangeEnd(); // Scene º¯°æ ½Ã È£Ãâ
-	virtual void Start() override; // Scene »ı¼º ½Ã È£Ãâ
-	virtual void Update(float _DeltaTime) override; // Actors³» ActorµéÀÇ Update È£Ãâ
+	virtual void SceneChangeInitialize(); // Scene ë³€ê²½ ì‹œ í˜¸ì¶œ
+	virtual void SceneChangeEnd(); // Scene ë³€ê²½ ì‹œ í˜¸ì¶œ
+	virtual void Start() override; // Scene ìƒì„± ì‹œ í˜¸ì¶œ
+	virtual void Update(float _DeltaTime) override; // Actorsë‚´ Actorë“¤ì˜ Update í˜¸ì¶œ
 	
 private:
-	void Rendering(float _DeltaTime); // ·»´õ¸µ ¾÷µ¥ÀÌÆ®
-	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order); // Actor »ı¼º ½Ã ÀÚµ¿ È£Ãâ, ÀÌ¸§ ¼³Á¤, Owner¼³Á¤
+	void Rendering(float _DeltaTime); // ë Œë”ë§ ì—…ë°ì´íŠ¸
+	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order); // Actor ìƒì„± ì‹œ ìë™ í˜¸ì¶œ, ì´ë¦„ ì„¤ì •, Ownerì„¤ì •
 	
-	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;	// Scene¿¡ ÀúÀåµÈ Actorµé, Order·Î ±×·ìÈ­
-	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;		// Scene¿¡ ÀúÀåµÈ Cameraµé
-	std::shared_ptr<class Ext_Camera> MainCamera;									// ÇöÀç SceneÀÇ MainCamera
+	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;	// Sceneì— ì €ì¥ëœ Actorë“¤, Orderë¡œ ê·¸ë£¹í™”
+	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;		// Sceneì— ì €ì¥ëœ Cameraë“¤
+	std::shared_ptr<class Ext_Camera> MainCamera;									// í˜„ì¬ Sceneì˜ MainCamera
 };

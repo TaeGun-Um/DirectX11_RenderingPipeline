@@ -1,14 +1,14 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXDevice.h"
 
-// ¹öÅØ½º ¹öÆÛ »ı¼º
+// ë²„í…ìŠ¤ ë²„í¼ ìƒì„±
 void Ext_DirectXVertexBuffer::CreateVertexBuffer(const void* _Data, UINT _VertexSize, UINT _VertexCount)
 {
 	VertexSize = _VertexSize;
 	VertexCount = _VertexCount;
 
-	// D3D11_BUFFER_DESC Á¤º¸ ÀÔ·Â
+	// D3D11_BUFFER_DESC ì •ë³´ ì…ë ¥
 	VertexBufferInfo.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	VertexBufferInfo.ByteWidth = VertexSize * VertexCount;
 	VertexBufferInfo.CPUAccessFlags = 0;
@@ -20,34 +20,34 @@ void Ext_DirectXVertexBuffer::CreateVertexBuffer(const void* _Data, UINT _Vertex
 	{
 		VertexBufferInfo.Usage = D3D11_USAGE_DYNAMIC;
 	}
-	// <<¼³¸í>>
-	/*1. BindFlags : ÀÌ ¹öÆÛ°¡ GPU¿¡¼­ ¾î¶² ¿ëµµ·Î ¹ÙÀÎµùµÉ Áö ¼³¸íÇÏ±â À§ÇÔ, D3D11_BIND_VERTEX_BUFFER´Â ¹öÅØ½º ¹öÆÛ·Î »ç¿ëÇÏ°Ú´Ù´Â ¶æ*/ 
-	/*2. ByteWidth : ¹öÆÛÀÇ Å©±â(byte ´ÜÀ§), (Vertex Å©±â * Vertex °¹¼ö)·Î Á¤ÇØÁÜ*/
-	/*3. CPUAccessFlags : CPU°¡ ¹öÆÛ¿¡ Á¢±ÙÇÒ ¼ö ÀÖ´ÂÁö ¼³Á¤*/
-	/*4. Usage : ¹öÆÛÀÇ »ç¿ë ¹æ½ÄÀ» Á¤ÀÇÇÔ, D3D11_USAGE_DEFAULT´Â GPU°¡ »ç¿ëÇÏ´Â ¹öÆÛ·Î ¼³Á¤ÇÏ¿© CPUÁ¢±Ù ºÒ°¡ ¼³Á¤, D3D11_USAGE_DYNAMICÀº CPU°¡ ÀÚÁÖ ¼öÁ¤ÇÏ´Â ¹öÆÛ*/
+	// <<ì„¤ëª…>>
+	/*1. BindFlags : ì´ ë²„í¼ê°€ GPUì—ì„œ ì–´ë–¤ ìš©ë„ë¡œ ë°”ì¸ë”©ë  ì§€ ì„¤ëª…í•˜ê¸° ìœ„í•¨, D3D11_BIND_VERTEX_BUFFERëŠ” ë²„í…ìŠ¤ ë²„í¼ë¡œ ì‚¬ìš©í•˜ê² ë‹¤ëŠ” ëœ»*/ 
+	/*2. ByteWidth : ë²„í¼ì˜ í¬ê¸°(byte ë‹¨ìœ„), (Vertex í¬ê¸° * Vertex ê°¯ìˆ˜)ë¡œ ì •í•´ì¤Œ*/
+	/*3. CPUAccessFlags : CPUê°€ ë²„í¼ì— ì ‘ê·¼í•  ìˆ˜ ìˆëŠ”ì§€ ì„¤ì •*/
+	/*4. Usage : ë²„í¼ì˜ ì‚¬ìš© ë°©ì‹ì„ ì •ì˜í•¨, D3D11_USAGE_DEFAULTëŠ” GPUê°€ ì‚¬ìš©í•˜ëŠ” ë²„í¼ë¡œ ì„¤ì •í•˜ì—¬ CPUì ‘ê·¼ ë¶ˆê°€ ì„¤ì •, D3D11_USAGE_DYNAMICì€ CPUê°€ ìì£¼ ìˆ˜ì •í•˜ëŠ” ë²„í¼*/
 
-	// D3D11_SUBRESOURCE_DATA : ¹öÆÛ ¶Ç´Â ¸®¼Ò½º¸¦ »ı¼ºÇÒ ¶§ ÃÊ±â µ¥ÀÌÅÍ¸¦ GPU¿¡ Àü´ŞÇÏ±â À§ÇÑ ±¸Á¶Ã¼
+	// D3D11_SUBRESOURCE_DATA : ë²„í¼ ë˜ëŠ” ë¦¬ì†ŒìŠ¤ë¥¼ ìƒì„±í•  ë•Œ ì´ˆê¸° ë°ì´í„°ë¥¼ GPUì— ì „ë‹¬í•˜ê¸° ìœ„í•œ êµ¬ì¡°ì²´
 	D3D11_SUBRESOURCE_DATA Data;
 	Data.pSysMem = _Data;
-	// pSysMemÀº ¸®¼Ò½º¿¡ º¹»çÇÒ ¿øº» µ¥ÀÌÅÍÀÇ Æ÷ÀÎÅÍ
-	// µÎ °³ ´õ ÀÖ´Âµ¥, ¹öÆÛ »ı¼º½Ã¿¡´Â ÇÏÁö¾ÊÀ½
+	// pSysMemì€ ë¦¬ì†ŒìŠ¤ì— ë³µì‚¬í•  ì›ë³¸ ë°ì´í„°ì˜ í¬ì¸í„°
+	// ë‘ ê°œ ë” ìˆëŠ”ë°, ë²„í¼ ìƒì„±ì‹œì—ëŠ” í•˜ì§€ì•ŠìŒ
 
-	// VertexBuffer »ı¼º
+	// VertexBuffer ìƒì„±
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateBuffer(&VertexBufferInfo, &Data, VertexBuffer.GetAddressOf()))
 	{
-		MsgAssert("¹öÅØ½º ¹öÆÛ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ë²„í…ìŠ¤ ë²„í¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 	}
-	// <<¼³¸í>>
-	/*1. D3D11_BUFFER_DESC Àü´Ş*/
-	/*2. D3D11_SUBRESOURCE_DATA Àü´Ş*/
-	/*3. ID3D11Buffer Àü´Ş*/
+	// <<ì„¤ëª…>>
+	/*1. D3D11_BUFFER_DESC ì „ë‹¬*/
+	/*2. D3D11_SUBRESOURCE_DATA ì „ë‹¬*/
+	/*3. ID3D11Buffer ì „ë‹¬*/
 }
 
 void Ext_DirectXVertexBuffer::VertexBufferSetting()
 {
 	if (nullptr == VertexBuffer)
 	{
-		MsgAssert("¹öÅØ½º ¹öÆÛ°¡ ¾ø¾î ¼¼ÆÃ ºÒ°¡");
+		MsgAssert("ë²„í…ìŠ¤ ë²„í¼ê°€ ì—†ì–´ ì„¸íŒ… ë¶ˆê°€");
 		return;
 	}
 

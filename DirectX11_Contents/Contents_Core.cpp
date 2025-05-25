@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Contents_Core.h"
 
 #include <DirectX11_Extension/Ext_Core.h>
@@ -10,7 +10,7 @@
 #include "RectActor.h"
 
 /// <summary>
-/// Scene »ı¼ºÇÏ´Â °÷
+/// Scene ìƒì„±í•˜ëŠ” ê³³
 /// </summary>
 void Contents_Core::Start()
 {
@@ -20,5 +20,5 @@ void Contents_Core::Start()
 
 void Contents_Core::End()
 {
-	// ÇÁ·Î¼¼½º Á¾·á ½Ã ¹«¾ğ°¡¸¦ ÁøÇàÇÏ¸é µÊ
+	// í”„ë¡œì„¸ìŠ¤ ì¢…ë£Œ ì‹œ ë¬´ì–¸ê°€ë¥¼ ì§„í–‰í•˜ë©´ ë¨
 }

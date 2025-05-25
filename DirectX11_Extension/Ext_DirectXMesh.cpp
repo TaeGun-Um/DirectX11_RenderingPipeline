@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXMesh.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
@@ -22,7 +22,7 @@ void Ext_DirectXMesh::InputAssembler1()
 {
 	if (nullptr == VertexBufferPtr)
 	{
-		MsgAssert("¹öÅØ½º ¹öÆÛ°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ÀÎÇ²¾î¼Àºí·¯1 °úÁ¤À» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("ë²„í…ìŠ¤ ë²„í¼ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ì¸í’‹ì–´ì…ˆë¸”ëŸ¬1 ê³¼ì •ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -33,10 +33,10 @@ void Ext_DirectXMesh::InputAssembler1()
 
 void Ext_DirectXMesh::InputAssembler2()
 {
-	// ±×¸®´Â ¼ø¼­¿¡ ´ëÇÑ µ¥ÀÌÅÍ¸¦ ³Ö¾îÁØ´Ù // 012023
+	// ê·¸ë¦¬ëŠ” ìˆœì„œì— ëŒ€í•œ ë°ì´í„°ë¥¼ ë„£ì–´ì¤€ë‹¤ // 012023
 	if (nullptr == IndexBufferPtr)
 	{
-		MsgAssert("ÀÎµ¦½º ¹öÆÛ°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ÀÎÇ² ¾î¼Àºí·¯2 °úÁ¤À» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("ì¸ë±ìŠ¤ ë²„í¼ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ì¸í’‹ ì–´ì…ˆë¸”ëŸ¬2 ê³¼ì •ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 

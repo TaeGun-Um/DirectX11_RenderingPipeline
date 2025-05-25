@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "RotateFace.h"
 
 #include <DirectX11_Extension/Ext_MeshComponent.h>
@@ -17,7 +17,7 @@ void RotateFace::Start()
 	Ext_Actor::Start();
 	// CreateComponent<Ext_Component>("TestComp", true);
 	GetTransform()->SetWorldPosition({ 0.f, 0.f, 10.0f });
-	GetTransform()->SetWorldScale({ 200.f, 200.f, 1.f }); // Å©±â È®´ë
+	GetTransform()->SetWorldScale({ 200.f, 200.f, 1.f }); // í¬ê¸° í™•ëŒ€
 	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 	MeshComp->CreateMeshComponentUnit("RotateFace", "Basic");
 }

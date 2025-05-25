@@ -1,7 +1,7 @@
-#include "Ext_ResourceManager.h"
+ï»¿#include "Ext_ResourceManager.h"
 #include "Ext_DirectXShader.h"
 
-// DirectXÀÇ ÄÄÇ»Æ® ¼ÎÀÌ´õ ÄÄÆÄÀÏ ¹× Á¤º¸ ÀúÀåÀ» À§ÇÑ Å¬·¡½º
+// DirectXì˜ ì»´í“¨íŠ¸ ì…°ì´ë” ì»´íŒŒì¼ ë° ì •ë³´ ì €ì¥ì„ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXComputeShader : public Ext_ResourceManager<Ext_DirectXComputeShader>, public Ext_DirectXShader
 {
 	friend class Ext_DirectXMaterial;
@@ -17,7 +17,7 @@ public:
 	Ext_DirectXComputeShader& operator=(const Ext_DirectXComputeShader& _Other) = delete;
 	Ext_DirectXComputeShader& operator=(Ext_DirectXComputeShader&& _Other) noexcept = delete;
 
-	// ÄÄÇ»Æ® ¼ÎÀÌ´õ »ı¼º ¹× Á¤º¸ ÀúÀå
+	// ì»´í“¨íŠ¸ ì…°ì´ë” ìƒì„± ë° ì •ë³´ ì €ì¥
 	static std::shared_ptr<Ext_DirectXComputeShader> LoadComputeShader(std::string_view _Path, const std::string_view _EntryPoint, UINT _VersionHigh = 5, UINT _VersionLow = 0)
 	{
 		std::shared_ptr<Ext_DirectXComputeShader> NewShader = Ext_DirectXComputeShader::CreateNameResource(_EntryPoint);
@@ -29,7 +29,7 @@ protected:
 
 private:
 	void CreateComputeShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh = 5, UINT _VersionLow = 0);
-	void ComputeShaderSetting(); // CSSetShader() È£Ãâ
+	void ComputeShaderSetting(); // CSSetShader() í˜¸ì¶œ
 
-	COMPTR<ID3D11ComputeShader> ComputeShader = nullptr; // »ı¼ºÇÑ ÄÄÇ»Æ® ¼ÎÀÌ´õ Á¤º¸ ÀúÀå¿ë
+	COMPTR<ID3D11ComputeShader> ComputeShader = nullptr; // ìƒì„±í•œ ì»´í“¨íŠ¸ ì…°ì´ë” ì •ë³´ ì €ì¥ìš©
 };

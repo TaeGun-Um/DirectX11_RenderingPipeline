@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_Object.h"
 
-// Component ¼Ó¼ºÀ» ´ã´çÇÏ´Â Å¬·¡½º
+// Component ì†ì„±ì„ ë‹´ë‹¹í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_Component : public Ext_Object
 {
 	friend class Ext_Actor;
@@ -27,9 +27,9 @@ protected:
 	virtual void Update(float _DeltaTime) override {}
 	virtual void Destroy() override {}
 	
-	std::shared_ptr<class Ext_Transform> Transform = nullptr;	// ÀÚ½ÅÀÌ °¡Áø Æ®·£½ºÆû Á¤º¸
-	std::weak_ptr<class Ext_Actor> OwnerActor;						// ÀÚ½ÅÀ» ¼ÒÀ¯ÇÑ ¾×ÅÍ Á¤º¸
-	bool IsTransformShare = false;											// »ı¼º ½Ã Æ®·£½ºÆûÀ» Actor¿Í °øÀ¯ÇÒ °ÍÀÎÁö ¼³Á¤
+	std::shared_ptr<class Ext_Transform> Transform = nullptr;	// ìì‹ ì´ ê°€ì§„ íŠ¸ëœìŠ¤í¼ ì •ë³´
+	std::weak_ptr<class Ext_Actor> OwnerActor;						// ìì‹ ì„ ì†Œìœ í•œ ì•¡í„° ì •ë³´
+	bool IsTransformShare = false;											// ìƒì„± ì‹œ íŠ¸ëœìŠ¤í¼ì„ Actorì™€ ê³µìœ í•  ê²ƒì¸ì§€ ì„¤ì •
 
 private:
 

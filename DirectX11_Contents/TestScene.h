@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DirectX11_Extension/Ext_Scene.h>
 
 class TestScene : public Ext_Scene

@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXVertexShader.h"
 #include "Ext_DirectXDevice.h"
 
@@ -24,38 +24,38 @@ void Ext_DirectXVertexShader::CreateVertexShader(std::string_view _Path, std::st
 	std::wstring UniCodePath = Base_String::AnsiToUniCode(_Path);
 	if (S_OK != D3DCompileFromFile(UniCodePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, EntryPoint.c_str(), Version.c_str(), Flag, 0, BinaryCode.GetAddressOf(), Error.GetAddressOf()))
 	{
-		// ¿¡·¯¸¦ ÅØ½ºÆ®·Î Ãâ·Â
+		// ì—ëŸ¬ë¥¼ í…ìŠ¤íŠ¸ë¡œ ì¶œë ¥
 		std::string ErrorString = reinterpret_cast<char*>(Error->GetBufferPointer());
 		MsgAssert(ErrorString);
 		return;
 	}
-	// <<¼³¸í>>
-	/*1. ÆÄÀÏ °æ·Î ÀÔ·Â*/
-	/*2. ±âº» include Ã³¸® ¹æ½Ä ¼³Á¤*/
-	/*3. ÇÔ¼ö¸í*/
-	/*4. ¼ÎÀÌ´õ ¸ğµ¨, ºñÁÖ¾ó ½ºÆ©µğ¿À 2022¿¡¼­ ±âº» »ı¼ºÇÏ¸é Vertex Shader Model 5.0ÀÌ±â ‹š¹®¿¡ vs_5_0*/
-	/*5. ÄÄÆÄÀÏ ÇÃ·¹±× ¼³Á¤*/
-	/*6. ÄÄÆÄÀÏ ÇÃ·¹±× ¼³Á¤*/
-	/*7. Ãâ·Â ¹ÙÀÌÆ®ÄÚµå*/
-	/*8. Ãâ·Â ¿¡·¯*/
+	// <<ì„¤ëª…>>
+	/*1. íŒŒì¼ ê²½ë¡œ ì…ë ¥*/
+	/*2. ê¸°ë³¸ include ì²˜ë¦¬ ë°©ì‹ ì„¤ì •*/
+	/*3. í•¨ìˆ˜ëª…*/
+	/*4. ì…°ì´ë” ëª¨ë¸, ë¹„ì£¼ì–¼ ìŠ¤íŠœë””ì˜¤ 2022ì—ì„œ ê¸°ë³¸ ìƒì„±í•˜ë©´ Vertex Shader Model 5.0ì´ê¸° ë–„ë¬¸ì— vs_5_0*/
+	/*5. ì»´íŒŒì¼ í”Œë ˆê·¸ ì„¤ì •*/
+	/*6. ì»´íŒŒì¼ í”Œë ˆê·¸ ì„¤ì •*/
+	/*7. ì¶œë ¥ ë°”ì´íŠ¸ì½”ë“œ*/
+	/*8. ì¶œë ¥ ì—ëŸ¬*/
 
-	// ÄÄÆÄÀÏµÈ ¹ÙÀÌÆ®ÄÚµå·Î GPU¿ë Vertex Shader »ı¼º
+	// ì»´íŒŒì¼ëœ ë°”ì´íŠ¸ì½”ë“œë¡œ GPUìš© Vertex Shader ìƒì„±
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateVertexShader(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), nullptr, VertexShader.GetAddressOf()))
 	{
-		MsgAssert("¹öÅØ½º ½¦ÀÌ´õ ÇÚµé »ı¼º¿¡ ½ÇÆĞ");
+		MsgAssert("ë²„í…ìŠ¤ ì‰ì´ë” í•¸ë“¤ ìƒì„±ì— ì‹¤íŒ¨");
 		return;
 	}
 
-	// »ó¼ö¹öÆÛ ¼¼ÆÃ, ¸®¼Ò½º ¼¼ÆÃ
+	// ìƒìˆ˜ë²„í¼ ì„¸íŒ…, ë¦¬ì†ŒìŠ¤ ì„¸íŒ…
 	ShaderResourceSetting();
 }
 
-// PSSetShader È£Ãâ·Î ÇÈ¼¿ ¼ÎÀÌ´õ ¼¼ÆÃ
+// PSSetShader í˜¸ì¶œë¡œ í”½ì…€ ì…°ì´ë” ì„¸íŒ…
 void Ext_DirectXVertexShader::VertexShaderSetting()
 {
 	if (nullptr == VertexShader.Get())
 	{
-		MsgAssert("ÇÈ¼¿ ¼ÎÀÌ´õ°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ ¼¼ÆÃ¿¡ ½ÇÆĞ");
+		MsgAssert("í”½ì…€ ì…°ì´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ ì„¸íŒ…ì— ì‹¤íŒ¨");
 	}
 
 	Ext_DirectXDevice::GetContext()->VSSetShader(VertexShader.Get(), nullptr, 0);

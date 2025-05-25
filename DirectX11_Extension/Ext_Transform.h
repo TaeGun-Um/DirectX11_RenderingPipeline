@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// Çà·Ä Á¤º¸(Á¤Á¡ ¼ÎÀÌ´õ¶û µ¿ÀÏÇÑ Å©±â·Î ¼³Á¤ÇØ¾ßÇÔ)
+// í–‰ë ¬ ì •ë³´(ì •ì  ì…°ì´ë”ë‘ ë™ì¼í•œ í¬ê¸°ë¡œ ì„¤ì •í•´ì•¼í•¨)
 struct TransformData
 {
 	TransformData()
@@ -32,7 +32,7 @@ struct TransformData
 	void SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection);
 };
 
-// ±âÇÏÇĞ ±¸Á¶¸¦ À§ÇÑ Å¬·¡½º, World´Â Scene ÀüÃ¼ µ¥Ä«¸£Æ®ÁÂÇ¥°è ±âÁØ, LocalÀº ÀÚ±â ÀÚ½Å ±âÁØ
+// ê¸°í•˜í•™ êµ¬ì¡°ë¥¼ ìœ„í•œ í´ë˜ìŠ¤, WorldëŠ” Scene ì „ì²´ ë°ì¹´ë¥´íŠ¸ì¢Œí‘œê³„ ê¸°ì¤€, Localì€ ìê¸° ìì‹  ê¸°ì¤€
 class Ext_Transform
 {
 	friend class Ext_Camera;
@@ -49,27 +49,27 @@ public:
 	Ext_Transform& operator=(const Ext_Transform& _Other) = delete;
 	Ext_Transform& operator=(Ext_Transform&& _Other) noexcept = delete;
 
-	void SetWorldScale(const float4& _Value) // ¿ùµå Å©±â ÁöÁ¤
+	void SetWorldScale(const float4& _Value) // ì›”ë“œ í¬ê¸° ì§€ì •
 	{
 		TFData->Scale = _Value;
 		TransformUpdate();
 	}
 	
-	void SetWorldRotation(const float4& _Value) // ¿ùµå °¢µµ ÁöÁ¤
+	void SetWorldRotation(const float4& _Value) // ì›”ë“œ ê°ë„ ì§€ì •
 	{
 		TFData->Rotation = _Value;
 		TransformUpdate();
 	}
 	
-	void SetWorldPosition(const float4& _Value) // ¿ùµå À§Ä¡ ÁöÁ¤
+	void SetWorldPosition(const float4& _Value) // ì›”ë“œ ìœ„ì¹˜ ì§€ì •
 	{
 		TFData->Position = _Value;
 		TransformUpdate();
 	}
 
-	void AddWorldScale(const float4& _Value) { SetWorldScale(TFData->Scale + _Value); } // ÀÔ·Â°ª¸¸Å­ Å©±â º¯°æ
-	void AddWorldRotation(const float4& _Value) { SetWorldRotation(TFData->Rotation + _Value); } // ÀÔ·Â°ª¸¸Å­ È¸Àü
-	void AddWorldPosition(const float4& _Value) { SetWorldPosition(TFData->Position + _Value); } // ÀÔ·Â°ª¸¸Å­ ÀÌµ¿
+	void AddWorldScale(const float4& _Value) { SetWorldScale(TFData->Scale + _Value); } // ì…ë ¥ê°’ë§Œí¼ í¬ê¸° ë³€ê²½
+	void AddWorldRotation(const float4& _Value) { SetWorldRotation(TFData->Rotation + _Value); } // ì…ë ¥ê°’ë§Œí¼ íšŒì „
+	void AddWorldPosition(const float4& _Value) { SetWorldPosition(TFData->Position + _Value); } // ì…ë ¥ê°’ë§Œí¼ ì´ë™
 
 	std::shared_ptr<TransformData> GetTransformData() { return TFData; }
 	float4x4 GetWorldMatrix() { return TFData->WorldMatrix; }
@@ -86,12 +86,12 @@ public:
 protected:
 	
 private:
-	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); } // Çà·Ä ¿ùµå, ºä, ÇÁ·ÎÁ§¼Ç Àû¿ë
-	void TransformUpdate(); // Çà·Ä ¾÷µ¥ÀÌÆ®
+	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); } // í–‰ë ¬ ì›”ë“œ, ë·°, í”„ë¡œì ì…˜ ì ìš©
+	void TransformUpdate(); // í–‰ë ¬ ì—…ë°ì´íŠ¸
 
-	std::shared_ptr<TransformData> TFData = nullptr; // TransformData Á¤º¸
+	std::shared_ptr<TransformData> TFData = nullptr; // TransformData ì •ë³´
 
-	std::shared_ptr<Ext_Transform> Parent = nullptr; // ºÎ¸ğ Çà·Ä(¾ÆÁ÷ ¾È¾µµí)
-	std::list<std::shared_ptr<Ext_Transform>> Childs; // ÀÚ½Ä Çà·Ä(¾ÆÁ÷ ¾È¾µµí)
+	std::shared_ptr<Ext_Transform> Parent = nullptr; // ë¶€ëª¨ í–‰ë ¬(ì•„ì§ ì•ˆì“¸ë“¯)
+	std::list<std::shared_ptr<Ext_Transform>> Childs; // ìì‹ í–‰ë ¬(ì•„ì§ ì•ˆì“¸ë“¯)
 
 };

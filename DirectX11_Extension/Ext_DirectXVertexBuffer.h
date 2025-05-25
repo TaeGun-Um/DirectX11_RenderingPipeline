@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_ResourceManager.h"
 
-// ¹öÅØ½º ¹öÆÛ(Vertex Buffer) »ı¼ºÀ» À§ÇÑ Å¬·¡½º
+// ë²„í…ìŠ¤ ë²„í¼(Vertex Buffer) ìƒì„±ì„ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXVertexBuffer : public Ext_ResourceManager<Ext_DirectXVertexBuffer>
 {
 	friend class Ext_DirectXMesh;
@@ -17,7 +17,7 @@ public:
 	Ext_DirectXVertexBuffer& operator=(const Ext_DirectXVertexBuffer& _Other) = delete;
 	Ext_DirectXVertexBuffer& operator=(Ext_DirectXVertexBuffer&& _Other) noexcept = delete;
 
-	// Vertex Buffer »ı¼º ¹× ÀúÀå
+	// Vertex Buffer ìƒì„± ë° ì €ì¥
 	template<typename VertexLayout>
 	static std::shared_ptr<Ext_DirectXVertexBuffer> CreateVertexBuffer(std::string_view _Name, const std::vector<VertexLayout>& _Vertexs)
 	{
@@ -38,24 +38,24 @@ public:
 protected:
 	
 private:
-	void CreateVertexBuffer(const void* _Data, UINT _VertexSize, UINT _VertexCount); // Vertex Buffer »ı¼º ¹× ÀúÀå
-	void VertexBufferSetting(); // IASetVertexBuffers() È£Ãâ
+	void CreateVertexBuffer(const void* _Data, UINT _VertexSize, UINT _VertexCount); // Vertex Buffer ìƒì„± ë° ì €ì¥
+	void VertexBufferSetting(); // IASetVertexBuffers() í˜¸ì¶œ
 
-	std::shared_ptr<class InputLayoutData> InputLayout = nullptr;			     // »ı¼ºµÈ ÀÔ·Â ·¹ÀÌ¾Æ¿ô Á¤º¸ ÀúÀå¿ë
-	D3D11_BUFFER_DESC VertexBufferInfo = { 0, };  // ¹öÅØ½º ¹öÆÛ DESC ÀúÀå¿ë
-	COMPTR<ID3D11Buffer> VertexBuffer = nullptr;   // ¹öÅØ½º ¹öÆÛ ÀÎÅÍÆäÀÌ½º ÀúÀå¿ë
-	UINT VertexSize = 0;											 // ¹öÅØ½º »çÀÌÁî
-	UINT VertexCount = 0;										 // ¹öÅØ½º °¹¼ö
+	std::shared_ptr<class InputLayoutData> InputLayout = nullptr;			     // ìƒì„±ëœ ì…ë ¥ ë ˆì´ì•„ì›ƒ ì •ë³´ ì €ì¥ìš©
+	D3D11_BUFFER_DESC VertexBufferInfo = { 0, };  // ë²„í…ìŠ¤ ë²„í¼ DESC ì €ì¥ìš©
+	COMPTR<ID3D11Buffer> VertexBuffer = nullptr;   // ë²„í…ìŠ¤ ë²„í¼ ì¸í„°í˜ì´ìŠ¤ ì €ì¥ìš©
+	UINT VertexSize = 0;											 // ë²„í…ìŠ¤ ì‚¬ì´ì¦ˆ
+	UINT VertexCount = 0;										 // ë²„í…ìŠ¤ ê°¯ìˆ˜
 	
 	UINT Offset = 0;
 };
 // [ID3D11Buffer]
-// ¹öÆÛ ¸®¼Ò½º¸¦ ³ªÅ¸³»´Â ÀÎÅÍÆäÀÌ½º
-// ÀÏ¹İÀûÀ¸·Î GPU¿¡ µ¥ÀÌÅÍ¸¦ Àü´ŞÇÒ ¶§ »ç¿ëµÇ´Â °¡Àå ±âº»ÀûÀÎ °´Ã¼·Î, 3°¡Áö ¿ëµµ·Î »ç¿ëµÊ
-// 1. Vertex Buffer : Á¤Á¡ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ°í GPU¿¡ Àü´Ş
-// 2. Index Buffer : Á¤Á¡ ¹è¿­ÀÇ ÀÎµ¦½º Á¤º¸ ÀúÀå
-// 3. Constant Buffer : ¼ÎÀÌ´õ¿¡ Àü´ŞÇÒ »ó¼ö µ¥ÀÌÅÍ ÀúÀå(Àü¿ª º¯¼öÃ³·³ »ç¿ë)
+// ë²„í¼ ë¦¬ì†ŒìŠ¤ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì¸í„°í˜ì´ìŠ¤
+// ì¼ë°˜ì ìœ¼ë¡œ GPUì— ë°ì´í„°ë¥¼ ì „ë‹¬í•  ë•Œ ì‚¬ìš©ë˜ëŠ” ê°€ì¥ ê¸°ë³¸ì ì¸ ê°ì²´ë¡œ, 3ê°€ì§€ ìš©ë„ë¡œ ì‚¬ìš©ë¨
+// 1. Vertex Buffer : ì •ì  ë°ì´í„°ë¥¼ ì €ì¥í•˜ê³  GPUì— ì „ë‹¬
+// 2. Index Buffer : ì •ì  ë°°ì—´ì˜ ì¸ë±ìŠ¤ ì •ë³´ ì €ì¥
+// 3. Constant Buffer : ì…°ì´ë”ì— ì „ë‹¬í•  ìƒìˆ˜ ë°ì´í„° ì €ì¥(ì „ì—­ ë³€ìˆ˜ì²˜ëŸ¼ ì‚¬ìš©)
 
 // [D3D11_BUFFER_DESC]
-// ID3D11Buffer »ı¼º ½Ã, ¹öÆÛÀÇ ¿ëµµ¿Í Æ¯¼ºÀ» Á¤ÀÇÇÏ±â À§ÇÑ ±¸Á¶Ã¼
-// GPU ¸Ş¸ğ¸®¿¡¼­ ¹öÆÛ°¡ ¾î¶»°Ô »ç¿ëµÉÁö, Á¢±ÙµÉÁö ÁöÁ¤ÇÏ´Â Á¤º¸
+// ID3D11Buffer ìƒì„± ì‹œ, ë²„í¼ì˜ ìš©ë„ì™€ íŠ¹ì„±ì„ ì •ì˜í•˜ê¸° ìœ„í•œ êµ¬ì¡°ì²´
+// GPU ë©”ëª¨ë¦¬ì—ì„œ ë²„í¼ê°€ ì–´ë–»ê²Œ ì‚¬ìš©ë ì§€, ì ‘ê·¼ë ì§€ ì§€ì •í•˜ëŠ” ì •ë³´

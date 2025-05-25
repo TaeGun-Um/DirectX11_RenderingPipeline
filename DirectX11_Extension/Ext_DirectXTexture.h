@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Ext_ResourceManager.h"
 
-// DirectXÀÇ Texture2D, View ´ã´ç
+// DirectXì˜ Texture2D, View ë‹´ë‹¹
 class Ext_DirectXTexture : public Ext_ResourceManager<Ext_DirectXTexture>
 {
 	friend class Ext_DirectXDevice;
@@ -18,7 +18,7 @@ public:
 	Ext_DirectXTexture& operator=(const Ext_DirectXTexture& _Other) = delete;
 	Ext_DirectXTexture& operator=(Ext_DirectXTexture&& _Other) noexcept = delete;
 
-	// ¸®¼Ò½º ¸Å´ÏÀú¿¡ °ªÀ» ±â·ÏÇÏ°í, DescÀÇ BindFlags¿¡ µû¶ó RTV, SRV, DSV Áß ÇÏ³ª¸¦ Create
+	// ë¦¬ì†ŒìŠ¤ ë§¤ë‹ˆì €ì— ê°’ì„ ê¸°ë¡í•˜ê³ , Descì˜ BindFlagsì— ë”°ë¼ RTV, SRV, DSV ì¤‘ í•˜ë‚˜ë¥¼ Create
 	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Value)
 	{
 		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateResource();
@@ -29,7 +29,7 @@ public:
 	// Getter, Setter
 	int GetWidth() {	return Desc.Width; }
 	int GetHeight() { return Desc.Height; }
-	size_t GetRTVSize() {	return RTVs.size(); } // ·»´õÅ¸°Ùºä Å¬¸®¾î¿ë
+	size_t GetRTVSize() {	return RTVs.size(); } // ë Œë”íƒ€ê²Ÿë·° í´ë¦¬ì–´ìš©
 	float4 GetScale() {	return float4(static_cast<float>(Desc.Width), static_cast<float>(Desc.Height)); }
 	COMPTR<ID3D11Texture2D>& GetTexture2D() { return Texture2D; }
 	COMPTR<ID3D11RenderTargetView>& GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
@@ -39,59 +39,59 @@ public:
 protected:
 	
 private:
-	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture); // ¹é¹öÆÛ ·»´õÅ¸°Ùºä »ý¼ºÀ» À§ÇØ È£ÃâµÊ
-	void CreateView(const D3D11_TEXTURE2D_DESC& _Value); // DescÀÇ BindFlags¿¡ µû¶ó RTV, SRV, DSV Áß ÇÏ³ª¸¦ Create
-	void CreateRenderTargetView(); // ·»´õÅ¸°Ùºä »ý¼º
-	void CreateDepthStencilView(); // µª½º½ºÅÙ½Çºä »ý¼º
-	void CreateShaderResourcesView(); // ½¦ÀÌ´õ¸®¼Ò½ººä »ý¼º
+	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture); // ë°±ë²„í¼ ë Œë”íƒ€ê²Ÿë·° ìƒì„±ì„ ìœ„í•´ í˜¸ì¶œë¨
+	void CreateView(const D3D11_TEXTURE2D_DESC& _Value); // Descì˜ BindFlagsì— ë”°ë¼ RTV, SRV, DSV ì¤‘ í•˜ë‚˜ë¥¼ Create
+	void CreateRenderTargetView(); // ë Œë”íƒ€ê²Ÿë·° ìƒì„±
+	void CreateDepthStencilView(); // ëŽìŠ¤ìŠ¤í…ì‹¤ë·° ìƒì„±
+	void CreateShaderResourcesView(); // ì‰ì´ë”ë¦¬ì†ŒìŠ¤ë·° ìƒì„±
 
 	COMPTR<ID3D11Texture2D> Texture2D;
 	D3D11_TEXTURE2D_DESC Desc;
 
-	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs; // »ý¼ºµÈ ·»´õÅ¸°ÙºäµéÀ» ÀúÀåÇÏ´Â ÄÁÅ×ÀÌ³Ê
-	COMPTR<ID3D11ShaderResourceView> SRV; // »ý¼ºµÈ ½¦ÀÌ´õ ¸®¼Ò½º ºä
-	COMPTR<ID3D11DepthStencilView> DSV; // »ý¼ºµÈ µª½º½ºÅÙ½Ç ºä
+	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs; // ìƒì„±ëœ ë Œë”íƒ€ê²Ÿë·°ë“¤ì„ ì €ìž¥í•˜ëŠ” ì»¨í…Œì´ë„ˆ
+	COMPTR<ID3D11ShaderResourceView> SRV; // ìƒì„±ëœ ì‰ì´ë” ë¦¬ì†ŒìŠ¤ ë·°
+	COMPTR<ID3D11DepthStencilView> DSV; // ìƒì„±ëœ ëŽìŠ¤ìŠ¤í…ì‹¤ ë·°
 
 	std::vector<float4> Colors;
 
 };
 // [ID3D11Texture2D]
-// 2D ÅØ½ºÃ³¸¦ ³ªÅ¸³»´Â ÀÎÅÍÆäÀÌ½º, GPU¿¡ ¿Ã¶ó°¡´Â 2Â÷¿ø ÀÌ¹ÌÁö(ÅØ½ºÃ³), ·»´õÅ¸°Ù, µª½º ¹öÆÛ µîÀÇ ÀÚ¿øÀ» Ç¥ÇöÇÏ´Âµ¥ »ç¿ë
+// 2D í…ìŠ¤ì²˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì¸í„°íŽ˜ì´ìŠ¤, GPUì— ì˜¬ë¼ê°€ëŠ” 2ì°¨ì› ì´ë¯¸ì§€(í…ìŠ¤ì²˜), ë Œë”íƒ€ê²Ÿ, ëŽìŠ¤ ë²„í¼ ë“±ì˜ ìžì›ì„ í‘œí˜„í•˜ëŠ”ë° ì‚¬ìš©
 
 // [D3D11_TEXTURE2D_DESC]
-// 2D ÅØ½ºÃÄ¸¦ »ý¼ºÇÒ ¶§ »ç¿ëÇÏ´Â ±¸Á¶Ã¼·Î ÅØ½ºÃÄ ÇØ»óµµ, Æ÷¸Ë, »ùÇÃ¸µ Á¤º¸, BindFlags(»ç¿ë ¿ëµµ) µîÀ» ´ã°í ÀÖÀ½
-// <<¼³¸í>>
-/*1. Width : ÅØ½ºÃ³ÀÇ °¡·Î ÇØ»óµµ(ÇÈ¼¿ ´ÜÀ§)*/ 
-/*2. Height : ÅØ½ºÃ³ÀÇ ¼¼·Î ÇØ»óµµ(ÇÈ¼¿ ´ÜÀ§)*/
-/*3. MipLevels : »ý¼ºÇÒ miplevel ¼ö, 0ÀÌ¸é Direct3D°¡ ¸ðµç ¹Ó¸Ê ÀÚµ¿ »ý¼º*/
-/*4. ArraySize : ÅØ½ºÃ³ ¹è¿­ÀÇ °³¼ö(¹è¿­ ÅØ½ºÃ³ ¶Ç´Â Å¥ºê¸ÊÀÇ 6¸é µî)*/
-/*5. Format : ÇÈ¼¿ Æ÷¸ä(DXGI_FORMAT_R8G8B8A8_UNORM)*/
-/*6. SampleDesc : ¸ÖÆ¼»ùÇÃ¸µÀÇ Á¤º¸(MSAA), Count, Quality µîÀÌ ´ã°ÜÀÖÀ½*/
-/*7.Usage : ÅØ½ºÃ³ »ç¿ë ÆÐÅÏ(DEFAULT, IMMUTABLE, DYNAMIC, STAGING)*/
-/*8. BindFlags : ¹ÙÀÎµù °¡´ÉÇÑ ÇüÅÂ(RENDER_TARGET, DEPTH_STENCIL, SHADER_RESOURCE)*/
-/*9. CPUAccessFlags : CPU°¡ Á¢±ÙÇÒ ±ÇÇÑ(º¸Åë DYNAMICÀÌ³ª STAGING¿¡¼­ »ç¿ë)*/
-/*10. MiscFlags : ±âÅ¸ ÇÃ·¡±× (TEXTURECUBE, GENERATE_MIPS µî)*/
+// 2D í…ìŠ¤ì³ë¥¼ ìƒì„±í•  ë•Œ ì‚¬ìš©í•˜ëŠ” êµ¬ì¡°ì²´ë¡œ í…ìŠ¤ì³ í•´ìƒë„, í¬ë§·, ìƒ˜í”Œë§ ì •ë³´, BindFlags(ì‚¬ìš© ìš©ë„) ë“±ì„ ë‹´ê³  ìžˆìŒ
+// <<ì„¤ëª…>>
+/*1. Width : í…ìŠ¤ì²˜ì˜ ê°€ë¡œ í•´ìƒë„(í”½ì…€ ë‹¨ìœ„)*/ 
+/*2. Height : í…ìŠ¤ì²˜ì˜ ì„¸ë¡œ í•´ìƒë„(í”½ì…€ ë‹¨ìœ„)*/
+/*3. MipLevels : ìƒì„±í•  miplevel ìˆ˜, 0ì´ë©´ Direct3Dê°€ ëª¨ë“  ë°‰ë§µ ìžë™ ìƒì„±*/
+/*4. ArraySize : í…ìŠ¤ì²˜ ë°°ì—´ì˜ ê°œìˆ˜(ë°°ì—´ í…ìŠ¤ì²˜ ë˜ëŠ” íë¸Œë§µì˜ 6ë©´ ë“±)*/
+/*5. Format : í”½ì…€ í¬ë©§(DXGI_FORMAT_R8G8B8A8_UNORM)*/
+/*6. SampleDesc : ë©€í‹°ìƒ˜í”Œë§ì˜ ì •ë³´(MSAA), Count, Quality ë“±ì´ ë‹´ê²¨ìžˆìŒ*/
+/*7.Usage : í…ìŠ¤ì²˜ ì‚¬ìš© íŒ¨í„´(DEFAULT, IMMUTABLE, DYNAMIC, STAGING)*/
+/*8. BindFlags : ë°”ì¸ë”© ê°€ëŠ¥í•œ í˜•íƒœ(RENDER_TARGET, DEPTH_STENCIL, SHADER_RESOURCE)*/
+/*9. CPUAccessFlags : CPUê°€ ì ‘ê·¼í•  ê¶Œí•œ(ë³´í†µ DYNAMICì´ë‚˜ STAGINGì—ì„œ ì‚¬ìš©)*/
+/*10. MiscFlags : ê¸°íƒ€ í”Œëž˜ê·¸ (TEXTURECUBE, GENERATE_MIPS ë“±)*/
 
 // [ID3D11RenderTargetView] 
-// GPU°¡ ÇÈ¼¿ Ãâ·ÂÀ» ±â·ÏÇÒ ¼ö ÀÖµµ·Ï ¼³Á¤µÈ 2D ÅØ½ºÃÄ(±×¸²ÆÇ) ¿ªÇÒÀ» ÇÏ´Â ºä(View)ÀÌ´Ù.
-// µð¹ÙÀÌ½ºÀÇ ¹é¹öÆÛ¿¡ ¹Ù¿îµùµÇ¸é¼­ »ý¼ºµÈ´Ù.
-// ¹é ¹öÆÛ¿¡ ¸ðµç È­¸éÀ» ·»´õ¸µÇÏ°í ³­ ´ÙÀ½¿¡´Â SwapChainÀ» ÅëÇØ ¹é¹öÆÛ¸¦ È­¸é¿¡ ±×¸®¸é µÇ´Â °ÍÀÌ´Ù.
-// <<¿ªÇÒ>>
-/*1. ·»´õ Å¸°Ù ¿¬°á : GPU ÆÄÀÌÇÁ¶óÀÎÀÇ ·»´õ Å¸°Ù ½½·Ô¿¡ ¿¬°áµÇ¾î, ÇÈ¼¿ ¼ÎÀÌ´õÀÇ Ãâ·ÂÀÌ ¿©±â¿¡ ±â·ÏµÊ*/  
-/*2. View : ÅØ½ºÃ³ ¸®¼Ò½º(ID3D11Texture2D)ÀÇ ÀÏºÎºÐ ¶Ç´Â ÀüÃ¼¸¦ GPU°¡ ·»´õ Å¸°ÙÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖ°Ô ÇØÁÖ´Â Á¢±Ù ÁöÁ¤*/
-/*3. Output : ÃÖÁ¾ È­¸é Ãâ·Â¿ë ¹é¹öÆÛ(½º¿Ò Ã¼ÀÎ ÅØ½ºÃ³) ¶Ç´Â ´Ù¸¥ ÅØ½ºÃ³¿¡ ´ëÇÑ Ãâ·ÂÀ» ¸ñÇ¥·Î ÇÔ*/
+// GPUê°€ í”½ì…€ ì¶œë ¥ì„ ê¸°ë¡í•  ìˆ˜ ìžˆë„ë¡ ì„¤ì •ëœ 2D í…ìŠ¤ì³(ê·¸ë¦¼íŒ) ì—­í• ì„ í•˜ëŠ” ë·°(View)ì´ë‹¤.
+// ë””ë°”ì´ìŠ¤ì˜ ë°±ë²„í¼ì— ë°”ìš´ë”©ë˜ë©´ì„œ ìƒì„±ëœë‹¤.
+// ë°± ë²„í¼ì— ëª¨ë“  í™”ë©´ì„ ë Œë”ë§í•˜ê³  ë‚œ ë‹¤ìŒì—ëŠ” SwapChainì„ í†µí•´ ë°±ë²„í¼ë¥¼ í™”ë©´ì— ê·¸ë¦¬ë©´ ë˜ëŠ” ê²ƒì´ë‹¤.
+// <<ì—­í• >>
+/*1. ë Œë” íƒ€ê²Ÿ ì—°ê²° : GPU íŒŒì´í”„ë¼ì¸ì˜ ë Œë” íƒ€ê²Ÿ ìŠ¬ë¡¯ì— ì—°ê²°ë˜ì–´, í”½ì…€ ì…°ì´ë”ì˜ ì¶œë ¥ì´ ì—¬ê¸°ì— ê¸°ë¡ë¨*/  
+/*2. View : í…ìŠ¤ì²˜ ë¦¬ì†ŒìŠ¤(ID3D11Texture2D)ì˜ ì¼ë¶€ë¶„ ë˜ëŠ” ì „ì²´ë¥¼ GPUê°€ ë Œë” íƒ€ê²Ÿìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆê²Œ í•´ì£¼ëŠ” ì ‘ê·¼ ì§€ì •*/
+/*3. Output : ìµœì¢… í™”ë©´ ì¶œë ¥ìš© ë°±ë²„í¼(ìŠ¤ì™‘ ì²´ì¸ í…ìŠ¤ì²˜) ë˜ëŠ” ë‹¤ë¥¸ í…ìŠ¤ì²˜ì— ëŒ€í•œ ì¶œë ¥ì„ ëª©í‘œë¡œ í•¨*/
 
 // [ID3D11ShaderResourceView]
-// Shader°¡ GPU ÀÚ¿ø(¸®¼Ò½º)¿¡ Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï(ÀÐÀ» ¼ö ÀÖµµ·Ï) ÇØÁÖ´Â ºä(View)ÀÌ´Ù.
-// ÁÖ·Î ÅØ½ºÃ³, ¹öÆÛ µîÀÇ ¸®¼Ò½º¸¦ ¼ÎÀÌ´õ¿¡¼­ Á¢±Ù °¡´ÉÇÏ°Ô ¸¸µå´Â ¿ªÇÒÀ» ¼öÇàÇÑ´Ù.
-// <<¿ªÇÒ>>
-/*1. ¼ÎÀÌ´õ ¸®¼Ò½º Á¢±Ù : ¼ÎÀÌ´õ(ÇÈ¼¿ ¼ÎÀÌ´õ, ¹öÅØ½º ¼ÎÀÌ´õ µî)¿¡¼­ ÅØ½ºÃ³³ª ¹öÆÛ µ¥ÀÌÅÍ¸¦ ÀÐ±â À§ÇØ ÇÊ¿ä*/
-/*2. ¸®¼Ò½º View : ¿øº» ¸®¼Ò½º(¿¹: ID3D11Texture2D)ÀÇ Æ¯Á¤ ¹üÀ§³ª Æ÷¸ËÀ» ¼ÎÀÌ´õ¿¡¼­ ÀÐÀ» ¼ö ÀÖµµ·Ï Á¤ÀÇ*/
-/*3. »ç¿ëÃ³ : ÅØ½ºÃ³ »ùÇÃ¸µ, ¹öÆÛ ÂüÁ¶, G-Buffer Á¢±Ù, ÈÄÃ³¸®(PP) È¿°ú µî*/
+// Shaderê°€ GPU ìžì›(ë¦¬ì†ŒìŠ¤)ì— ì ‘ê·¼í•  ìˆ˜ ìžˆë„ë¡(ì½ì„ ìˆ˜ ìžˆë„ë¡) í•´ì£¼ëŠ” ë·°(View)ì´ë‹¤.
+// ì£¼ë¡œ í…ìŠ¤ì²˜, ë²„í¼ ë“±ì˜ ë¦¬ì†ŒìŠ¤ë¥¼ ì…°ì´ë”ì—ì„œ ì ‘ê·¼ ê°€ëŠ¥í•˜ê²Œ ë§Œë“œëŠ” ì—­í• ì„ ìˆ˜í–‰í•œë‹¤.
+// <<ì—­í• >>
+/*1. ì…°ì´ë” ë¦¬ì†ŒìŠ¤ ì ‘ê·¼ : ì…°ì´ë”(í”½ì…€ ì…°ì´ë”, ë²„í…ìŠ¤ ì…°ì´ë” ë“±)ì—ì„œ í…ìŠ¤ì²˜ë‚˜ ë²„í¼ ë°ì´í„°ë¥¼ ì½ê¸° ìœ„í•´ í•„ìš”*/
+/*2. ë¦¬ì†ŒìŠ¤ View : ì›ë³¸ ë¦¬ì†ŒìŠ¤(ì˜ˆ: ID3D11Texture2D)ì˜ íŠ¹ì • ë²”ìœ„ë‚˜ í¬ë§·ì„ ì…°ì´ë”ì—ì„œ ì½ì„ ìˆ˜ ìžˆë„ë¡ ì •ì˜*/
+/*3. ì‚¬ìš©ì²˜ : í…ìŠ¤ì²˜ ìƒ˜í”Œë§, ë²„í¼ ì°¸ì¡°, G-Buffer ì ‘ê·¼, í›„ì²˜ë¦¬(PP) íš¨ê³¼ ë“±*/
 
 // [ID3D11DepthStencilView]
-// ±íÀÌ(Depth)¿Í ½ºÅÙ½Ç(Stencil) Á¤º¸¸¦ ÀÐ°í ¾µ ¼ö ÀÖµµ·Ï ÇØÁÖ´Â ºä(View)ÀÌ´Ù.
-// ½±°Ô ¸»ÇØ, ±íÀÌ ¹öÆÛ(Depth Buffer)³ª ½ºÅÙ½Ç ¹öÆÛ(Stencil Buffer)·Î »ç¿ëÇÒ ¼ö ÀÖ´Â ÅØ½ºÃ³¿¡ ´ëÇÑ Á¢±Ù ÀÎÅÍÆäÀÌ½ºÀÌ´Ù.
-// ·»´õ¸µ °úÁ¤¿¡¼­ GPU°¡ ÇÈ¼¿À» ±×¸± ¶§, µÎ °¡Áö ÁÖ¿äÇÑ Å×½ºÆ®(Depth Test, Stencil Test)¸¦ ¼öÇàÇÒ ¼öµµ ÀÖ´Ù.
-/*1. Depth Test (±íÀÌ Å×½ºÆ®) : ÀÌ¹Ì ±×·ÁÁø ÇÈ¼¿º¸´Ù °¡±î¿îÁö ÆÇ´ÜÇØ ·»´õ¸µÇÒÁö °áÁ¤*/ 
-/*2. Stencil Test (½ºÅÙ½Ç Å×½ºÆ®) : ÁöÁ¤µÈ Á¶°ÇÀ» ¸¸Á·ÇÏ´Â °æ¿ì¿¡¸¸ ÇÈ¼¿À» ·»´õ¸µ*/
+// ê¹Šì´(Depth)ì™€ ìŠ¤í…ì‹¤(Stencil) ì •ë³´ë¥¼ ì½ê³  ì“¸ ìˆ˜ ìžˆë„ë¡ í•´ì£¼ëŠ” ë·°(View)ì´ë‹¤.
+// ì‰½ê²Œ ë§í•´, ê¹Šì´ ë²„í¼(Depth Buffer)ë‚˜ ìŠ¤í…ì‹¤ ë²„í¼(Stencil Buffer)ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆëŠ” í…ìŠ¤ì²˜ì— ëŒ€í•œ ì ‘ê·¼ ì¸í„°íŽ˜ì´ìŠ¤ì´ë‹¤.
+// ë Œë”ë§ ê³¼ì •ì—ì„œ GPUê°€ í”½ì…€ì„ ê·¸ë¦´ ë•Œ, ë‘ ê°€ì§€ ì£¼ìš”í•œ í…ŒìŠ¤íŠ¸(Depth Test, Stencil Test)ë¥¼ ìˆ˜í–‰í•  ìˆ˜ë„ ìžˆë‹¤.
+/*1. Depth Test (ê¹Šì´ í…ŒìŠ¤íŠ¸) : ì´ë¯¸ ê·¸ë ¤ì§„ í”½ì…€ë³´ë‹¤ ê°€ê¹Œìš´ì§€ íŒë‹¨í•´ ë Œë”ë§í• ì§€ ê²°ì •*/ 
+/*2. Stencil Test (ìŠ¤í…ì‹¤ í…ŒìŠ¤íŠ¸) : ì§€ì •ëœ ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš°ì—ë§Œ í”½ì…€ì„ ë Œë”ë§*/

@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXVertexData.h"
 
 InputLayoutData Ext_DirectXVertexData::ILData;
@@ -14,14 +14,14 @@ void InputLayoutData::AddInputLayoutDesc
 	/*7*/UINT _SemanticIndex
 )
 {
-	// <<ÀÎÀÚ ¼³¸í>>
-	/*1. LPCSTR :  Á¤Á¡ ¿ä¼ÒÀÇ ÀÇ¹Ì(Semantic)¸¦ ³ªÅ¸³»´Â ¹®ÀÚ¿­, "POSITION", "NORMAL", "TEXCOORD", "COLOR" µîÀ¸·Î, Vertex ShaderÀÇ ÀÔ·Â ÆÄ¶ó¹ÌÅÍ ÀÌ¸§°ú ÀÏÄ¡ÇØ¾ßÇÔ*/
-	/*2. DXGI_FORMAT : ÇØ´ç ¿ä¼ÒÀÇ µ¥ÀÌÅÍ Çü½ÄÀ» ÁöÁ¤ÇÔ, DXGI_FORMAT_R32G32B32_FLOAT´Â float3, DXGI_FORMAT_R32G32_FLOAT´Â float2 µîÀ¸·Î, ¼ÎÀÌ´õ°¡ ÇØ¼®ÇÒ µ¥ÀÌÅÍ ±¸Á¶¿Í ÀÏÄ¡ÇØ¾ßÇÔ*/
-	/*3. D3D11_INPUT_CLASSIFICATION : Á¤Á¡ µ¥ÀÌÅÍ°¡ Á¤Á¡ ´ç(per Vetex)ÀÎÁö, ÀÎ½ºÅÏ½º ´ç(per Instance)ÀÎÁö ±¸ºÐ, D3D11_INPUT_PER_VERTEX_DATA³ª D3D11_INPUT_PER_INSTANCE_DATA Àü´Þ*/
-	/*4. UINT : InputSlotClass°¡ PER_VERTEX_DATAÀÏ °æ¿ì¿¡¸¸ »ç¿ëµÊ, ÀÎ½ºÅÏ½º ¸î °³¸¶´Ù ÇØ´ç µ¥ÀÌÅÍ¸¦ ÇÑ ¹ø¾¿ »ç¿ëÇÒÁö ÁöÁ¤ÇÏ¸ç, º¸Åë 1À» »ç¿ë(1 ÀÎ½ºÅÏ½º ´ç 1°³ °ª)*/
-	/*5. UINT : Á¤Á¡ ±¸Á¶Ã¼ ³»¿¡¼­ ÀÌ ¿ä¼Ò°¡ ¸î ¹ÙÀÌÆ® ¶³¾îÁ® ÀÖ´ÂÁö ¸í½Ã, D3D11_APPEND_ALIGNED_ELEMENT¸¦ ÀÚµ¿ °è»êÀÌ °¡´ÉÇÏ¸ç, ¼öµ¿ ÁöÁ¤ ½Ã ¼öµ¿À¸·Î ´©Àû ¿ÀÇÁ¼ÂÀ» °ü¸®ÇØ¾ßÇÔ*/
-	/*6. UINT : ¾î¶² ¹öÆÛ ½½·Ô¿¡¼­ µ¥ÀÌÅÍ¸¦ ÀÐ¾î¿Ã Áö ÁöÁ¤, IASetVertexBuffers() ÇÔ¼ö¿¡¼­ ¹ÙÀÎµùµÈ ½½·Ô°ú ÀÏÄ¡ÇØ¾ßÇÔ, ¿¹½Ã·Î 0¹ø ½½·ÔÀº POSITION, 1¹ø ½½·ÔÀº TEXTCOORD ÀÌ·± ½ÄÀ¸·Î*/
-	/*7. UINT : °°Àº SemanticNameÀÌ ¿©·¯ °³ ÀÖÀ» °æ¿ì, ¸î ¹øÂ°ÀÎÁö ±¸ºÐÇÔ, TEXTCOORD0, TEXTCOORD1ÀÌ ÀÖÀ¸¸é °¢ index´Â 0, 1*/
+	// <<ì¸ìž ì„¤ëª…>>
+	/*1. LPCSTR :  ì •ì  ìš”ì†Œì˜ ì˜ë¯¸(Semantic)ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë¬¸ìžì—´, "POSITION", "NORMAL", "TEXCOORD", "COLOR" ë“±ìœ¼ë¡œ, Vertex Shaderì˜ ìž…ë ¥ íŒŒë¼ë¯¸í„° ì´ë¦„ê³¼ ì¼ì¹˜í•´ì•¼í•¨*/
+	/*2. DXGI_FORMAT : í•´ë‹¹ ìš”ì†Œì˜ ë°ì´í„° í˜•ì‹ì„ ì§€ì •í•¨, DXGI_FORMAT_R32G32B32_FLOATëŠ” float3, DXGI_FORMAT_R32G32_FLOATëŠ” float2 ë“±ìœ¼ë¡œ, ì…°ì´ë”ê°€ í•´ì„í•  ë°ì´í„° êµ¬ì¡°ì™€ ì¼ì¹˜í•´ì•¼í•¨*/
+	/*3. D3D11_INPUT_CLASSIFICATION : ì •ì  ë°ì´í„°ê°€ ì •ì  ë‹¹(per Vetex)ì¸ì§€, ì¸ìŠ¤í„´ìŠ¤ ë‹¹(per Instance)ì¸ì§€ êµ¬ë¶„, D3D11_INPUT_PER_VERTEX_DATAë‚˜ D3D11_INPUT_PER_INSTANCE_DATA ì „ë‹¬*/
+	/*4. UINT : InputSlotClassê°€ PER_VERTEX_DATAì¼ ê²½ìš°ì—ë§Œ ì‚¬ìš©ë¨, ì¸ìŠ¤í„´ìŠ¤ ëª‡ ê°œë§ˆë‹¤ í•´ë‹¹ ë°ì´í„°ë¥¼ í•œ ë²ˆì”© ì‚¬ìš©í• ì§€ ì§€ì •í•˜ë©°, ë³´í†µ 1ì„ ì‚¬ìš©(1 ì¸ìŠ¤í„´ìŠ¤ ë‹¹ 1ê°œ ê°’)*/
+	/*5. UINT : ì •ì  êµ¬ì¡°ì²´ ë‚´ì—ì„œ ì´ ìš”ì†Œê°€ ëª‡ ë°”ì´íŠ¸ ë–¨ì–´ì ¸ ìžˆëŠ”ì§€ ëª…ì‹œ, D3D11_APPEND_ALIGNED_ELEMENTë¥¼ ìžë™ ê³„ì‚°ì´ ê°€ëŠ¥í•˜ë©°, ìˆ˜ë™ ì§€ì • ì‹œ ìˆ˜ë™ìœ¼ë¡œ ëˆ„ì  ì˜¤í”„ì…‹ì„ ê´€ë¦¬í•´ì•¼í•¨*/
+	/*6. UINT : ì–´ë–¤ ë²„í¼ ìŠ¬ë¡¯ì—ì„œ ë°ì´í„°ë¥¼ ì½ì–´ì˜¬ ì§€ ì§€ì •, IASetVertexBuffers() í•¨ìˆ˜ì—ì„œ ë°”ì¸ë”©ëœ ìŠ¬ë¡¯ê³¼ ì¼ì¹˜í•´ì•¼í•¨, ì˜ˆì‹œë¡œ 0ë²ˆ ìŠ¬ë¡¯ì€ POSITION, 1ë²ˆ ìŠ¬ë¡¯ì€ TEXTCOORD ì´ëŸ° ì‹ìœ¼ë¡œ*/
+	/*7. UINT : ê°™ì€ SemanticNameì´ ì—¬ëŸ¬ ê°œ ìžˆì„ ê²½ìš°, ëª‡ ë²ˆì§¸ì¸ì§€ êµ¬ë¶„í•¨, TEXTCOORD0, TEXTCOORD1ì´ ìžˆìœ¼ë©´ ê° indexëŠ” 0, 1*/
 	D3D11_INPUT_ELEMENT_DESC Data;
 
 	Data.SemanticName = _SemanticName;
@@ -36,14 +36,14 @@ void InputLayoutData::AddInputLayoutDesc
 	InputLayoutDescs.push_back(Data);
 }
 
-// Æ÷¸ä Å©±â È®ÀÎ¿ë
+// í¬ë©§ í¬ê¸° í™•ì¸ìš©
 UINT InputLayoutData::FormatSize(DXGI_FORMAT _Format)
 {
 	switch (_Format)
 	{
 	case DXGI_FORMAT_UNKNOWN:
 	{
-		MsgAssert("Format ¼³Á¤ÀÌ Àß¸øµÆ½À´Ï´Ù.");
+		MsgAssert("Format ì„¤ì •ì´ ìž˜ëª»ëìŠµë‹ˆë‹¤.");
 		return -1;
 	}
 	case DXGI_FORMAT_R32G32B32A32_TYPELESS:
@@ -170,13 +170,13 @@ UINT InputLayoutData::FormatSize(DXGI_FORMAT _Format)
 	case DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE:
 	case DXGI_FORMAT_FORCE_UINT:
 	{
-		MsgAssert("Format Å©±â°¡ Á¤ÇØÁöÁö ¾Ê¾Ò½À´Ï´Ù. Ext_DirectXVertex Å¬·¡½º¿¡¼­ Á¤ÇØÁÖ¼¼¿ä");
+		MsgAssert("Format í¬ê¸°ê°€ ì •í•´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. Ext_DirectXVertex í´ëž˜ìŠ¤ì—ì„œ ì •í•´ì£¼ì„¸ìš”");
 		return -1;
 	}
 	default:
 		break;
 	}
 
-	MsgAssert("¸»µµ ¾ÈµÊ");
+	MsgAssert("ë§ë„ ì•ˆë¨");
 	return -1;
 }

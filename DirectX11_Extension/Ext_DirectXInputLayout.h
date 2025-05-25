@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ¹öÅØ½º ¹öÆÛ, ¹öÅØ½º ¼ÎÀÌ´õ¸¦ ÅëÇØ ÀÎÇ² ·¹ÀÌ¾Æ¿ôÀ» »ı¼ºÇÏ¿© Á¤º¸¸¦ ÀúÀåÇÏ´Â Å¬·¡½º
+// ë²„í…ìŠ¤ ë²„í¼, ë²„í…ìŠ¤ ì…°ì´ë”ë¥¼ í†µí•´ ì¸í’‹ ë ˆì´ì•„ì›ƒì„ ìƒì„±í•˜ì—¬ ì •ë³´ë¥¼ ì €ì¥í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_DirectXInputLayout
 {
 	friend class Ext_MeshComponentUnit;
@@ -22,10 +22,10 @@ public:
 protected:
 
 private:
-	void CreateInputLayout(std::shared_ptr<class Ext_DirectXVertexBuffer> _VertexBuffer, std::shared_ptr<class Ext_DirectXVertexShader> _Shader); // CreateInputLayout() È£Ãâ
-	void Relase();					// InputLayout »ı¼º Àü, 1È¸ ½Ç½Ã
-	void InputLayoutSetting();  // IASetInputLayout() È£Ãâ
+	void CreateInputLayout(std::shared_ptr<class Ext_DirectXVertexBuffer> _VertexBuffer, std::shared_ptr<class Ext_DirectXVertexShader> _Shader); // CreateInputLayout() í˜¸ì¶œ
+	void Relase();					// InputLayout ìƒì„± ì „, 1íšŒ ì‹¤ì‹œ
+	void InputLayoutSetting();  // IASetInputLayout() í˜¸ì¶œ
 
-	COMPTR<ID3D11InputLayout> InputLayout = nullptr; // »ı¼ºµÈ ÀÎÇ² ·¹ÀÌ¾Æ¿ô Á¤º¸ ÀúÀå
+	COMPTR<ID3D11InputLayout> InputLayout = nullptr; // ìƒì„±ëœ ì¸í’‹ ë ˆì´ì•„ì›ƒ ì •ë³´ ì €ì¥
 
 };

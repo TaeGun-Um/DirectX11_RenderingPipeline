@@ -1,14 +1,14 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_Scene.h"
 
 #include "Ext_Actor.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
 
-#include "Ext_DirectXResourceLoader.h" // ÀÓ½Ã
-#include "Ext_DirectXDevice.h" // ÀÓ½Ã
+#include "Ext_DirectXResourceLoader.h" // ì„ì‹œ
+#include "Ext_DirectXDevice.h" // ì„ì‹œ
 
-// Actor »ı¼º ½Ã ÀÚµ¿ È£Ãâ(ÀÌ¸§ ¼³Á¤, ¿À³Ê ½Å ¼³Á¤, ¿À´õ ¼³Á¤)
+// Actor ìƒì„± ì‹œ ìë™ í˜¸ì¶œ(ì´ë¦„ ì„¤ì •, ì˜¤ë„ˆ ì‹  ì„¤ì •, ì˜¤ë” ì„¤ì •)
 void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order /*= 0*/)
 {
 	_Actor->SetName(_Name);
@@ -17,21 +17,21 @@ void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr
 	_Actor->Start();
 }
 
-// ÁöÁ¤ÇÑ Ä«¸Ş¶ó¿¡ MeshComponent ÀúÀå
+// ì§€ì •í•œ ì¹´ë©”ë¼ì— MeshComponent ì €ì¥
 void Ext_Scene::PushMeshToCamera(std::shared_ptr<Ext_MeshComponent> _MeshComponent, std::string_view _CameraName)
 {
 	std::shared_ptr<Ext_Camera> FindCam = FindCamera(_CameraName);
 
 	if (nullptr == FindCam)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â Ä«¸Ş¶ó¿¡ ·£´õ·¯¸¦ ³ÖÀ»¼ö´Â ¾ø½À´Ï´Ù.");
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì¹´ë©”ë¼ì— ëœë”ëŸ¬ë¥¼ ë„£ì„ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	FindCam->PushMeshComponent(_MeshComponent);
 }
 
-// ÀÌ¸§À¸·Î Ä«¸Ş¶ó Ã£±â
+// ì´ë¦„ìœ¼ë¡œ ì¹´ë©”ë¼ ì°¾ê¸°
 std::shared_ptr<Ext_Camera> Ext_Scene::FindCamera(std::string_view _CameraName)
 {
 	std::map<std::string, std::shared_ptr<Ext_Camera>>::iterator FindIter = Cameras.find(_CameraName.data());
@@ -48,20 +48,20 @@ std::shared_ptr<Ext_Camera> Ext_Scene::FindCamera(std::string_view _CameraName)
 
 void Ext_Scene::SceneChangeInitialize()
 {
-	// Scene º¯°æ ½Ã È£Ãâ
+	// Scene ë³€ê²½ ì‹œ í˜¸ì¶œ
 }
 
 void Ext_Scene::SceneChangeEnd()
 {
-	// Scene º¯°æ ½Ã È£Ãâ
+	// Scene ë³€ê²½ ì‹œ í˜¸ì¶œ
 }
 
 void Ext_Scene::Start()
 {
-	// Scene ½ÃÀÛ ½Ã È£Ãâ
+	// Scene ì‹œì‘ ì‹œ í˜¸ì¶œ
 }
 
-// Actors³» ActorµéÀÇ Update È£Ãâ
+// Actorsë‚´ Actorë“¤ì˜ Update í˜¸ì¶œ
 void Ext_Scene::Update(float _DeltaTime)
 {
 	for (auto& [Key, ActorList] : Actors)
@@ -77,18 +77,18 @@ void Ext_Scene::Update(float _DeltaTime)
 	}
 }
 
-// CameraµéÀÇ Rendering È£Ãâ
+// Cameraë“¤ì˜ Rendering í˜¸ì¶œ
 void Ext_Scene::Rendering(float _DeltaTime)
 {
-	// Rendering ¾÷µ¥ÀÌÆ®
+	// Rendering ì—…ë°ì´íŠ¸
 	for (auto& Iter : Cameras)
 	{
 		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
 
-		CurCamera->CameraTransformUpdate(); // Ä«¸Ş¶ó¿¡ ´ëÇÑ ºä, ÇÁ·ÎÁ§¼Ç, ºäÆ÷Æ® Çà·Ä ÃÖ½ÅÈ­
-		CurCamera->ViewPortSetting(); // ºäÆ÷Æ® ¼¼ÆÃ
+		CurCamera->CameraTransformUpdate(); // ì¹´ë©”ë¼ì— ëŒ€í•œ ë·°, í”„ë¡œì ì…˜, ë·°í¬íŠ¸ í–‰ë ¬ ìµœì‹ í™”
+		CurCamera->ViewPortSetting(); // ë·°í¬íŠ¸ ì„¸íŒ…
 
-		// ÀÓ½Ã
+		// ì„ì‹œ
 		{
 			Ext_DirectXDevice::GetContext()->RSSetState(Ext_DirectXResourceLoader::RasterState);
 		}

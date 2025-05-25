@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_DirectXBufferSetter.h"
 
-// ·»´õ¸µ ÄÄÆ÷³ÍÆ®¿¡ ÇÊ¿äÇÑ Á¤º¸(¸Ş½Ã, Pipeline, »ó¼ö¹öÆÛ Á¤º¸ µî)µéÀ» °¡Áö°í ÀÖ´Â Å¬·¡½º
+// ë Œë”ë§ ì»´í¬ë„ŒíŠ¸ì— í•„ìš”í•œ ì •ë³´(ë©”ì‹œ, Pipeline, ìƒìˆ˜ë²„í¼ ì •ë³´ ë“±)ë“¤ì„ ê°€ì§€ê³  ìˆëŠ” í´ë˜ìŠ¤
 class Ext_MeshComponentUnit : public std::enable_shared_from_this<Ext_MeshComponentUnit>
 {
 	friend class Ext_Camera;
@@ -18,9 +18,9 @@ public:
 	Ext_MeshComponentUnit& operator=(const Ext_MeshComponentUnit& _Other) = delete;
 	Ext_MeshComponentUnit& operator=(Ext_MeshComponentUnit&& _Other) noexcept = delete;
 
-	void MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName); // ¸Ş½Ã ÄÄÆ÷³ÍÆ® À¯´Ö »ı¼º ½Ã È£Ãâ
+	void MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ ìœ ë‹› ìƒì„± ì‹œ í˜¸ì¶œ
 
-	// this °¡Á®¿À±â
+	// this ê°€ì ¸ì˜¤ê¸°
 	template<typename Type>
 	std::shared_ptr<Type> GetSharedFromThis()
 	{
@@ -36,13 +36,13 @@ protected:
 	
 private:
 	void SetOwnerMeshComponent(std::weak_ptr<class Ext_MeshComponent> _OwnerMeshComponent) { OwnerMeshComponent = _OwnerMeshComponent; }
-	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw È£Ãâ
+	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw í˜¸ì¶œ
 	void RenderUnitSetting(); // Mesh, Material Setting
-	void RenderUnitDraw(); // Á¤Á¡ Á¤º¸µé°ú ¼ÎÀÌ´õ¸¦ ÅëÇØ ¸Ş½Ã Draw ½Ç½Ã(DrawIndexed Call)
+	void RenderUnitDraw(); // ì •ì  ì •ë³´ë“¤ê³¼ ì…°ì´ë”ë¥¼ í†µí•´ ë©”ì‹œ Draw ì‹¤ì‹œ(DrawIndexed Call)
 
-	std::weak_ptr<class Ext_MeshComponent> OwnerMeshComponent;		// ÀÚ½ÅÀ» ¼ÒÀ¯ÇÑ Ä«¸Ş¶ó
-	std::shared_ptr<class Ext_DirectXInputLayout> InputLayout = nullptr;	// Vertex Buffer¿Í Vertex Shader·Î »ı¼ºµÈ ÀÎÇ² ·¹ÀÌ¾Æ¿ô Á¤º¸ ÀúÀå¿ë
-	std::shared_ptr<class Ext_DirectXMesh> Mesh = nullptr;						// Á¤Á¡, ÀÎµ¦½º ¹öÆÛ ÀúÀå¿ë
-	std::shared_ptr<class Ext_DirectXMaterial> Material = nullptr;				// ÆÄÀÌÇÁ¶óÀÎ Á¤º¸ ÀúÀå¿ë(¼ÎÀÌ´õ, ·¹½ºÅÍ¶óÀÌÀú µî)
-	Ext_DirectXBufferSetter BufferSetter;													// »ó¼ö¹öÆÛ ÀúÀå¿ë(»ó¼ö¹öÆÛ, ÅØ½ºÃ³, ºí·»µå µî)
+	std::weak_ptr<class Ext_MeshComponent> OwnerMeshComponent;		// ìì‹ ì„ ì†Œìœ í•œ ì¹´ë©”ë¼
+	std::shared_ptr<class Ext_DirectXInputLayout> InputLayout = nullptr;	// Vertex Bufferì™€ Vertex Shaderë¡œ ìƒì„±ëœ ì¸í’‹ ë ˆì´ì•„ì›ƒ ì •ë³´ ì €ì¥ìš©
+	std::shared_ptr<class Ext_DirectXMesh> Mesh = nullptr;						// ì •ì , ì¸ë±ìŠ¤ ë²„í¼ ì €ì¥ìš©
+	std::shared_ptr<class Ext_DirectXMaterial> Material = nullptr;				// íŒŒì´í”„ë¼ì¸ ì •ë³´ ì €ì¥ìš©(ì…°ì´ë”, ë ˆìŠ¤í„°ë¼ì´ì € ë“±)
+	Ext_DirectXBufferSetter BufferSetter;													// ìƒìˆ˜ë²„í¼ ì €ì¥ìš©(ìƒìˆ˜ë²„í¼, í…ìŠ¤ì²˜, ë¸”ë Œë“œ ë“±)
 };

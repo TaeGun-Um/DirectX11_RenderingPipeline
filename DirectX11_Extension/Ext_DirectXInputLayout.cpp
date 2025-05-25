@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXInputLayout.h"
 #include "Ext_DirectXDevice.h"
 #include "Ext_DirectXVertexBuffer.h"
@@ -12,16 +12,16 @@ void Ext_DirectXInputLayout::Relase()
 
 void Ext_DirectXInputLayout::CreateInputLayout(std::shared_ptr<Ext_DirectXVertexBuffer> _VertexBuffer, std::shared_ptr< Ext_DirectXVertexShader> _VertexShader)
 {
-	Relase(); // ÇÑ¹ø ÇØÁà¾ß CreateInputLayout°¡ Á¤»ó µ¿ÀÛÇÔ
+	Relase(); // í•œë²ˆ í•´ì¤˜ì•¼ CreateInputLayoutê°€ ì •ìƒ ë™ì‘í•¨
 
 	if (nullptr == _VertexBuffer->GetInputLayout())
 	{
-		MsgAssert("·¹ÀÌ¾Æ¿ô Á¤º¸¸¦ ¸¸µé¼ö ¾ø´Â ¹öÅØ½º ¹öÆÛ ÀÔ´Ï´Ù.");
+		MsgAssert("ë ˆì´ì•„ì›ƒ ì •ë³´ë¥¼ ë§Œë“¤ìˆ˜ ì—†ëŠ” ë²„í…ìŠ¤ ë²„í¼ ì…ë‹ˆë‹¤.");
 	}
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC>& LayOutInfo = _VertexBuffer->GetInputLayout()->GetInputLayoutDescs();
 
-	// CreateInputLayoutÀº Á¤Á¡ ¹öÆÛ ±¸Á¶¿Í ¼ÎÀÌ´õ ÀÔ·Â ±¸Á¶ °£ÀÇ ¸ÅÇÎÀ» Á¤ÀÇ
+	// CreateInputLayoutì€ ì •ì  ë²„í¼ êµ¬ì¡°ì™€ ì…°ì´ë” ì…ë ¥ êµ¬ì¡° ê°„ì˜ ë§¤í•‘ì„ ì •ì˜
 	HRESULT hr = Ext_DirectXDevice::GetDevice()->CreateInputLayout
 	(
 		&LayOutInfo[0],
@@ -44,7 +44,7 @@ void Ext_DirectXInputLayout::InputLayoutSetting()
 {
 	if (nullptr == InputLayout)
 	{
-		MsgAssert("»ı¼ºµÇÁö ¾ÊÀº ÀÎÇ²·¹ÀÌ¾Æ¿ôÀ» ¼¼ÆÃÇÏ·Á°í Çß½À´Ï´Ù.");
+		MsgAssert("ìƒì„±ë˜ì§€ ì•Šì€ ì¸í’‹ë ˆì´ì•„ì›ƒì„ ì„¸íŒ…í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 	}
 
 	Ext_DirectXDevice::GetContext()->IASetInputLayout(InputLayout);

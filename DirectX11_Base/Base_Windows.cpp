@@ -15,7 +15,7 @@ float4              Base_Windows::WindowPosition = { 0.f, 0.f, 0.f, 0.f };
 bool                Base_Windows::IsWindowUpdate = true;
 bool                Base_Windows::IsWindowFocus = true;
 
-LRESULT CALLBACK Base_Windows::MessageFunction(HWND _ㅁhWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
+LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
     if (nullptr != UserMessageFunction)
     {

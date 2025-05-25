@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// Object ¼Ó¼ºÀ» ´ã´çÇÏ´Â Å¬·¡½º
+// Object ì†ì„±ì„ ë‹´ë‹¹í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_Object : public std::enable_shared_from_this<Ext_Object>
 {
 public:
@@ -14,7 +14,7 @@ public:
 	Ext_Object& operator=(const Ext_Object& _Other) = delete;
 	Ext_Object& operator=(Ext_Object&& _Other) noexcept = delete;
 
-	// this °¡Á®¿À±â
+	// this ê°€ì ¸ì˜¤ê¸°
 	template<typename Type>
 	std::shared_ptr<Type> GetSharedFromThis()
 	{
@@ -42,11 +42,11 @@ protected:
 	void SetName(std::string_view _Name) { Name = _Name; }
 	void SetOwnerScene(std::weak_ptr<class Ext_Scene> _OwnerScene) { OwnerScene = _OwnerScene; }
 
-	std::weak_ptr<class Ext_Scene> OwnerScene;	// ÀÚ½ÅÀÌ ¼ÓÇÑ Scene Á¤º¸
-	std::string Name = "";										// ¿ÀºêÁ§Æ® ÀÌ¸§
-	int Order = 0;													// Order ÁöÁ¤(ÀúÀå ½Ã ±×·ìÈ­ÇÒ ¶§ È°¿ë)
-	bool IsUpdate = true;											// ¾÷µ¥ÀÌÆ® ÇÒ°ÍÀÎÁö ¾ÈÇÒ°ÍÀÎÁö ÁöÁ¤
-	bool IsDeath = false;											// Delete ÇÒ°ÍÀÎÁö ¾ÈÇÒ°ÍÀÎÁö ÁöÁ¤(¾ÆÁ÷ ¾È¾¸)
+	std::weak_ptr<class Ext_Scene> OwnerScene;	// ìì‹ ì´ ì†í•œ Scene ì •ë³´
+	std::string Name = "";										// ì˜¤ë¸Œì íŠ¸ ì´ë¦„
+	int Order = 0;													// Order ì§€ì •(ì €ì¥ ì‹œ ê·¸ë£¹í™”í•  ë•Œ í™œìš©)
+	bool IsUpdate = true;											// ì—…ë°ì´íŠ¸ í• ê²ƒì¸ì§€ ì•ˆí• ê²ƒì¸ì§€ ì§€ì •
+	bool IsDeath = false;											// Delete í• ê²ƒì¸ì§€ ì•ˆí• ê²ƒì¸ì§€ ì§€ì •(ì•„ì§ ì•ˆì”€)
 
 private:
 

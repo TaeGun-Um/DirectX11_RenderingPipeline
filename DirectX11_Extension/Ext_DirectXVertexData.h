@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
-// ÀÔ·ÂµÈ ·¹ÀÌ¾Æ¿ô µ¥ÀÌÅÍ Á¤º¸
+// ì…ë ¥ëœ ë ˆì´ì•„ì›ƒ ë°ì´í„° ì •ë³´
 class InputLayoutData
 {
 public:
-	// IAData ÀÔ·Â
+	// IAData ì…ë ¥
 	void AddInputLayoutDesc
 	(
 		LPCSTR _SemanticName,
@@ -20,14 +20,14 @@ public:
 	const std::vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutDescs() { return InputLayoutDescs;  }
 
 private:
-	static UINT FormatSize(DXGI_FORMAT _Format); // Æ÷¸ä Å©±â È®ÀÎ¿ë
+	static UINT FormatSize(DXGI_FORMAT _Format); // í¬ë©§ í¬ê¸° í™•ì¸ìš©
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> InputLayoutDescs;
 	int Offset = 0;
 
 };
 
-// ÀÔ·Â ·¹ÀÌ¾Æ¿ôÀ» »ı¼º ÈÄ ÀúÀåÇÏ±â À§ÇÑ Å¬·¡½º(InputLayoutData È°¿ë)
+// ì…ë ¥ ë ˆì´ì•„ì›ƒì„ ìƒì„± í›„ ì €ì¥í•˜ê¸° ìœ„í•œ í´ë˜ìŠ¤(InputLayoutData í™œìš©)
 class Ext_DirectXVertexData
 {
 public:
@@ -42,10 +42,10 @@ public:
 protected:
 	
 private:
-	static InputLayoutData ILData; // ÀÔ·ÂµÈ ·¹ÀÌ¾Æ¿ô µ¥ÀÌÅÍ °ü¸®
+	static InputLayoutData ILData; // ì…ë ¥ëœ ë ˆì´ì•„ì›ƒ ë°ì´í„° ê´€ë¦¬
 		
 };
 // [D3D11_INPUT_ELEMENT_DESC]
-// DirectX11¿¡¼­ ÀÔ·Â ·¹ÀÌ¾Æ¿ô(Input Layout)À» Á¤ÀÇÇÒ ¶§ »ç¿ëÇÏ´Â ±¸Á¶Ã¼
-// ±¸Á¶Ã¼´Â Á¤Á¡ µ¥ÀÌÅÍ°¡ ¾î¶² ±¸Á¶·Î µÇ¾îÀÖ´ÂÁö¸¦ GPU¿¡ ¾Ë·ÁÁÖ±â À§ÇÑ °Í
-// Á¤Á¡ ¹öÆÛ ¾ÈÀÇ µ¥ÀÌÅÍ°¡ ¾î¶² ÀÇ¹Ì¸¦ °®´ÂÁö ¼³¸íÇÏ´Â ¼³¸í¼­ ¿ªÇÒ ¼öÇà
+// DirectX11ì—ì„œ ì…ë ¥ ë ˆì´ì•„ì›ƒ(Input Layout)ì„ ì •ì˜í•  ë•Œ ì‚¬ìš©í•˜ëŠ” êµ¬ì¡°ì²´
+// êµ¬ì¡°ì²´ëŠ” ì •ì  ë°ì´í„°ê°€ ì–´ë–¤ êµ¬ì¡°ë¡œ ë˜ì–´ìˆëŠ”ì§€ë¥¼ GPUì— ì•Œë ¤ì£¼ê¸° ìœ„í•œ ê²ƒ
+// ì •ì  ë²„í¼ ì•ˆì˜ ë°ì´í„°ê°€ ì–´ë–¤ ì˜ë¯¸ë¥¼ ê°–ëŠ”ì§€ ì„¤ëª…í•˜ëŠ” ì„¤ëª…ì„œ ì—­í•  ìˆ˜í–‰

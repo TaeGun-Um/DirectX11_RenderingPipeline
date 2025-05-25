@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+Ôªø#include "PrecompileHeader.h"
 #include "TestScene.h"
 
 #include "TriangleActor.h"
@@ -20,7 +20,7 @@ TestScene::~TestScene()
 void TestScene::Start()
 {
 	GetMainCamera()->GetTransform()->SetWorldPosition({ 0.f, 0.f, -100.0f });
-	GetMainCamera()->GetTransform()->SetWorldRotation({ 0.f, 0.f, 0.f }); // Z+ πÊ«‚ πŸ∂Û∫∏∞‘
+	GetMainCamera()->GetTransform()->SetWorldRotation({ 0.f, 0.f, 0.f }); // Z+ Î∞©Ìñ• Î∞îÎùºÎ≥¥Í≤å
 
 	CreateActor<TriangleActor>("TriangleActor");
 	CreateActor<RectActor>("RectActor");

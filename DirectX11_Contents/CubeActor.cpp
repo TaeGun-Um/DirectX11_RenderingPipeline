@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "CubeActor.h"
 
 #include <DirectX11_Extension/Ext_MeshComponent.h>
@@ -17,7 +17,7 @@ void CubeActor::Start()
 	Ext_Actor::Start();
 	// CreateComponent<Ext_Component>("TestComp", true);
 	GetTransform()->SetWorldPosition({ 150.f, 0.f, 100.0f });
-	GetTransform()->SetWorldScale({ 100.f, 100.f, 100.f }); // Å©±â È®´ë
+	GetTransform()->SetWorldScale({ 100.f, 100.f, 100.f }); // í¬ê¸° í™•ëŒ€
 	std::shared_ptr<Ext_MeshComponent> MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh", true);
 	MeshComp->CreateMeshComponentUnit("Box", "Basic");
 }
@@ -28,7 +28,7 @@ void CubeActor::Update(float _DeltaTime)
 
 	AccTime += _DeltaTime;
 
-	float MoveSpeed = 100.0f; // ÃÊ´ç 100 ´ÜÀ§ ÀÌµ¿
+	float MoveSpeed = 100.0f; // ì´ˆë‹¹ 100 ë‹¨ìœ„ ì´ë™
 	float4 MoveDir = float4::ZERO;
 
 	if (bUp)
@@ -48,7 +48,7 @@ void CubeActor::Update(float _DeltaTime)
 	if (AccTime >= 1.5f)
 	{
 		AccTime = 0.0f;
-		bUp = !bUp; // ¹æÇâ ¹İÀü
+		bUp = !bUp; // ë°©í–¥ ë°˜ì „
 	}
 }
 

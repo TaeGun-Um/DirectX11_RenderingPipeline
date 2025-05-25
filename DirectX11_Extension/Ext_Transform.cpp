@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_Transform.h"
 
 /////////////////////////////////////// Ext_Transform ///////////////////////////////////////
@@ -26,7 +26,7 @@ void TransformData::CalculateWorldMatrix()
     WorldMatrix.Compose(Scale, Quaternion, Position);
 }
 
-// Ä«¸Ş¶ó ±âÁØÀ¸·Î ¿ùµå, ºä, ÇÁ·ÎÁ§¼Ç Çà·Ä »ı¼º
+// ì¹´ë©”ë¼ ê¸°ì¤€ìœ¼ë¡œ ì›”ë“œ, ë·°, í”„ë¡œì ì…˜ í–‰ë ¬ ìƒì„±
 void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
 {
     ViewMatrix = _View;

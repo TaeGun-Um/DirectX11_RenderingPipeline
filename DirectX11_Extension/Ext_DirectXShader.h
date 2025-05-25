@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_DirectXBufferSetter.h"
 
-// DirectXÀÇ ¼ÎÀÌ´õ ÄÄÆÄÀÏ ¹× Á¤º¸ ÀúÀåÀ» À§ÇÑ Å¬·¡½º(»ó¼ÓÇÏ¿© »ç¿ë)
+// DirectXì˜ ì…°ì´ë” ì»´íŒŒì¼ ë° ì •ë³´ ì €ì¥ì„ ìœ„í•œ í´ë˜ìŠ¤(ìƒì†í•˜ì—¬ ì‚¬ìš©)
 class Ext_DirectXShader : public std::enable_shared_from_this<Ext_DirectXShader>
 {
 public:
@@ -17,7 +17,7 @@ public:
 
 	static void ShaderAutoCompile(std::string_view _Path, std::string_view _EntryPoint);
 
-	// this °¡Á®¿À±â
+	// this ê°€ì ¸ì˜¤ê¸°
 	template<typename Type>
 	std::shared_ptr<Type> GetSharedFromThis()
 	{
@@ -27,16 +27,16 @@ public:
 	Ext_DirectXBufferSetter& GetBufferSetter() { return BufferSetter; }
 	ShaderType GetType() { return Type; }
 
-	COMPTR<ID3DBlob>& GetBinaryCode() { return BinaryCode; } // ÀÓ½Ã
+	COMPTR<ID3DBlob>& GetBinaryCode() { return BinaryCode; } // ì„ì‹œ
 
 protected:
 	void CreateVersion(std::string_view _ShaderType, UINT _VersionHigt /*= 5*/, UINT _VersionLow /*= 0*/);
-	void ShaderResourceSetting(); // »ó¼ö ¹öÆÛ ¼¼ÆÃ
+	void ShaderResourceSetting(); // ìƒìˆ˜ ë²„í¼ ì„¸íŒ…
 
-	COMPTR<ID3DBlob> BinaryCode = nullptr; // ID3DBlob Á¤º¸ ÀúÀå
-	std::string Version = ""; // ¼ÎÀÌ´õ ¹öÀü ÀúÀå
-	std::string EntryPoint = ""; // ¼ÎÀÌ´õ EntryPoint ÀÌ¸§ ÀúÀå(¸®¼Ò½º ¸Å´ÏÀú¿¡µµ µ¿ÀÏÇÑ ÀÌ¸§À¸·Î ÀúÀå)
-	ShaderType Type = ShaderType::Unknown; // ¼ÎÀÌ´õ Å¸ÀÔ ÀúÀå
+	COMPTR<ID3DBlob> BinaryCode = nullptr; // ID3DBlob ì •ë³´ ì €ì¥
+	std::string Version = ""; // ì…°ì´ë” ë²„ì „ ì €ì¥
+	std::string EntryPoint = ""; // ì…°ì´ë” EntryPoint ì´ë¦„ ì €ì¥(ë¦¬ì†ŒìŠ¤ ë§¤ë‹ˆì €ì—ë„ ë™ì¼í•œ ì´ë¦„ìœ¼ë¡œ ì €ì¥)
+	ShaderType Type = ShaderType::Unknown; // ì…°ì´ë” íƒ€ì… ì €ì¥
 
 private:
 	static ShaderType FindShaderType(std::string_view _EntryPoint);
@@ -44,6 +44,6 @@ private:
 
 };
 // [ID3DBlob]
-// ¹ÙÀÌ³Ê¸® µ¥ÀÌÅÍ(¸Ş¸ğ¸® ¹öÆÛ, ¼ÎÀÌ´õ ÄÄÆÄÀÏ °á°ú µî)¸¦ ÀúÀåÇÏ°í, GPU¿¡ Àü´ŞÇÏ±â À§ÇØ »ç¿ëÇÏ´Â ÀÎÅÍÆäÀÌ½º
-// Æ¯È÷ ¼ÎÀÌ´õ ÄÄÆÄÀÏ °á°ú³ª µğ¹ö±× ¸Ş½ÃÁö °°Àº ¹ÙÀÌ³Ê¸® µ¥ÀÌÅÍ¸¦ ´ãÀ» ¶§ È°¿ë
+// ë°”ì´ë„ˆë¦¬ ë°ì´í„°(ë©”ëª¨ë¦¬ ë²„í¼, ì…°ì´ë” ì»´íŒŒì¼ ê²°ê³¼ ë“±)ë¥¼ ì €ì¥í•˜ê³ , GPUì— ì „ë‹¬í•˜ê¸° ìœ„í•´ ì‚¬ìš©í•˜ëŠ” ì¸í„°í˜ì´ìŠ¤
+// íŠ¹íˆ ì…°ì´ë” ì»´íŒŒì¼ ê²°ê³¼ë‚˜ ë””ë²„ê·¸ ë©”ì‹œì§€ ê°™ì€ ë°”ì´ë„ˆë¦¬ ë°ì´í„°ë¥¼ ë‹´ì„ ë•Œ í™œìš©
 //

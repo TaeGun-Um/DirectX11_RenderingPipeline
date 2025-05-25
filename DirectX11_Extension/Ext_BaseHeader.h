@@ -1,29 +1,29 @@
-#pragma once
+ï»¿#pragma once
 
 #include <wrl/client.h>
 
-// Microsoft::WRL::ComPtr<T> ·¡ÇÎ ±¸Á¶Ã¼
+// Microsoft::WRL::ComPtr<T> ë˜í•‘ êµ¬ì¡°ì²´
 template<typename T>
 struct COMPTR
 {
 public:
-    // »ı¼ºÀÚ
+    // ìƒì„±ì
     COMPTR() {}
     COMPTR(nullptr_t) {}
 
-    // ¿¬»êÀÚ ¿À¹ö·Îµù
-    operator Microsoft::WRL::ComPtr<T>& () { return Ptr; } // Ptr Á÷Á¢ Á¢±Ù¿ë º¯È¯ ¿¬»êÀÚ
-    operator T* () const { return Ptr.Get(); } // Ptr Á÷Á¢ Á¢±Ù¿ë º¯È¯ ¿¬»êÀÚ
-    T* operator->() const { return Ptr.Get(); } // ½º¸¶Æ® Æ÷ÀÎÅÍÃ³·³ µ¿ÀÛÇÏµµ·Ï ¿¬»êÀÚ ¿À¹ö·Îµå
-    T** operator&() { return Ptr.GetAddressOf(); } // ½º¸¶Æ® Æ÷ÀÎÅÍÃ³·³ µ¿ÀÛÇÏµµ·Ï ¿¬»êÀÚ ¿À¹ö·Îµå
-    operator bool() const { return Ptr != nullptr; } // Á¶°Ç¹®¿¡¼­ »ç¿ë(nullÀÎÁö ¾Æ´ÑÁö ÆÇº°)
+    // ì—°ì‚°ì ì˜¤ë²„ë¡œë”©
+    operator Microsoft::WRL::ComPtr<T>& () { return Ptr; } // Ptr ì§ì ‘ ì ‘ê·¼ìš© ë³€í™˜ ì—°ì‚°ì
+    operator T* () const { return Ptr.Get(); } // Ptr ì§ì ‘ ì ‘ê·¼ìš© ë³€í™˜ ì—°ì‚°ì
+    T* operator->() const { return Ptr.Get(); } // ìŠ¤ë§ˆíŠ¸ í¬ì¸í„°ì²˜ëŸ¼ ë™ì‘í•˜ë„ë¡ ì—°ì‚°ì ì˜¤ë²„ë¡œë“œ
+    T** operator&() { return Ptr.GetAddressOf(); } // ìŠ¤ë§ˆíŠ¸ í¬ì¸í„°ì²˜ëŸ¼ ë™ì‘í•˜ë„ë¡ ì—°ì‚°ì ì˜¤ë²„ë¡œë“œ
+    operator bool() const { return Ptr != nullptr; } // ì¡°ê±´ë¬¸ì—ì„œ ì‚¬ìš©(nullì¸ì§€ ì•„ë‹Œì§€ íŒë³„)
 
     // Getter
-    T* Get() const { return Ptr.Get(); } // ¿ø½Ã Æ÷ÀÎÅÍ ¹İÈ¯
-    T** GetAddressOf() { return Ptr.GetAddressOf(); } // ·¹ÆÛ·±½º ¹İÈ¯(ÇÔ¼ö Àü´Ş¿ë)
+    T* Get() const { return Ptr.Get(); } // ì›ì‹œ í¬ì¸í„° ë°˜í™˜
+    T** GetAddressOf() { return Ptr.GetAddressOf(); } // ë ˆí¼ëŸ°ìŠ¤ ë°˜í™˜(í•¨ìˆ˜ ì „ë‹¬ìš©)
 
-    void Reset() { Ptr.Reset(); } // ÇöÀç º¸À¯ÁßÀÎ COM °´Ã¼ ÇØÁ¦(Release())¸¦ È£ÃâÇÏ°í nullptr·Î ¼³Á¤
-    T* Detach() { return Ptr.Detach(); } // ¼ÒÀ¯±Ç ÀÌÀü
+    void Reset() { Ptr.Reset(); } // í˜„ì¬ ë³´ìœ ì¤‘ì¸ COM ê°ì²´ í•´ì œ(Release())ë¥¼ í˜¸ì¶œí•˜ê³  nullptrë¡œ ì„¤ì •
+    T* Detach() { return Ptr.Detach(); } // ì†Œìœ ê¶Œ ì´ì „
 
 public:
     Microsoft::WRL::ComPtr<T> Ptr = nullptr;

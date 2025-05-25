@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_MeshComponentUnit.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
@@ -15,63 +15,63 @@
 
 Ext_MeshComponentUnit::Ext_MeshComponentUnit()
 {
-	InputLayout = std::make_shared<Ext_DirectXInputLayout>(); // ¸¸µé¾î¾ß µ¿ÀÛÇÔ
+	InputLayout = std::make_shared<Ext_DirectXInputLayout>(); // ë§Œë“¤ì–´ì•¼ ë™ìž‘í•¨
 }
 
 Ext_MeshComponentUnit::~Ext_MeshComponentUnit()
 {
 }
 
-// ¸Þ½Ã ÄÄÆ÷³ÍÆ® À¯´Ö »ý¼º ½Ã È£Ãâ, Mesh, Material, ConstantBuffer ¼¼ÆÃ
+// ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ ìœ ë‹› ìƒì„± ì‹œ í˜¸ì¶œ, Mesh, Material, ConstantBuffer ì„¸íŒ…
 void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName)
 {
-	Mesh = Ext_DirectXMesh::Find(_MeshName); // ¸Þ½Ã ¼³Á¤
-	Material = Ext_DirectXMaterial::Find(_MaterialName); // ¸ÓÆ¼¸®¾ó ¼³Á¤
+	Mesh = Ext_DirectXMesh::Find(_MeshName); // ë©”ì‹œ ì„¤ì •
+	Material = Ext_DirectXMaterial::Find(_MaterialName); // ë¨¸í‹°ë¦¬ì–¼ ì„¤ì •
 	
 	if (nullptr == Mesh || nullptr == Material)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ¸Þ½Ã³ª ¸ÓÆ¼¸®¾óÀ» ¸Þ½ÃÀ¯´Ö¿¡ ³ÖÀ» ¼ö´Â ¾ø½À´Ï´Ù.")
+		MsgAssert("ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ë©”ì‹œë‚˜ ë¨¸í‹°ë¦¬ì–¼ì„ ë©”ì‹œìœ ë‹›ì— ë„£ì„ ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.")
 	}
 
-	InputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), Material->GetVertexShader()); // InputLayout ¼³Á¤
+	InputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), Material->GetVertexShader()); // InputLayout ì„¤ì •
 
-	// »ó¼ö¹öÆÛ ¼¼ÆÃ
-	// [1] ¹öÅØ½º ¼ÎÀÌ´õ Á¤º¸ °¡Á®¿À±â
+	// ìƒìˆ˜ë²„í¼ ì„¸íŒ…
+	// [1] ë²„í…ìŠ¤ ì…°ì´ë” ì •ë³´ ê°€ì ¸ì˜¤ê¸°
 	const Ext_DirectXBufferSetter& VertexShaderBuffers = Material->GetVertexShader()->GetBufferSetter();
 	BufferSetter.Copy(VertexShaderBuffers);
 
-	// [2] ÇÈ¼¿ ¼ÎÀÌ´õ Á¤º¸ °¡Á®¿À±â
+	// [2] í”½ì…€ ì…°ì´ë” ì •ë³´ ê°€ì ¸ì˜¤ê¸°
 	const Ext_DirectXBufferSetter& PixelShaderBuffers = Material->GetPixelShader()->GetBufferSetter();
 	BufferSetter.Copy(PixelShaderBuffers);
 
-	// [3] Æ®·£½ºÆû »ó¼ö¹öÆÛ ¼¼ÆÃÇÏ±â
+	// [3] íŠ¸ëžœìŠ¤í¼ ìƒìˆ˜ë²„í¼ ì„¸íŒ…í•˜ê¸°
 	const TransformData& Data = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
 	BufferSetter.SetConstantBufferLink("TransformData", Data);
 
-	// [4] Ä«¸Þ¶ó¿¡ ³Ö±â
+	// [4] ì¹´ë©”ë¼ì— ë„£ê¸°
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
 }
 
-// Mesh, MaterialÀÇ RenderingPipeline Setting
+// Mesh, Materialì˜ RenderingPipeline Setting
 void Ext_MeshComponentUnit::RenderUnitSetting()
 {
 	if (nullptr == Mesh)
 	{
-		MsgAssert("¸Å½¬°¡ Á¸ÀçÇÏÁö ¾Ê´Â À¯´ÏÆ® ÀÔ´Ï´Ù");
+		MsgAssert("ë§¤ì‰¬ê°€ ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ìœ ë‹ˆíŠ¸ ìž…ë‹ˆë‹¤");
 	}
 
 	if (nullptr == Material)
 	{
-		MsgAssert("ÆÄÀÌÇÁ¶óÀÎÀÌ Á¸ÀçÇÏÁö ¾Ê´Â À¯´ÏÆ® ÀÔ´Ï´Ù");
+		MsgAssert("íŒŒì´í”„ë¼ì¸ì´ ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ìœ ë‹ˆíŠ¸ ìž…ë‹ˆë‹¤");
 	}
 
-	InputLayout->InputLayoutSetting(); // InputLayoutÀ¸·Î IASetInputLayout È£Ãâ
-	Mesh->MeshSetting();					 // InputAssembler 1´Ü°è, InputAssembler 2´Ü°è È£Ãâ : IASetVertexBuffers, IASetPrimitiveTopology, IASetIndexBuffer
-	Material->MaterialSetting();			 // VertexShader, PixelShader È£Ãâ(·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ´Ü°è ½ÇÇà) : VSSetShader, PSSetShader
-	BufferSetter.BufferSetting();			 // Map -> memcpy -> UnMap, VSSetConstantBuffers, PSSetConstantBuffers ½Ç½Ã
+	InputLayout->InputLayoutSetting(); // InputLayoutìœ¼ë¡œ IASetInputLayout í˜¸ì¶œ
+	Mesh->MeshSetting();					 // InputAssembler 1ë‹¨ê³„, InputAssembler 2ë‹¨ê³„ í˜¸ì¶œ : IASetVertexBuffers, IASetPrimitiveTopology, IASetIndexBuffer
+	Material->MaterialSetting();			 // VertexShader, PixelShader í˜¸ì¶œ(ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ë‹¨ê³„ ì‹¤í–‰) : VSSetShader, PSSetShader
+	BufferSetter.BufferSetting();			 // Map -> memcpy -> UnMap, VSSetConstantBuffers, PSSetConstantBuffers ì‹¤ì‹œ
 }
 
-// Á¤Á¡ Á¤º¸µé°ú ¼ÎÀÌ´õ¸¦ ÅëÇØ ¸Þ½Ã Draw ½Ç½Ã(DrawIndexed Call)
+// ì •ì  ì •ë³´ë“¤ê³¼ ì…°ì´ë”ë¥¼ í†µí•´ ë©”ì‹œ Draw ì‹¤ì‹œ(DrawIndexed Call)
 void Ext_MeshComponentUnit::RenderUnitDraw()
 {
 	UINT IndexCount = Mesh->GetIndexBuffer()->GetVertexCount();

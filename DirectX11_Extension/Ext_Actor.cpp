@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_Actor.h"
 #include "Ext_Component.h"
 #include "Ext_Transform.h"
@@ -12,7 +12,7 @@ Ext_Actor::~Ext_Actor()
 {
 }
 
-// ÄÄÆ÷³ÍÆ® »ı¼º ½Ã ÀÚµ¿È£Ãâ(¿À³Ê ¾×ÅÍ ¼³Á¤, ¿À³Ê ½Å ¼³Á¤, ÀÌ¸§ ÀúÀå, ¿À´õ ÀúÀå)
+// ì»´í¬ë„ŒíŠ¸ ìƒì„± ì‹œ ìë™í˜¸ì¶œ(ì˜¤ë„ˆ ì•¡í„° ì„¤ì •, ì˜¤ë„ˆ ì‹  ì„¤ì •, ì´ë¦„ ì €ì¥, ì˜¤ë” ì €ì¥)
 void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order /*=0*/, bool __IsTransformShare /*= false*/)
 {
 	_Component->SetOwnerActor(_Actor);

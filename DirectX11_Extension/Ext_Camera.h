@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_Actor.h"
 
-// È­¸éÀÇ ·»´õ¸µÀ» ´ã´çÇÏ´Â Actor
+// í™”ë©´ì˜ ë Œë”ë§ì„ ë‹´ë‹¹í•˜ëŠ” Actor
 class Ext_Camera : public Ext_Actor
 {
 	friend class Ext_Scene;
@@ -17,12 +17,12 @@ public:
 	Ext_Camera& operator=(const Ext_Camera& _Other) = delete;
 	Ext_Camera& operator=(Ext_Camera&& _Other) noexcept = delete;
 
-	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent); // ¸Ş½Ã ÄÄÆ÷³ÍÆ®¸¦ MeshComponents¿¡ ÀúÀå
-	void PushMeshComponentUnit(std::shared_ptr<class Ext_MeshComponentUnit> _Unit, RenderPath _Path = RenderPath::Unknown); // ¸Ş½Ã ÄÄÆ÷³ÍÆ® À¯´ÖÀ» MeshComponentUnits¿¡ ÀúÀå
+	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ë¥¼ MeshComponentsì— ì €ì¥
+	void PushMeshComponentUnit(std::shared_ptr<class Ext_MeshComponentUnit> _Unit, RenderPath _Path = RenderPath::Unknown); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ ìœ ë‹›ì„ MeshComponentUnitsì— ì €ì¥
 
-	const float4x4& GetViewMatrix() { return ViewMatrix; } // ºäÇà·Ä °¡Á®¿À±â
-	const float4x4& GetProjectionMatrix() { return ProjectionMatrix; } // ÇÁ·ÎÁ§¼Ç Çà·Ä °¡Á®¿À±â
-	const float4x4& GetViewPortMatrix() { return ViewPortMatrix; } // ºäÆ÷Æ® Çà·Ä °¡Á®¿À±â
+	const float4x4& GetViewMatrix() { return ViewMatrix; } // ë·°í–‰ë ¬ ê°€ì ¸ì˜¤ê¸°
+	const float4x4& GetProjectionMatrix() { return ProjectionMatrix; } // í”„ë¡œì ì…˜ í–‰ë ¬ ê°€ì ¸ì˜¤ê¸°
+	const float4x4& GetViewPortMatrix() { return ViewPortMatrix; } // ë·°í¬íŠ¸ í–‰ë ¬ ê°€ì ¸ì˜¤ê¸°
 
 	void SetCameraType(ProjectionType _CameraType) { CameraType = _CameraType; }
 
@@ -32,22 +32,22 @@ protected:
 	void Destroy() override {}
 	
 private:
-	void CameraTransformUpdate(); // Ä«¸Ş¶óÀÇ ºä, ÇÁ·ÎÁ§¼Ç, ºäÆ÷Æ® Çà·Ä ¿¬»ê ½Ç½Ã
-	void Rendering(float _Deltatime); // Ä«¸Ş¶óÀÇ MeshComponents, MeshComponentUnits¿¡ ´ëÇÑ ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ °á°ú Àû¿ë
+	void CameraTransformUpdate(); // ì¹´ë©”ë¼ì˜ ë·°, í”„ë¡œì ì…˜, ë·°í¬íŠ¸ í–‰ë ¬ ì—°ì‚° ì‹¤ì‹œ
+	void Rendering(float _Deltatime); // ì¹´ë©”ë¼ì˜ MeshComponents, MeshComponentUnitsì— ëŒ€í•œ ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ê²°ê³¼ ì ìš©
 	
-	void ViewPortSetting(); //////////////////////////////////// Å×½ºÆ®¿ë
+	void ViewPortSetting(); //////////////////////////////////// í…ŒìŠ¤íŠ¸ìš©
 
-	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents; // »ı¼ºµÈ ¸Ş½Ã ÄÄÆ÷³ÍÆ®µé
-	std::map<RenderPath, std::map<int, std::list<std::shared_ptr<class Ext_MeshComponentUnit>>>> MeshComponentUnits; // »ı¼ºµÈ ¸Ş½Ã ÄÄÆ÷³ÍÆ® À¯´Öµé
+	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents; // ìƒì„±ëœ ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ë“¤
+	std::map<RenderPath, std::map<int, std::list<std::shared_ptr<class Ext_MeshComponentUnit>>>> MeshComponentUnits; // ìƒì„±ëœ ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ ìœ ë‹›ë“¤
 	ProjectionType CameraType = ProjectionType::Perspective;
-	float4x4 ViewMatrix;			// Ä«¸Ş¶ó ±âÁØ ºäÇà·Ä
-	float4x4 ProjectionMatrix;	// Ä«¸Ş¶ó ±âÁØ ÇÁ·ÎÁ§¼Ç Çà·Ä
-	float4x4 ViewPortMatrix;		// Ä«¸Ş¶ó ±âÁØ ºäÆ÷Æ® Çà·Ä
-	float Width = 0.0f;				// ³Êºñ(¸ğ´ÏÅÍ)
-	float Height = 0.0f;				// ³ôÀÌ(¸ğ´ÏÅÍ)
-	float FOV = 90.0f;				// FOV°ª
-	float Near = 10.f;				// ±ÙÆò¸é
-	float Far = 100000.0f;		// ¿øÆò¸é
+	float4x4 ViewMatrix;			// ì¹´ë©”ë¼ ê¸°ì¤€ ë·°í–‰ë ¬
+	float4x4 ProjectionMatrix;	// ì¹´ë©”ë¼ ê¸°ì¤€ í”„ë¡œì ì…˜ í–‰ë ¬
+	float4x4 ViewPortMatrix;		// ì¹´ë©”ë¼ ê¸°ì¤€ ë·°í¬íŠ¸ í–‰ë ¬
+	float Width = 0.0f;				// ë„ˆë¹„(ëª¨ë‹ˆí„°)
+	float Height = 0.0f;				// ë†’ì´(ëª¨ë‹ˆí„°)
+	float FOV = 90.0f;				// FOVê°’
+	float Near = 10.f;				// ê·¼í‰ë©´
+	float Far = 100000.0f;		// ì›í‰ë©´
 	
-	D3D11_VIEWPORT ViewPortData; //////////////////////////////////// Å×½ºÆ®¿ë
+	D3D11_VIEWPORT ViewPortData; //////////////////////////////////// í…ŒìŠ¤íŠ¸ìš©
 };

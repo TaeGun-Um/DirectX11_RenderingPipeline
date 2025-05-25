@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_Component.h"
 
-// ·»´õ¸µÀ» À§ÇÑ ÄÄÆ÷³ÍÆ®
+// ë Œë”ë§ì„ ìœ„í•œ ì»´í¬ë„ŒíŠ¸
 class Ext_MeshComponent : public Ext_Component
 {
 	friend class Ext_Camera;
@@ -17,7 +17,7 @@ public:
 	Ext_MeshComponent& operator=(const Ext_MeshComponent& _Other) = delete;
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
-	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // ¸Ş½Ã ÄÄÆ÷³ÍÆ®¿¡ ÇÊ¿äÇÑ À¯´Ö »ı¼º ¹× ÀúÀå
+	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ì— í•„ìš”í•œ ìœ ë‹› ìƒì„± ë° ì €ì¥
 	
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
@@ -29,12 +29,12 @@ protected:
 	virtual void Destroy() override {}
 
 private:
-	void PushMeshToCamera(std::string_view _CameraName); // ¸Ş½Ã ÄÄÆ÷³ÍÆ®´Â »ı¼ºÇÏ¸é Ä«¸Ş¶ó¿¡ ³Ö±â ÁøÇà(Áö±İÀº ¸ŞÀÎ Ä«¸Ş¶ó·Î µé¾î°¨)
-	void Rendering(float _Deltatime, std::shared_ptr<class Ext_Camera> _Camera); // ¸Ş½Ã ·»´õ¸µ ¾÷µ¥ÀÌÆ®
-	void MeshComponentTransformSetting(std::shared_ptr<class Ext_Camera> _Camera); // ¸Ş½Ã ÄÄÆ÷³ÍÆ® Çà·Ä ¾÷µ¥ÀÌÆ®
+	void PushMeshToCamera(std::string_view _CameraName); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ëŠ” ìƒì„±í•˜ë©´ ì¹´ë©”ë¼ì— ë„£ê¸° ì§„í–‰(ì§€ê¸ˆì€ ë©”ì¸ ì¹´ë©”ë¼ë¡œ ë“¤ì–´ê°)
+	void Rendering(float _Deltatime, std::shared_ptr<class Ext_Camera> _Camera); // ë©”ì‹œ ë Œë”ë§ ì—…ë°ì´íŠ¸
+	void MeshComponentTransformSetting(std::shared_ptr<class Ext_Camera> _Camera); // ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ í–‰ë ¬ ì—…ë°ì´íŠ¸
 
 	 
-	std::weak_ptr<class Ext_Camera> OwnerCamera; // ÀÚ½ÅÀ» ¼ÒÀ¯ÇÑ Ä«¸Ş¶ó
-	std::vector<std::shared_ptr<class Ext_MeshComponentUnit>> Units; // Mesh¿Í Pipeline Á¤º¸ ¸ğÀ½
+	std::weak_ptr<class Ext_Camera> OwnerCamera; // ìì‹ ì„ ì†Œìœ í•œ ì¹´ë©”ë¼
+	std::vector<std::shared_ptr<class Ext_MeshComponentUnit>> Units; // Meshì™€ Pipeline ì •ë³´ ëª¨ìŒ
 	
 };

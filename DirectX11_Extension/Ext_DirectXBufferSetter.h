@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
-// »ó¼ö¹öÆÛ ÀúÀå¿ë ÀÎÅÍÆäÀÌ½º
+// ìƒìˆ˜ë²„í¼ ì €ì¥ìš© ì¸í„°í˜ì´ìŠ¤
 struct ConstantBufferSetter
 {
 	std::string Name;
 	std::weak_ptr<class Ext_DirectXShader> OwnerShader;
-	int BindPoint = -1; // b0 t0 °°Àº ¸î¹øÂ° ½½·Ô¿¡ ¼¼ÆÃµÇ¾î¾ß ÇÏ´ÂÁö¿¡ ´ëÇÑ Á¤º¸.
+	int BindPoint = -1; // b0 t0 ê°™ì€ ëª‡ë²ˆì§¸ ìŠ¬ë¡¯ì— ì„¸íŒ…ë˜ì–´ì•¼ í•˜ëŠ”ì§€ì— ëŒ€í•œ ì •ë³´.
 	std::shared_ptr<class Ext_DirectXConstantBuffer> ConstantBuffer;
 	const void* CPUData;
 	UINT CPUDataSize;
@@ -13,7 +13,7 @@ struct ConstantBufferSetter
 	void Setting();
 };
 
-// ´Ù¾çÇÑ Á¾·ùÀÇ »ó¼ö ¹öÆÛ¸¦ ÀúÀåÇÏ°í °¡Á®¿À±â À§ÇØ »ç¿ëÇÏ´Â Å¬·¡½º
+// ë‹¤ì–‘í•œ ì¢…ë¥˜ì˜ ìƒìˆ˜ ë²„í¼ë¥¼ ì €ì¥í•˜ê³  ê°€ì ¸ì˜¤ê¸° ìœ„í•´ ì‚¬ìš©í•˜ëŠ” í´ë˜ìŠ¤
 class Ext_DirectXBufferSetter
 {
 	friend class Ext_MeshComponentUnit;
@@ -29,10 +29,10 @@ public:
 	Ext_DirectXBufferSetter& operator=(const Ext_DirectXBufferSetter& _Other) = delete;
 	Ext_DirectXBufferSetter& operator=(Ext_DirectXBufferSetter&& _Other) noexcept = delete;
 
-	// »ı¼ºµÈ »ó¼ö¹öÆÛ ÀúÀåÇÏ±â
+	// ìƒì„±ëœ ìƒìˆ˜ë²„í¼ ì €ì¥í•˜ê¸°
 	void InsertConstantBufferSetter(const ConstantBufferSetter& _Setter) { ConstantBufferSetters.insert(std::make_pair(_Setter.Name, _Setter)); } 
 
-	// »ó¼ö¹öÆÛ µ¥ÀÌÅÍ ÀúÀå
+	// ìƒìˆ˜ë²„í¼ ë°ì´í„° ì €ì¥
 	template<typename Type>
 	void SetConstantBufferLink(std::string_view _Name, const Type& _Data)
 	{
@@ -42,9 +42,9 @@ public:
 protected:
 	
 private:
-	std::multimap<std::string, ConstantBufferSetter> ConstantBufferSetters; // »ó¼ö ¹öÆÛ ÀúÀå¿ë ÄÁÅ×ÀÌ³Ê
+	std::multimap<std::string, ConstantBufferSetter> ConstantBufferSetters; // ìƒìˆ˜ ë²„í¼ ì €ì¥ìš© ì»¨í…Œì´ë„ˆ
 	
-	void SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size); // »ó¼ö¹öÆÛ µ¥ÀÌÅÍ ÀúÀå
-	void Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter); // ¹öÆÛ ¼¼ÆÃ º¹»ç/ºÙ¿©³Ö±â ½Ç½Ã
-	void BufferSetting(); // ¹öÆÛ ¼¼ÆÃ È£Ãâ
+	void SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size); // ìƒìˆ˜ë²„í¼ ë°ì´í„° ì €ì¥
+	void Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter); // ë²„í¼ ì„¸íŒ… ë³µì‚¬/ë¶™ì—¬ë„£ê¸° ì‹¤ì‹œ
+	void BufferSetting(); // ë²„í¼ ì„¸íŒ… í˜¸ì¶œ
 };

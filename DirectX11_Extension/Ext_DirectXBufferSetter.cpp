@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXBufferSetter.h"
 #include "Ext_DirectXConstantBuffer.h"
 #include "Ext_DirectXShader.h"
@@ -11,7 +11,7 @@ Ext_DirectXBufferSetter::~Ext_DirectXBufferSetter()
 {
 }
 
-// ¹öÆÛ ¼¼ÆÃ º¹»ç/ºÙ¿©³Ö±â ½Ç½Ã
+// ë²„í¼ ì„¸íŒ… ë³µì‚¬/ë¶™ì—¬ë„£ê¸° ì‹¤ì‹œ
 void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter)
 {
 	for (const std::pair<std::string, ConstantBufferSetter>& Setter : _OtherBufferSetter.ConstantBufferSetters)
@@ -35,7 +35,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 	//}
 }
 
-// »ó¼ö ¹öÆÛ µ¥ÀÌÅÍ ÀúÀå
+// ìƒìˆ˜ ë²„í¼ ë°ì´í„° ì €ì¥
 void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size)
 {
 	std::string UpperName = Base_String::ToUpper(_Name);
@@ -44,7 +44,7 @@ void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, cons
 
 	if (ConstantBufferSetters.end() == FindIter)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â »ó¼ö¹öÆÛ¸¦ ¼¼ÆÃÇÏ·Á°í Çß½À´Ï´Ù." + UpperName);
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ìƒìˆ˜ë²„í¼ë¥¼ ì„¸íŒ…í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤." + UpperName);
 		return;
 	}
 
@@ -57,7 +57,7 @@ void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, cons
 
 		if (BufferSetter.ConstantBuffer->GetBufferSize() != _Size)
 		{
-			MsgAssert("»ó¼ö¹öÆÛ¿Í ¼¼ÆÃÇÏ·Á´Â µ¥ÀÌÅÍÀÇ Å©±â°¡ ´Ù¸¨´Ï´Ù. »ó¼ö¹öÆÛ : " + std::to_string(BufferSetter.ConstantBuffer->GetBufferSize()) + "À¯Àú°¡ ¼¼ÆÃÇÑ µ¥ÀÌÅÍ" + std::to_string(_Size) + UpperName);
+			MsgAssert("ìƒìˆ˜ë²„í¼ì™€ ì„¸íŒ…í•˜ë ¤ëŠ” ë°ì´í„°ì˜ í¬ê¸°ê°€ ë‹¤ë¦…ë‹ˆë‹¤. ìƒìˆ˜ë²„í¼ : " + std::to_string(BufferSetter.ConstantBuffer->GetBufferSize()) + "ìœ ì €ê°€ ì„¸íŒ…í•œ ë°ì´í„°" + std::to_string(_Size) + UpperName);
 			return;
 		}
 
@@ -88,7 +88,7 @@ void ConstantBufferSetter::Setting()
 	{
 	case ShaderType::Unknown:
 	{
-		MsgAssert("¾î¶² ½¦ÀÌ´õ¿¡ ¼¼ÆÃµÉÁö ¾Ë¼ö¾ø´Â »ó¼ö¹öÆÛ ÀÔ´Ï´Ù.");
+		MsgAssert("ì–´ë–¤ ì‰ì´ë”ì— ì„¸íŒ…ë ì§€ ì•Œìˆ˜ì—†ëŠ” ìƒìˆ˜ë²„í¼ ì…ë‹ˆë‹¤.");
 		break;
 	}
 	case ShaderType::Vertex:

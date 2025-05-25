@@ -1,13 +1,13 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXDevice.h"
 
-// View¸¦ ±â¹ÝÀ¸·Î ·»´õÅ¸°Ù »ý¼º
+// Viewë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë Œë”íƒ€ê²Ÿ ìƒì„±
 void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color)
 {
 	Colors.push_back(_Color);
 
-	// ·»´õ¸µÇÒ Ãâ·Â ¿µ¿ª ¼³Á¤ ±¸Á¶Ã¼ Á¤ÀÇ
+	// ë Œë”ë§í•  ì¶œë ¥ ì˜ì—­ ì„¤ì • êµ¬ì¡°ì²´ ì •ì˜
 	D3D11_VIEWPORT ViewPortData;
 	ViewPortData.TopLeftX = 0;
 	ViewPortData.TopLeftY = 0;
@@ -15,24 +15,24 @@ void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXText
 	ViewPortData.Height = _Texture->GetScale().y;
 	ViewPortData.MinDepth = 0.0f;
 	ViewPortData.MaxDepth = 1.0f;
-	// <<¼³¸í>>
-	/*1. TopLeftX : ºäÆ÷Æ® ÁÂ»ó´Ü X À§Ä¡ (ÇÈ¼¿ ´ÜÀ§)*/
-	/*2. TopLeftY : ºäÆ÷Æ® ÁÂ»ó´Ü Y À§Ä¡ (ÇÈ¼¿ ´ÜÀ§)*/
-	/*3. Width : ºäÆ÷Æ® ³Êºñ (ÇÈ¼¿ ´ÜÀ§)*/
-	/*4. Height : ºäÆ÷Æ® ³ôÀÌ (ÇÈ¼¿ ´ÜÀ§)*/
-	/*5. MinDepth : ±íÀÌ°ª ÃÖ¼Ò (º¸Åë 0.0f)*/
-	/*6. MaxDepth : ±íÀÌ°ª ÃÖ´ë (º¸Åë 1.0f)*/
+	// <<ì„¤ëª…>>
+	/*1. TopLeftX : ë·°í¬íŠ¸ ì¢Œìƒë‹¨ X ìœ„ì¹˜ (í”½ì…€ ë‹¨ìœ„)*/
+	/*2. TopLeftY : ë·°í¬íŠ¸ ì¢Œìƒë‹¨ Y ìœ„ì¹˜ (í”½ì…€ ë‹¨ìœ„)*/
+	/*3. Width : ë·°í¬íŠ¸ ë„ˆë¹„ (í”½ì…€ ë‹¨ìœ„)*/
+	/*4. Height : ë·°í¬íŠ¸ ë†’ì´ (í”½ì…€ ë‹¨ìœ„)*/
+	/*5. MinDepth : ê¹Šì´ê°’ ìµœì†Œ (ë³´í†µ 0.0f)*/
+	/*6. MaxDepth : ê¹Šì´ê°’ ìµœëŒ€ (ë³´í†µ 1.0f)*/
 
-	Textures.push_back(_Texture); // Ext_DirectXTexture ÀúÀå
-	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT ÀúÀå
+	Textures.push_back(_Texture); // Ext_DirectXTexture ì €ìž¥
+	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT ì €ìž¥
 	
 	RTVs.push_back(_Texture->GetRTV());
 	
-	//SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView ÀúÀå
-	//RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView ÀúÀå
+	//SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView ì €ìž¥
+	//RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView ì €ìž¥
 }
 
-// µª½ºÅØ½ºÃÄ »ý¼º(±âº» Çü½Ä)
+// ëŽìŠ¤í…ìŠ¤ì³ ìƒì„±(ê¸°ë³¸ í˜•ì‹)
 void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)
 {
 	D3D11_TEXTURE2D_DESC Desc = { 0, };
@@ -46,26 +46,26 @@ void Ext_DirectXRenderTarget::CreateDepthTexture(int _Index)
 	Desc.MipLevels = 1;
 	Desc.Usage = D3D11_USAGE_DEFAULT;
 	Desc.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL;
-	// <¼³¸í>
-	/*1. 	D3D11_TEXTURE2D_DESC ±¸Á¶Ã¼¿¡¼­ ÇØ´ç ÅØ½ºÃ³°¡ ¸î °³ÀÇ ¹è¿­ ¿ä¼Ò(Array Slice)·Î ±¸¼ºµÇ¾î ÀÖ´ÂÁö¸¦ ³ªÅ¸³½´Ù. 1Àº ´ÜÀÏ 2D ÅØ½ºÃ³¶ó´Â ¶æ*/
-	/*2. µª½º ÅØ½ºÃÄ °¡·Î(·»´õ Å¸°Ù Å©±â¿Í ÅëÀÏÇÏ°Ô)*/
-	/*3. µª½º ÅØ½ºÃÄ ¼¼·Î(·»´õ Å¸°Ù Å©±â¿Í ÅëÀÏÇÏ°Ô)*/
-	/*4. 4byte(32bit)Áß »óÀ§ 24bit´Â ±íÀÌ°ª(0.0 ~ 1.0), ÇÏÀ§ 8bit´Â ½ºÅÙ½Ç °ª(0~255)À¸·Î È°¿ë*/
-	/*5. ¸ÖÆ¼ »ùÇÃ¸µ(¾ÈÆ¼¾Ù¸®¾î½Ì) ¼³Á¤, Count = 1Àº ºñÈ°¼ºÈ­¶ó´Â ¶æ*/
-	/*6. ¸ÖÆ¼ »ùÇÃ¸µ(¾ÈÆ¼¾Ù¸®¾î½Ì) ¼³Á¤, Quality = 0Àº ±âº» Ç°Áú ¼öÁØ »ç¿ëÇÑ´Ù´Â ¶æ*/
-	/*7. ÅØ½ºÃÄ ¹Ó¸Ê ¼öÁØ ¼³Á¤, Depth Texture´Â º¸Åë ÇÑ ·¹º§¸¸ ÇÊ¿äÇØ¼­ 1À» ³ÖÀ½*/
-	/*8. ¸®¼Ò½º »ç¿ë ¹æ½Ä ¼³Á¤, D3D11_USAGE_DEFAULT´Â GPU¿¡¼­ ÀÐ°í ¾²´Â ÀÏ¹ÝÀûÀÎ ¸®¼Ò½º Å¸ÀÔ*/
-	/*9. ÇØ´ç ÅØ½ºÃ³°¡ ¾î¶² ¿ëµµ·Î ¹ÙÀÎµùµÉ ¼ö ÀÖ´ÂÁö ¼³Á¤ÇÑ´Ù. */
+	// <ì„¤ëª…>
+	/*1. 	D3D11_TEXTURE2D_DESC êµ¬ì¡°ì²´ì—ì„œ í•´ë‹¹ í…ìŠ¤ì²˜ê°€ ëª‡ ê°œì˜ ë°°ì—´ ìš”ì†Œ(Array Slice)ë¡œ êµ¬ì„±ë˜ì–´ ìžˆëŠ”ì§€ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤. 1ì€ ë‹¨ì¼ 2D í…ìŠ¤ì²˜ë¼ëŠ” ëœ»*/
+	/*2. ëŽìŠ¤ í…ìŠ¤ì³ ê°€ë¡œ(ë Œë” íƒ€ê²Ÿ í¬ê¸°ì™€ í†µì¼í•˜ê²Œ)*/
+	/*3. ëŽìŠ¤ í…ìŠ¤ì³ ì„¸ë¡œ(ë Œë” íƒ€ê²Ÿ í¬ê¸°ì™€ í†µì¼í•˜ê²Œ)*/
+	/*4. 4byte(32bit)ì¤‘ ìƒìœ„ 24bitëŠ” ê¹Šì´ê°’(0.0 ~ 1.0), í•˜ìœ„ 8bitëŠ” ìŠ¤í…ì‹¤ ê°’(0~255)ìœ¼ë¡œ í™œìš©*/
+	/*5. ë©€í‹° ìƒ˜í”Œë§(ì•ˆí‹°ì•¨ë¦¬ì–´ì‹±) ì„¤ì •, Count = 1ì€ ë¹„í™œì„±í™”ë¼ëŠ” ëœ»*/
+	/*6. ë©€í‹° ìƒ˜í”Œë§(ì•ˆí‹°ì•¨ë¦¬ì–´ì‹±) ì„¤ì •, Quality = 0ì€ ê¸°ë³¸ í’ˆì§ˆ ìˆ˜ì¤€ ì‚¬ìš©í•œë‹¤ëŠ” ëœ»*/
+	/*7. í…ìŠ¤ì³ ë°‰ë§µ ìˆ˜ì¤€ ì„¤ì •, Depth TextureëŠ” ë³´í†µ í•œ ë ˆë²¨ë§Œ í•„ìš”í•´ì„œ 1ì„ ë„£ìŒ*/
+	/*8. ë¦¬ì†ŒìŠ¤ ì‚¬ìš© ë°©ì‹ ì„¤ì •, D3D11_USAGE_DEFAULTëŠ” GPUì—ì„œ ì½ê³  ì“°ëŠ” ì¼ë°˜ì ì¸ ë¦¬ì†ŒìŠ¤ íƒ€ìž…*/
+	/*9. í•´ë‹¹ í…ìŠ¤ì²˜ê°€ ì–´ë–¤ ìš©ë„ë¡œ ë°”ì¸ë”©ë  ìˆ˜ ìžˆëŠ”ì§€ ì„¤ì •í•œë‹¤. */
 
-	DepthTexture = Ext_DirectXTexture::CreateViews(Desc); // µª½º½ºÅÙ½Çºä »ý¼º
-	// ±íÀÌ ÅØ½ºÃÄ´Â 
-	// 1. ´Ù¸¥ ¹°Ã¼¿¡ °¡·ÁÁö¸é ·»´õ¸µ µÇÁö ¾Êµµ·Ï ÇÏ±â À§ÇÑ ±íÀÌ ¹öÆÛ(0.0 ~ 1.0ÀÌ¸ç 1.0ÀÌ Á¦ÀÏ ¸Õ ¹°Ã¼)¸¦ ÅëÇØ °¡Àå °¡±î¿î ÇÈ¼¿ ·»´õ¸µ
-	// 2. Æ¯Á¤ »óÈ²¿¡¼­´Â ±íÀÌ ¹öÆÛ·Î¸¸ ¹°Ã¼¸¦ ·»´õ¸µ ÇÒ °ÍÀÎÁö ÆÇ´ÜÇÏ±â ¾î·Æ±â ¶§¹®¿¡(Æ¯Á¤ ¿µ¿ª ·»´õ¸µ ¸·±â(½ºÅÙ½Ç ¹öÆÛ°ªÀÌ Ã¤¿öÁ®ÀÖÀ¸¸é ±×·ÁÁö°í, ºñ¿öÁö¸é ¾È±×¸®´Â)) ¾²±â À§ÇÑ ½ºÅÙ½Ç ¹öÆÛ È°¿ë
-	//   2-1. ¿¹¸¦ µé¾î °Å¿ïÀÌ ÀÖ´Â ¹æÀ» ¸¸µé ¶§, °Å¿ï ºÎºÐÀÇ ½ºÅÙ½Ç ¹öÆÛ¸¦ ºñ¿ì´Â °Í
-	// À§ÀÇ µÎ °¡Áö ¸ñÀûÀ» À§ÇÏ¿© »ý¼ºÇÑ´Ù.
+	DepthTexture = Ext_DirectXTexture::CreateViews(Desc); // ëŽìŠ¤ìŠ¤í…ì‹¤ë·° ìƒì„±
+	// ê¹Šì´ í…ìŠ¤ì³ëŠ” 
+	// 1. ë‹¤ë¥¸ ë¬¼ì²´ì— ê°€ë ¤ì§€ë©´ ë Œë”ë§ ë˜ì§€ ì•Šë„ë¡ í•˜ê¸° ìœ„í•œ ê¹Šì´ ë²„í¼(0.0 ~ 1.0ì´ë©° 1.0ì´ ì œì¼ ë¨¼ ë¬¼ì²´)ë¥¼ í†µí•´ ê°€ìž¥ ê°€ê¹Œìš´ í”½ì…€ ë Œë”ë§
+	// 2. íŠ¹ì • ìƒí™©ì—ì„œëŠ” ê¹Šì´ ë²„í¼ë¡œë§Œ ë¬¼ì²´ë¥¼ ë Œë”ë§ í•  ê²ƒì¸ì§€ íŒë‹¨í•˜ê¸° ì–´ë µê¸° ë•Œë¬¸ì—(íŠ¹ì • ì˜ì—­ ë Œë”ë§ ë§‰ê¸°(ìŠ¤í…ì‹¤ ë²„í¼ê°’ì´ ì±„ì›Œì ¸ìžˆìœ¼ë©´ ê·¸ë ¤ì§€ê³ , ë¹„ì›Œì§€ë©´ ì•ˆê·¸ë¦¬ëŠ”)) ì“°ê¸° ìœ„í•œ ìŠ¤í…ì‹¤ ë²„í¼ í™œìš©
+	//   2-1. ì˜ˆë¥¼ ë“¤ì–´ ê±°ìš¸ì´ ìžˆëŠ” ë°©ì„ ë§Œë“¤ ë•Œ, ê±°ìš¸ ë¶€ë¶„ì˜ ìŠ¤í…ì‹¤ ë²„í¼ë¥¼ ë¹„ìš°ëŠ” ê²ƒ
+	// ìœ„ì˜ ë‘ ê°€ì§€ ëª©ì ì„ ìœ„í•˜ì—¬ ìƒì„±í•œë‹¤.
 }
 
-// Textures¿¡ ÀúÀåµÈ ·»´õ Å¸°Ù ºäµéÀ» ¸ðµÎ Å¬¸®¾î
+// Texturesì— ì €ìž¥ëœ ë Œë” íƒ€ê²Ÿ ë·°ë“¤ì„ ëª¨ë‘ í´ë¦¬ì–´
 void Ext_DirectXRenderTarget::RenderTargetViewsClear()
 {
 	for (size_t i = 0; i < Textures.size(); i++)
@@ -76,30 +76,30 @@ void Ext_DirectXRenderTarget::RenderTargetViewsClear()
 
 			if (nullptr == RTV)
 			{
-				MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ·£´õÅ¸°Ùºä¸¦ Å¬¸®¾îÇÒ ¼ö´Â ¾øÀ½");
+				MsgAssert("ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ëžœë”íƒ€ê²Ÿë·°ë¥¼ í´ë¦¬ì–´í•  ìˆ˜ëŠ” ì—†ìŒ");
 				return;
 			}
 
-			Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), Colors[i].Arr1D); // ±âº» ÄÃ·¯(ÆÄ¶õ»ö)À¸·Î Å¬¸®¾î
+			Ext_DirectXDevice::GetContext()->ClearRenderTargetView(RTV.Get(), Colors[i].Arr1D); // ê¸°ë³¸ ì»¬ëŸ¬(íŒŒëž€ìƒ‰)ìœ¼ë¡œ í´ë¦¬ì–´
 		}
 	}
 }
 
-// µª½º½ºÅÙ½Çºä Å¬¸®¾î
+// ëŽìŠ¤ìŠ¤í…ì‹¤ë·° í´ë¦¬ì–´
 void Ext_DirectXRenderTarget::DepthStencilViewClear()
 {
 	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
 
 	if (nullptr == DSV)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â µª½º½ºÅÙ½Çºä¸¦ Å¬¸®¾îÇÒ ¼ö´Â ¾øÀ½");
+		MsgAssert("ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ëŽìŠ¤ìŠ¤í…ì‹¤ë·°ë¥¼ í´ë¦¬ì–´í•  ìˆ˜ëŠ” ì—†ìŒ");
 		return;
 	}
 
 	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
-// ·»´õÅ¸°Ùºä, µª½º½ºÅÙ½Çºä Å¬¸®¾î
+// ë Œë”íƒ€ê²Ÿë·°, ëŽìŠ¤ìŠ¤í…ì‹¤ë·° í´ë¦¬ì–´
 void Ext_DirectXRenderTarget::RenderTargetClear()
 {
 	RenderTargetViewsClear();
@@ -112,7 +112,7 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 
 	if (nullptr == RTV)
 	{
-		MsgAssert("·£´õÅ¸°Ù ºä°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ Å¬¸®¾î°¡ ºÒ°¡´ÉÇÕ´Ï´Ù.");
+		MsgAssert("ëžœë”íƒ€ê²Ÿ ë·°ê°€ ì¡´ìž¬í•˜ì§€ ì•Šì•„ì„œ í´ë¦¬ì–´ê°€ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.");
 	}
 
 	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV();
@@ -124,7 +124,7 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 
 	if (nullptr == DSV)
 	{
-		MsgAssert("µª½º½ºÅÙ½Çºä ¿Ó");
+		MsgAssert("ëŽìŠ¤ìŠ¤í…ì‹¤ë·° ì™“");
 	}
 	
 	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get());

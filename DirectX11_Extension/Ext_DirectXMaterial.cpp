@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXMaterial.h"
 #include <DirectX11_Base/Base_String.h>
 
@@ -12,7 +12,7 @@ void Ext_DirectXMaterial::SetVertexShader(std::string_view _Name)
 
 	if (nullptr == VertexShader)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ¹öÅØ½º¼ÎÀÌ´õ¸¦ ¼¼ÆÃÇÒ ¼ø ¾øÀ½");
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë²„í…ìŠ¤ì…°ì´ë”ë¥¼ ì„¸íŒ…í•  ìˆœ ì—†ìŒ");
 		return;
 	}
 }
@@ -24,7 +24,7 @@ void Ext_DirectXMaterial::SetPixelShader(std::string_view _Name)
 
 	if (nullptr == PixelShader)
 	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ÇÈ¼¿ ¼ÎÀÌ´õ¸¦ ¼¼ÆÃÇÒ ¼ø ¾øÀ½");
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í”½ì…€ ì…°ì´ë”ë¥¼ ì„¸íŒ…í•  ìˆœ ì—†ìŒ");
 	}
 }
 
@@ -35,7 +35,7 @@ void Ext_DirectXMaterial::SetBlendState(std::string_view _Name)
 
 	//if (nullptr == BlendState)
 	//{
-	//	MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ºí·£µå¸¦ ¼¼ÆÃÇÏ·Á°í Çß½À´Ï´Ù.");
+	//	MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë¸”ëœë“œë¥¼ ì„¸íŒ…í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 	//	return;
 	//}
 }
@@ -47,7 +47,7 @@ void Ext_DirectXMaterial::SetDepthState(std::string_view _Name)
 
 	//if (nullptr == DepthState)
 	//{
-	//	MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ±íÀÌ¹öÆÛ ½ºÅ×ÀÌÆ®¸¦ ¼¼ÆÃÇÏ·Á°í Çß½À´Ï´Ù.");
+	//	MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê¹Šì´ë²„í¼ ìŠ¤í…Œì´íŠ¸ë¥¼ ì„¸íŒ…í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 	//	return;
 	//}
 }
@@ -59,7 +59,7 @@ void Ext_DirectXMaterial::SetRasterizer(std::string_view _Name)
 
 	//if (nullptr == Rasterizer)
 	//{
-	//	MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â ·¹½ºÅÍ¶óÀÌÀú¸¦ »ç¿ëÇÏ·Á°í Çß½À´Ï´Ù.");
+	//	MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë ˆìŠ¤í„°ë¼ì´ì €ë¥¼ ì‚¬ìš©í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 	//}
 }
 
@@ -79,7 +79,7 @@ void Ext_DirectXMaterial::VertexShaderSetting()
 {
 	if (nullptr == VertexShader)
 	{
-		MsgAssert("¹öÅØ½º ½¦ÀÌ´õ°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ¹öÅØ½º ½¦ÀÌ´õ °úÁ¤À» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("ë²„í…ìŠ¤ ì‰ì´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ë²„í…ìŠ¤ ì‰ì´ë” ê³¼ì •ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -112,7 +112,7 @@ void Ext_DirectXMaterial::RasterizerSetting()
 {
 	//if (nullptr == Rasterizer)
 	//{
-	//	MsgAssert("·¹½ºÅÍ¶óÀÌÀú°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ¼¼ÆÃÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù.");
+	//	MsgAssert("ë ˆìŠ¤í„°ë¼ì´ì €ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ì„¸íŒ…ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.");
 	//	return;
 	//}
 
@@ -124,7 +124,7 @@ void Ext_DirectXMaterial::PixelShaderSetting()
 {
 	if (nullptr == PixelShader)
 	{
-		MsgAssert("ÇÈ¼¿ ½¦ÀÌ´õ°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ÇÈ¼¿ ½¦ÀÌ´õ °úÁ¤À» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("í”½ì…€ ì‰ì´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ í”½ì…€ ì‰ì´ë” ê³¼ì •ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -135,7 +135,7 @@ void Ext_DirectXMaterial::OutputMergerSetting()
 {
 	//if (nullptr == BlendState)
 	//{
-	//	MsgAssert("ºí·£µå°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ ¾Æ¿ôÇ² ¸ÓÀú °úÁ¤À» ¿Ï·áÇÒ¼ö°¡ ¾ø½À´Ï´Ù.");
+	//	MsgAssert("ë¸”ëœë“œê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ ì•„ì›ƒí’‹ ë¨¸ì € ê³¼ì •ì„ ì™„ë£Œí• ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	//	return;
 	//}
 
@@ -143,7 +143,7 @@ void Ext_DirectXMaterial::OutputMergerSetting()
 
 	//if (nullptr == DepthState)
 	//{
-	//	MsgAssert("ºí·£µå°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ ¾Æ¿ôÇ² ¸ÓÀú °úÁ¤À» ¿Ï·áÇÒ¼ö°¡ ¾ø½À´Ï´Ù.");
+	//	MsgAssert("ë¸”ëœë“œê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ ì•„ì›ƒí’‹ ë¨¸ì € ê³¼ì •ì„ ì™„ë£Œí• ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	//	return;
 	//}
 

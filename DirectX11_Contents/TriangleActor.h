@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DirectX11_Extension/Ext_Actor.h>
 
 class TriangleActor : public Ext_Actor

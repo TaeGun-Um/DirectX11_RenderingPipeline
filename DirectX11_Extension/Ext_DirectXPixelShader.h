@@ -1,7 +1,7 @@
-#include "Ext_ResourceManager.h"
+ï»¿#include "Ext_ResourceManager.h"
 #include "Ext_DirectXShader.h"
 
-// DirectXÀÇ ÇÈ¼¿ ¼ÎÀÌ´õ ÄÄÆÄÀÏ ¹× Á¤º¸ ÀúÀåÀ» À§ÇÑ Å¬·¡½º
+// DirectXì˜ í”½ì…€ ì…°ì´ë” ì»´íŒŒì¼ ë° ì •ë³´ ì €ì¥ì„ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXPixelShader : public Ext_ResourceManager<Ext_DirectXPixelShader>, public Ext_DirectXShader
 {
 	friend class Ext_DirectXMaterial;
@@ -17,7 +17,7 @@ public:
 	Ext_DirectXPixelShader& operator=(const Ext_DirectXPixelShader& _Other) = delete;
 	Ext_DirectXPixelShader& operator=(Ext_DirectXPixelShader&& _Other) noexcept = delete;
 
-	// ÇÈ¼¿ ¼ÎÀÌ´õ »ı¼º ¹× Á¤º¸ ÀúÀå
+	// í”½ì…€ ì…°ì´ë” ìƒì„± ë° ì •ë³´ ì €ì¥
 	static std::shared_ptr<Ext_DirectXPixelShader> LoadPixelShader(std::string_view _Path, const std::string_view _EntryPoint, UINT _VersionHigh = 5, UINT _VersionLow = 0)
 	{
 		std::shared_ptr<Ext_DirectXPixelShader> NewShader = Ext_DirectXPixelShader::CreateNameResource(_EntryPoint);
@@ -29,7 +29,7 @@ protected:
 
 private:
 	void CreatePixelShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh = 5, UINT _VersionLow = 0);
-	void PixelShaderSetting(); // PixelShaderSetting() È£Ãâ
+	void PixelShaderSetting(); // PixelShaderSetting() í˜¸ì¶œ
 	
-	COMPTR<ID3D11PixelShader> PixelShader = nullptr; // »ı¼ºÇÑ ÇÈ¼¿ ¼ÎÀÌ´õ Á¤º¸ ÀúÀå¿ë
+	COMPTR<ID3D11PixelShader> PixelShader = nullptr; // ìƒì„±í•œ í”½ì…€ ì…°ì´ë” ì •ë³´ ì €ì¥ìš©
 };

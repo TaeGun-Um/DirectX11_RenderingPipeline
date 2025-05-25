@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_ResourceManager.h"
 
-// »ó¼ö ¹öÆÛ(Constant Buffer) »ı¼ºÀ» À§ÇÑ Å¬·¡½º
+// ìƒìˆ˜ ë²„í¼(Constant Buffer) ìƒì„±ì„ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXConstantBuffer : public Ext_ResourceManager<Ext_DirectXConstantBuffer>
 {
 	friend class Ext_DirectXBufferSetter;
@@ -18,7 +18,7 @@ public:
 	Ext_DirectXConstantBuffer& operator=(const Ext_DirectXConstantBuffer& _Other) = delete;
 	Ext_DirectXConstantBuffer& operator=(Ext_DirectXConstantBuffer&& _Other) noexcept = delete;
 
-	// ConstantBuffer »ı¼º
+	// ConstantBuffer ìƒì„±
 	static std::shared_ptr<Ext_DirectXConstantBuffer> CreateConstantBuffer(std::string_view _Name, const D3D11_SHADER_BUFFER_DESC& _Desc, int _Byte)
 	{
 		std::string NewName = Base_String::ToUpper(_Name.data());
@@ -41,15 +41,15 @@ public:
 protected:
 	
 private:
-	void CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc); // CreateBuffer() È£Ãâ
-	void ChangeData(const void* _Data, UINT _Size); // Map() -> memcpy_s() -> Unmap() ½Ç½Ã
-	void VSSetting(UINT _Slot); // VSSetConstantBuffers() È£Ãâ
-	void PSSetting(UINT _Slot); // PSSetConstantBuffers() È£Ãâ
-	void CSSetting(UINT _Slot); // CSSetConstantBuffers() È£Ãâ
+	void CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc); // CreateBuffer() í˜¸ì¶œ
+	void ChangeData(const void* _Data, UINT _Size); // Map() -> memcpy_s() -> Unmap() ì‹¤ì‹œ
+	void VSSetting(UINT _Slot); // VSSetConstantBuffers() í˜¸ì¶œ
+	void PSSetting(UINT _Slot); // PSSetConstantBuffers() í˜¸ì¶œ
+	void CSSetting(UINT _Slot); // CSSetConstantBuffers() í˜¸ì¶œ
 
 	static std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> ConstantBuffers;
 	static std::string Name;
-	D3D11_BUFFER_DESC ConstantBufferInfo = { 0, };  // »ó¼ö ¹öÆÛ DESC ÀúÀå¿ë
-	COMPTR<ID3D11Buffer> ConstantBuffer = nullptr;   // »ó¼ö ¹öÆÛ ÀÎÅÍÆäÀÌ½º ÀúÀå¿ë
+	D3D11_BUFFER_DESC ConstantBufferInfo = { 0, };  // ìƒìˆ˜ ë²„í¼ DESC ì €ì¥ìš©
+	COMPTR<ID3D11Buffer> ConstantBuffer = nullptr;   // ìƒìˆ˜ ë²„í¼ ì¸í„°í˜ì´ìŠ¤ ì €ì¥ìš©
 
 };

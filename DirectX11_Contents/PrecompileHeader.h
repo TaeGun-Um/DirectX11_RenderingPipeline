@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 // DirectX11_Contents PrecompileHeader
-// Contents´Â ÇÁ·¹ÀÓ¿öÅ©¿¡ ¸¸µé ±â´ÉµéÀ» DirectX11_ExtensionÀÇ ±â´ÉÀ» È°¿ëÇØ ¸¸µå´Â °÷
+// ContentsëŠ” í”„ë ˆì„ì›Œí¬ì— ë§Œë“¤ ê¸°ëŠ¥ë“¤ì„ DirectX11_Extensionì˜ ê¸°ëŠ¥ì„ í™œìš©í•´ ë§Œë“œëŠ” ê³³
 
 #include <DirectX11_Extension/PrecompileHeader.h>
 

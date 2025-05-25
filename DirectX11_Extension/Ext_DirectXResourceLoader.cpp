@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXResourceLoader.h"
 
 #include <DirectX11_Base/Base_Directory.h>
@@ -10,23 +10,23 @@
 #include "Ext_DirectXShader.h"
 #include "Ext_DirectXMaterial.h"
 
-#include "Ext_DirectXDevice.h"// ÀÓ½Ã
+#include "Ext_DirectXDevice.h"// ì„ì‹œ
 
-COMPTR<ID3D11RasterizerState> Ext_DirectXResourceLoader::RasterState; // ÀÓ½Ã
+COMPTR<ID3D11RasterizerState> Ext_DirectXResourceLoader::RasterState; // ì„ì‹œ
 
-// DirectX¿¡ ÇÊ¿äÇÑ ¸®¼Ò½º¸¦ ·Îµå
+// DirectXì— í•„ìš”í•œ ë¦¬ì†ŒìŠ¤ë¥¼ ë¡œë“œ
 void Ext_DirectXResourceLoader::Initialize()
 {
-	MakeVertex(); // Ext_DirectXVertexData Å¬·¡½ºÀÇ InputLayoutElement¿¡ SemanticName, Format °áÁ¤
+	MakeVertex(); // Ext_DirectXVertexData í´ë˜ìŠ¤ì˜ InputLayoutElementì— SemanticName, Format ê²°ì •
 	MakeSampler();
 	MakeBlend();
 	MakeDepth();
 	MakeRasterizer();
-	ShaderCompile(); // ¼ÎÀÌ´õ ÄÄÆÄÀÏ ÈÄ »ó¼ö¹öÆÛ »ı¼º
-	MakeMaterial(); // ¸ÓÆ¼¸®¾ó(ÆÄÀÌÇÁ¶óÀÎ) »ı¼º
+	ShaderCompile(); // ì…°ì´ë” ì»´íŒŒì¼ í›„ ìƒìˆ˜ë²„í¼ ìƒì„±
+	MakeMaterial(); // ë¨¸í‹°ë¦¬ì–¼(íŒŒì´í”„ë¼ì¸) ìƒì„±
 }
 
-// Á¤Á¡ Á¤º¸ »ı¼º(InputLayout, VertexBuffer, IndexBuffer)
+// ì •ì  ì •ë³´ ìƒì„±(InputLayout, VertexBuffer, IndexBuffer)
 void Ext_DirectXResourceLoader::MakeVertex() 
 {
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -34,7 +34,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	// »ï°¢Çü
+	// ì‚¼ê°í˜•
 	{
 		std::vector<Ext_DirectXVertexData> Vertices;
 		Vertices.resize(3);
@@ -50,7 +50,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Ext_DirectXMesh::CreateMesh("Triangle");
 	}
 
-	// ±âº» ¸Ş½¬ »ı¼º, Rect
+	// ê¸°ë³¸ ë©”ì‰¬ ìƒì„±, Rect
 	{
 		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
@@ -67,7 +67,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Ext_DirectXMesh::CreateMesh("Rect");
 	}
 
-	// Á¤À°¸éÃ¼
+	// ì •ìœ¡ë©´ì²´
 	{
 		std::vector<Ext_DirectXVertexData> Vertex =
 		{
@@ -127,7 +127,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("Box");
 	}
 
-	// Å×½ºÆ®¿ë
+	// í…ŒìŠ¤íŠ¸ìš©
 	{
 		float AngleDeg = 45.0f;
 		float AngleRad = AngleDeg * (3.14159265f / 180.0f);
@@ -165,12 +165,12 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	}
 }
 
-// ¼ÎÀÌ´õ Á¤º¸ »ı¼º(Shader ¿ÀÅäÄÄÆÄÀÏ, ConstantBuffer)
+// ì…°ì´ë” ì •ë³´ ìƒì„±(Shader ì˜¤í† ì»´íŒŒì¼, ConstantBuffer)
 void Ext_DirectXResourceLoader::ShaderCompile()
 {
-	// ¼ÎÀÌ´õ »ı¼º ±ÔÄ¢ : [1], [2]¸¦ ¸ğµÎ ¸¸Á·ÇØ¾ß Á¤»ó ÄÄÆÄÀÏ ÁøÇà
-	// [1] ÀÌ¸§ + "_" + "Type" == Basic_PS
-	// [2] ³»ºÎ main(EntryPoint) ÀÌ¸§µµ µ¿ÀÏÇÏ°Ô ¼³Á¤
+	// ì…°ì´ë” ìƒì„± ê·œì¹™ : [1], [2]ë¥¼ ëª¨ë‘ ë§Œì¡±í•´ì•¼ ì •ìƒ ì»´íŒŒì¼ ì§„í–‰
+	// [1] ì´ë¦„ + "_" + "Type" == Basic_PS
+	// [2] ë‚´ë¶€ main(EntryPoint) ì´ë¦„ë„ ë™ì¼í•˜ê²Œ ì„¤ì •
 	Base_Directory Dir;
 	Dir.MakePath("../Shader");
 	std::vector<std::string> Paths = Dir.GetAllFile({ "hlsl" });
@@ -200,12 +200,12 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 {
 	D3D11_RASTERIZER_DESC RasterDesc = {};
 	RasterDesc.FillMode = D3D11_FILL_SOLID;
-	RasterDesc.CullMode = D3D11_CULL_NONE;  // µŞ¸é Á¦°Å
-	RasterDesc.FrontCounterClockwise = TRUE; // CCW¸¦ ¾Õ¸éÀ¸·Î ÀÎ½Ä
+	RasterDesc.CullMode = D3D11_CULL_NONE;  // ë’·ë©´ ì œê±°
+	RasterDesc.FrontCounterClockwise = TRUE; // CCWë¥¼ ì•ë©´ìœ¼ë¡œ ì¸ì‹
 	Ext_DirectXDevice::GetDevice()->CreateRasterizerState(&RasterDesc, RasterState.GetAddressOf());
 }
 
-// ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ »ı¼º
+// ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ìƒì„±
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
 	std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");

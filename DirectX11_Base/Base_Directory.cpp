@@ -68,12 +68,12 @@ std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 	std::string Line;
 	while (std::getline(File, Line))
 	{
-		// 공백 제거
-		Line.erase(remove_if(Line.begin(), Line.end(), isspace), Line.end());
+		// 공백 제거 (안전하게 처리)
+		Line.erase(remove_if(Line.begin(), Line.end(),
+			[](char c) { return std::isspace(static_cast<unsigned char>(c)); }),
+			Line.end());
 
-		// "Basic_VS(" 혹은 "Basic_VS(" 형태로 함수 시작 찾기
 		std::string Signature = FileName + "(";
-
 		if (Line.find(Signature) != std::string::npos)
 		{
 			return FileName;

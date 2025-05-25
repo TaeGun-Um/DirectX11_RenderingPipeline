@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// DirectX¿¡ ÇÊ¿äÇÑ ResourceµéÀ» ·ÎµåÇÏ´Â Å¬·¡½º
+// DirectXì— í•„ìš”í•œ Resourceë“¤ì„ ë¡œë“œí•˜ëŠ” í´ë˜ìŠ¤
 class Ext_DirectXResourceLoader
 {
 	friend class Ext_Core;
@@ -12,18 +12,18 @@ public:
 	Ext_DirectXResourceLoader& operator=(const Ext_DirectXResourceLoader& _Other) = delete;
 	Ext_DirectXResourceLoader& operator=(Ext_DirectXResourceLoader&& _Other) noexcept = delete;
 
-	static COMPTR<ID3D11RasterizerState> RasterState; // ÀÓ½Ã
+	static COMPTR<ID3D11RasterizerState> RasterState; // ì„ì‹œ
 
 protected:
 	
 private:
-	static void Initialize();					// ÃÖÃÊ 1È¸ ½ÇÇàÇÏ¿© ¸®¼Ò½º ·Îµù
-	static void MakeVertex();			// ÀÎÇ²·¹ÀÌ¾Æ¿ô, ¹öÅØ½º ¹öÆÛ, ÀÎµ¦½º ¹öÆÛ, ¸Ş½Ã »ı¼º
-	static void MakeSampler();			// »ùÇÃ·¯ »ı¼º
-	static void MakeBlend();				// ºí·»µå »ı¼º
-	static void MakeDepth();				// µª½º »ı¼º
-	static void ShaderCompile();		// ¼ÎÀÌ´õ ¿ÀÅä ÄÄÆÄÀÏ ½Ç½Ã
-	static void MakeRasterizer();		// ·¹½ºÅÍ¶óÀÌÀú ¼¼ÆÃ
-	static void MakeMaterial();			// ¸ÓÆ¼¸®¾ó »ı¼º
+	static void Initialize();					// ìµœì´ˆ 1íšŒ ì‹¤í–‰í•˜ì—¬ ë¦¬ì†ŒìŠ¤ ë¡œë”©
+	static void MakeVertex();			// ì¸í’‹ë ˆì´ì•„ì›ƒ, ë²„í…ìŠ¤ ë²„í¼, ì¸ë±ìŠ¤ ë²„í¼, ë©”ì‹œ ìƒì„±
+	static void MakeSampler();			// ìƒ˜í”ŒëŸ¬ ìƒì„±
+	static void MakeBlend();				// ë¸”ë Œë“œ ìƒì„±
+	static void MakeDepth();				// ëìŠ¤ ìƒì„±
+	static void ShaderCompile();		// ì…°ì´ë” ì˜¤í†  ì»´íŒŒì¼ ì‹¤ì‹œ
+	static void MakeRasterizer();		// ë ˆìŠ¤í„°ë¼ì´ì € ì„¸íŒ…
+	static void MakeMaterial();			// ë¨¸í‹°ë¦¬ì–¼ ìƒì„±
 
 };

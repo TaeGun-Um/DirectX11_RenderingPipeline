@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXDevice.h"
 #include <DirectX11_Base/Base_Debug.h>
 #include <DirectX11_Base/Base_Windows.h>
@@ -11,30 +11,30 @@ COMPTR<ID3D11Device> Ext_DirectXDevice::Device = nullptr;
 COMPTR<ID3D11DeviceContext> Ext_DirectXDevice::Context = nullptr;
 COMPTR<IDXGISwapChain> Ext_DirectXDevice::SwapChain = nullptr;
 
-// DirectX11 ½ÃÀÛ
+// DirectX11 ì‹œìž‘
 void Ext_DirectXDevice::Initialize()
 {
 	if (!Base_Windows::GetHWnd())
 	{
-		MsgAssert("À©µµ¿ì ÃÊ±âÈ­ Àü¿¡´Â Initialize¸¦ ÁøÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("ìœˆë„ìš° ì´ˆê¸°í™” ì „ì—ëŠ” Initializeë¥¼ ì§„í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 	
 	int iFlag = 0;
 
 #ifdef _DEBUG
-	iFlag = D3D11_CREATE_DEVICE_DEBUG; // DirectX 11 µð¹ö±× ±â´É ¼³Á¤
+	iFlag = D3D11_CREATE_DEVICE_DEBUG; // DirectX 11 ë””ë²„ê·¸ ê¸°ëŠ¥ ì„¤ì •
 
 #endif
 	D3D_FEATURE_LEVEL Level = D3D_FEATURE_LEVEL_11_0;
 	COMPTR<IDXGIAdapter> Adapter = GetHighPerformanceAdapter();
 	if (!Adapter)
 	{
-		MsgAssert("±×·¡ÇÈÄ«µå ¾î´ðÅÍ ÀÎÅÍÆäÀÌ½º È¹µæ ½ÇÆÐ");
+		MsgAssert("ê·¸ëž˜í”½ì¹´ë“œ ì–´ëŒ‘í„° ì¸í„°íŽ˜ì´ìŠ¤ íšë“ ì‹¤íŒ¨");
 		return;
 	}
 
-	// µð¹ÙÀÌ½º, µð¹ÙÀÌ½º ÄÁÅØ½ºÆ® »ý¼º ÇÔ¼ö
+	// ë””ë°”ì´ìŠ¤, ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸ ìƒì„± í•¨ìˆ˜
 	HRESULT Hr = D3D11CreateDevice
 	(
 		/*1*/Adapter.Get(),
@@ -48,104 +48,104 @@ void Ext_DirectXDevice::Initialize()
 		/*9*/&Level,
 		/*10*/Context.GetAddressOf()
 	);
-	// <<¼³¸í>>
-	// [1] IDXGIAdapter*						: µð¹ÙÀÌ½º¸¦ ¸¸µé ¶§ »ç¿ëÇÒ ºñµð¿À ¾î´ðÅÍ¿¡ ´ëÇÑ Æ÷ÀÎÅÍ, nullptr Àü´Þ ½Ã IDXGIFactory1::EnumAdapters·Î ¿­°ÅµÈ Ã¹ ¹øÂ° ¾î´ðÅÍÀÎ ±âº»°ªÀÌ ¼³Á¤µÊ
-	// [2] D3D_DRIVER_TYPE				: µå¶óÀÌ¹ö À¯Çü ¼±ÅÃ, ¾î´ðÅÍ¸¦ Àü´ÞÇßÀ¸´Ï UNKNOWNÀ» Àü´ÞÇÏ¸é µÊ(HARDWARE == GPU »ç¿ë, REFERENCE == CPU ±â¹Ý ¼ÒÇÁÆ®¿þ¾î ±¸Çö, WARP == °í¼º´É ¼ÒÇÁÆ®¿þ¾î ±¸Çö)
-	// [3] HMODULE								: ¼ÒÇÁÆ®¿þ¾î ·¡½ºÅÍ¶óÀÌÀú¸¦ ±¸ÇöÇÏ´Â DLL¿¡ ´ëÇÑ ÇÚµé, nullptr Àü´Þ ½Ã ¼ÒÇÁÆ®¿þ¾î µå¶óÀÌ¹ö ¾øÀ½À» Àü´Þ, º¸Åë nullptrÀ» Àü´ÞÇÑ´Ù.
-	// [4] UINT									: D3D11_CREATE_DEVICE_FLAG °ª Àü´Þ, µð¹ö±× ·¹ÀÌ¾î ÇÃ·¡±×
-	// [5] const D3D_FEATURE_LEVEL   : ¸¸µå´Â ±â´É ¼öÁØÀÇ ¼ø¼­¸¦ °áÁ¤ÇÏ´Â Feature Level ¹è¿­¿¡ ´ëÇÑ Æ÷ÀÎÅÍ Àü´Þ, nullptr Àü´Þ ½Ã D3D_FEATURE_LEVEL ¹è¿­ÀÇ Ã¹ ¹øÂ° °ªÀÌ ¹ÝÈ¯µÊ
-	// [6] UINT									: [5]¿¡ ´ëÇÑ ¹è¿­ ¿ä¼ÒÀÇ °³¼ö
-	// [7] UINT									: SDK ¹öÀü, ¹«Á¶°Ç D3D11_SDK_VERSION·Î Àü´Þ
-	// [8] ID3D11Device**					: ¸¸µç µð¹ÙÀÌ½º¸¦ ¹ÝÈ¯ÇØÁÖ´Ï ¹ÞÀ¸¸é µÊ
-	// [9] D3D_FEATURE_LEVEL*			: ½ÇÁ¦·Î »ý¼ºµÈ µð¹ÙÀÌ½ºÀÇ ±â´É ¼öÁØ ¹ÝÈ¯, Ã¹ ¹øÂ° D3D_FEATURE_LEVEL ¹ÝÈ¯ÇØÁÜ
-	// [10] ID3D11DeviceContext**		: µð¹ÙÀÌ½ºÄÁÅØ½ºÆ® ¹ÝÈ¯ÇØÁÖ´Ï ¹ÞÀ¸¸é µÊ
+	// <<ì„¤ëª…>>
+	// [1] IDXGIAdapter*						: ë””ë°”ì´ìŠ¤ë¥¼ ë§Œë“¤ ë•Œ ì‚¬ìš©í•  ë¹„ë””ì˜¤ ì–´ëŒ‘í„°ì— ëŒ€í•œ í¬ì¸í„°, nullptr ì „ë‹¬ ì‹œ IDXGIFactory1::EnumAdaptersë¡œ ì—´ê±°ëœ ì²« ë²ˆì§¸ ì–´ëŒ‘í„°ì¸ ê¸°ë³¸ê°’ì´ ì„¤ì •ë¨
+	// [2] D3D_DRIVER_TYPE				: ë“œë¼ì´ë²„ ìœ í˜• ì„ íƒ, ì–´ëŒ‘í„°ë¥¼ ì „ë‹¬í–ˆìœ¼ë‹ˆ UNKNOWNì„ ì „ë‹¬í•˜ë©´ ë¨(HARDWARE == GPU ì‚¬ìš©, REFERENCE == CPU ê¸°ë°˜ ì†Œí”„íŠ¸ì›¨ì–´ êµ¬í˜„, WARP == ê³ ì„±ëŠ¥ ì†Œí”„íŠ¸ì›¨ì–´ êµ¬í˜„)
+	// [3] HMODULE								: ì†Œí”„íŠ¸ì›¨ì–´ ëž˜ìŠ¤í„°ë¼ì´ì €ë¥¼ êµ¬í˜„í•˜ëŠ” DLLì— ëŒ€í•œ í•¸ë“¤, nullptr ì „ë‹¬ ì‹œ ì†Œí”„íŠ¸ì›¨ì–´ ë“œë¼ì´ë²„ ì—†ìŒì„ ì „ë‹¬, ë³´í†µ nullptrì„ ì „ë‹¬í•œë‹¤.
+	// [4] UINT									: D3D11_CREATE_DEVICE_FLAG ê°’ ì „ë‹¬, ë””ë²„ê·¸ ë ˆì´ì–´ í”Œëž˜ê·¸
+	// [5] const D3D_FEATURE_LEVEL   : ë§Œë“œëŠ” ê¸°ëŠ¥ ìˆ˜ì¤€ì˜ ìˆœì„œë¥¼ ê²°ì •í•˜ëŠ” Feature Level ë°°ì—´ì— ëŒ€í•œ í¬ì¸í„° ì „ë‹¬, nullptr ì „ë‹¬ ì‹œ D3D_FEATURE_LEVEL ë°°ì—´ì˜ ì²« ë²ˆì§¸ ê°’ì´ ë°˜í™˜ë¨
+	// [6] UINT									: [5]ì— ëŒ€í•œ ë°°ì—´ ìš”ì†Œì˜ ê°œìˆ˜
+	// [7] UINT									: SDK ë²„ì „, ë¬´ì¡°ê±´ D3D11_SDK_VERSIONë¡œ ì „ë‹¬
+	// [8] ID3D11Device**					: ë§Œë“  ë””ë°”ì´ìŠ¤ë¥¼ ë°˜í™˜í•´ì£¼ë‹ˆ ë°›ìœ¼ë©´ ë¨
+	// [9] D3D_FEATURE_LEVEL*			: ì‹¤ì œë¡œ ìƒì„±ëœ ë””ë°”ì´ìŠ¤ì˜ ê¸°ëŠ¥ ìˆ˜ì¤€ ë°˜í™˜, ì²« ë²ˆì§¸ D3D_FEATURE_LEVEL ë°˜í™˜í•´ì¤Œ
+	// [10] ID3D11DeviceContext**		: ë””ë°”ì´ìŠ¤ì»¨í…ìŠ¤íŠ¸ ë°˜í™˜í•´ì£¼ë‹ˆ ë°›ìœ¼ë©´ ë¨
 	
-	// Feature LevelÀº DirectX¿¡¼­ GPU°¡ Áö¿øÇÏ´Â ±â´ÉÀ» ´Ü°èº°·Î ±¸ºÐÇÑ °ÍÀÌ´Ù. -> ÀÌ ±×·¡ÇÈÄ«µå°¡ ¾ó¸¶³ª ÃÖ½Å ±â¼úÀ» ¾µ ¼ö ÀÖ´Â°¡?
-	// DirectX11À» »ç¿ëÇÏ°í ½Í¾îµµ GPU°¡ ±â´É Áö¿ø ¾ÈÇÏ¸é ¾ÈµÇ±â¶§¹®¿¡, ÀÌ°É·Î ¹Þ¾Æ¼­ È®ÀÎÇØº¸¸é µÈ´Ù.
+	// Feature Levelì€ DirectXì—ì„œ GPUê°€ ì§€ì›í•˜ëŠ” ê¸°ëŠ¥ì„ ë‹¨ê³„ë³„ë¡œ êµ¬ë¶„í•œ ê²ƒì´ë‹¤. -> ì´ ê·¸ëž˜í”½ì¹´ë“œê°€ ì–¼ë§ˆë‚˜ ìµœì‹  ê¸°ìˆ ì„ ì“¸ ìˆ˜ ìžˆëŠ”ê°€?
+	// DirectX11ì„ ì‚¬ìš©í•˜ê³  ì‹¶ì–´ë„ GPUê°€ ê¸°ëŠ¥ ì§€ì› ì•ˆí•˜ë©´ ì•ˆë˜ê¸°ë•Œë¬¸ì—, ì´ê±¸ë¡œ ë°›ì•„ì„œ í™•ì¸í•´ë³´ë©´ ëœë‹¤.
 
 	if (S_OK != Hr)
 	{
-		MsgAssert("µð¹ÙÀÌ½º »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		MsgAssert("ë””ë°”ì´ìŠ¤ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
-	// ¾î´ðÅÍ ´Ù½èÀ¸¸é ÇØÁ¦
+	// ì–´ëŒ‘í„° ë‹¤ì¼ìœ¼ë©´ í•´ì œ
 	if (nullptr != Adapter)
 	{
 		Adapter.Reset();
 	}
 
-	// DirectX11·Î ÃÊ±âÈ­µÈ°Ô ¾Æ´Ï¶ó¸é ÇØ´ç ¾î´ðÅÍ´Â DirectX11À» Áö¿øÇÏÁö ¾Ê´Â ±×·¡ÇÈÄ«µåÀÓ
+	// DirectX11ë¡œ ì´ˆê¸°í™”ëœê²Œ ì•„ë‹ˆë¼ë©´ í•´ë‹¹ ì–´ëŒ‘í„°ëŠ” DirectX11ì„ ì§€ì›í•˜ì§€ ì•ŠëŠ” ê·¸ëž˜í”½ì¹´ë“œìž„
 	if (Level != D3D_FEATURE_LEVEL_11_0)
 	{
-		MsgAssert("´ÙÀÌ·ºÆ® 11À» Áö¿øÇÏÁö ¾Ê´Â ±×·¡ÇÈÄ«µå ÀÔ´Ï´Ù");
+		MsgAssert("ë‹¤ì´ë ‰íŠ¸ 11ì„ ì§€ì›í•˜ì§€ ì•ŠëŠ” ê·¸ëž˜í”½ì¹´ë“œ ìž…ë‹ˆë‹¤");
 		return;
 	}
 
-	Hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED); // ¸ÖÆ¼½º·¹µå »ç¿ë ¼³Á¤
-	CreateSwapChain(); // ½º¿ÒÃ¼ÀÎ »ý¼º
+	Hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED); // ë©€í‹°ìŠ¤ë ˆë“œ ì‚¬ìš© ì„¤ì •
+	CreateSwapChain(); // ìŠ¤ì™‘ì²´ì¸ ìƒì„±
 }
 
-// ±×·¡ÇÈÄ«µå Á¤º¸ °¡Á®¿À±â
+// ê·¸ëž˜í”½ì¹´ë“œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
 COMPTR<IDXGIAdapter> Ext_DirectXDevice::GetHighPerformanceAdapter()
 {
 	COMPTR<IDXGIFactory> Factory = nullptr;
 	COMPTR<IDXGIAdapter> Adapter = nullptr;
 
-	// ÆÑÅä¸® »ý¼º
+	// íŒ©í† ë¦¬ ìƒì„±
 	HRESULT HR = CreateDXGIFactory
 	(
-		__uuidof(IDXGIFactory),				// [1] »ý¼ºÇÒ ÀÎÅÍÆäÀÌ½ºÀÇ GUID¸¦ ÁöÁ¤, IDXGIFactory´Â DXGI ÆÑÅä¸® ÀÎÅÍÆäÀÌ½ºÀÌ¸ç __uuidof´Â ÄÄÆÄÀÏ Å¸ÀÓ¿¡ GUID¸¦ ÃßÃâÇÏ´Â ¸ÅÅ©·Î
-		(void**)Factory.GetAddressOf()	// [2] °á°ú·Î »ý¼ºµÈ IDXGIFactory °´Ã¼¸¦ ¹ÞÀ» Æ÷ÀÎÅÍ¸¦ Àü´Þ
+		__uuidof(IDXGIFactory),				// [1] ìƒì„±í•  ì¸í„°íŽ˜ì´ìŠ¤ì˜ GUIDë¥¼ ì§€ì •, IDXGIFactoryëŠ” DXGI íŒ©í† ë¦¬ ì¸í„°íŽ˜ì´ìŠ¤ì´ë©° __uuidofëŠ” ì»´íŒŒì¼ íƒ€ìž„ì— GUIDë¥¼ ì¶”ì¶œí•˜ëŠ” ë§¤í¬ë¡œ
+		(void**)Factory.GetAddressOf()	// [2] ê²°ê³¼ë¡œ ìƒì„±ëœ IDXGIFactory ê°ì²´ë¥¼ ë°›ì„ í¬ì¸í„°ë¥¼ ì „ë‹¬
 	);
 
 	if (nullptr == Factory)
 	{
-		MsgAssert("±×·¡ÇÈÄ«µå¿¡¼­ ÆÑÅä¸® ÀÎÅÍÆäÀÌ½º¸¦ »ý¼ºÇÏÁö ¸øÇß½À´Ï´Ù.");
+		MsgAssert("ê·¸ëž˜í”½ì¹´ë“œì—ì„œ íŒ©í† ë¦¬ ì¸í„°íŽ˜ì´ìŠ¤ë¥¼ ìƒì„±í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		return COMPTR<IDXGIAdapter>();
 	}
 
-	// ¿©·¯ GPU Áß¿¡¼­, "°¡Àå ¸¹Àº Àü¿ë ºñµð¿À ¸Þ¸ð¸®(DedicatedVideoMemory)"¸¦ °¡Áø ¾î´ðÅÍ¸¦ ¼±ÅÃ
+	// ì—¬ëŸ¬ GPU ì¤‘ì—ì„œ, "ê°€ìž¥ ë§Žì€ ì „ìš© ë¹„ë””ì˜¤ ë©”ëª¨ë¦¬(DedicatedVideoMemory)"ë¥¼ ê°€ì§„ ì–´ëŒ‘í„°ë¥¼ ì„ íƒ
 	size_t prevAdapterVideoMemory = 0;
 	for (UINT Adapterindex = 0; ; Adapterindex++)
 	{
 		COMPTR<IDXGIAdapter> CurAdapter = nullptr;
-		Factory->EnumAdapters(Adapterindex, CurAdapter.GetAddressOf()); // DXGI ÆÑÅä¸®¸¦ ÅëÇØ ¾î´ðÅÍ¸¦ ÇÏ³ª ¾òÀ½
+		Factory->EnumAdapters(Adapterindex, CurAdapter.GetAddressOf()); // DXGI íŒ©í† ë¦¬ë¥¼ í†µí•´ ì–´ëŒ‘í„°ë¥¼ í•˜ë‚˜ ì–»ìŒ
 
-		if (nullptr == CurAdapter) // ¾î´ðÅÍ°¡ ´õ ÀÌ»ó ¾øÀ¸¸é ·çÇÁ Á¾·á
+		if (nullptr == CurAdapter) // ì–´ëŒ‘í„°ê°€ ë” ì´ìƒ ì—†ìœ¼ë©´ ë£¨í”„ ì¢…ë£Œ
 		{
 			break;
 		}
 
 		DXGI_ADAPTER_DESC Desc;
-		CurAdapter->GetDesc(&Desc); // ÇöÀç ¾î´ðÅÍÀÇ Á¤º¸¸¦ DXGI_ADAPTER_DESC¿¡ Ã¤¿ò
+		CurAdapter->GetDesc(&Desc); // í˜„ìž¬ ì–´ëŒ‘í„°ì˜ ì •ë³´ë¥¼ DXGI_ADAPTER_DESCì— ì±„ì›€
 
-		if (prevAdapterVideoMemory <= Desc.DedicatedVideoMemory) // ÀÌÀü¿¡ ¼±ÅÃµÈ ¾î´ðÅÍº¸´Ù ¸Þ¸ð¸®°¡ °°°Å³ª ¸¹´Ù¸é °»½Å
+		if (prevAdapterVideoMemory <= Desc.DedicatedVideoMemory) // ì´ì „ì— ì„ íƒëœ ì–´ëŒ‘í„°ë³´ë‹¤ ë©”ëª¨ë¦¬ê°€ ê°™ê±°ë‚˜ ë§Žë‹¤ë©´ ê°±ì‹ 
 		{
 			prevAdapterVideoMemory = Desc.DedicatedVideoMemory;
 
 			if (nullptr != Adapter)
 			{
-				Adapter.Reset(); // ÀÌÀü ¾î´ðÅÍ ¸Þ¸ð¸® ÇØÁ¦
+				Adapter.Reset(); // ì´ì „ ì–´ëŒ‘í„° ë©”ëª¨ë¦¬ í•´ì œ
 			}
 
-			Adapter = CurAdapter; // ÇöÀç ¾î´ðÅÍ¸¦ ÃÖÁ¾ ÈÄº¸·Î ÀúÀå
+			Adapter = CurAdapter; // í˜„ìž¬ ì–´ëŒ‘í„°ë¥¼ ìµœì¢… í›„ë³´ë¡œ ì €ìž¥
 			continue;
 		}
 
-		CurAdapter.Reset(); // »ç¿ë ÈÄ ¹Ýµå½Ã Release
+		CurAdapter.Reset(); // ì‚¬ìš© í›„ ë°˜ë“œì‹œ Release
 	}
 
-	Factory.Reset(); // »ç¿ë ÈÄ ¹Ýµå½Ã Release ÇØÁÖµµ·Ï ÇÑ´Ù.
+	Factory.Reset(); // ì‚¬ìš© í›„ ë°˜ë“œì‹œ Release í•´ì£¼ë„ë¡ í•œë‹¤.
 
 	return Adapter;
 }
 
-// ½º¿ÒÃ¼ÀÎ »ý¼º
+// ìŠ¤ì™‘ì²´ì¸ ìƒì„±
 void Ext_DirectXDevice::CreateSwapChain()
 {
 	float4 ScreenSize = Base_Windows::GetScreenSize();
-	DXGI_SWAP_CHAIN_DESC SwapChainDesc = { 0, }; // DXGI_SWAP_CHAIN_DESC ±¸Á¶Ã¼ »ý¼º
+	DXGI_SWAP_CHAIN_DESC SwapChainDesc = { 0, }; // DXGI_SWAP_CHAIN_DESC êµ¬ì¡°ì²´ ìƒì„±
 
 	/*1*/SwapChainDesc.BufferCount = 2;
 	/*2*/SwapChainDesc.BufferDesc.Width = ScreenSize.uix();
@@ -162,93 +162,93 @@ void Ext_DirectXDevice::CreateSwapChain()
 	/*13*/SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	/*14*/SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	/*15*/SwapChainDesc.Windowed = true;
-	// <<¼³¸í>>
-	// [1] : ´õºí ¹öÆÛ¸µ »ç¿ë, GPU°¡ ÇÏ³ªÀÇ ¹öÆÛ¿¡ ·»´õ¸µÇÏ´Â µ¿¾È ´Ù¸¥ ÇÏ³ª´Â È­¸é¿¡ Ç¥½ÃÇÏ¿© ±ôºýÀÓ°ú Æ¼¾î¸µ ¹æÁö
-	// [2] : ½º¿ÒÃ¼ÀÎ ¹öÆÛ ÇØ»óµµ ¼³Á¤(³Êºñ)
-	// [3] : ½º¿ÒÃ¼ÀÎ ¹öÆÛ ÇØ»óµµ ¼³Á¤(³ôÀÌ)
-	// [4] : ·»´õ¸µ °á°ú¸¦ Ãâ·ÂÇÒ À©µµ¿ìÀÇ ÇÚµé ¼³Á¤, CreateWindow()·Î ¸¸µç Ã¢ÀÇ ÇÚµé(ÇöÀç ½ÇÇàÇÏ´Â ÇÁ·Î¼¼½º ÇÚµé ³Ö¾îÁÜ)
-	// [5] : È­¸é ÁÖ»çÀ² ¼³Á¤, ¿©±â¼­ 1
-	// [6] : È­¸é ÁÖ»çÀ² ¼³Á¤, ¿©±â¼­ 60, ÀÌ·¯¸é Numerator/ Denominator°¡ µÇ¾î 60 / 1 = 60Hz·Î ¼³Á¤µÊ
-	// [7] : ÇÈ¼¿ Æ÷¸ä ¼³Á¤, DXGI_FORMAT_R8G8B8A8_UNORM´Â °¢ RGBA Ã¤³ÎÀÌ 8bitÀÌ¸ç 0~255 ¹üÀ§ÀÇ Á¤±ÔÈ­ µÈ °ªÀ» °¡Áü
-	// [8] : ½ºÄµ¶óÀÎ ¼ø¼­¸¦ ¸í½ÃÇÏÁö ¾Ê´Â´Ù´Â ¶æÀ¸·Î ±âº» ¼³Á¤ÇÏ¶ó°í Àü´Þ
-	// [9] : È­¸é È®´ë/Ãà¼Ò ¸ðµå ¼³Á¤, DXGI_MODE_SCALING_UNSPECIFIED´Â µð½ºÇÃ·¹ÀÌ ±âº» ¼³Á¤À» µû¸¥´Ù´Â ¶æÀÌ´Ù.
-	// [10] : ÇØ´ç ½º¿Ò Ã¼ÀÎÀ» ·»´õ Å¸°ÙÀ¸·Î »ç¿ëÇÏ°í, ½¦ÀÌ´õµµ ÇØ´ç ¿É¼ÇÀ» »ç¿ëÇÏµµ·Ï ¼³Á¤
-	// [11] : Count°¡ 1ÀÌ¸é ¾ÈÆ¼¾Ù¸®¾î½Ì »ç¿ë ¾ÈÇÑ´Ù´Â ¶æ
-	// [12] : ¸ÖÆ¼ »ùÇÃ¸µ(MSAA) ºñÈ°¼ºÈ­
-	// [13] : ÃÖ½Å ¹æ½ÄÀÇ ÇÃ¸³ Ã¼ÀÎ »ç¿ëÇÑ´Ù´Â ¶æ
-	// [14] : ÀüÃ¼È­¸é ÀüÈ¯ ½Ã ÇØ»óµµ º¯°æÀ» Çã¿ëÇÒ °ÍÀÎÁö, ÇØ´ç ÇÁ·ÎÁ§Æ®´Â ¾È¾²µµ·Ï ¼³Á¤
-	// [15] : Ã¢¸ðµå ¼³Á¤(false´Â ÀüÃ¼È­¸é ¸ðµå)
+	// <<ì„¤ëª…>>
+	// [1] : ë”ë¸” ë²„í¼ë§ ì‚¬ìš©, GPUê°€ í•˜ë‚˜ì˜ ë²„í¼ì— ë Œë”ë§í•˜ëŠ” ë™ì•ˆ ë‹¤ë¥¸ í•˜ë‚˜ëŠ” í™”ë©´ì— í‘œì‹œí•˜ì—¬ ê¹œë¹¡ìž„ê³¼ í‹°ì–´ë§ ë°©ì§€
+	// [2] : ìŠ¤ì™‘ì²´ì¸ ë²„í¼ í•´ìƒë„ ì„¤ì •(ë„ˆë¹„)
+	// [3] : ìŠ¤ì™‘ì²´ì¸ ë²„í¼ í•´ìƒë„ ì„¤ì •(ë†’ì´)
+	// [4] : ë Œë”ë§ ê²°ê³¼ë¥¼ ì¶œë ¥í•  ìœˆë„ìš°ì˜ í•¸ë“¤ ì„¤ì •, CreateWindow()ë¡œ ë§Œë“  ì°½ì˜ í•¸ë“¤(í˜„ìž¬ ì‹¤í–‰í•˜ëŠ” í”„ë¡œì„¸ìŠ¤ í•¸ë“¤ ë„£ì–´ì¤Œ)
+	// [5] : í™”ë©´ ì£¼ì‚¬ìœ¨ ì„¤ì •, ì—¬ê¸°ì„œ 1
+	// [6] : í™”ë©´ ì£¼ì‚¬ìœ¨ ì„¤ì •, ì—¬ê¸°ì„œ 60, ì´ëŸ¬ë©´ Numerator/ Denominatorê°€ ë˜ì–´ 60 / 1 = 60Hzë¡œ ì„¤ì •ë¨
+	// [7] : í”½ì…€ í¬ë©§ ì„¤ì •, DXGI_FORMAT_R8G8B8A8_UNORMëŠ” ê° RGBA ì±„ë„ì´ 8bitì´ë©° 0~255 ë²”ìœ„ì˜ ì •ê·œí™” ëœ ê°’ì„ ê°€ì§
+	// [8] : ìŠ¤ìº”ë¼ì¸ ìˆœì„œë¥¼ ëª…ì‹œí•˜ì§€ ì•ŠëŠ”ë‹¤ëŠ” ëœ»ìœ¼ë¡œ ê¸°ë³¸ ì„¤ì •í•˜ë¼ê³  ì „ë‹¬
+	// [9] : í™”ë©´ í™•ëŒ€/ì¶•ì†Œ ëª¨ë“œ ì„¤ì •, DXGI_MODE_SCALING_UNSPECIFIEDëŠ” ë””ìŠ¤í”Œë ˆì´ ê¸°ë³¸ ì„¤ì •ì„ ë”°ë¥¸ë‹¤ëŠ” ëœ»ì´ë‹¤.
+	// [10] : í•´ë‹¹ ìŠ¤ì™‘ ì²´ì¸ì„ ë Œë” íƒ€ê²Ÿìœ¼ë¡œ ì‚¬ìš©í•˜ê³ , ì‰ì´ë”ë„ í•´ë‹¹ ì˜µì…˜ì„ ì‚¬ìš©í•˜ë„ë¡ ì„¤ì •
+	// [11] : Countê°€ 1ì´ë©´ ì•ˆí‹°ì•¨ë¦¬ì–´ì‹± ì‚¬ìš© ì•ˆí•œë‹¤ëŠ” ëœ»
+	// [12] : ë©€í‹° ìƒ˜í”Œë§(MSAA) ë¹„í™œì„±í™”
+	// [13] : ìµœì‹  ë°©ì‹ì˜ í”Œë¦½ ì²´ì¸ ì‚¬ìš©í•œë‹¤ëŠ” ëœ»
+	// [14] : ì „ì²´í™”ë©´ ì „í™˜ ì‹œ í•´ìƒë„ ë³€ê²½ì„ í—ˆìš©í•  ê²ƒì¸ì§€, í•´ë‹¹ í”„ë¡œì íŠ¸ëŠ” ì•ˆì“°ë„ë¡ ì„¤ì •
+	// [15] : ì°½ëª¨ë“œ ì„¤ì •(falseëŠ” ì „ì²´í™”ë©´ ëª¨ë“œ)
 
 	COMPTR<IDXGIDevice> SwapDevice = nullptr;
 	COMPTR<IDXGIAdapter> SwapAdapter = nullptr;
 	COMPTR<IDXGIFactory> SwapFactory = nullptr;
 
-	// µð¹ÙÀÌ½º Äõ¸®ÀÎÅÍÆäÀÌ½º¿¡¼­ SwapDevice °ª º¹»ç
+	// ë””ë°”ì´ìŠ¤ ì¿¼ë¦¬ì¸í„°íŽ˜ì´ìŠ¤ì—ì„œ SwapDevice ê°’ ë³µì‚¬
 	Device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(SwapDevice.GetAddressOf()));
 	if (nullptr == SwapDevice)
 	{
-		MsgAssert("DXGI µð¹ÙÀÌ½º¸¦ DirectXµð¹ÙÀÌ½º¿¡¼­ ¾ò¾î¿ÀÁö ¸øÇß½À´Ï´Ù.");
+		MsgAssert("DXGI ë””ë°”ì´ìŠ¤ë¥¼ DirectXë””ë°”ì´ìŠ¤ì—ì„œ ì–»ì–´ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
-	// SwapDevice¿¡¼­ SwapAdapter °ª º¹»ç
+	// SwapDeviceì—ì„œ SwapAdapter ê°’ ë³µì‚¬
 	SwapDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(SwapAdapter.GetAddressOf()));
 	if (nullptr == SwapAdapter)
 	{
-		MsgAssert("DXGI µð¹ÙÀÌ½º¸¦ DirectXµð¹ÙÀÌ½º¿¡¼­ ¾ò¾î¿ÀÁö ¸øÇß½À´Ï´Ù.");
+		MsgAssert("DXGI ë””ë°”ì´ìŠ¤ë¥¼ DirectXë””ë°”ì´ìŠ¤ì—ì„œ ì–»ì–´ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
-	// SwapAdapter¿¡¼­ SwapFactory °ªÀ» º¹»çÇÑ µÚ, ±×·ÎºÎÅÍ ½º¿ÒÃ¼ÀÎÀ» »ý¼ºÇÔ
+	// SwapAdapterì—ì„œ SwapFactory ê°’ì„ ë³µì‚¬í•œ ë’¤, ê·¸ë¡œë¶€í„° ìŠ¤ì™‘ì²´ì¸ì„ ìƒì„±í•¨
 	SwapAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(SwapFactory.GetAddressOf()));
 	if (S_OK != SwapFactory->CreateSwapChain(Device.Get(), &SwapChainDesc, SwapChain.GetAddressOf()))
 	{
-		MsgAssert("½º¿ÒÃ¼ÀÎ »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		MsgAssert("ìŠ¤ì™‘ì²´ì¸ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
-	// »ç¿ë ÈÄ ¹Ýµå½Ã Release
+	// ì‚¬ìš© í›„ ë°˜ë“œì‹œ Release
 	SwapDevice.Reset();
 	SwapAdapter.Reset();
 	SwapFactory.Reset();
 
-	// ¹é¹öÆÛÀÇ Æ÷ÀÎÅÍ¸¦ ¾ò¾î¿À´Â °úÁ¤À» ÅëÇØ ½º¿ÒÃ¼ÀÎÀÌ Á¤»óÀûÀ¸·Î »ý¼ºµÆ´ÂÁö È®ÀÎÇÒ ¼ö ÀÖÀ½
+	// ë°±ë²„í¼ì˜ í¬ì¸í„°ë¥¼ ì–»ì–´ì˜¤ëŠ” ê³¼ì •ì„ í†µí•´ ìŠ¤ì™‘ì²´ì¸ì´ ì •ìƒì ìœ¼ë¡œ ìƒì„±ëëŠ”ì§€ í™•ì¸í•  ìˆ˜ ìžˆìŒ
 	COMPTR<ID3D11Texture2D> SwapBackBufferTexture = nullptr;
 	if (S_OK != SwapChain.Get()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(SwapBackBufferTexture.GetAddressOf())))
 	{
-		MsgAssert("½º¿ÒÃ¼ÀÎ »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		MsgAssert("ìŠ¤ì™‘ì²´ì¸ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
-	// ½º¿ÒÃ¼ÀÎÀº ³»ºÎÀûÀ¸·Î ¿©·¯ °³ÀÇ ¹öÆÛ¸¦ °ü¸®ÇÏ´Âµ¥, ±× Áß 0¹øÂ° ¹öÆÛ(È­¸é¿¡ ±×¸± ¹é¹öÆÛ)¸¦ ID3D11Texture2D·Î °¡Á®¿Ã ¼ö ÀÖ´Ù.
-	// ¹é¹öÆÛ¿¡ Á÷Á¢ ±×¸®·Á¸é ·»´õÅ¸°Ùºä°¡ ÇÊ¿äÇÏ°í, ÀÌ ·»´õÅ¸°Ùºä¸¦ ¸¸µå·Á¸é ID3D11Texture2D°¡ ÇÊ¿ä
+	// ìŠ¤ì™‘ì²´ì¸ì€ ë‚´ë¶€ì ìœ¼ë¡œ ì—¬ëŸ¬ ê°œì˜ ë²„í¼ë¥¼ ê´€ë¦¬í•˜ëŠ”ë°, ê·¸ ì¤‘ 0ë²ˆì§¸ ë²„í¼(í™”ë©´ì— ê·¸ë¦´ ë°±ë²„í¼)ë¥¼ ID3D11Texture2Dë¡œ ê°€ì ¸ì˜¬ ìˆ˜ ìžˆë‹¤.
+	// ë°±ë²„í¼ì— ì§ì ‘ ê·¸ë¦¬ë ¤ë©´ ë Œë”íƒ€ê²Ÿë·°ê°€ í•„ìš”í•˜ê³ , ì´ ë Œë”íƒ€ê²Ÿë·°ë¥¼ ë§Œë“œë ¤ë©´ ID3D11Texture2Dê°€ í•„ìš”
 
-	// ¹é¹öÆÛ Æ÷ÀÎÅÍ(ID3D11Texture2D)·Î ·£´õÅ¸°Ùºä »ý¼º
+	// ë°±ë²„í¼ í¬ì¸í„°(ID3D11Texture2D)ë¡œ ëžœë”íƒ€ê²Ÿë·° ìƒì„±
 	std::shared_ptr<Ext_DirectXTexture> BackBufferTexture = std::make_shared<Ext_DirectXTexture>();
 	BackBufferTexture->CreateRenderTargetView(SwapBackBufferTexture);
-	// Swap Chain »ý¼º -> Swap Chain ¾È¿¡¼­ ¹é¹öÆÛ(½º¿Ò Ã¼ÀÎ ÅØ½ºÃ³, 2D ÅØ½ºÃ³ÀÓ)¸¦ ²¨³»¿È -> ²¨³»¿Â ¹é¹öÆÛ¸¦ °¡Áö°í ·£´õÅ¸°Ùºä¶ó´Â ¿ÀºêÁ§Æ®¿¡ ¹Ù¿îµù
-	// ·»´õÅ¸°Ùºä¿¡ °ÔÀÓ È­¸éÀ» ·»´õ¸µÇÑ´Ù´Â °ÍÀº ¹é¹öÆÛ¿¡ ·»´õ¸µÇÏ´Â °Í°ú °°´Ù.
-	// ¹é ¹öÆÛ¿¡ ¸ðµç È­¸éÀ» ·»´õ¸µÇÏ°í ³­ ´ÙÀ½¿¡´Â SwapChainÀ» ÅëÇØ ¹é¹öÆÛ¸¦ È­¸é¿¡ ±×¸®¸é µÇ´Â °ÍÀÌ´Ù.
+	// Swap Chain ìƒì„± -> Swap Chain ì•ˆì—ì„œ ë°±ë²„í¼(ìŠ¤ì™‘ ì²´ì¸ í…ìŠ¤ì²˜, 2D í…ìŠ¤ì²˜ìž„)ë¥¼ êº¼ë‚´ì˜´ -> êº¼ë‚´ì˜¨ ë°±ë²„í¼ë¥¼ ê°€ì§€ê³  ëžœë”íƒ€ê²Ÿë·°ë¼ëŠ” ì˜¤ë¸Œì íŠ¸ì— ë°”ìš´ë”©
+	// ë Œë”íƒ€ê²Ÿë·°ì— ê²Œìž„ í™”ë©´ì„ ë Œë”ë§í•œë‹¤ëŠ” ê²ƒì€ ë°±ë²„í¼ì— ë Œë”ë§í•˜ëŠ” ê²ƒê³¼ ê°™ë‹¤.
+	// ë°± ë²„í¼ì— ëª¨ë“  í™”ë©´ì„ ë Œë”ë§í•˜ê³  ë‚œ ë‹¤ìŒì—ëŠ” SwapChainì„ í†µí•´ ë°±ë²„í¼ë¥¼ í™”ë©´ì— ê·¸ë¦¬ë©´ ë˜ëŠ” ê²ƒì´ë‹¤.
 
-	// ¸ÞÀÎÀ¸·Î »ç¿ëÇÒ ·£´õÅ¸°Ù »ý¼º
+	// ë©”ì¸ìœ¼ë¡œ ì‚¬ìš©í•  ëžœë”íƒ€ê²Ÿ ìƒì„±
 	MainRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget("MainRenderTarget", BackBufferTexture, { 0.0f, 0.0f, 1.0f, 1.0f });
-	MainRenderTarget->CreateDepthTexture(); // ±íÀÌ¿Í ½ºÅÙ½Ç Á¤º¸¸¦ À§ÇÑ µª½ºÅØ½ºÃÄ »ý¼º
+	MainRenderTarget->CreateDepthTexture(); // ê¹Šì´ì™€ ìŠ¤í…ì‹¤ ì •ë³´ë¥¼ ìœ„í•œ ëŽìŠ¤í…ìŠ¤ì³ ìƒì„±
 }
 
-// MeshComponent Render ¾÷µ¥ÀÌÆ® Àü ¹é¹öÆÛ ¸®¼Ò½º Å¬¸®¾î ¹× ¼¼ÆÃ
+// MeshComponent Render ì—…ë°ì´íŠ¸ ì „ ë°±ë²„í¼ ë¦¬ì†ŒìŠ¤ í´ë¦¬ì–´ ë° ì„¸íŒ…
 void Ext_DirectXDevice::RenderStart()
 {
-	MainRenderTarget->RenderTargetClear(); // ClearRenderTargetView(), ClearDepthStencilView() ½Ç½Ã
-	MainRenderTarget->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() ½Ç½Ã
+	MainRenderTarget->RenderTargetClear(); // ClearRenderTargetView(), ClearDepthStencilView() ì‹¤ì‹œ
+	MainRenderTarget->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() ì‹¤ì‹œ
 }
 
-// MeshComponent Render ¾÷µ¥ÀÌÆ® ÈÄ ¹é¹öÆÛ¿¡ Present È£Ãâ
+// MeshComponent Render ì—…ë°ì´íŠ¸ í›„ ë°±ë²„í¼ì— Present í˜¸ì¶œ
 void Ext_DirectXDevice::RenderEnd()
 {
 	HRESULT Result = SwapChain->Present(0, 0);
 	if (Result == DXGI_ERROR_DEVICE_REMOVED || Result == DXGI_ERROR_DEVICE_RESET)
 	{
-		// µð¹ÙÀÌ½º ´Ù½Ã¸¸µé±â
-		MsgAssert("·£´õÅ¸°Ù »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		// ë””ë°”ì´ìŠ¤ ë‹¤ì‹œë§Œë“¤ê¸°
+		MsgAssert("ëžœë”íƒ€ê²Ÿ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 }

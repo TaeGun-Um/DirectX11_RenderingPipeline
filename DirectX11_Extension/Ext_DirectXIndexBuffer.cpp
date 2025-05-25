@@ -1,8 +1,8 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXDevice.h"
 
-// IndexBuffer »ı¼º
+// IndexBuffer ìƒì„±
 void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSize, UINT _IndexCount)
 {
 	VertexSize = _IndexSize;
@@ -38,7 +38,7 @@ void Ext_DirectXIndexBuffer::CreateIndexBuffer(const void* _Data, UINT _IndexSiz
 
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateBuffer(&IndexBufferInfo, &Data, IndexBuffer.GetAddressOf()))
 	{
-		MsgAssert("¹öÅØ½º ¹öÆÛ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ë²„í…ìŠ¤ ë²„í¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 	}
 }
 
@@ -46,7 +46,7 @@ void Ext_DirectXIndexBuffer::IndexBufferSetting()
 {
 	if (nullptr == IndexBuffer)
 	{
-		MsgAssert("ID3DBuffer°¡ ¸¸µé¾îÁöÁö ¾ÊÀº ¹öÅØ½º ¹öÆÛ ÀÔ´Ï´Ù.");
+		MsgAssert("ID3DBufferê°€ ë§Œë“¤ì–´ì§€ì§€ ì•Šì€ ë²„í…ìŠ¤ ë²„í¼ ì…ë‹ˆë‹¤.");
 		return;
 	}
 

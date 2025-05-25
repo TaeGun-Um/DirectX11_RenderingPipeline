@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_ResourceManager.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 
-// ¸¸µé¾îÁø ¹öÅØ½ºµéÀÇ Á¤º¸¸¦ ÀúÀåÇÏ±â À§ÇÑ Å¬·¡½º
+// ë§Œë“¤ì–´ì§„ ë²„í…ìŠ¤ë“¤ì˜ ì •ë³´ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXMesh : public Ext_ResourceManager<Ext_DirectXMesh>
 {
 	friend class Ext_MeshComponentUnit;
@@ -19,13 +19,13 @@ public:
 	Ext_DirectXMesh& operator=(const Ext_DirectXMesh& _Other) = delete;
 	Ext_DirectXMesh& operator=(Ext_DirectXMesh&& _Other) noexcept = delete;
 
-	// ¹öÅØ½º ¹öÆÛ¿Í ÀÎµ¦½º ¹öÆÛ Á¤º¸ ÀÔ·Â ¹× ¸Ş½Ã »ı¼º
+	// ë²„í…ìŠ¤ ë²„í¼ì™€ ì¸ë±ìŠ¤ ë²„í¼ ì •ë³´ ì…ë ¥ ë° ë©”ì‹œ ìƒì„±
 	static std::shared_ptr<Ext_DirectXMesh> CreateMesh(std::string_view _Name)
 	{
 		return CreateMesh(_Name, _Name, _Name);
 	}
 
-	// ¹öÅØ½º ¹öÆÛ¿Í ÀÎµ¦½º ¹öÆÛ Á¤º¸ ÀÔ·Â ¹× »ı¼º
+	// ë²„í…ìŠ¤ ë²„í¼ì™€ ì¸ë±ìŠ¤ ë²„í¼ ì •ë³´ ì…ë ¥ ë° ìƒì„±
 	static std::shared_ptr<Ext_DirectXMesh> CreateMesh(std::string_view _Name, std::string_view _VBName, std::string_view _IBName)
 	{
 		std::shared_ptr<Ext_DirectXMesh> NewMesh = Ext_ResourceManager::CreateNameResource(_Name);
@@ -34,7 +34,7 @@ public:
 
 		if ((nullptr == NewMesh->VertexBufferPtr) || (nullptr == NewMesh->IndexBufferPtr))
 		{
-			MsgAssert("¸Ş½Ã »ı¼º ½ÇÆĞ");
+			MsgAssert("ë©”ì‹œ ìƒì„± ì‹¤íŒ¨");
 		}
 
 		return NewMesh;
@@ -49,10 +49,10 @@ protected:
 	
 private:
 	D3D11_PRIMITIVE_TOPOLOGY Topology = D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	std::shared_ptr<class Ext_DirectXVertexBuffer> VertexBufferPtr; // »ó¼ö¹öÆÛ µ¥ÀÌÅÍ ÀúÀå¿ë
-	std::shared_ptr<class Ext_DirectXIndexBuffer> IndexBufferPtr; // ÀÎµ¦½º¹öÆÛ µ¥ÀÌÅÍ ÀúÀå¿ë
+	std::shared_ptr<class Ext_DirectXVertexBuffer> VertexBufferPtr; // ìƒìˆ˜ë²„í¼ ë°ì´í„° ì €ì¥ìš©
+	std::shared_ptr<class Ext_DirectXIndexBuffer> IndexBufferPtr; // ì¸ë±ìŠ¤ë²„í¼ ë°ì´í„° ì €ì¥ìš©
 	
-	void MeshSetting(); // InputAssembler1(), InputAssembler2() È£Ãâ
-	void InputAssembler1(); // ÀÎÇ²¾î¼Àºí·¯ 1´Ü°è ½Ç½Ã, IASetVertexBuffers(), IASetPrimitiveTopology() ½Ç½Ã
-	void InputAssembler2(); // ÀÎÇ²¾î¼Àºí·¯ 2´Ü°è ½Ç½Ã, IndexBufferSetting() È£Ãâ
+	void MeshSetting(); // InputAssembler1(), InputAssembler2() í˜¸ì¶œ
+	void InputAssembler1(); // ì¸í’‹ì–´ì…ˆë¸”ëŸ¬ 1ë‹¨ê³„ ì‹¤ì‹œ, IASetVertexBuffers(), IASetPrimitiveTopology() ì‹¤ì‹œ
+	void InputAssembler2(); // ì¸í’‹ì–´ì…ˆë¸”ëŸ¬ 2ë‹¨ê³„ ì‹¤ì‹œ, IndexBufferSetting() í˜¸ì¶œ
 };

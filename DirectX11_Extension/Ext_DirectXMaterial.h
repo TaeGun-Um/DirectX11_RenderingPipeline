@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Ext_ResourceManager.h"
 
-// ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ¼¼ÆÃ ½Ç½Ã¸¦ À§ÇÑ Å¬·¡½º
+// ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ì„¸íŒ… ì‹¤ì‹œë¥¼ ìœ„í•œ í´ë˜ìŠ¤
 class Ext_DirectXMaterial : public Ext_ResourceManager<Ext_DirectXMaterial>
 {
 	friend class Ext_MeshComponentUnit;
@@ -17,14 +17,14 @@ public:
 	Ext_DirectXMaterial& operator=(const Ext_DirectXMaterial& _Other) = delete;
 	Ext_DirectXMaterial& operator=(Ext_DirectXMaterial&& _Other) noexcept = delete;
 
-	// ¸ÓÆ¼¸®¾ó »ı¼º
+	// ë¨¸í‹°ë¦¬ì–¼ ìƒì„±
 	static std::shared_ptr<class Ext_DirectXMaterial> CreateMaterial(const std::string_view& _Name)
 	{
 		std::shared_ptr<class Ext_DirectXMaterial> NewRes = Ext_ResourceManager<Ext_DirectXMaterial>::CreateNameResource(_Name);
 		return NewRes;
 	}
 
-	// ¸ÓÆ¼¸®¾ó ¼¼ÆÃ ½Ç½Ã
+	// ë¨¸í‹°ë¦¬ì–¼ ì„¸íŒ… ì‹¤ì‹œ
 	void SetVertexShader(std::string_view _Name);
 	void SetPixelShader(std::string_view _Name);
 	void SetBlendState(std::string_view _Name);
@@ -38,8 +38,8 @@ public:
 protected:
 	
 private:
-	// ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ¼¼ÆÃ
-	void MaterialSetting(); // ¾Æ·¡ÀÇ ÇÔ¼öµé Â÷·Ê´ë·Î ½ÇÇà
+	// ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ì„¸íŒ…
+	void MaterialSetting(); // ì•„ë˜ì˜ í•¨ìˆ˜ë“¤ ì°¨ë¡€ëŒ€ë¡œ ì‹¤í–‰
 	void VertexShaderSetting();
 	void HullShaderSetting();
 	void TessellatorSetting();
@@ -49,8 +49,8 @@ private:
 	void PixelShaderSetting();
 	void OutputMergerSetting();
 
-	std::shared_ptr<class Ext_DirectXVertexShader> VertexShader; // ¹öÅØ½º ¼ÎÀÌ´õ ÀúÀå
-	std::shared_ptr<class Ext_DirectXPixelShader> PixelShader; // ÇÈ¼¿ ¼ÎÀÌ´õ ÀúÀå
+	std::shared_ptr<class Ext_DirectXVertexShader> VertexShader; // ë²„í…ìŠ¤ ì…°ì´ë” ì €ì¥
+	std::shared_ptr<class Ext_DirectXPixelShader> PixelShader; // í”½ì…€ ì…°ì´ë” ì €ì¥
 	//std::shared_ptr<class Ext_DirectXDepthState> DepthStatePtr;
 	
 	

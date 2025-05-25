@@ -1,16 +1,16 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXTexture.h"
 #include "Ext_DirectXDevice.h"
 
-// ¹é¹öÆÛ ·»´õÅ¸°Ùºä »ı¼ºÀ» À§ÇØ È£ÃâµÊ
+// ë°±ë²„í¼ ë Œë”íƒ€ê²Ÿë·° ìƒì„±ì„ ìœ„í•´ í˜¸ì¶œë¨
 void Ext_DirectXTexture::CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture)
 {
 	Texture2D = _Texture;
-	Texture2D->GetDesc(&Desc); // Desc(D3D11_TEXTURE2D_DESC)¿¡ °ª º¹»ç
+	Texture2D->GetDesc(&Desc); // Desc(D3D11_TEXTURE2D_DESC)ì— ê°’ ë³µì‚¬
 	CreateRenderTargetView();
 }
 
-// DescÀÇ BindFlags¿¡ µû¶ó RTV, SRV, DSV Áß ÇÏ³ª¸¦ Create
+// Descì˜ BindFlagsì— ë”°ë¼ RTV, SRV, DSV ì¤‘ í•˜ë‚˜ë¥¼ Create
 void Ext_DirectXTexture::CreateView(const D3D11_TEXTURE2D_DESC& _Value)
 {
 	Desc = _Value;
@@ -34,70 +34,70 @@ void Ext_DirectXTexture::CreateView(const D3D11_TEXTURE2D_DESC& _Value)
 
 	if (nullptr == Texture2D)
 	{
-		MsgAssert("ÅØ½ºÃ³ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("í…ìŠ¤ì²˜ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 	}
 }
 
-// ·£´õÅ¸°Ùºä(RTV) »ı¼º, CreateRenderTargetView()
+// ëœë”íƒ€ê²Ÿë·°(RTV) ìƒì„±, CreateRenderTargetView()
 void Ext_DirectXTexture::CreateRenderTargetView()
 {
 	if (nullptr == Texture2D)
 	{
-		MsgAssert("ÅØ½ºÃ³°¡ Á¸ÀçÇÏÁö ¾Ê´Â ·£´õÅ¸°ÙºäÀ» ¸¸µé ¼ö´Â ¾ø½À´Ï´Ù.");
+		MsgAssert("í…ìŠ¤ì²˜ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ëœë”íƒ€ê²Ÿë·°ì„ ë§Œë“¤ ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	COMPTR<ID3D11RenderTargetView> NewRTV = nullptr;
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateRenderTargetView(Texture2D, nullptr, NewRTV.GetAddressOf()))
 	{
-		MsgAssert("·£´õÅ¸°Ù ºä »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ëœë”íƒ€ê²Ÿ ë·° ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
-	// <<¼³¸í>> CreateRenderTargetView()ÀÇ Àü´Ş ÀÎÀÚ
-	/*1. ·»´õ Å¸°ÙÀ¸·Î »ç¿ëÇÒ 2D ÅØ½ºÃ³ ¸®¼Ò½º*/
-	/*2. ·»´õÅ¸°Ùºä¸¦ »ç¿ëÇÏ¿© ¾×¼¼½º ÇÒ ¼ö ÀÖ´Â ¸®¼Ò½ºµéÀ» ÁöÁ¤ÇÏ´Â ±¸Á¶Ã¼, ÁöÁ¤ÀÌ ÇÊ¿ä¾ø¾î nullptr Àü´Ş*/
-	/*3. »ı¼ºµÈ RTV °´Ã¼¸¦ ¹ŞÀ» Æ÷ÀÎÅÍ*/
+	// <<ì„¤ëª…>> CreateRenderTargetView()ì˜ ì „ë‹¬ ì¸ì
+	/*1. ë Œë” íƒ€ê²Ÿìœ¼ë¡œ ì‚¬ìš©í•  2D í…ìŠ¤ì²˜ ë¦¬ì†ŒìŠ¤*/
+	/*2. ë Œë”íƒ€ê²Ÿë·°ë¥¼ ì‚¬ìš©í•˜ì—¬ ì•¡ì„¸ìŠ¤ í•  ìˆ˜ ìˆëŠ” ë¦¬ì†ŒìŠ¤ë“¤ì„ ì§€ì •í•˜ëŠ” êµ¬ì¡°ì²´, ì§€ì •ì´ í•„ìš”ì—†ì–´ nullptr ì „ë‹¬*/
+	/*3. ìƒì„±ëœ RTV ê°ì²´ë¥¼ ë°›ì„ í¬ì¸í„°*/
 
 	RTVs.push_back(NewRTV);
 }
 
-// µª½º½ºÅÙ½Çºä(DSV) »ı¼º, CreateDepthStencilView()
+// ëìŠ¤ìŠ¤í…ì‹¤ë·°(DSV) ìƒì„±, CreateDepthStencilView()
 void Ext_DirectXTexture::CreateDepthStencilView()
 {
 	if (nullptr == Texture2D)
 	{
-		MsgAssert("ÅØ½ºÃ³°¡ Á¸ÀçÇÏÁö ¾Ê´Âµ¥ µª½º ½ºÅÙ½Ç ºä ¸¸µé ¼ö´Â ¾ø½À´Ï´Ù.");
+		MsgAssert("í…ìŠ¤ì²˜ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë° ëìŠ¤ ìŠ¤í…ì‹¤ ë·° ë§Œë“¤ ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateDepthStencilView(Texture2D, nullptr, DSV.GetAddressOf()))
 	{
-		MsgAssert("µª½º ½ºÅÙ½Ç ºä »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ëìŠ¤ ìŠ¤í…ì‹¤ ë·° ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
-	// <<¼³¸í>> CreateRenderTargetView()ÀÇ Àü´Ş ÀÎÀÚ
-	/*1. ±íÀÌ/½ºÅÙ½Ç Á¤º¸¸¦ ÀúÀåÇÒ ÅØ½ºÃ³*/
-	/*2. ±âº» ºä ¼³Á¤ »ç¿ë*/
-	/*3. »ı¼ºµÈ DSV °´Ã¼ Æ÷ÀÎÅÍ*/
+	// <<ì„¤ëª…>> CreateRenderTargetView()ì˜ ì „ë‹¬ ì¸ì
+	/*1. ê¹Šì´/ìŠ¤í…ì‹¤ ì •ë³´ë¥¼ ì €ì¥í•  í…ìŠ¤ì²˜*/
+	/*2. ê¸°ë³¸ ë·° ì„¤ì • ì‚¬ìš©*/
+	/*3. ìƒì„±ëœ DSV ê°ì²´ í¬ì¸í„°*/
 }
 
-// ½¦ÀÌ´õ¸®¼Ò½ººä(SRV) »ı¼º, CreateShaderResourceView()
+// ì‰ì´ë”ë¦¬ì†ŒìŠ¤ë·°(SRV) ìƒì„±, CreateShaderResourceView()
 void Ext_DirectXTexture::CreateShaderResourcesView()
 {
 	if (nullptr == Texture2D)
 	{
-		MsgAssert("ÅØ½ºÃ³°¡ Á¸ÀçÇÏÁö ¾Ê´Â ½¦ÀÌ´õ ¸®¼Ò½º ºä¸¦ ¸¸µé ¼ö´Â ¾ø½À´Ï´Ù.");
+		MsgAssert("í…ìŠ¤ì²˜ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì‰ì´ë” ë¦¬ì†ŒìŠ¤ ë·°ë¥¼ ë§Œë“¤ ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D, nullptr, SRV.GetAddressOf()))
 	{
-		MsgAssert("½¦ÀÌ´õ ¸®¼Ò½º ºä »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ì‰ì´ë” ë¦¬ì†ŒìŠ¤ ë·° ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
-	// <<¼³¸í>> CreateRenderTargetView()ÀÇ Àü´Ş ÀÎÀÚ
-	/*1. ¼ÎÀÌ´õ¿¡¼­ ÀĞÀ» 2D ÅØ½ºÃ³*/
-	/*2. ÀüÃ¼ ÅØ½ºÃ³¸¦ ±âº» ¼³Á¤À¸·Î Á¢±Ù*/
-	/*3. »ı¼ºµÈ SRV¸¦ ÀúÀåÇÒ Æ÷ÀÎÅÍ*/
+	// <<ì„¤ëª…>> CreateRenderTargetView()ì˜ ì „ë‹¬ ì¸ì
+	/*1. ì…°ì´ë”ì—ì„œ ì½ì„ 2D í…ìŠ¤ì²˜*/
+	/*2. ì „ì²´ í…ìŠ¤ì²˜ë¥¼ ê¸°ë³¸ ì„¤ì •ìœ¼ë¡œ ì ‘ê·¼*/
+	/*3. ìƒì„±ëœ SRVë¥¼ ì €ì¥í•  í¬ì¸í„°*/
 }
 

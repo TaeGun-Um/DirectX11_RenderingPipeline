@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXShader.h"
 #include "Ext_DirectXVertexShader.h"
 #include "Ext_DirectXPixelShader.h"
@@ -16,7 +16,7 @@ void Ext_DirectXShader::CreateVersion(std::string_view _ShaderType, UINT _Versio
 	Version += std::to_string(_VersionLow);
 }
 
-// EntryPoint ±âÁØÀ¸·Î, ¼ÎÀÌÅÍ Á¾·ù¸¦ Å½»ö
+// EntryPoint ê¸°ì¤€ìœ¼ë¡œ, ì…°ì´í„° ì¢…ë¥˜ë¥¼ íƒìƒ‰
 ShaderType Ext_DirectXShader::FindShaderType(std::string_view _EntryPoint)
 {
 	std::string Lower = _EntryPoint.data();
@@ -25,13 +25,13 @@ ShaderType Ext_DirectXShader::FindShaderType(std::string_view _EntryPoint)
 	if (Lower.find("_PS") != std::string::npos) return ShaderType::Pixel;
 	if (Lower.find("_CS") != std::string::npos) return ShaderType::Compute;
 	if (Lower.find("_GS") != std::string::npos) return ShaderType::Geometry;
-	// if (Lower.find("_HS") != std::string::npos) return ShaderType::Unknown; // ¶Ç´Â Hull
-	// if (Lower.find("_DS") != std::string::npos) return ShaderType::Unknown; // ¶Ç´Â Domain
+	// if (Lower.find("_HS") != std::string::npos) return ShaderType::Unknown; // ë˜ëŠ” Hull
+	// if (Lower.find("_DS") != std::string::npos) return ShaderType::Unknown; // ë˜ëŠ” Domain
 
 	return ShaderType::Unknown;
 }
 
-// ¼ÎÀÌ´õ Á¾·ù ±âÁØÀ¸·Î ÄÄÆÄÀÏ ÁøÇà
+// ì…°ì´ë” ì¢…ë¥˜ ê¸°ì¤€ìœ¼ë¡œ ì»´íŒŒì¼ ì§„í–‰
 void Ext_DirectXShader::ShaderAutoCompile(std::string_view _Path, std::string_view _EntryPoint)
 {
 	ShaderType Type = FindShaderType(_EntryPoint);
@@ -55,33 +55,33 @@ void Ext_DirectXShader::ShaderAutoCompile(std::string_view _Path, std::string_vi
 	}
 	case ShaderType::Geometry:
 	{
-		MsgAssert("Geometry ¼ÎÀÌ´õ Å¸ÀÔÀº ¾ÆÁ÷ ¾È¸¸µë");
+		MsgAssert("Geometry ì…°ì´ë” íƒ€ì…ì€ ì•„ì§ ì•ˆë§Œë“¬");
 		break;
 	}
 	case ShaderType::Unknown:
 	{
-		MsgAssert("EntryPoint Å½»ö ½ÇÆĞ");
+		MsgAssert("EntryPoint íƒìƒ‰ ì‹¤íŒ¨");
 		break;
 	}
 	}
 }
 
-// »ó¼ö ¹öÆÛ ¼¼ÆÃ
+// ìƒìˆ˜ ë²„í¼ ì„¸íŒ…
 void Ext_DirectXShader::ShaderResourceSetting()
 {
 	if (nullptr == BinaryCode)
 	{
-		MsgAssert("½¦ÀÌ´õ°¡ ÄÄÆÄÀÏ µÇÁö ¾Ê¾Æ¼­ ½¦ÀÌ´õÀÇ ¸®¼Ò½º¸¦ Á¶»çÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		MsgAssert("ì‰ì´ë”ê°€ ì»´íŒŒì¼ ë˜ì§€ ì•Šì•„ì„œ ì‰ì´ë”ì˜ ë¦¬ì†ŒìŠ¤ë¥¼ ì¡°ì‚¬í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	// Reflection 
-	// RTTIÀÇ ºñ½ÁÇÑ °³³äÀ¸·Î 
+	// RTTIì˜ ë¹„ìŠ·í•œ ê°œë…ìœ¼ë¡œ 
 	ID3D11ShaderReflection* CompileInfo = nullptr;
 
 	if (S_OK != D3DReflect(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&CompileInfo)))
 	{
-		MsgAssert("½¦ÀÌ´õ ¸®ÇÃ·º¼Ç¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		MsgAssert("ì‰ì´ë” ë¦¬í”Œë ‰ì…˜ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -89,10 +89,10 @@ void Ext_DirectXShader::ShaderResourceSetting()
 	CompileInfo->GetDesc(&Info);
 	D3D11_SHADER_INPUT_BIND_DESC ResDesc;
 
-	// ³»°¡ »ç¿ëÇÑ »ó¼ö¹öÆÛ ÅØ½ºÃ³ »ùÇÃ·¯µîÀÇ ÃÑÇÕÀÔ´Ï´Ù.
+	// ë‚´ê°€ ì‚¬ìš©í•œ ìƒìˆ˜ë²„í¼ í…ìŠ¤ì²˜ ìƒ˜í”ŒëŸ¬ë“±ì˜ ì´í•©ì…ë‹ˆë‹¤.
 	for (UINT i = 0; i < Info.BoundResources; i++)
 	{
-		// ¸®¼Ò½º Á¤º¸¸¦ ¾ò¾î¿À°Ô µÇ°í
+		// ë¦¬ì†ŒìŠ¤ ì •ë³´ë¥¼ ì–»ì–´ì˜¤ê²Œ ë˜ê³ 
 		CompileInfo->GetResourceBindingDesc(i, &ResDesc);
 		std::string Name = ResDesc.Name;
 		D3D_SHADER_INPUT_TYPE Type = ResDesc.Type;
@@ -115,7 +115,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 			Set.BindPoint = ResDesc.BindPoint;
 			Set.ConstantBuffer = ConstantBuffer;
 
-			// std::multimap<std::string, GameEngineConstantBufferSetter> ConstantBufferSetters;¿¡ ÀúÀå
+			// std::multimap<std::string, GameEngineConstantBufferSetter> ConstantBufferSetters;ì— ì €ì¥
 			BufferSetter.InsertConstantBufferSetter(Set);
 
 			break;
@@ -161,7 +161,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 			//if (nullptr == Res)
 			//{
 			//	Res = GameEngineSampler::Find("ENGINEBASE");
-			//	// MsgAssert("´ÙÀ½ÀÇ »ùÇÃ·¯°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ ½¦ÀÌ´õ¿¡ ¼¼ÆÃÇØÁÙ¼ö°¡ ¾ø½À´Ï´Ù. : " + UpperName);
+			//	// MsgAssert("ë‹¤ìŒì˜ ìƒ˜í”ŒëŸ¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ì‰ì´ë”ì— ì„¸íŒ…í•´ì¤„ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤. : " + UpperName);
 			//}
 
 			//GameEngineSamplerSetter Setter;
@@ -175,8 +175,8 @@ void Ext_DirectXShader::ShaderResourceSetting()
 		}
 		case D3D_SIT_STRUCTURED:
 		{
-			// ½ºÆ®·°Ã³µå ¹öÆÛ´Â ÅØ½ºÃ³ ½½·ÔÀ» »ç¿ëÇÕ´Ï´Ù.
-			// ±âº»ÀûÀ¸·Î ÅØ½ºÃ³·Î ÆÇ´Ü
+			// ìŠ¤íŠ¸ëŸ­ì²˜ë“œ ë²„í¼ëŠ” í…ìŠ¤ì²˜ ìŠ¬ë¡¯ì„ ì‚¬ìš©í•©ë‹ˆë‹¤.
+			// ê¸°ë³¸ì ìœ¼ë¡œ í…ìŠ¤ì²˜ë¡œ íŒë‹¨
 			//ID3D11ShaderReflectionConstantBuffer* SBufferPtr = CompileInfo->GetConstantBufferByName(ResDesc.Name);
 			//D3D11_SHADER_BUFFER_DESC BufferDesc;
 			//SBufferPtr->GetDesc(&BufferDesc);
@@ -198,7 +198,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 			//D3D11_SHADER_BUFFER_DESC BufferDesc;
 			//SBufferPtr->GetDesc(&BufferDesc);
 
-			//// RW¹öÆÛ·Î 
+			//// RWë²„í¼ë¡œ 
 
 			//std::shared_ptr<GameEngineStructuredBuffer> Res = GameEngineStructuredBuffer::CreateAndFind(Name, BufferDesc, 0);
 
@@ -212,7 +212,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 			break;
 		}
 		default:
-			MsgAssert(std::string(ResDesc.Name) + "Ã³¸®ÇÒ¼ö ¾ø´Â ¸®¼Ò½º ÀÔ´Ï´Ù");
+			MsgAssert(std::string(ResDesc.Name) + "ì²˜ë¦¬í• ìˆ˜ ì—†ëŠ” ë¦¬ì†ŒìŠ¤ ì…ë‹ˆë‹¤");
 			break;
 		}
 

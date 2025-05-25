@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Scene.h"
 #include "Ext_Actor.h"
@@ -15,13 +15,13 @@ Ext_MeshComponent::~Ext_MeshComponent()
 {
 }
 
-// »ı¼ºÇÏ¸é Ä«¸Ş¶ó¿¡µµ ÀúÀåÇÏ±â À§ÇØ ½ÇÇà
+// ìƒì„±í•˜ë©´ ì¹´ë©”ë¼ì—ë„ ì €ì¥í•˜ê¸° ìœ„í•´ ì‹¤í–‰
 void Ext_MeshComponent::PushMeshToCamera(std::string_view _CameraName)
 {
 	GetOwnerScene().lock()->PushMeshToCamera(GetSharedFromThis<Ext_MeshComponent>(), _CameraName);
 }
 
-// ¸Ş½Ã ÄÄÆ÷³ÍÆ®¿¡ ÇÊ¿äÇÑ À¯´Ö »ı¼º ¹× ÀúÀå
+// ë©”ì‹œ ì»´í¬ë„ŒíŠ¸ì— í•„ìš”í•œ ìœ ë‹› ìƒì„± ë° ì €ì¥
 std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, std::string_view _MaterialName)
 {
 	std::shared_ptr<Ext_MeshComponentUnit> NewUnit = std::make_shared<Ext_MeshComponentUnit>();
@@ -38,13 +38,13 @@ void Ext_MeshComponent::Start()
 	PushMeshToCamera("MainCamera");
 }
 
-// ºä, ÇÁ·ÎÁ§¼ÇÇà·ÄÀ» MeshComponentÀÇ Transform¿¡ Àû¿ë
+// ë·°, í”„ë¡œì ì…˜í–‰ë ¬ì„ MeshComponentì˜ Transformì— ì ìš©
 void Ext_MeshComponent::MeshComponentTransformSetting(std::shared_ptr<Ext_Camera> _Camera)
 {
 	GetTransform()->SetCameraMatrix(_Camera->GetViewMatrix(), _Camera->GetProjectionMatrix());
 }
 
-// Ä«¸Ş¶ó Rendering¿¡¼­ ¿©±â·Î ¿Â´ÙÀ½, °¢ ¸Ş½ÃµéÀÇ Rendering() ÇÔ¼ö¸¦ ¸ÅÆ½ ½ÇÇà
+// ì¹´ë©”ë¼ Renderingì—ì„œ ì—¬ê¸°ë¡œ ì˜¨ë‹¤ìŒ, ê° ë©”ì‹œë“¤ì˜ Rendering() í•¨ìˆ˜ë¥¼ ë§¤í‹± ì‹¤í–‰
 void Ext_MeshComponent::Rendering(float _Deltatime, std::shared_ptr<Ext_Camera> _Camera)
 {
 	MeshComponentTransformSetting(_Camera);

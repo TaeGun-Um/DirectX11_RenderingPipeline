@@ -1,11 +1,11 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_DirectXConstantBuffer.h"
 #include "Ext_DirectXDevice.h"
 
 std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> Ext_DirectXConstantBuffer::ConstantBuffers;
 std::string Ext_DirectXConstantBuffer::Name = "";
 
-// CreateBuffer()¸¦ ÅëÇØ »ó¼ö ¹öÆÛ¸¦ »ý¼º
+// CreateBuffer()ë¥¼ í†µí•´ ìƒìˆ˜ ë²„í¼ë¥¼ ìƒì„±
 void Ext_DirectXConstantBuffer::CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc)
 {
 	ConstantBufferInfo.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -22,39 +22,39 @@ void Ext_DirectXConstantBuffer::CreateConstantBuffer(const D3D11_SHADER_BUFFER_D
 
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateBuffer(&ConstantBufferInfo, nullptr, ConstantBuffer.GetAddressOf()))
 	{
-		MsgAssert("»ó¼ö ¹öÆÛ »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+		MsgAssert("ìƒìˆ˜ ë²„í¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 }
 
-// Map(), Unmap() ½Ç½Ã
+// Map(), Unmap() ì‹¤ì‹œ
 void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 {
-	// ¸ÓÆ¼¸®¾óµéÀº »ó¼ö¹öÆÛ³ª ÀÌ·±°É ÅëÀÏÇØ ³õÀº °ÍÀÌ´Ù.
+	// ë¨¸í‹°ë¦¬ì–¼ë“¤ì€ ìƒìˆ˜ë²„í¼ë‚˜ ì´ëŸ°ê±¸ í†µì¼í•´ ë†“ì€ ê²ƒì´ë‹¤.
 	if (nullptr == _Data)
 	{
 		std::string CurName = Name;
-		MsgAssert(CurName + "¿¡ nullptrÀÎ µ¥ÀÌÅÍ¸¦ ¼¼ÆÃÇÏ·Á°í Çß½À´Ï´Ù.");
+		MsgAssert(CurName + "ì— nullptrì¸ ë°ì´í„°ë¥¼ ì„¸íŒ…í•˜ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	if (ConstantBufferInfo.ByteWidth != _Size)
 	{
 		std::string CurName = Name;
-		MsgAssert(CurName + "Å©±â°¡ ´Ù¸¥ µ¥ÀÌÅÍ°¡ µé¾î¿Ô½À´Ï´Ù.");
+		MsgAssert(CurName + "í¬ê¸°ê°€ ë‹¤ë¥¸ ë°ì´í„°ê°€ ë“¤ì–´ì™”ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	D3D11_MAPPED_SUBRESOURCE SettingResources = { 0, };
 
-	// ±×·¡ÇÈÄ«µå¾ß ³ÊÇÑÅ× º¸³¾²²ÀÖ¾î Àá±ñ ¸ØÃçºÁ 
-	// D3D11_MAP_WRITE_DISCARD ÃÖ´ëÇÑ ºü¸£°Ô Ã³¸®ÇÏ´Â 
+	// ê·¸ëž˜í”½ì¹´ë“œì•¼ ë„ˆí•œí…Œ ë³´ë‚¼ê»˜ìžˆì–´ ìž ê¹ ë©ˆì¶°ë´ 
+	// D3D11_MAP_WRITE_DISCARD ìµœëŒ€í•œ ë¹ ë¥´ê²Œ ì²˜ë¦¬í•˜ëŠ” 
 	Ext_DirectXDevice::GetContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SettingResources);
 
 	if (SettingResources.pData == nullptr)
 	{
 		std::string CurName = Name;
-		MsgAssert(CurName + " ±×·¡ÇÈÄ«µå¿¡°Ô ¸Þ¸ð¸® Á¢±ÙÀ» Çã°¡¹ÞÁö ¸øÇß½À´Ï´Ù.");
+		MsgAssert(CurName + " ê·¸ëž˜í”½ì¹´ë“œì—ê²Œ ë©”ëª¨ë¦¬ ì ‘ê·¼ì„ í—ˆê°€ë°›ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 	memcpy_s(SettingResources.pData, ConstantBufferInfo.ByteWidth, _Data, ConstantBufferInfo.ByteWidth);
@@ -63,19 +63,19 @@ void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 	int a = 0;
 }
 
-// VSSetConstantBuffers() È£Ãâ
+// VSSetConstantBuffers() í˜¸ì¶œ
 void Ext_DirectXConstantBuffer::VSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->VSSetConstantBuffers(_Slot, 1, &ConstantBuffer);
 }
 
-// PSSetConstantBuffers() È£Ãâ
+// PSSetConstantBuffers() í˜¸ì¶œ
 void Ext_DirectXConstantBuffer::PSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->PSSetConstantBuffers(_Slot, 1, &ConstantBuffer);
 }
 
-// CSSetConstantBuffers() È£Ãâ
+// CSSetConstantBuffers() í˜¸ì¶œ
 void Ext_DirectXConstantBuffer::CSSetting(UINT _Slot)
 {
 	Ext_DirectXDevice::GetContext()->CSSetConstantBuffers(_Slot, 1, &ConstantBuffer);

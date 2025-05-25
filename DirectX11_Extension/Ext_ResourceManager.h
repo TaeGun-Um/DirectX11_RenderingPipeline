@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// µ¿Àû ÇÒ´çµÈ DirectX ¸®¼Ò½ºµéÀ» ÀúÀå ¹× Å½»öÇÏ±â À§ÇØ ¼±¾ğµÈ Å¬·¡½º
+// ë™ì  í• ë‹¹ëœ DirectX ë¦¬ì†ŒìŠ¤ë“¤ì„ ì €ì¥ ë° íƒìƒ‰í•˜ê¸° ìœ„í•´ ì„ ì–¸ëœ í´ë˜ìŠ¤
 template<typename ResourcesType>
 class Ext_ResourceManager
 {
@@ -8,8 +8,8 @@ public:
 	// constrcuter destructer
 	Ext_ResourceManager() {}
 	virtual ~Ext_ResourceManager() {};
-	// ÅÛÇÃ¸´ Å¬·¡½º´Â ÄÄÆÄÀÏ ½Ã ÀÎ½ºÅÏ½ºÈ­ µÇ¹Ç·Î, ¼±¾ğÀÌ ¾øÀ¸¸é ÇØ´ç Å¸ÀÔÀÌ ´Ù¸¥ °÷¿¡ »ç¿ëµÉ ¶§ ¸öÃ¼¸¦ ¸øÃ£À½
-	// ÅÛÇÃ¸´ Å¬·¡½ºÀÇ ¸â¹ö ÇÔ¼ö(¼Ò¸êÀÚ Æ÷ÇÔ)´Â Çì´õ¿¡¼­ Á¤ÀÇµÇÁö ¾ÊÀ¸¸é ¸µÅ© ºÒ°¡
+	// í…œí”Œë¦¿ í´ë˜ìŠ¤ëŠ” ì»´íŒŒì¼ ì‹œ ì¸ìŠ¤í„´ìŠ¤í™” ë˜ë¯€ë¡œ, ì„ ì–¸ì´ ì—†ìœ¼ë©´ í•´ë‹¹ íƒ€ì…ì´ ë‹¤ë¥¸ ê³³ì— ì‚¬ìš©ë  ë•Œ ëª¸ì²´ë¥¼ ëª»ì°¾ìŒ
+	// í…œí”Œë¦¿ í´ë˜ìŠ¤ì˜ ë©¤ë²„ í•¨ìˆ˜(ì†Œë©¸ì í¬í•¨)ëŠ” í—¤ë”ì—ì„œ ì •ì˜ë˜ì§€ ì•Šìœ¼ë©´ ë§í¬ ë¶ˆê°€
 
 	// delete Function
 	Ext_ResourceManager(const Ext_ResourceManager& _Other) = delete;
@@ -17,7 +17,7 @@ public:
 	Ext_ResourceManager& operator=(const Ext_ResourceManager& _Other) = delete;
 	Ext_ResourceManager& operator=(Ext_ResourceManager&& _Other) noexcept = delete;
 
-	// ÀúÀåµÈ ¸®¼Ò½º¸¦ ÀÌ¸§À¸·Î Ã£±â
+	// ì €ì¥ëœ ë¦¬ì†ŒìŠ¤ë¥¼ ì´ë¦„ìœ¼ë¡œ ì°¾ê¸°
 	static std::shared_ptr<ResourcesType> Find(std::string_view _Name)
 	{
 		std::string UpperName = Base_String::ToUpper(_Name);
@@ -30,7 +30,7 @@ public:
 		return NameResources[UpperName];
 	}
 
-	// ¸®¼Ò½º »ı¼º(±×³É »ı¼º)
+	// ë¦¬ì†ŒìŠ¤ ìƒì„±(ê·¸ëƒ¥ ìƒì„±)
 	static std::shared_ptr<ResourcesType> CreateResource()
 	{
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
@@ -39,14 +39,14 @@ public:
 		return NewRes;
 	}
 
-	// ¸®¼Ò½º »ı¼º(ÀÌ¸§À¸·Î »ı¼º ÈÄ ÀúÀå)
+	// ë¦¬ì†ŒìŠ¤ ìƒì„±(ì´ë¦„ìœ¼ë¡œ ìƒì„± í›„ ì €ì¥)
 	static std::shared_ptr<ResourcesType> CreateNameResource(std::string_view _Name)
 	{
 		std::string UpperName = Base_String::ToUpper(_Name);
 
 		if (nullptr != Find(UpperName))
 		{
-			MsgAssert("ÀÌ¹Ì Á¸ÀçÇÏ´Â ÀÌ¸§ÀÇ ¸®¼Ò½º¸¦ ¶Ç ¸¸µé·Á°í Çß½À´Ï´Ù.");
+			MsgAssert("ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì´ë¦„ì˜ ë¦¬ì†ŒìŠ¤ë¥¼ ë˜ ë§Œë“¤ë ¤ê³  í–ˆìŠµë‹ˆë‹¤.");
 			return nullptr;
 		}
 
@@ -59,8 +59,8 @@ public:
 protected:
 	
 private:
-	static std::vector<std::shared_ptr<ResourcesType>> Resources; // ÀúÀåÇÒ ¸®¼Ò½º
-	static std::map<std::string, std::shared_ptr<ResourcesType>> NameResources; // ÀÌ¸§À¸·Î ÀúÀåÇÒ ¸®¼Ò½º
+	static std::vector<std::shared_ptr<ResourcesType>> Resources; // ì €ì¥í•  ë¦¬ì†ŒìŠ¤
+	static std::map<std::string, std::shared_ptr<ResourcesType>> NameResources; // ì´ë¦„ìœ¼ë¡œ ì €ì¥í•  ë¦¬ì†ŒìŠ¤
 	
 };
 

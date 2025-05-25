@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// DirectX Device, Context ´ã´ç Å¬·¡½º
+// DirectX Device, Context ë‹´ë‹¹ í´ëž˜ìŠ¤
 class Ext_DirectXDevice
 {
 	friend class Ext_Core;
@@ -25,36 +25,36 @@ public:
 protected:
 	
 private:
-	static void Initialize(); // DirectX11 ½ÃÀÛ
-	static COMPTR<IDXGIAdapter> GetHighPerformanceAdapter(); // ±×·¡ÇÈÄ«µå Á¤º¸ °¡Á®¿À±â
-	static void CreateSwapChain(); // ½º¿ÒÃ¼ÀÎ »ý¼ºÇÏ±â
-	static void RenderStart(); // MeshComponent Render ¾÷µ¥ÀÌÆ® Àü ¹é¹öÆÛ ¸®¼Ò½º Å¬¸®¾î ¹× ¼¼ÆÃ
-	static void RenderEnd(); // MeshComponent Render ¾÷µ¥ÀÌÆ® ÈÄ ¹é¹öÆÛ¿¡ Present È£Ãâ
+	static void Initialize(); // DirectX11 ì‹œìž‘
+	static COMPTR<IDXGIAdapter> GetHighPerformanceAdapter(); // ê·¸ëž˜í”½ì¹´ë“œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+	static void CreateSwapChain(); // ìŠ¤ì™‘ì²´ì¸ ìƒì„±í•˜ê¸°
+	static void RenderStart(); // MeshComponent Render ì—…ë°ì´íŠ¸ ì „ ë°±ë²„í¼ ë¦¬ì†ŒìŠ¤ í´ë¦¬ì–´ ë° ì„¸íŒ…
+	static void RenderEnd(); // MeshComponent Render ì—…ë°ì´íŠ¸ í›„ ë°±ë²„í¼ì— Present í˜¸ì¶œ
 
-	static COMPTR<ID3D11Device> Device;				// GPU¸¦ Á¦¾îÇÒ ¼ö ÀÖ´Â ÀÎÅÍÆäÀÌ½º
-	static COMPTR<ID3D11DeviceContext> Context;   // GPU¸¦ Á¦¾îÇÒ ¼ö ÀÖ´Â ÀÎÅÍÆäÀÌ½ºÀÌÁö¸¸ Ãß°¡ ±â´ÉÀÌ ÀÖÀ½(·»´õ¸µ °ü·Ã ¿¬»ê)
-	static COMPTR<IDXGISwapChain> SwapChain;     // È­¸éÀ» Ç¥½ÃÇÏ´Â ½º¿ÒÃ¼ÀÎ ±â´ÉÀ» ´Ù·ë
+	static COMPTR<ID3D11Device> Device;				// GPUë¥¼ ì œì–´í•  ìˆ˜ ìžˆëŠ” ì¸í„°íŽ˜ì´ìŠ¤
+	static COMPTR<ID3D11DeviceContext> Context;   // GPUë¥¼ ì œì–´í•  ìˆ˜ ìžˆëŠ” ì¸í„°íŽ˜ì´ìŠ¤ì´ì§€ë§Œ ì¶”ê°€ ê¸°ëŠ¥ì´ ìžˆìŒ(ë Œë”ë§ ê´€ë ¨ ì—°ì‚°)
+	static COMPTR<IDXGISwapChain> SwapChain;     // í™”ë©´ì„ í‘œì‹œí•˜ëŠ” ìŠ¤ì™‘ì²´ì¸ ê¸°ëŠ¥ì„ ë‹¤ë£¸
 	static std::shared_ptr<class Ext_DirectXRenderTarget> MainRenderTarget; // BackBuffer RenderTarget
 	
 };
 // [ID3D11Device]
-// GPU¸¦ Á¦¾îÇÒ ¼ö ÀÖ´Â ÀÎÅÍÆäÀÌ½º, ÀÌ ÀÎÅÍÆäÀÌ½º´Â ±â´É Áö¿ø Á¡°Ë°ú ÀÚ¿ø ÇÒ´ç¿¡ »ç¿ëµÊ(±×·¡ÇÈÄ«µå RAM¿¡ ÇØ´çÇÏ´Â ºÎºÐ¿¡ ´ëÇÑ ±ÇÇÑ ´ã´ç)
+// GPUë¥¼ ì œì–´í•  ìˆ˜ ìžˆëŠ” ì¸í„°íŽ˜ì´ìŠ¤, ì´ ì¸í„°íŽ˜ì´ìŠ¤ëŠ” ê¸°ëŠ¥ ì§€ì› ì ê²€ê³¼ ìžì› í• ë‹¹ì— ì‚¬ìš©ë¨(ê·¸ëž˜í”½ì¹´ë“œ RAMì— í•´ë‹¹í•˜ëŠ” ë¶€ë¶„ì— ëŒ€í•œ ê¶Œí•œ ë‹´ë‹¹)
 
 // [ID3D11DeviceContext]
-// ÀÌ°Íµµ GPU¸¦ Á¦¾îÇÒ ¼ö ÀÖ´Â ÀÎÅÍÆäÀÌ½ºÀÌÁö¸¸ Ãß°¡ ±â´ÉÀÌ ÀÖÀ½
-// 1. ·»´õ ´ë»ó ¼³Á¤
-// 2. ID3D11Device·Î ÇÒ´çµÈ ÀÚ¿øÀ» ±×·¡ÇÈ ÆÄÀÌÇÁ ¶óÀÎ¿¡ ¹­°í, GPU°¡ ·»´õ¸µ ¸í·ÉÀ» Áö½ÃÇÏµµ·Ï ÇÔ
+// ì´ê²ƒë„ GPUë¥¼ ì œì–´í•  ìˆ˜ ìžˆëŠ” ì¸í„°íŽ˜ì´ìŠ¤ì´ì§€ë§Œ ì¶”ê°€ ê¸°ëŠ¥ì´ ìžˆìŒ
+// 1. ë Œë” ëŒ€ìƒ ì„¤ì •
+// 2. ID3D11Deviceë¡œ í• ë‹¹ëœ ìžì›ì„ ê·¸ëž˜í”½ íŒŒì´í”„ ë¼ì¸ì— ë¬¶ê³ , GPUê°€ ë Œë”ë§ ëª…ë ¹ì„ ì§€ì‹œí•˜ë„ë¡ í•¨
 
 // [DXGI]
-// DirectX11 µî ¿©·¯ ±×·¡ÇÈ½º ±â´ÉÀÌ³ª ¾îÇÃ¸®ÄÉÀÌ¼ÇÀ¸·ÎºÎÅÍ ¿À´Â Ç¥½Ã¸¦ ¹Þ¾Æ Ä¿³Î ¸ðµå µå¶óÀÌ¹ö³ª ÇÏµå¿þ¾î¿Í ÁÖ°í¹Þ´Â ¿ªÇÒ ¼öÇà
-// ±×·¡ÇÈÄ«µå ¼±ÅÃ, À©µµ¿ì »çÀÌÁî °»½Å(¹é¹öÆÛ »çÀÌÁî °»½Å, µð½ºÇÃ·¹ÀÌ ¸ðµå °»½Å), ÇÊ¿ä¾ø´Â È­¸é ·»´õ¸µ Á¦¾î, È­¸é ¸ðµå ÀüÈ¯(Ç® <-> À©µµ¿ì), Åæ Ä¿ºê¿¡ ÀÇÇÑ °èÁ¶ º¸Á¤ µî ¼öÇà
-// 1. IDXGIFactory : DXGi¸¦ »ç¿ëÇÏ±â À§ÇØ ÇÊ¿äÇÑ °¢Á¾ ÀÎÅÍÆäÀÌ½º¸¦ ¾ò¾î¿À´Â ÀÎÅÍÆäÀÌ½º, CreateDXGIFactory()·Î ÀÎÅÍÆäÀÌ½º¸¦ ¾ò¾î¿Â´Ù.
-// 2. IDXGIAdapter : ±×·¡ÇÈÄ«µå °ü·Ã ±â´ÉÀ» ´Ù·ë
-// 3. IDXGIOutput : ±×·¡ÇÈÄ«µå¿¡ ¿¬°áµÈ µð½ºÇÃ·¹ÀÌ  °ü·Ã ±â´ÉÀ» ´Ù·ë, ÀÌ°É·Î ´ëÀÀ µð½ºÇÃ·¹ÀÌ ¸ðµå(ÇØ»óµµ, Refresh), °¨¸¶ ¼³Á¤ µî °¡´É
-// 4. IDXGISwapChain : È­¸éÀ» Ç¥½ÃÇÏ´Â ½º¿ÒÃ¼ÀÎ ±â´ÉÀ» ´Ù·ë, D3D11CreateDeviceAndSwapChain·Î ID3D11Device ÀÎÅÍÆäÀÌ½º¸¦ ¾òÀ» ¶§ °°ÀÌ ¾òÀ» ¼ö ÀÖÀ½
+// DirectX11 ë“± ì—¬ëŸ¬ ê·¸ëž˜í”½ìŠ¤ ê¸°ëŠ¥ì´ë‚˜ ì–´í”Œë¦¬ì¼€ì´ì…˜ìœ¼ë¡œë¶€í„° ì˜¤ëŠ” í‘œì‹œë¥¼ ë°›ì•„ ì»¤ë„ ëª¨ë“œ ë“œë¼ì´ë²„ë‚˜ í•˜ë“œì›¨ì–´ì™€ ì£¼ê³ ë°›ëŠ” ì—­í•  ìˆ˜í–‰
+// ê·¸ëž˜í”½ì¹´ë“œ ì„ íƒ, ìœˆë„ìš° ì‚¬ì´ì¦ˆ ê°±ì‹ (ë°±ë²„í¼ ì‚¬ì´ì¦ˆ ê°±ì‹ , ë””ìŠ¤í”Œë ˆì´ ëª¨ë“œ ê°±ì‹ ), í•„ìš”ì—†ëŠ” í™”ë©´ ë Œë”ë§ ì œì–´, í™”ë©´ ëª¨ë“œ ì „í™˜(í’€ <-> ìœˆë„ìš°), í†¤ ì»¤ë¸Œì— ì˜í•œ ê³„ì¡° ë³´ì • ë“± ìˆ˜í–‰
+// 1. IDXGIFactory : DXGië¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•„ìš”í•œ ê°ì¢… ì¸í„°íŽ˜ì´ìŠ¤ë¥¼ ì–»ì–´ì˜¤ëŠ” ì¸í„°íŽ˜ì´ìŠ¤, CreateDXGIFactory()ë¡œ ì¸í„°íŽ˜ì´ìŠ¤ë¥¼ ì–»ì–´ì˜¨ë‹¤.
+// 2. IDXGIAdapter : ê·¸ëž˜í”½ì¹´ë“œ ê´€ë ¨ ê¸°ëŠ¥ì„ ë‹¤ë£¸
+// 3. IDXGIOutput : ê·¸ëž˜í”½ì¹´ë“œì— ì—°ê²°ëœ ë””ìŠ¤í”Œë ˆì´  ê´€ë ¨ ê¸°ëŠ¥ì„ ë‹¤ë£¸, ì´ê±¸ë¡œ ëŒ€ì‘ ë””ìŠ¤í”Œë ˆì´ ëª¨ë“œ(í•´ìƒë„, Refresh), ê°ë§ˆ ì„¤ì • ë“± ê°€ëŠ¥
+// 4. IDXGISwapChain : í™”ë©´ì„ í‘œì‹œí•˜ëŠ” ìŠ¤ì™‘ì²´ì¸ ê¸°ëŠ¥ì„ ë‹¤ë£¸, D3D11CreateDeviceAndSwapChainë¡œ ID3D11Device ì¸í„°íŽ˜ì´ìŠ¤ë¥¼ ì–»ì„ ë•Œ ê°™ì´ ì–»ì„ ìˆ˜ ìžˆìŒ
 
 // [SwapChain]
-// ¿£Áø¿¡¼­ GPU°¡ ÇÁ·¹ÀÓ ¹öÆÛ¿¡ ÀÌ¹ÌÁö¸¦ ±×¸®´Â µ¿¾È, ºñµð¿À ÄÁÆ®·Ñ·¯°¡ GPU°¡ ÀÌ¹ÌÁö¸¦ ±×¸®°í ÀÖ´Â ÇÁ·¹ÀÓ ¹öÆÛ¸¦ ÂüÁ¶ÇÏ¿© È­¸é¿¡ Ãâ·ÂÇÒ ¶§ ±ôºý°Å¸®´Â Çö»óÀÌ ÀÖ´Âµ¥,
-// ÀÌ¸¦ ÇØ°áÇÏ±â À§ÇØ GPU°¡ ±×¸®´Â ¹é ÇÁ·¹ÀÓ ¹öÆÛ¿Í È­¸é¿¡ Ãâ·ÂÇÏ´Â ÇÁ·ÐÆ® ÇÁ·¹ÀÓ ¹öÆÛ µÎ °³¸¦ ¸¸µé¾î¼­ ±³Ã¼ÇÏ´Â ¹æ½ÄÀ» ¸»ÇÔ
-// ÇÁ·¹ÀÓ ¹öÆÛ°£ °è¼ÓµÈ ±³Ã¼°¡ ÀÏ¾î³², ¹éÀÌ ÇÁ·ÐÆ®°¡ µÇ¸é ÇÁ·ÐÆ®°¡ ¹éÀÌ µÇ°í, ÀÌ°É ¹Ýº¹
-// ÀÌ¸¦ ÀÌÁß ¹öÆÛ¸µÀÌ¶ó°íµµ ºÎ¸£¸ç, ¹öÆÛ °³¼ö¸¦ ´Ã·Áµµ µÇÁö¸¸ º¸Åë 2°³¸¸ ÇØµµ ±ôºý°Å¸²ÀÌ ÇØ°áµÊ
+// ì—”ì§„ì—ì„œ GPUê°€ í”„ë ˆìž„ ë²„í¼ì— ì´ë¯¸ì§€ë¥¼ ê·¸ë¦¬ëŠ” ë™ì•ˆ, ë¹„ë””ì˜¤ ì»¨íŠ¸ë¡¤ëŸ¬ê°€ GPUê°€ ì´ë¯¸ì§€ë¥¼ ê·¸ë¦¬ê³  ìžˆëŠ” í”„ë ˆìž„ ë²„í¼ë¥¼ ì°¸ì¡°í•˜ì—¬ í™”ë©´ì— ì¶œë ¥í•  ë•Œ ê¹œë¹¡ê±°ë¦¬ëŠ” í˜„ìƒì´ ìžˆëŠ”ë°,
+// ì´ë¥¼ í•´ê²°í•˜ê¸° ìœ„í•´ GPUê°€ ê·¸ë¦¬ëŠ” ë°± í”„ë ˆìž„ ë²„í¼ì™€ í™”ë©´ì— ì¶œë ¥í•˜ëŠ” í”„ë¡ íŠ¸ í”„ë ˆìž„ ë²„í¼ ë‘ ê°œë¥¼ ë§Œë“¤ì–´ì„œ êµì²´í•˜ëŠ” ë°©ì‹ì„ ë§í•¨
+// í”„ë ˆìž„ ë²„í¼ê°„ ê³„ì†ëœ êµì²´ê°€ ì¼ì–´ë‚¨, ë°±ì´ í”„ë¡ íŠ¸ê°€ ë˜ë©´ í”„ë¡ íŠ¸ê°€ ë°±ì´ ë˜ê³ , ì´ê±¸ ë°˜ë³µ
+// ì´ë¥¼ ì´ì¤‘ ë²„í¼ë§ì´ë¼ê³ ë„ ë¶€ë¥´ë©°, ë²„í¼ ê°œìˆ˜ë¥¼ ëŠ˜ë ¤ë„ ë˜ì§€ë§Œ ë³´í†µ 2ê°œë§Œ í•´ë„ ê¹œë¹¡ê±°ë¦¼ì´ í•´ê²°ë¨
