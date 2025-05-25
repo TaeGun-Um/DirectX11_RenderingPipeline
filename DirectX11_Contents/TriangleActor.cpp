@@ -25,8 +25,3 @@ void TriangleActor::Update(float _DeltaTime)
 	std::shared_ptr<Ext_Transform> Transform = GetTransform();
 	GetTransform()->AddWorldRotation({ 0.f, 0.f, -1.f });
 }
-
-void TriangleActor::Destroy()
-{
-
-}

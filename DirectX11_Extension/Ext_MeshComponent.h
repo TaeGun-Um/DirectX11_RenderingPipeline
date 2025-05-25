@@ -8,8 +8,8 @@ class Ext_MeshComponent : public Ext_Component
 
 public:
 	// constrcuter destructer
-	Ext_MeshComponent();
-	~Ext_MeshComponent();
+	Ext_MeshComponent() {}
+	~Ext_MeshComponent() {}
 
 	// delete Function
 	Ext_MeshComponent(const Ext_MeshComponent& _Other) = delete;
@@ -26,7 +26,7 @@ public:
 protected:
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override {}
-	virtual void Destroy() override {}
+	void Destroy() override;
 
 private:
 	void PushMeshToCamera(std::string_view _CameraName); // 메시 컴포넌트는 생성하면 카메라에 넣기 진행(지금은 메인 카메라로 들어감)

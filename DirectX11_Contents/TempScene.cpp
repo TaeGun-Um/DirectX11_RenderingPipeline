@@ -21,8 +21,3 @@ void TempScene::Update(float _DeltaTime)
 {
 
 }
-
-void TempScene::Destroy()
-{
-
-}

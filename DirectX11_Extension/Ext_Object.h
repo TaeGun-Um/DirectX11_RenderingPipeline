@@ -27,7 +27,7 @@ public:
 	void UpdateOff() { IsUpdate = false; }
 
 	bool GetIsDeath() { return IsDeath; }
-	bool SetIsDeath(bool _IsDeath) { IsDeath = _IsDeath; }
+	void SetIsDeath(bool _IsDeath) { IsDeath = _IsDeath; }
 
 	int GetOrder() { return Order; }
 	std::string GetName() { return Name; }

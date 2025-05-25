@@ -53,6 +53,7 @@ protected:
 	virtual void SceneChangeEnd(); // Scene 변경 시 호출
 	virtual void Start() override; // Scene 생성 시 호출
 	virtual void Update(float _DeltaTime) override; // Actors내 Actor들의 Update 호출
+	virtual void Destroy() override;
 	
 private:
 	void Rendering(float _DeltaTime); // 렌더링 업데이트

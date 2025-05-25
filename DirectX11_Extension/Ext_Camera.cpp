@@ -8,6 +8,36 @@
 #include "Ext_MeshComponent.h"
 #include "Ext_MeshComponentUnit.h"
 
+void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor)
+{
+	// [1] MeshComponents에서 해당 액터 소유 MeshComponent 제거
+	for (auto& [Order, List] : MeshComponents)
+	{
+		List.erase(
+			std::remove_if(List.begin(), List.end(),
+				[&](std::shared_ptr<Ext_MeshComponent>& MeshComp)
+				{
+					return MeshComp && MeshComp->GetOwnerActor().lock() == DeadActor;
+				}),
+			List.end()
+		);
+	}
+
+	// [2] MeshComponentUnits에서도 제거
+	for (auto& [Path, MapByOrder] : MeshComponentUnits)
+	{
+		for (auto& [Order, UnitList] : MapByOrder)
+		{
+			UnitList.remove_if(
+				[&](std::shared_ptr<Ext_MeshComponentUnit>& Unit)
+				{
+					auto MeshComp = Unit->GetOwnerMeshComponent().lock();
+					return MeshComp && MeshComp->GetOwnerActor().lock() == DeadActor;
+				});
+		}
+	}
+}
+
 // 현재 카메라 타입에 따라 뷰, 프로젝션, 뷰포트 행렬 세팅
 void Ext_Camera::CameraTransformUpdate()
 {

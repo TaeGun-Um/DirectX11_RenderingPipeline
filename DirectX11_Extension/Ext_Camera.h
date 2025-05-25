@@ -29,9 +29,9 @@ public:
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override {}
-	void Destroy() override {}
 	
 private:
+	void RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor);
 	void CameraTransformUpdate(); // 카메라의 뷰, 프로젝션, 뷰포트 행렬 연산 실시
 	void Rendering(float _Deltatime); // 카메라의 MeshComponents, MeshComponentUnits에 대한 렌더링 파이프라인 결과 적용
 	

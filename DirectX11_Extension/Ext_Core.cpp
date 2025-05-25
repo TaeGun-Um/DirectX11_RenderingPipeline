@@ -122,6 +122,8 @@ void Ext_Core::Update()
 	CurrentScenes->Rendering(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Rendering 업데이트
 	Ext_DirectXDevice::RenderEnd(); // Present 호출
 	////////////////////////////// 업데이트 종료 //////////////////////////////
+
+	CurrentScenes->Destroy();
 }
 
 // 윈도우창 종료 시 호출, 자원 Release 실시

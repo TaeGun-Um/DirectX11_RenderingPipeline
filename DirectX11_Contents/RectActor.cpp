@@ -24,8 +24,3 @@ void RectActor::Update(float _DeltaTime)
 	float MoveSpeed = 100.0f; // 초당 100 단위 회전
 	GetTransform()->AddWorldRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
 }
-
-void RectActor::Destroy()
-{
-
-}

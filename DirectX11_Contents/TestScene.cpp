@@ -24,12 +24,19 @@ void TestScene::Start()
 	CreateActor<CubeActor>("CubeActor");
 }
 
+float AccTime = 0;
+bool one = false;
+
 void TestScene::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
+
+	AccTime += _DeltaTime;
+
+	if (AccTime >= 4.0f && false == one)
+	{
+		one = true;
+		CreateActor<CubeActor>("CubeActor");
+	}
 }
 
-void TestScene::Destroy()
-{
-
-}

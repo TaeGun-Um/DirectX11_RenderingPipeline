@@ -27,9 +27,10 @@ void CubeActor::Update(float _DeltaTime)
 	GetTransform()->AddWorldRotation({ MoveSpeed * _DeltaTime, 0.f, 0.f });
 	GetTransform()->AddWorldRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
 	GetTransform()->AddWorldRotation({ 0.f, 0.f, MoveSpeed * _DeltaTime });
-}
 
-void CubeActor::Destroy()
-{
-
+	AccTime += _DeltaTime;
+	if (AccTime >= 2.0f)
+	{
+		SetIsDeath(true);
+	}
 }

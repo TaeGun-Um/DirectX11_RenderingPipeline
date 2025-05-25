@@ -18,8 +18,15 @@ Ext_MeshComponentUnit::Ext_MeshComponentUnit()
 	InputLayout = std::make_shared<Ext_DirectXInputLayout>(); // 만들어야 동작함
 }
 
-Ext_MeshComponentUnit::~Ext_MeshComponentUnit()
+void Ext_MeshComponentUnit::Destroy()
 {
+	// [2] 렌더링 자원 해제
+	InputLayout = nullptr;
+	Mesh = nullptr;
+	Material = nullptr;
+
+	// [3] 부모 연결 해제
+	OwnerMeshComponent.reset();
 }
 
 // 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅

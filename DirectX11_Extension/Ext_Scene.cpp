@@ -95,3 +95,44 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		CurCamera->Rendering(_DeltaTime);
 	}
 }
+
+// Actors내 Actor들의 Destroy 호출
+void Ext_Scene::Destroy()
+{
+	for (auto& [Key, ActorList] : Actors)
+	{
+		ActorList.erase(
+			std::remove_if(
+				ActorList.begin(), ActorList.end(),
+				[](const std::shared_ptr<Ext_Actor>& CurActor)
+				{
+					if (!CurActor->GetIsDeath())
+					{
+						return false;
+					}
+
+					// [1] 카메라에서 MeshComponent 제거 처리
+					for (const auto& [Name, Component] : CurActor->GetComponents())
+					{
+						// MeshComponent인지 확인
+						auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component);
+						if (MeshComp)
+						{
+							// 소유 카메라 얻기
+							std::shared_ptr<Ext_Camera> Camera = MeshComp->GetOwnerCamera().lock();
+							if (Camera)
+							{
+								Camera->RemoveMeshByActor(CurActor);
+							}
+						}
+					}
+
+					// [2] Actor 자체 Destroy 처리
+					CurActor->Destroy();
+					return true;
+				}
+			),
+			ActorList.end()
+		);
+	}
+}

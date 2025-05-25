@@ -1,6 +1,24 @@
 ﻿#include "PrecompileHeader.h"
 #include "Ext_Transform.h"
 
+void Ext_Transform::Destroy()
+{
+	// [1] TransformData 제거
+	if (TFData)
+	{
+		TFData.reset();
+	}
+
+	// [2] 부모 관계 제거
+	if (Parent)
+	{
+		Parent = nullptr;
+	}
+
+	// [3] 자식 리스트 제거
+	Childs.clear();
+}
+
 /////////////////////////////////////// Ext_Transform ///////////////////////////////////////
 
 Ext_Transform::Ext_Transform()

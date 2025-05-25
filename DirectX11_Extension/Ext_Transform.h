@@ -37,6 +37,8 @@ class Ext_Transform
 {
 	friend class Ext_Camera;
 	friend class Ext_MeshComponent;
+	friend class Ext_Component;
+	friend class Ext_Actor;
 
 public:
 	// constrcuter destructer
@@ -88,6 +90,7 @@ protected:
 private:
 	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
 	void TransformUpdate(); // 행렬 업데이트
+	void Destroy();
 
 	std::shared_ptr<TransformData> TFData = nullptr; // TransformData 정보
 

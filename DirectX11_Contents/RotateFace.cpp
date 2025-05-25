@@ -31,8 +31,3 @@ void RotateFace::Update(float _DeltaTime)
 	// GetTransform()->AddWorldRotation({ 0.f, 0.f, 5.f });
 	// GetTransform()->AddWorldPosition({ 0.f, 0.1f, 0.3f });
 }
-
-void RotateFace::Destroy()
-{
-
-}

@@ -25,7 +25,7 @@ public:
 protected:
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override {}
-	virtual void Destroy() override {}
+	virtual void Destroy() override;
 	
 	std::shared_ptr<class Ext_Transform> Transform = nullptr;	// 자신이 가진 트랜스폼 정보
 	std::weak_ptr<class Ext_Actor> OwnerActor;						// 자신을 소유한 액터 정보
