@@ -28,7 +28,7 @@ public:
 
 protected:
 	void Start() override;
-	void Update(float _DeltaTime) override {}
+	void Update(float _DeltaTime) override;
 	
 private:
 	void RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor);
@@ -49,5 +49,13 @@ private:
 	float Near = 10.f;				// 근평면
 	float Far = 100000.0f;		// 원평면
 	
-	D3D11_VIEWPORT ViewPortData; //////////////////////////////////// 테스트용
+
+	//////////////////////////////////// 테스트용
+	D3D11_VIEWPORT ViewPortData; 
+	void bIsCameraSwitch() { bIsCameraAcc = !bIsCameraAcc; }
+
+	bool bIsCameraAcc = false;
+	float AccTime = 0.f;
+	float Yaw = 0.f;
+	float Pitch = 0.f;
 };

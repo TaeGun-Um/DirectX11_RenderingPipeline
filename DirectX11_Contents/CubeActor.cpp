@@ -10,7 +10,6 @@ void CubeActor::Start()
 {
 	GetTransform()->SetLocalPosition({ 0, 0, 5 });
 
-
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
 	MeshComp->CreateMeshComponentUnit("Box", "Basic");
 
@@ -31,8 +30,8 @@ void CubeActor::Update(float _DeltaTime)
 	// 자기 자신 회전
 	float MoveSpeed = 100.0f;
 	float MoveSpeed2 = 10.0f;
-	MeshComp->GetTransform()->AddLocalRotation({ MoveSpeed * _DeltaTime, MoveSpeed * _DeltaTime, MoveSpeed * _DeltaTime });
-	MeshComp->GetTransform()->AddLocalPosition({ MoveSpeed2 * _DeltaTime * 0.1f, 0.f, 0.f });
+	//GetTransform()->AddLocalRotation({ MoveSpeed * _DeltaTime, MoveSpeed * _DeltaTime, MoveSpeed * _DeltaTime });
+	GetTransform()->AddLocalPosition({ MoveSpeed2 * _DeltaTime * 0.1f, 0.f, 0.f });
 
 	// 공전 로직
 	RotationDegree += 180.0f * _DeltaTime; // 초당 90도 회전

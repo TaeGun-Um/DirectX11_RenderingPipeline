@@ -2,7 +2,9 @@
 #include "Ext_Camera.h"
 
 #include <DirectX11_Base/Base_Windows.h>
+#include <DirectX11_Base/Base_Input.h>
 
+#include "Ext_Scene.h"
 #include "Ext_DirectXDevice.h"
 #include "Ext_Transform.h"
 #include "Ext_MeshComponent.h"
@@ -214,3 +216,71 @@ void Ext_Camera::Rendering(float _Deltatime)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////			});
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////}
+
+// 카메라 조종
+void Ext_Camera::Update(float _Deltatime)
+{
+	if (GetSharedFromThis<Ext_Camera>() != GetOwnerScene().lock()->GetMainCamera()) return;
+
+	AccTime += _Deltatime;
+
+	if (Base_Input::IsDown("OnOff") && AccTime >= 1.0f)
+	{
+		AccTime = 0.f;
+		bIsCameraSwitch();
+	}
+
+	if (!bIsCameraAcc) return;
+
+	static POINT PrevMouse = { Base_Windows::GetScreenSize().x / 2, Base_Windows::GetScreenSize().y / 2 };
+	POINT CurMouse;
+	GetCursorPos(&CurMouse);
+
+	int DeltaX = CurMouse.x - PrevMouse.x;
+	int DeltaY = CurMouse.y - PrevMouse.y;
+
+	float Sensitivity = 0.1f;
+	Yaw += DeltaX * Sensitivity;     // 좌우 (Y축 회전)
+	Pitch += DeltaY * Sensitivity;   // 상하 (X축 회전, Y 반전 적용됨)
+
+	Pitch = std::clamp(Pitch, -89.9f, 89.9f);
+
+	GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
+
+	// 커서 중앙 고정
+	SetCursorPos(PrevMouse.x, PrevMouse.y);
+
+	// 회전 이후 현재 방향 벡터 얻기
+	float4 Forward = GetTransform()->GetLocalForwardVector(); // Z축
+	float4 Right = GetTransform()->GetLocalRightVector();     // X축
+	float4 Up = GetTransform()->GetLocalUpVector();           // Y축
+
+	float MoveSpeed = 10.f * _Deltatime;
+	float4 MoveDelta = { 0.f, 0.f, 0.f };
+	if (Base_Input::IsPress("Forword"))
+	{
+		MoveDelta += Forward * MoveSpeed;
+	}
+	if (Base_Input::IsPress("Back"))
+	{
+		MoveDelta -= Forward * MoveSpeed;
+	}
+	if (Base_Input::IsPress("Right"))
+	{
+		MoveDelta += Right * MoveSpeed;
+	}
+	if (Base_Input::IsPress("Left"))
+	{
+		MoveDelta -= Right * MoveSpeed;
+	}
+	if (Base_Input::IsPress("Up"))
+	{
+		MoveDelta += Up * MoveSpeed;
+	}
+	if (Base_Input::IsPress("Down"))
+	{
+		MoveDelta -= Up * MoveSpeed;
+	}
+
+	GetTransform()->AddLocalPosition(MoveDelta);
+}

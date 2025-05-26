@@ -65,7 +65,7 @@ void Ext_Transform::TransformUpdate()
 	// 부모가 없으면 단위 행렬이 들어가고, 부모가 있으면 부모 행렬이 들어감
 	TFData->CalculateWorldMatrix(ParentMatrix);
 
-	// 월드 위치, 회전 강제 덮어쓰기
+	//// 월드 위치, 회전 강제 덮어쓰기
 	//if (bForceWorldPosition || bForceWorldRotation)
 	//{
 	//	// ✅ 강제 월드 위치 및 회전 정보 준비

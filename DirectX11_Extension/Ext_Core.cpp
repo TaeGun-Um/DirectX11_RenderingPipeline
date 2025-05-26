@@ -4,6 +4,7 @@
 #include <DirectX11_Base/Base_Windows.h>
 #include <DirectX11_Base/Base_Debug.h>
 #include <DirectX11_Base/Base_Deltatime.h>
+#include <DirectX11_Base/Base_Input.h>
 
 #include "Ext_Scene.h"
 #include "Ext_Camera.h"
@@ -70,6 +71,14 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 	Ext_DirectXDevice::Initialize(); // 디바이스, 컨텍스트, 스왑체인, 렌더타겟 생성
 	Ext_DirectXResourceLoader::Initialize(); // DirectX에 활용할 리소스 생성
 
+	Base_Input::CreateKey("OnOff", 'Q');
+	Base_Input::CreateKey("Forword", 'W');
+	Base_Input::CreateKey("Back", 'S');
+	Base_Input::CreateKey("Right", 'D');
+	Base_Input::CreateKey("Left", 'A');
+	Base_Input::CreateKey("Up", VK_SPACE);
+	Base_Input::CreateKey("DOWN", VK_CONTROL);
+
 	if (nullptr == _ContentsCoreStart)
 	{
 		MsgAssert("Contents_Core Start is nullptr");
@@ -116,10 +125,14 @@ void Ext_Core::Update()
 
 	//////////////////////////////    업데이트    //////////////////////////////
 	if (!TimeCheck()) return;
-	CurrentScenes->Update(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Actor 행렬 업데이트
+
+	float DeltaTime = Base_Deltatime::GetGlobalTime().GetDeltaTime();
+
+	Base_Input::Update(DeltaTime);
+	CurrentScenes->Update(DeltaTime); // Actor 행렬 업데이트
 
 	Ext_DirectXDevice::RenderStart(); // 백버퍼 클리어 및 세팅
-	CurrentScenes->Rendering(Base_Deltatime::GetGlobalTime().GetDeltaTime()); // Rendering 업데이트
+	CurrentScenes->Rendering(DeltaTime); // Rendering 업데이트
 	Ext_DirectXDevice::RenderEnd(); // Present 호출
 	////////////////////////////// 업데이트 종료 //////////////////////////////
 
