@@ -26,7 +26,7 @@
       <Filter>00.Header\01.Enum</Filter>
     </ClInclude>
     <ClInclude Include="Base_Input.h">
-      <Filter>06. Input</Filter>
+      <Filter>06.Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +52,7 @@
       <Filter>04.String\Path</Filter>
     </ClCompile>
     <ClCompile Include="Base_Input.cpp">
-      <Filter>06. Input</Filter>
+      <Filter>06.Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +86,7 @@
     <Filter Include="04.String\Path">
       <UniqueIdentifier>{869f3d7a-78f6-4ad0-a122-8f161a5fe75c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Input">
+    <Filter Include="06.Input">
       <UniqueIdentifier>{f3d7f0ca-c50c-4355-ac01-0d5a3dc8c1c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

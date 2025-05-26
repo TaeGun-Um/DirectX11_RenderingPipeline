@@ -31,6 +31,6 @@ private:
 	void Setting();
 
 	D3D11_DEPTH_STENCIL_DESC Desc = {};
-	ID3D11DepthStencilState* State = nullptr;
+	COMPTR<ID3D11DepthStencilState> DSS = nullptr;
 	
 };

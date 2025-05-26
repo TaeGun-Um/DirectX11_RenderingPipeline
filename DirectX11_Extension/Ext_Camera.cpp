@@ -117,75 +117,50 @@ void Ext_Camera::Start()
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	// MeshComponents 렌더링 업데이트 시작
-	for (auto& [Key, MeshComponentList] : MeshComponents)
-	{
-		// [!] 필요하면 ZSort 실시(나중에)
-
-		for (const std::shared_ptr<Ext_MeshComponent>& CurMeshComponent : MeshComponentList)
-		{
-			if (!CurMeshComponent->IsUpdate() || CurMeshComponent->IsDeath()) continue;
-			else
-			{
-				std::string Name = CurMeshComponent->GetName();
-				CurMeshComponent->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix()); // [3] 현재 MeshComponent에게 카메라의 View, Projection 곱해주기
-				// [!] 필요하면 픽셀 셰이더에서 활용할 Value들 업데이트
-			}
-		}
-
-	}
-
-	// 컴포넌트 메시의 유닛들 순회
+	// ✅ 전체 유닛 Z정렬 후 렌더링
+	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
 	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
 	{
-		//switch (RenderPathKey)
-		//{
-		//case RenderPath::Forward:
-		//{
-
-		//	break;
-		//}
-		//case RenderPath::Deferred:
-		//{
-
-		//	break;
-		//}
-		//case RenderPath::Alpha:
-		//{
-
-		//	break;
-		//}
-		//case RenderPath::Unknown:
-		//{
-		//	
-		//	break;
-		//}
-		//default:
-		//{
-		//	MsgAssert("what?");
-		//	break;
-		//}
-		//}
-
 		for (auto& [IndexKey, UnitList] : UnitMap)
 		{
 			for (auto& Unit : UnitList)
 			{
-				auto OwnerMeshComponent = Unit->GetOwnerMeshComponent().lock();
-				if (!OwnerMeshComponent || OwnerMeshComponent->IsDeath() || !OwnerMeshComponent->IsUpdate())
+				auto Owner = Unit->GetOwnerMeshComponent().lock();
+				if (!Owner || Owner->IsDeath() || !Owner->IsUpdate())
 				{
-					continue; // 죽은 MeshComponent의 유닛은 렌더링하지 않음
+					continue;
 				}
-				Unit->Rendering(_Deltatime); // 예시
+				AllRenderUnits.push_back(Unit);
 			}
 		}
 	}
-		
-		// <<추가 필요>>
-		// 렌더링 파이프라인의 각 단계 호출, << Ext_Material에서 진행 >>
-		// 1. Resterizer : RasterizerPtr->SetFILL_MODE(FILL_MODE);, GameEngineDevice::GetContext()->RSSetState(CurState);
-		// 2. OutputMerget : GameEngineDevice::GetContext()->OMSetBlendState(State, nullptr, Mask);, 
-		// 3. GameEngineDevice::GetContext()->OMSetDepthStencilState(State, 0);
+
+	float4 CamPos = GetTransform()->GetWorldPosition();
+	std::sort(AllRenderUnits.begin(), AllRenderUnits.end(),
+		[&](const std::shared_ptr<Ext_MeshComponentUnit>& A, const std::shared_ptr<Ext_MeshComponentUnit>& B)
+		{
+			auto AMesh = A->GetOwnerMeshComponent().lock();
+			auto BMesh = B->GetOwnerMeshComponent().lock();
+			return (AMesh->GetTransform()->GetWorldPosition() - CamPos).Size()
+			 > (BMesh->GetTransform()->GetWorldPosition() - CamPos).Size();
+		});
+
+	std::unordered_set<std::shared_ptr<Ext_MeshComponent>> UpdatedComponents;
+
+	for (auto& Unit : AllRenderUnits)
+	{
+		auto Owner = Unit->GetOwnerMeshComponent().lock();
+		if (!Owner)
+			continue;
+
+		// ✅ View/Projection은 한 번만 업데이트
+		if (UpdatedComponents.insert(Owner).second)
+		{
+			Owner->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix());
+		}
+
+		Unit->Rendering(_Deltatime);
+	}
 }
 
 

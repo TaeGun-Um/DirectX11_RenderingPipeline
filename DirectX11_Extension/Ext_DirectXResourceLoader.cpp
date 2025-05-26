@@ -203,12 +203,9 @@ void Ext_DirectXResourceLoader::MakeDepth()
 	D3D11_DEPTH_STENCIL_DESC Desc = { 0, };
 
 	Desc.DepthEnable = true;
-	Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
 	Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+	Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
 	Desc.StencilEnable = false;
-
-	// 스텐실 옵션은 꺼두고
-	Desc.StencilEnable = FALSE;
 
 	Ext_DirectXDepth::CreateDepth("EngineDepth", Desc);
 }

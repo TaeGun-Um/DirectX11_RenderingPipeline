@@ -98,7 +98,7 @@ void Ext_DirectXRenderTarget::DepthStencilViewClear()
 		return;
 	}
 
-	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	// 1. 클리어 대상
 	// 2. 어떻게 클리어 할것인가
 	// 3. 깊이 클리어값(가장 멀리)
@@ -123,6 +123,7 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 	}
 
 	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV(); // 깊이 텍스처에서 DSV(DepthStencilView) 획득
+
 
 	//if (false == DepthSetting)
 	//{
