@@ -8,9 +8,10 @@
 
 #include "Ext_Scene.h"
 #include "Ext_Camera.h"
-
 #include "Ext_DirectXDevice.h"
 #include "Ext_DirectXResourceLoader.h"
+#include "Ext_Imgui.h"
+#include "ExtGui.h"
 
 std::map<std::string, std::shared_ptr<class Ext_Scene>> Ext_Core::Scenes;
 std::shared_ptr<class Ext_Scene> Ext_Core::CurrentScenes = nullptr;
@@ -70,6 +71,8 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 {
 	Ext_DirectXDevice::Initialize(); // 디바이스, 컨텍스트, 스왑체인, 렌더타겟 생성
 	Ext_DirectXResourceLoader::Initialize(); // DirectX에 활용할 리소스 생성
+	Ext_Imgui::Initialize();
+	Ext_Imgui::CreateImgui<ExtGui>("ExtGui");
 
 	Base_Input::CreateKey("OnOff", 'Q');
 	Base_Input::CreateKey("Forword", 'W');

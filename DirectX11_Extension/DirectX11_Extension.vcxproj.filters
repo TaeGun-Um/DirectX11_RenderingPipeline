@@ -94,6 +94,33 @@
     <ClCompile Include="Ext_DirectXBufferSetter.cpp">
       <Filter>02.DirectX\02.Resource\03.Shader\01.Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_Imgui.cpp">
+      <Filter>03.ThridParty\00. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtGui.cpp">
+      <Filter>03.ThridParty\00. Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -195,6 +222,36 @@
     <ClInclude Include="Ext_DirectXBufferSetter.h">
       <Filter>02.DirectX\02.Resource\03.Shader\01.Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_Imgui.h">
+      <Filter>03.ThridParty\00. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>03.ThridParty\00. Imgui\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtGui.h">
+      <Filter>03.ThridParty\00. Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02.DirectX">
@@ -292,6 +349,15 @@
     </Filter>
     <Filter Include="02.DirectX\02.Resource\01.Vertex\00.VertexData">
       <UniqueIdentifier>{2a9ca916-dde8-45cb-aeb5-fc077101b346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ThridParty">
+      <UniqueIdentifier>{b2e324e0-4915-48aa-8606-22e36517c7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ThridParty\00. Imgui">
+      <UniqueIdentifier>{7f6f07b8-01f9-4d96-b775-53d80b74a32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ThridParty\00. Imgui\Source">
+      <UniqueIdentifier>{421babfa-83d2-44b4-859b-b73861ae2a4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

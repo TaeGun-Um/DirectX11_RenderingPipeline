@@ -4,9 +4,7 @@
 #include "Ext_Actor.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
-
-#include "Ext_DirectXResourceLoader.h" // 임시
-#include "Ext_DirectXDevice.h" // 임시
+#include "Ext_Imgui.h"
 
 // Actor 생성 시 자동 호출(이름 설정, 오너 신 설정, 오더 설정)
 void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr<Ext_Scene> _Level, std::string_view _Name, int _Order /*= 0*/)
@@ -89,6 +87,8 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		CurCamera->CameraTransformUpdate(); // 카메라에 대한 뷰, 프로젝션, 뷰포트 행렬 최신화
 		CurCamera->Rendering(_DeltaTime);
 	}
+
+	Ext_Imgui::Render(GetSharedFromThis<Ext_Scene>(), _DeltaTime);
 }
 
 // Actors내 Actor들의 Release 호출
