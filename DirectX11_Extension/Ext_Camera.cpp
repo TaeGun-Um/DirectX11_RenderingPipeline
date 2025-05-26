@@ -234,16 +234,16 @@ void Ext_Camera::Update(float _Deltatime)
 
 	static POINT PrevMouse = { Base_Windows::GetScreenSize().x / 2, Base_Windows::GetScreenSize().y / 2 };
 	POINT CurMouse;
-	GetCursorPos(&CurMouse);
+	GetCursorPos(&CurMouse); // 현재 마우스 위치를 화면 기준 좌표계로 얻어옴, 이값과 PrevMouse 차이를 통해 마우스가 얼마나 움직였나 파악 가능
 
 	int DeltaX = CurMouse.x - PrevMouse.x;
 	int DeltaY = CurMouse.y - PrevMouse.y;
 
-	float Sensitivity = 0.1f;
+	float Sensitivity = 0.1f; // 움직임 대비 회전량 강도(클수록 더 크게 회전)
 	Yaw += DeltaX * Sensitivity;     // 좌우 (Y축 회전)
 	Pitch += DeltaY * Sensitivity;   // 상하 (X축 회전, Y 반전 적용됨)
 
-	Pitch = std::clamp(Pitch, -89.9f, 89.9f);
+	Pitch = std::clamp(Pitch, -89.9f, 89.9f); // 상하 극단적 회전 제한
 
 	GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
 
