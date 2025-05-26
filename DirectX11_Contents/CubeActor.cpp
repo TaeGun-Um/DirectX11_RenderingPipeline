@@ -18,12 +18,12 @@ void CubeActor::Start()
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh"); // 메시 생성
 	MeshComp->CreateMeshComponentUnit("Box", "Basic"); // 렌더링 세팅 설정
 	//MeshComp->GetTransform()->SetWorldPosition({ 0, 0, 10});
-	GetTransform()->SetLocalPosition({ 0, 0, 4 });
+	GetTransform()->SetLocalPosition({ -2, 0, 4 });
 
 	MeshComp2 = CreateComponent<Ext_MeshComponent>("BasicMesh2"); // 메시 생성;
 	MeshComp2->CreateMeshComponentUnit("Box", "Basic"); // 렌더링 세팅 설정
 	MeshComp2->GetTransform()->SetParent(GetTransform());
-	MeshComp2->GetTransform()->SetLocalPosition({ 2.f, 0.f, 0.f });
+	MeshComp2->GetTransform()->SetLocalPosition({ 2.f, 2.f, 0.f });
 
 	//PivotComponent = OrbitPivot;
 }
@@ -47,7 +47,7 @@ void CubeActor::Update(float _DeltaTime)
 	AccTime += _DeltaTime;
 	if (AccTime >= 3.f)
 	{
-		//Destroy();
-		MeshComp2->Destroy(true);
+		MeshComp2->Destroy();
+		Destroy();
 	}
 }

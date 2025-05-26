@@ -27,7 +27,7 @@ public:
 	void UpdateOff() { bIsUpdate = false; }
 
 	bool IsDeath() { return bIsDeath; }
-	virtual void Destroy(bool _bValue = false)
+	virtual void Destroy(bool _bValue = false) // Destroy는 bIsDeath, bIsUpdate를 변경하고 루프 마지막에 지우도록 플래그만 설정하는 함수
 	{ 
 		bIsDeath = true;
 		bIsUpdate = false;

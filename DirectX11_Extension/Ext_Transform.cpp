@@ -3,12 +3,16 @@
 
 /////////////////////////////////////// TransformData ///////////////////////////////////////
 
+// 로컬 매트릭스 만들기
 void TransformData::CalculateLocalMatrix()
 {
 	LocalQuaternion = LocalRotation.DegreeToQuaternion();
 	LocalMatrix.Compose(LocalScale, LocalQuaternion, LocalPosition);
 }
 
+// 로컬 매트릭스로 월드 매트릭스 만들기
+// 부모가 없다면 단위행렬을 곱하여 자기 자신의 로컬이 곧 월드 행렬이 되도록함
+// 부모가 있다면 부모의 월드 행렬을 받아서 자신의 월드 행렬 계산 -> 부모 영향을 받는 월드 행렬 구성
 void TransformData::CalculateWorldMatrix(const float4x4& _ParentMatrix)
 {
 	CalculateLocalMatrix();
@@ -17,6 +21,7 @@ void TransformData::CalculateWorldMatrix(const float4x4& _ParentMatrix)
 	WorldRotation = WorldQuaternion.QuaternionToDegree();
 }
 
+// 뷰, 프로젝션 생성
 void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
 {
 	ViewMatrix = _View;
@@ -56,7 +61,8 @@ void Ext_Transform::TransformUpdate()
 	{
 		ParentMatrix = ParentTransform->GetWorldMatrix();
 	}
-
+	
+	// 부모가 없으면 단위 행렬이 들어가고, 부모가 있으면 부모 행렬이 들어감
 	TFData->CalculateWorldMatrix(ParentMatrix);
 
 	for (auto& Child : Children)

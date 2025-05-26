@@ -22,7 +22,8 @@ public:
 	std::weak_ptr<class Ext_Actor> GetOwnerActor() { return OwnerActor; }
 	void SetOwnerActor(std::weak_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
 
-	void Destroy(bool _bIncludeChildren = false) override; // 특정 컴포넌트를 지우기 위한 구조
+	void Destroy(bool _bIncludeChildren = false) override; // Destroy는 bIsDeath, bIsUpdate를 변경하고 루프 마지막에 지우도록 플래그만 설정하는 함수
+
 protected:
 	virtual void Start() override;
 	void Update(float _DeltaTime) override;

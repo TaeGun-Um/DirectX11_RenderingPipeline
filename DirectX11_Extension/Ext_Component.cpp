@@ -8,6 +8,7 @@ Ext_Component::Ext_Component()
 	Transform = std::make_shared<Ext_Transform>();
 }
 
+// Destroy는 bIsDeath, bIsUpdate를 변경하고 루프 마지막에 지우도록 플래그만 설정하는 함수
 void Ext_Component::Destroy(bool _bIncludeChildren/* = false*/)
 {
 	if (bIsDeath) return;
@@ -20,10 +21,10 @@ void Ext_Component::Destroy(bool _bIncludeChildren/* = false*/)
 	// [2] 재귀 제거 옵션이 true인 경우에만 자식 제거
 	if (_bIncludeChildren)
 	{
-		auto Transform = GetTransform();
+		auto Transform = GetTransform(); // 컴포넌트가 재귀적으로 지워질 때는 트랜스폼의 부모자식 관계를 확인하여 지움
 		if (Transform)
 		{
-			const auto& Children = Transform->GetChildren();
+			const auto& Children = Transform->GetChildren(); // 자식 있나요?
 			for (const auto& ChildTransform : Children)
 			{
 				if (auto ChildComp = ChildTransform->GetOwnerComponent().lock())
