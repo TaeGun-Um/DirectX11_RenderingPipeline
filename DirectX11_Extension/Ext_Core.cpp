@@ -153,4 +153,6 @@ void Ext_Core::End(std::function<void()> _ContentsCoreEnd)
 		return;
 	}
 	_ContentsCoreEnd();
+
+	Ext_Imgui::Release();
 }
