@@ -5,8 +5,8 @@ class CubeActor : public Ext_Actor
 {
 public:
 	// constrcuter destructer
-	CubeActor();
-	~CubeActor();
+	CubeActor() {}
+	~CubeActor() {}
 
 	// delete Function
 	CubeActor(const CubeActor& _Other) = delete;
@@ -20,6 +20,7 @@ protected:
 	
 private:
 	float AccTime = 0;
+	float RotationDegree = 0.f;
 	std::shared_ptr<class Ext_MeshComponent> MeshComp;
 	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
 };

@@ -65,6 +65,40 @@ void Ext_Transform::TransformUpdate()
 	// 부모가 없으면 단위 행렬이 들어가고, 부모가 있으면 부모 행렬이 들어감
 	TFData->CalculateWorldMatrix(ParentMatrix);
 
+	// 월드 위치, 회전 강제 덮어쓰기
+	//if (bForceWorldPosition || bForceWorldRotation)
+	//{
+	//	// ✅ 강제 월드 위치 및 회전 정보 준비
+	//	float4 WorldPosition = TFData->WorldPosition;
+	//	float4 WorldRotation = TFData->WorldRotation;
+	//	float4 WorldScale = TFData->WorldScale;
+	//	float4 WorldQuaternion = TFData->WorldQuaternion;
+
+	//	if (bForceWorldPosition)
+	//	{
+	//		WorldPosition = ForcedWorldPosition;
+	//		TFData->WorldPosition = WorldPosition;
+	//	}
+
+	//	if (bForceWorldRotation)
+	//	{
+	//		WorldRotation = ForcedWorldRotation;
+	//		WorldQuaternion = ForcedWorldRotation.DegreeToQuaternion();
+
+	//		TFData->WorldRotation = WorldRotation;
+	//		TFData->WorldQuaternion = WorldQuaternion;
+	//	}
+
+	//	// ✅ 새로 조합
+	//	TFData->WorldMatrix.Compose(WorldScale, WorldQuaternion, WorldPosition);
+
+	//	// ✅ 역산으로 LocalMatrix 계산
+	//	ParentMatrix.Inverse();
+	//	TFData->LocalMatrix = TFData->WorldMatrix * ParentMatrix;
+	//	TFData->LocalMatrix.Decompose(TFData->LocalScale,	TFData->LocalQuaternion, TFData->LocalPosition);
+	//	TFData->LocalRotation = TFData->LocalQuaternion.QuaternionToDegree();
+	//}
+
 	for (auto& Child : Children)
 	{
 		Child->TransformUpdate();

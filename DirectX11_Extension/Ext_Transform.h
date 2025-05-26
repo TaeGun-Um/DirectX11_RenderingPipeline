@@ -89,6 +89,26 @@ public:
 	float4 GetLocalRotation() const { return TFData->LocalRotation; }
 	float4 GetLocalScale() const { return TFData->LocalScale; }
 
+	//void SetWorldPosition(const float4& _Value)
+	//{
+	//	bForceWorldPosition = true;
+	//	ForcedWorldPosition = _Value;
+	//	TransformUpdate();
+	//}
+
+	//void SetWorldRotation(const float4& _Value)
+	//{
+	//	bForceWorldRotation = false;
+	//	ForcedWorldRotation = _Value;
+	//	TransformUpdate();
+	//}
+
+	//void SetWorldScale(const float4& _Value)
+	//{
+	//	TFData->WorldScale = _Value;
+	//	TransformUpdate();
+	//}
+
 	// 월드 Getter
 	float4 GetWorldPosition() const { return TFData->WorldPosition; }
 	float4 GetWorldRotation() const { return TFData->WorldRotation; }
@@ -155,6 +175,12 @@ private:
 	std::weak_ptr<Ext_Transform> Parent;
 	std::vector<std::shared_ptr<Ext_Transform>> Children;
 	std::weak_ptr<Ext_Component> OwnerComponent;
+
+	//bool bForceWorldPosition = false;
+	//bool bForceWorldRotation = false;
+
+	//float4 ForcedWorldPosition = float4::ZERO;
+	//float4 ForcedWorldRotation = float4::ZERONULL;
 
 };
 
