@@ -8,8 +8,8 @@
 #include "Ext_DirectXResourceLoader.h" // 임시
 #include "Ext_DirectXDevice.h" // 임시
 
-// Actors내 Actor들의 Destroy 호출
-void Ext_Scene::Destroy()
+// Actors내 Actor들의 Release 호출
+void Ext_Scene::Release()
 {
 	for (auto& [Key, ActorList] : Actors)
 	{
@@ -39,7 +39,7 @@ void Ext_Scene::Destroy()
 				}
 
 				// [2] Actor 자체 Destroy 처리
-				CurActor->Destroy();
+				CurActor->Release();
 				return true;
 			}
 		),

@@ -18,7 +18,7 @@ void Ext_Actor::RemoveDeadComponents()
 	{
 		if (Iter->second && Iter->second->IsDeath())
 		{
-			Iter->second->Destroy(); // 컴포넌트 자원 정리
+			Iter->second->Release(); // 컴포넌트 자원 정리
 			Iter = Components.erase(Iter);
 		}
 		else
@@ -28,16 +28,16 @@ void Ext_Actor::RemoveDeadComponents()
 	}
 }
 
-void Ext_Actor::Destroy()
+void Ext_Actor::Release()
 {
-	SetIsDeath(true);
+	Destroy();
 
 	// [1] 자신이 보유한 모든 Component를 제거 요청 (재귀적으로 자식까지 제거됨)
 	for (auto& [Name, Component] : Components)
 	{
 		if (Component)
 		{
-			Component->SetIsDeath(true);
+			Component->Destroy();
 		}
 	}
 
@@ -48,7 +48,7 @@ void Ext_Actor::Destroy()
 	// [3] Actor가 Transform을 소유한 경우, 직접 정리
 	if (Transform)
 	{
-		Transform->Destroy();
+		Transform->Release();
 		Transform = nullptr;
 	}
 }

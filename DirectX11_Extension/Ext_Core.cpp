@@ -123,7 +123,7 @@ void Ext_Core::Update()
 	Ext_DirectXDevice::RenderEnd(); // Present 호출
 	////////////////////////////// 업데이트 종료 //////////////////////////////
 
-	CurrentScenes->Destroy();
+	CurrentScenes->Release();
 }
 
 // 윈도우창 종료 시 호출, 자원 Release 실시

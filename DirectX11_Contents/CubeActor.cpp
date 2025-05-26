@@ -44,9 +44,10 @@ void CubeActor::Update(float _DeltaTime)
 	//Rotation.y += Speed * _DeltaTime;
 	//PivotComponent->GetTransform()->SetWorldRotation(Rotation);
 
-	//AccTime += _DeltaTime;
-	//if (AccTime >= 3.f)
-	//{
-	//	SetIsDeath(true);
-	//}
+	AccTime += _DeltaTime;
+	if (AccTime >= 3.f)
+	{
+		//Destroy();
+		MeshComp2->Destroy(true);
+	}
 }

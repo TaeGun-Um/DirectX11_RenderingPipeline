@@ -27,7 +27,11 @@ public:
 	void UpdateOff() { bIsUpdate = false; }
 
 	bool IsDeath() { return bIsDeath; }
-	void SetIsDeath(bool _IsDeath) { bIsDeath = _IsDeath; }
+	virtual void Destroy(bool _bValue = false)
+	{ 
+		bIsDeath = true;
+		bIsUpdate = false;
+	}
 
 	int GetOrder() { return Order; }
 	std::string GetName() { return Name; }
@@ -36,7 +40,7 @@ public:
 protected:
 	virtual void Start() {}
 	virtual void Update(float _DeltaTime) {}
-	virtual void Destroy() {}
+	virtual void Release() {}
 
 	void SetOrder(int _Order) { Order = _Order; }
 	void SetName(std::string_view _Name) { Name = _Name; }

@@ -18,7 +18,7 @@ Ext_MeshComponentUnit::Ext_MeshComponentUnit()
 	InputLayout = std::make_shared<Ext_DirectXInputLayout>(); // 만들어야 동작함
 }
 
-void Ext_MeshComponentUnit::Destroy()
+void Ext_MeshComponentUnit::Release()
 {
 	// [2] 렌더링 자원 해제
 	InputLayout = nullptr;

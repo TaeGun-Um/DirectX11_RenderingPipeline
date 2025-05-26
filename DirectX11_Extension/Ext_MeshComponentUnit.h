@@ -39,7 +39,7 @@ private:
 	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
 	void RenderUnitSetting(); // Mesh, Material Setting
 	void RenderUnitDraw(); // 정점 정보들과 셰이더를 통해 메시 Draw 실시(DrawIndexed Call)
-	void Destroy();
+	void Release();
 
 	std::weak_ptr<class Ext_MeshComponent> OwnerMeshComponent;		// 자신을 소유한 카메라
 	std::shared_ptr<class Ext_DirectXInputLayout> InputLayout = nullptr;	// Vertex Buffer와 Vertex Shader로 생성된 인풋 레이아웃 정보 저장용

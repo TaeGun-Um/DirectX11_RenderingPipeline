@@ -33,7 +33,7 @@ Ext_Transform::Ext_Transform()
 	TransformUpdate();
 }
 
-void Ext_Transform::Destroy()
+void Ext_Transform::Release()
 {
 	if (TFData)
 	{

@@ -22,13 +22,11 @@ public:
 	std::weak_ptr<class Ext_Actor> GetOwnerActor() { return OwnerActor; }
 	void SetOwnerActor(std::weak_ptr<class Ext_Actor> _Acotr) { OwnerActor = _Acotr; }
 
-	void SetIsDeath(bool Value, bool bIncludeChildren = false); // 특정 컴포넌트를 지우기 위한 구조
-
-
+	void Destroy(bool _bIncludeChildren = false) override; // 특정 컴포넌트를 지우기 위한 구조
 protected:
 	virtual void Start() override;
 	void Update(float _DeltaTime) override;
-	virtual void Destroy() override;
+	virtual void Release() override;
 	
 	std::shared_ptr<class Ext_Transform> Transform = nullptr;	// 자신이 가진 트랜스폼 정보
 	std::weak_ptr<class Ext_Actor> OwnerActor;						// 자신을 소유한 액터 정보

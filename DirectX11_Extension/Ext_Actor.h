@@ -66,7 +66,7 @@ public:
 protected:
 	virtual void Start() override {}
 	virtual void Update(float _DeltaTime);
-	virtual void Destroy() override;
+	virtual void Release() override;
 	void RemoveDeadComponents(); // 특정 컴포넌트만 제거
 	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order); 
 	

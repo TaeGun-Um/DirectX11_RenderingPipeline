@@ -6,14 +6,14 @@
 #include "Ext_Transform.h"
 #include "Ext_Camera.h"
 
-void Ext_MeshComponent::Destroy()
+void Ext_MeshComponent::Release()
 {
 	// [1] 유닛 모두 정리
 	for (auto& Unit : Units)
 	{
 		if (Unit)
 		{
-			Unit->Destroy(); // 아래 정의된 유닛 Destroy 호출
+			Unit->Release(); // 아래 정의된 유닛 Release 호출
 		}
 	}
 	Units.clear();
@@ -21,8 +21,8 @@ void Ext_MeshComponent::Destroy()
 	// [2] 카메라 연결 해제
 	OwnerCamera.reset();
 
-	// [3] 부모 클래스 Destroy 호출
-	Ext_Component::Destroy();
+	// [3] 부모 클래스 Release 호출
+	Ext_Component::Release();
 }
 
 // 생성하면 카메라에도 저장하기 위해 실행

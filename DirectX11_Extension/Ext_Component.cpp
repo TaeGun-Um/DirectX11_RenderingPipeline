@@ -8,20 +8,17 @@ Ext_Component::Ext_Component()
 	Transform = std::make_shared<Ext_Transform>();
 }
 
-void Ext_Component::SetIsDeath(bool Value, bool bIncludeChildren/* = false*/)
+void Ext_Component::Destroy(bool _bIncludeChildren/* = false*/)
 {
-	bIsDeath = Value;
-
-	if (!bIsDeath)
-	{
-		return;
-	}
+	if (bIsDeath) return;
+	bIsDeath = true;
+	bIsUpdate = false;
 
 	// [1] 자신 보존
 	std::shared_ptr<Ext_Component> SelfKeepAlive = GetSharedFromThis<Ext_Component>();
 
 	// [2] 재귀 제거 옵션이 true인 경우에만 자식 제거
-	if (bIncludeChildren)
+	if (_bIncludeChildren)
 	{
 		auto Transform = GetTransform();
 		if (Transform)
@@ -31,7 +28,7 @@ void Ext_Component::SetIsDeath(bool Value, bool bIncludeChildren/* = false*/)
 			{
 				if (auto ChildComp = ChildTransform->GetOwnerComponent().lock())
 				{
-					ChildComp->SetIsDeath(true, true); // 재귀로 자식도 제거
+					ChildComp->Destroy(true); // 재귀로 자식도 제거
 				}
 			}
 		}
@@ -44,12 +41,12 @@ void Ext_Component::SetIsDeath(bool Value, bool bIncludeChildren/* = false*/)
 	}
 }
 
-void Ext_Component::Destroy()
+void Ext_Component::Release()
 {
 	// [1] Transform 정리
 	if (Transform)
 	{
-		Transform->Destroy(); // Transform 계층에서 자신 정리 + 부모/자식 관계 끊기
+		Transform->Release(); // Transform 계층에서 자신 정리 + 부모/자식 관계 끊기
 	}
 	Transform = nullptr;
 
