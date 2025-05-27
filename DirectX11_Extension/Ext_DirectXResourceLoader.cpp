@@ -198,6 +198,7 @@ void Ext_DirectXResourceLoader::MakeBlend()
 
 }
 
+// DirectX11 DepthStencilState 생성
 void Ext_DirectXResourceLoader::MakeDepth() 
 {
 	D3D11_DEPTH_STENCIL_DESC Desc = { 0, };
@@ -206,16 +207,22 @@ void Ext_DirectXResourceLoader::MakeDepth()
 	Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
 	Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
 	Desc.StencilEnable = false;
+	/*1. 깊이 테스트 수행함(true)*/
+	/*2. 깊이 값을 Z버퍼에 기록*/
+	/*3. 새 픽셀이 더 가깝거나 같으면 통과*/
+	/*4. 스텐실 안함*/
 
-	Ext_DirectXDepth::CreateDepth("EngineDepth", Desc);
+	Ext_DirectXDepth::CreateDepthStencilState("EngineDepth", Desc);
 }
 
+// DirectX11 Rasterizer 생성
 void Ext_DirectXResourceLoader::MakeRasterizer() 
 {
 	D3D11_RASTERIZER_DESC Desc = {};
 
-	Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거
-	Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면
+	Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
+	Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
+	// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
 
 	Ext_DirectXRasterizer::CreateRasterizer("EngineRasterizer", Desc);
 }

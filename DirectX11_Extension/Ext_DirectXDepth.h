@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Ext_ResourceManager.h"
 
+// DepthStencil State를 관리하는 클래스
 class Ext_DirectXDepth : public Ext_ResourceManager<Ext_DirectXDepth>
 {
 	friend class Ext_DirectXMaterial;
@@ -16,10 +17,11 @@ public:
 	Ext_DirectXDepth& operator=(const Ext_DirectXDepth& _Other) = delete;
 	Ext_DirectXDepth& operator=(Ext_DirectXDepth&& _Other) noexcept = delete;
 
-	static std::shared_ptr<Ext_DirectXDepth> CreateDepth(const std::string_view& _Name, const D3D11_DEPTH_STENCIL_DESC& _Desc)
+	// DepthStencilState 생성
+	static std::shared_ptr<Ext_DirectXDepth> CreateDepthStencilState(const std::string_view& _Name, const D3D11_DEPTH_STENCIL_DESC& _Desc)
 	{
 		std::shared_ptr<Ext_DirectXDepth> NewDepth = Ext_DirectXDepth::CreateNameResource(_Name);
-		NewDepth->CreateDepth(_Desc);
+		NewDepth->CreateDepthStencilState(_Desc);
 
 		return NewDepth;
 	}
@@ -27,10 +29,10 @@ public:
 protected:
 	
 private:
-	void CreateDepth(const D3D11_DEPTH_STENCIL_DESC& _Value);
-	void Setting();
+	void CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& _Value);
+	void Setting(); // DSS를 GPU에 바인딩
 
-	D3D11_DEPTH_STENCIL_DESC Desc = {};
-	COMPTR<ID3D11DepthStencilState> DSS = nullptr;
+	D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = {}; // 뎁스스텐실스테이트 설명서
+	COMPTR<ID3D11DepthStencilState> DSS = nullptr;		// 생성된 DSS 저장하는 포인터
 	
 };
