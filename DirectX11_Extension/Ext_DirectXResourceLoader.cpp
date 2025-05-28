@@ -225,6 +225,13 @@ void Ext_DirectXResourceLoader::MakeSampler()
 		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 		SamperInfo.MinLOD = -FLT_MAX;
 		SamperInfo.MaxLOD = FLT_MAX;
+		// <<설명>>
+		/*1. Filter : MIN_MAG_MIP_LINEAR(축소, 확대, 밉맵) 모두 선형 보간으로 부드럽게 처리한다는 뜻의 D3D11_FILTER_MIN_MAG_MIP_LINEAR 전달*/
+		/*2~4. AddressUVW : D3D11_TEXTURE_ADDRESS_CLAMP는 UV가 0~1 범위를 넘을 경우, 가장자리 색상을 계속 사용한다는 뜻*/
+		/*5. MipLODBias : 밉맵 LOD를 얼마나 조정할지 정하기 위함, 0.0f로 전달하면 기본 수준 사용 */
+		/*6. MaxAnisotropy : 애니소트로픽 필터링 여부, 1은 비활성화이며 4 ~ 16을 보통 사용한다.*/
+		/*7. ComparisonFunc : 그림자 맵 등에서 비교 연산 시 항상 통과한다는 설정, 일반 텍스쳐는 보통 ALWAYS를 설정한다.*/
+		/*8~9. MinLOD, MaxLOD : 밉맵 레벨 범위 제한, -FLT_MAX ~ FLT_MAX면 전체를 허용하는 것*/
 
 		Ext_DirectXSampler::CreateSampler("BaseSampler", SamperInfo);
 	}
@@ -242,52 +249,6 @@ void Ext_DirectXResourceLoader::MakeSampler()
 		//SamperInfo.MaxLOD = FLT_MAX;
 
 		//Ext_DirectXSampler::CreateSampler("POINTSAMPLER", SamperInfo);
-	}
-	{
-		//D3D11_SAMPLER_DESC SamperInfo = {};
-
-		//SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		//SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.MipLODBias = 0.0f;
-		//SamperInfo.MaxAnisotropy = 1;
-		//SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		//SamperInfo.MinLOD = -FLT_MAX;
-		//SamperInfo.MaxLOD = FLT_MAX;
-
-		//Ext_DirectXSampler::CreateSampler("CLAMPSAMPLER", SamperInfo);
-	}
-	{
-		//D3D11_SAMPLER_DESC SamperInfo = {};
-
-		//SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		//SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		//SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		//SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		//SamperInfo.MipLODBias = 0.0f;
-		//SamperInfo.MaxAnisotropy = 1;
-		//SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		//SamperInfo.MinLOD = -FLT_MAX;
-		//SamperInfo.MaxLOD = FLT_MAX;
-
-		//Ext_DirectXSampler::CreateSampler("WRAPSAMPLER", SamperInfo);
-	}
-
-	{
-		//D3D11_SAMPLER_DESC SamperInfo = {};
-
-		//SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		//SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
-		//SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
-		//SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.MipLODBias = 0.0f;
-		//SamperInfo.MaxAnisotropy = 1;
-		//SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		//SamperInfo.MinLOD = 0.0f;
-		//SamperInfo.MaxLOD = 0.0f;
-
-		//Ext_DirectXSampler::CreateSampler("CUBEMAPSAMPLER", SamperInfo);
 	}
 }
 
