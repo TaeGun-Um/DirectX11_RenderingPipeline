@@ -447,6 +447,9 @@
       <Project>{e1528c55-aaba-4b28-a5e6-60471cff73db}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ThirdParty\DirectXTex\lib.zip" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
