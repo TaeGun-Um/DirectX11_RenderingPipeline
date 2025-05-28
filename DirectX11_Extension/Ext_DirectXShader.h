@@ -40,7 +40,7 @@ protected:
 
 private:
 	static ShaderType FindShaderType(std::string_view _EntryPoint);
-	Ext_DirectXBufferSetter BufferSetter;
+	Ext_DirectXBufferSetter BufferSetter; // 리플렉션으로 생성된 상수 버퍼, 샘플러, 텍스쳐 등 데이터 저장용
 
 };
 // [ID3DBlob]

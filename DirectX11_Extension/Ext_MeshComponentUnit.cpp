@@ -59,6 +59,11 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
 }
 
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName)
+{
+	BufferSetter.SetTexture(_TextureName);
+}
+
 // Mesh, Material의 RenderingPipeline Setting
 void Ext_MeshComponentUnit::RenderUnitSetting()
 {

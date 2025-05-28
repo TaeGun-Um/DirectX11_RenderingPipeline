@@ -3,8 +3,10 @@
 #include "Ext_DirectXVertexShader.h"
 #include "Ext_DirectXPixelShader.h"
 #include "Ext_DirectXComputeShader.h"
-#include "Ext_DirectXConstantBuffer.h"
 #include "Ext_DirectXBufferSetter.h"
+#include "Ext_DirectXConstantBuffer.h"
+#include "Ext_DirectXSampler.h"
+#include "Ext_DirectXTexture.h"
 
 void Ext_DirectXShader::CreateVersion(std::string_view _ShaderType, UINT _VersionHigt /*= 5*/, UINT _VersionLow /*= 0*/)
 {
@@ -94,13 +96,13 @@ void Ext_DirectXShader::ShaderResourceSetting()
 	CompileInfo->GetDesc(&Info); // 이 셰이더가 몇 개의 상수버퍼, 텍스처, 샘플러를 쓰는지 등의 총괄 정보를 Info 구조체에 채움
 	D3D11_SHADER_INPUT_BIND_DESC ResDesc;
 
-	// 내가 사용한 상수버퍼 텍스처 샘플러등의 총합입니다.
+	// 바인딩 슬롯 갯수만큼 반복
 	for (UINT i = 0; i < Info.BoundResources; i++)
 	{
 		CompileInfo->GetResourceBindingDesc(i, &ResDesc); // i번째 리소스의 이름, 바인딩 슬롯, 타입 등을 ResDesc에 채움
-		std::string Name = ResDesc.Name; // 원본 이름
 		D3D_SHADER_INPUT_TYPE Type = ResDesc.Type; // 리소스 타입 파싱
-		std::string UpperName = Base_String::ToUpper(ResDesc.Name); // 엔진 내부 대문자로 통일 처리
+		std::string Name = ResDesc.Name; // 바인딩 슬롯 원본 이름
+		std::string UpperName = Base_String::ToUpper(ResDesc.Name); // 바인딩 슬롯 대문자
 
 		switch (Type)
 		{
@@ -113,6 +115,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 
 			std::shared_ptr<Ext_DirectXConstantBuffer> ConstantBuffer = Ext_DirectXConstantBuffer::CreateConstantBuffer(UpperName, BufferDesc, BufferDesc.Size); // 상수버퍼 클래스 생성
 
+			// 상수버퍼 세터 데이터 입력 후 저장
 			ConstantBufferSetter Set; 
 			Set.OwnerShader = GetSharedFromThis<Ext_DirectXShader>(); // 현재 셰이더
 			Set.Name = UpperName; // 이름 저장
@@ -144,36 +147,35 @@ void Ext_DirectXShader::ShaderResourceSetting()
 			}
 			else
 			{
-				//std::shared_ptr<GameEngineTexture> Res = GameEngineTexture::Find("EngineBaseTex.png");
+				// 기본 텍스쳐는 DefaultTex.png로 설정
+				std::shared_ptr<Ext_DirectXTexture> TextureResource = Ext_DirectXTexture::Find("DefaultTex.png");
 
-				//GameEngineTextureSetter Setter;
-				//Setter.ParentShader = this;
-				//Setter.Name = UpperName;
-				//Setter.BindPoint = ResDesc.BindPoint;
-				//Setter.Res = Res;
+				TextureSetter Setter;
+				Setter.OwnerShader = GetSharedFromThis<Ext_DirectXShader>();
+				Setter.Name = UpperName;
+				Setter.BindPoint = ResDesc.BindPoint; // GPU에 바인딩할 슬롯 정보 register(t0)
+				Setter.Texture = TextureResource;
 
-				//ResHelper.CreateTextureSetter(Setter);
+				BufferSetter.InsertTextureSetter(Setter);
 			}
 
 			break;
 		}
 		case D3D_SIT_SAMPLER:
 		{
-			//std::shared_ptr<GameEngineSampler> Res = GameEngineSampler::Find(UpperName);
+			// 바인딩 슬롯 이름과 동일한 샘플러를 찾지 못하면, 기본 Base 샘플러로 변경
+			std::shared_ptr<Ext_DirectXSampler> SamplerResource = Ext_DirectXSampler::Find(UpperName);
+			if (nullptr == SamplerResource) SamplerResource = Ext_DirectXSampler::Find("BaseSampler");
 
-			//if (nullptr == Res)
-			//{
-			//	Res = GameEngineSampler::Find("ENGINEBASE");
-			//	// MsgAssert("다음의 샘플러가 존재하지 않아서 쉐이더에 세팅해줄수가 없습니다. : " + UpperName);
-			//}
+			// 샘플러 세터 데이터 입력 후 저장
+			SamplerSetter Set;
+			Set.OwnerShader = GetSharedFromThis<Ext_DirectXShader>();
+			Set.Name = UpperName;
+			Set.BindPoint = ResDesc.BindPoint; // GPU에 바인딩할 슬롯 정보 register(s0)
+			Set.Sampler = SamplerResource; // 샘플러 저장
 
-			//GameEngineSamplerSetter Setter;
-			//Setter.ParentShader = this;
-			//Setter.Name = UpperName;
-			//Setter.BindPoint = ResDesc.BindPoint;
-			//Setter.Res = Res;
+			BufferSetter.InsertSamplerSetter(Set);
 
-			//ResHelper.CreateSamplerSetter(Setter);
 			break;
 		}
 		case D3D_SIT_STRUCTURED:

@@ -104,23 +104,23 @@ void Ext_DirectXTexture::CreateShaderResourcesView()
 void Ext_DirectXTexture::TextureLoad(std::string_view _Path, std::string_view _ExtensionName)
 {
 	std::wstring Path = Base_String::AnsiToUniCode(_Path);
-	std::string Extention = _ExtensionName.data();
+	std::string Extention = Base_String::ToUpper(_ExtensionName.data());
 
 	if (Extention == ".TGA")
 	{
-		if (S_OK != DirectX::LoadFromTGAFile(Path.c_str(), DirectX::TGA_FLAGS_NONE, &Data, Image))
+		if (S_OK != DirectX::LoadFromTGAFile(Path.c_str(), DirectX::TGA_FLAGS_NONE, &TexData, Image))
 		{
 			MsgAssert("TGA 포멧 텍스쳐 로드 실패" + std::string(_Path.data()));
 		}
 	}
 	else if (Extention == ".DDS")
 	{
-		if (S_OK != DirectX::LoadFromDDSFile(Path.c_str(), DirectX::DDS_FLAGS_NONE, &Data, Image))
+		if (S_OK != DirectX::LoadFromDDSFile(Path.c_str(), DirectX::DDS_FLAGS_NONE, &TexData, Image))
 		{
 			MsgAssert("DDS 포멧 텍스쳐 로드 실패" + std::string(_Path.data()));
 		}
 	}
-	else if (S_OK != DirectX::LoadFromWICFile(Path.c_str(), DirectX::WIC_FLAGS_NONE, &Data, Image))
+	else if (S_OK != DirectX::LoadFromWICFile(Path.c_str(), DirectX::WIC_FLAGS_NONE, &TexData, Image))
 	{
 		MsgAssert("텍스쳐 로드 실패" + std::string(_Path.data()));
 	}
@@ -137,10 +137,50 @@ void Ext_DirectXTexture::TextureLoad(std::string_view _Path, std::string_view _E
 		MsgAssert("텍스쳐의 SRV 생성 실패" + std::string(_Path.data()));
 	}
 
-	Texture2DInfo.Width = static_cast<UINT>(Data.width);
-	Texture2DInfo.Height = static_cast<UINT>(Data.height);
-	Texture2DInfo.Format = Data.format;
-	Texture2DInfo.ArraySize = (UINT)Data.arraySize;
-	Texture2DInfo.MiscFlags = (UINT)Data.miscFlags;
-	Texture2DInfo.MipLevels = (UINT)Data.mipLevels;
+	Texture2DInfo.Width = static_cast<UINT>(TexData.width);
+	Texture2DInfo.Height = static_cast<UINT>(TexData.height);
+	Texture2DInfo.Format = TexData.format;
+	Texture2DInfo.ArraySize = (UINT)TexData.arraySize;
+	Texture2DInfo.MiscFlags = (UINT)TexData.miscFlags;
+	Texture2DInfo.MipLevels = (UINT)TexData.mipLevels;
+}
+
+// 텍스쳐를 사용한 경우, 여기서 추가로 VSSetting 실시
+void Ext_DirectXTexture::VSSetting(UINT _Slot)
+{
+	if (nullptr == SRV)
+	{
+		MsgAssert("SRV가 존재하지 않는 텍스처를 쉐이더에 세팅할수 없습니다.");
+		return;
+	}
+
+	Ext_DirectXDevice::GetContext()->VSSetShaderResources(_Slot, 1, &SRV);
+}
+
+// 텍스쳐를 사용한 경우, 여기서 추가로 PSSetting 실시
+void Ext_DirectXTexture::PSSetting(UINT _Slot)
+{
+	if (nullptr == SRV)
+	{
+		MsgAssert("SRV가 존재하지 않는 텍스처를 쉐이더에 세팅할수 없습니다.");
+		return;
+	}
+
+	Ext_DirectXDevice::GetContext()->PSSetShaderResources(_Slot, 1, &SRV);
+}
+
+// 텍스쳐를 사용한 경우, 여기서 추가로 VSReset 실시
+void Ext_DirectXTexture::VSReset(UINT _Slot)
+{
+	static ID3D11ShaderResourceView* Nullptr = nullptr;
+
+	Ext_DirectXDevice::GetContext()->VSSetShaderResources(_Slot, 1, &Nullptr);
+}
+
+// 텍스쳐를 사용한 경우, 여기서 추가로 PSReset 실시
+void Ext_DirectXTexture::PSReset(UINT _Slot)
+{
+	static ID3D11ShaderResourceView* Nullptr = nullptr;
+
+	Ext_DirectXDevice::GetContext()->PSSetShaderResources(_Slot, 1, &Nullptr);
 }

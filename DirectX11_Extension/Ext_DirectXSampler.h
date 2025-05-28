@@ -39,6 +39,9 @@ public:
 		return NewSampler;
 	}
 
+	void VSSetting(UINT _Slot);
+	void PSSetting(UINT _Slot);
+
 protected:
 	
 private:
@@ -46,7 +49,5 @@ private:
 	D3D11_SAMPLER_DESC SamplerInfo; // 샘플러 설명서
 
 	void CreateSampler(const D3D11_SAMPLER_DESC& _Desc);
-	void VSSetting(UINT _Slot);
-	void PSSetting(UINT _Slot);
 	
 };

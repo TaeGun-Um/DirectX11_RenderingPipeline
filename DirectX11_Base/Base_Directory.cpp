@@ -57,7 +57,7 @@ std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::s
 std::string Base_Directory::GetFileName()
 {
 	std::filesystem::path CurrentPath(Path);
-	return CurrentPath.extension().string();
+	return CurrentPath.stem().string();
 }
 
 // 확장자명 가져오기

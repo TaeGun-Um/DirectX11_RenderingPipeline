@@ -29,7 +29,9 @@ public:
 	// 텍스쳐 로드
 	static std::shared_ptr<Ext_DirectXTexture> LoadTexture(std::string_view _Path, std::string_view _FileName, std::string_view _ExtensionName)
 	{
-		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(_FileName);
+		std::string ResourceName = _FileName.data();
+		ResourceName = ResourceName + _ExtensionName.data();
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(ResourceName);
 		//NewTexture->SetPath(_Path);
 		NewTexture->TextureLoad(_Path, _ExtensionName);
 
@@ -48,6 +50,12 @@ public:
 	COMPTR<ID3D11RenderTargetView>& GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
 	COMPTR<ID3D11ShaderResourceView>& GetSRV() { return SRV; }
 	COMPTR<ID3D11DepthStencilView>& GetDSV() { return DSV; }
+
+	// Texture 세팅, Texture를 로드해서 사용할 경우, 버퍼 세터를 통해 세팅되고, 아래 함수들 호출하여 사용
+	void VSSetting(UINT _Slot);
+	void PSSetting(UINT _Slot);
+	void VSReset(UINT _Slot);
+	void PSReset(UINT _Slot);
 
 protected:
 	
@@ -69,7 +77,7 @@ private:
 
 	// Texture 로드용
 	DirectX::ScratchImage Image;
-	DirectX::TexMetadata Data;
+	DirectX::TexMetadata TexData;
 
 };
 // [ID3D11Texture2D]
