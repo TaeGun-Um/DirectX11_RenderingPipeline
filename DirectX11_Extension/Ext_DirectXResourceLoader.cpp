@@ -3,6 +3,7 @@
 
 #include <DirectX11_Base/Base_Directory.h>
 
+#include "Ext_DirectXTexture.h"
 #include "Ext_DirectXVertexData.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
@@ -17,6 +18,7 @@
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
 {
+	LoadTexture();
 	MakeVertex(); // Ext_DirectXVertexData 클래스의 InputLayoutElement에 SemanticName, Format 결정
 	MakeSampler();
 	MakeBlend();
@@ -24,6 +26,23 @@ void Ext_DirectXResourceLoader::Initialize()
 	MakeRasterizer();
 	ShaderCompile(); // 셰이더 컴파일 후 상수버퍼 생성
 	MakeMaterial(); // 머티리얼(파이프라인) 생성
+}
+
+void Ext_DirectXResourceLoader::LoadTexture()
+{
+	// 셰이더 생성 규칙 : [1], [2]를 모두 만족해야 정상 컴파일 진행
+	// [1] 이름 + "_" + "Type" == Basic_PS
+	// [2] 내부 main(EntryPoint) 이름도 동일하게 설정
+	Base_Directory Dir;
+	Dir.MakePath("../Resource/Texture");
+	std::vector<std::string> Paths = Dir.GetAllFile({ ".png", ".tga", ".dss"});
+	for (const std::string& FilePath : Paths)
+	{
+		Dir.SetPath(FilePath.c_str());
+		std::string ExtensionName = Dir.GetExtension();
+		std::string FileName = Dir.GetFileName();
+		Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
+	}
 }
 
 // 정점 정보 생성(InputLayout, VertexBuffer, IndexBuffer)

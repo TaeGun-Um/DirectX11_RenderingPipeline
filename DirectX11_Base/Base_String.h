@@ -13,6 +13,9 @@ public:
 	static std::string ToUpper(std::string_view _Str); // 모두 대문자로 변환
 	static std::wstring AnsiToUniCode(std::string_view _Text); // Ansi를 UniCode로 변환
 	static std::string UniCodeToAnsi(std::wstring_view _Text); // UniCode를 Ansi로 변환
+	
+	//std::string GetFileName(std::wstring_view _Text) // 파일명 가져오기
+	//std::string GetExtension(std::wstring_view _Text) // 확장자명 가져오기
 
 protected:
 	

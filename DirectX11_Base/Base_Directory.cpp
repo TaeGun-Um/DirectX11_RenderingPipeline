@@ -53,6 +53,20 @@ std::vector<std::string> Base_Directory::GetAllFile(std::initializer_list<std::s
 	return Result;
 }
 
+// 파일명 가져오기
+std::string Base_Directory::GetFileName()
+{
+	std::filesystem::path CurrentPath(Path);
+	return CurrentPath.extension().string();
+}
+
+// 확장자명 가져오기
+std::string Base_Directory::GetExtension()
+{
+	std::filesystem::path CurrentPath(Path);
+	return CurrentPath.extension().string();
+}
+
 // 파일을 열어 특정 문자 검사, 라인별로 확인함(한줄씩)
 std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 {
@@ -83,3 +97,4 @@ std::string Base_Directory::FindEntryPoint(std::string_view _FilePath)
 	// 못 찾으면 기본값
 	return "";
 }
+

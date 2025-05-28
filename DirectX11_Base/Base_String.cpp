@@ -1,6 +1,7 @@
 ﻿#include "PrecompileHeader.h"
 #include "Base_String.h"
 #include "Base_Debug.h"
+#include "Base_Directory.h"
 
 // 모두 대문자로 변환
 std::string Base_String::ToUpper(std::string_view _Str)
@@ -64,3 +65,22 @@ std::string Base_String::UniCodeToAnsi(std::wstring_view _Text)
 
 	return Result;
 }
+
+//// 파일명 가져오기
+//std::string Base_String::GetFileName(std::wstring_view _Text)
+//{
+//	Base_Directory Dir;
+//	Base_Directory::GetExtension();
+//
+//	std::filesystem::path CurrentPath(Path);
+//	return CurrentPath.extension().string();
+//}
+//
+//// 확장자명 가져오기
+//std::string Base_String::GetExtension(std::wstring_view _Text)
+//{
+//	Base_Directory::GetExtension();
+//
+//	std::filesystem::path CurrentPath(Path);
+//	return CurrentPath.extension().string();
+//}

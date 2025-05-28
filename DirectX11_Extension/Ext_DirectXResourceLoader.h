@@ -16,6 +16,7 @@ protected:
 	
 private:
 	static void Initialize();					// 최초 1회 실행하여 리소스 로딩
+	static void LoadTexture();			// 이미지 로드
 	static void MakeVertex();			// 인풋레이아웃, 버텍스 버퍼, 인덱스 버퍼, 메시 생성
 	static void MakeSampler();			// 샘플러 생성
 	static void MakeBlend();				// 블렌드 생성

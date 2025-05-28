@@ -2,7 +2,7 @@
 
 #include "Ext_ResourceManager.h"
 
-// DirectX의 Texture2D, View 담당
+// DirectX의 Texture2D와 View(RTV, SRV, DSV)의 생성 및 저장, 관리 클래스
 class Ext_DirectXTexture : public Ext_ResourceManager<Ext_DirectXTexture>
 {
 	friend class Ext_DirectXDevice;
@@ -18,19 +18,32 @@ public:
 	Ext_DirectXTexture& operator=(const Ext_DirectXTexture& _Other) = delete;
 	Ext_DirectXTexture& operator=(Ext_DirectXTexture&& _Other) noexcept = delete;
 
-	// 리소스 매니저에 값을 기록하고, Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
-	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Value)
+	// Texture2DInfo의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
+	static std::shared_ptr<Ext_DirectXTexture> CreateViews(const D3D11_TEXTURE2D_DESC& _Texture2DInfo)
 	{
 		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateResource();
-		NewTexture->CreateView(_Value);
+		NewTexture->CreateView(_Texture2DInfo);
 		return NewTexture;
 	}
 
+	// 텍스쳐 로드
+	static std::shared_ptr<Ext_DirectXTexture> LoadTexture(std::string_view _Path, std::string_view _FileName, std::string_view _ExtensionName)
+	{
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(_FileName);
+		//NewTexture->SetPath(_Path);
+		NewTexture->TextureLoad(_Path, _ExtensionName);
+
+		return NewTexture;
+	}
+
+	// 렌더타겟 생성 시 호출(지금은 백버퍼 생성시에만 호출됨)
+	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture); 
+
 	// Getter, Setter
-	int GetWidth() {	return Desc.Width; }
-	int GetHeight() { return Desc.Height; }
+	int GetWidth() {	return Texture2DInfo.Width; }
+	int GetHeight() { return Texture2DInfo.Height; }
 	size_t GetRTVSize() {	return RTVs.size(); } // 렌더타겟뷰 클리어용
-	float4 GetScale() {	return float4(static_cast<float>(Desc.Width), static_cast<float>(Desc.Height)); }
+	float4 GetScale() {	return float4(static_cast<float>(Texture2DInfo.Width), static_cast<float>(Texture2DInfo.Height)); }
 	COMPTR<ID3D11Texture2D>& GetTexture2D() { return Texture2D; }
 	COMPTR<ID3D11RenderTargetView>& GetRTV(size_t _Index = 0) { return RTVs[_Index]; }
 	COMPTR<ID3D11ShaderResourceView>& GetSRV() { return SRV; }
@@ -39,20 +52,24 @@ public:
 protected:
 	
 private:
-	void CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture); // 백버퍼 렌더타겟뷰 생성을 위해 호출됨
-	void CreateView(const D3D11_TEXTURE2D_DESC& _Value); // Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
+	void CreateView(const D3D11_TEXTURE2D_DESC& _Texture2DInfo); // Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
 	void CreateRenderTargetView(); // 렌더타겟뷰 생성
 	void CreateDepthStencilView(); // 뎁스스텐실뷰 생성
 	void CreateShaderResourcesView(); // 쉐이더리소스뷰 생성
 
-	COMPTR<ID3D11Texture2D> Texture2D;
-	D3D11_TEXTURE2D_DESC Desc;
+	void TextureLoad(std::string_view _Path, std::string_view _ExtensionName); // 텍스쳐 로드
 
+	D3D11_TEXTURE2D_DESC Texture2DInfo;
+	COMPTR<ID3D11Texture2D> Texture2D;
+	
 	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs; // 생성된 렌더타겟뷰들을 저장하는 컨테이너
 	COMPTR<ID3D11ShaderResourceView> SRV; // 생성된 쉐이더 리소스 뷰
 	COMPTR<ID3D11DepthStencilView> DSV; // 생성된 뎁스스텐실 뷰
-
 	std::vector<float4> Colors;
+
+	// Texture 로드용
+	DirectX::ScratchImage Image;
+	DirectX::TexMetadata Data;
 
 };
 // [ID3D11Texture2D]

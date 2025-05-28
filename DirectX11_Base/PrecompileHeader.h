@@ -27,6 +27,7 @@
 #include <dxgi.h>					// DirectX Graphics Infrastructure. 화면 출력(출력 모드), 스왑 체인, 어댑터 관리 등 시스템 관련 기능의 선언이 담긴 헤더(어댑터, 스왑체인 등)
 #include <d3dcompiler.h>		// HLSL 셰이더 컴파일 관련 API 선언이 담긴 헤더(셰이더 컴파일 API 인터페이스)
 #include <D3D11Shader.h>	// 셰이더 리플렉션(Shader Reflection) 관련 인터페이스 선언이 담긴 헤더(셰이더 리플렉션 API 인터페이스)
+#include <DirectXTex.h>
 
 #pragma comment(lib, "d3d11.lib")				// d3d11.h 기능 링크
 #pragma comment(lib, "dxgi.lib")				// dxgi.h 기능 링크

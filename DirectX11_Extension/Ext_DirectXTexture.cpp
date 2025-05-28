@@ -6,28 +6,28 @@
 void Ext_DirectXTexture::CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture)
 {
 	Texture2D = _Texture;
-	Texture2D->GetDesc(&Desc); // Desc(D3D11_TEXTURE2D_DESC)에 값 복사
+	Texture2D->GetDesc(&Texture2DInfo); // Texture2DInfo(D3D11_TEXTURE2D_DESC)에 값 복사
 	CreateRenderTargetView();
 }
 
 // Desc의 BindFlags에 따라 RTV, SRV, DSV 중 하나를 Create
-void Ext_DirectXTexture::CreateView(const D3D11_TEXTURE2D_DESC& _Value)
+void Ext_DirectXTexture::CreateView(const D3D11_TEXTURE2D_DESC& _Texture2DInfo)
 {
-	Desc = _Value;
+	Texture2DInfo = _Texture2DInfo;
 
-	Ext_DirectXDevice::GetDevice()->CreateTexture2D(&Desc, nullptr, Texture2D.GetAddressOf());
+	Ext_DirectXDevice::GetDevice()->CreateTexture2D(&Texture2DInfo, nullptr, Texture2D.GetAddressOf());
 
-	if (D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET & Desc.BindFlags)
+	if (D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET & Texture2DInfo.BindFlags)
 	{
 		CreateRenderTargetView();
 	}
 
-	if (D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE & Desc.BindFlags)
+	if (D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE & Texture2DInfo.BindFlags)
 	{
 		CreateShaderResourcesView();
 	}
 
-	if (D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL & Desc.BindFlags)
+	if (D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL & Texture2DInfo.BindFlags)
 	{
 		CreateDepthStencilView();
 	}
@@ -101,3 +101,46 @@ void Ext_DirectXTexture::CreateShaderResourcesView()
 	/*3. 생성된 SRV를 저장할 포인터*/
 }
 
+void Ext_DirectXTexture::TextureLoad(std::string_view _Path, std::string_view _ExtensionName)
+{
+	std::wstring Path = Base_String::AnsiToUniCode(_Path);
+	std::string Extention = _ExtensionName.data();
+
+	if (Extention == ".TGA")
+	{
+		if (S_OK != DirectX::LoadFromTGAFile(Path.c_str(), DirectX::TGA_FLAGS_NONE, &Data, Image))
+		{
+			MsgAssert("TGA 포멧 텍스쳐 로드 실패" + std::string(_Path.data()));
+		}
+	}
+	else if (Extention == ".DDS")
+	{
+		if (S_OK != DirectX::LoadFromDDSFile(Path.c_str(), DirectX::DDS_FLAGS_NONE, &Data, Image))
+		{
+			MsgAssert("DDS 포멧 텍스쳐 로드 실패" + std::string(_Path.data()));
+		}
+	}
+	else if (S_OK != DirectX::LoadFromWICFile(Path.c_str(), DirectX::WIC_FLAGS_NONE, &Data, Image))
+	{
+		MsgAssert("텍스쳐 로드 실패" + std::string(_Path.data()));
+	}
+
+	if (S_OK != DirectX::CreateShaderResourceView
+	(
+		Ext_DirectXDevice::GetDevice(),
+		Image.GetImages(),
+		Image.GetImageCount(),
+		Image.GetMetadata(),
+		&SRV
+	))
+	{
+		MsgAssert("텍스쳐의 SRV 생성 실패" + std::string(_Path.data()));
+	}
+
+	Texture2DInfo.Width = static_cast<UINT>(Data.width);
+	Texture2DInfo.Height = static_cast<UINT>(Data.height);
+	Texture2DInfo.Format = Data.format;
+	Texture2DInfo.ArraySize = (UINT)Data.arraySize;
+	Texture2DInfo.MiscFlags = (UINT)Data.miscFlags;
+	Texture2DInfo.MipLevels = (UINT)Data.mipLevels;
+}

@@ -207,7 +207,7 @@ void Ext_Camera::Update(float _Deltatime)
 
 	if (!bIsCameraAcc) return;
 
-	static POINT PrevMouse = { Base_Windows::GetScreenSize().x / 2, Base_Windows::GetScreenSize().y / 2 };
+	static POINT PrevMouse = { static_cast<long>(Base_Windows::GetScreenSize().x / 2), static_cast<long>(Base_Windows::GetScreenSize().y / 2) };
 	POINT CurMouse;
 	GetCursorPos(&CurMouse); // 현재 마우스 위치를 화면 기준 좌표계로 얻어옴, 이값과 PrevMouse 차이를 통해 마우스가 얼마나 움직였나 파악 가능
 
