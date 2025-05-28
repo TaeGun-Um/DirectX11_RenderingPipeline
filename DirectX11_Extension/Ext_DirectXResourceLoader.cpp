@@ -35,7 +35,7 @@ void Ext_DirectXResourceLoader::LoadTexture()
 	// [2] 내부 main(EntryPoint) 이름도 동일하게 설정
 	Base_Directory Dir;
 	Dir.MakePath("../Resource/Texture");
-	std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss"});
+	std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
 	for (const std::string& FilePath : Paths)
 	{
 		Dir.SetPath(FilePath.c_str());
@@ -46,7 +46,7 @@ void Ext_DirectXResourceLoader::LoadTexture()
 }
 
 // 정점 정보 생성(InputLayout, VertexBuffer, IndexBuffer)
-void Ext_DirectXResourceLoader::MakeVertex() 
+void Ext_DirectXResourceLoader::MakeVertex()
 {
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -74,12 +74,12 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
 
-		ArrVertex[0] = { { -0.5f,  0.5f, 0.0f, 1.0f }, { 1, 0, 0, 1 }, /*{ 0.0f, 0.0f }*/ };
-		ArrVertex[1] = { {  0.5f,  0.5f, 0.0f, 1.0f }, { 0, 1, 0, 1 }, /*{ 1.0f, 0.0f }*/ };
-		ArrVertex[2] = { { -0.5f, -0.5f, 0.0f, 1.0f }, { 0, 0, 1, 1 }, /*{ 1.0f, 1.0f }*/ };
-		ArrVertex[3] = { {  0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 0, 1 }, /*{ 0.0f, 1.0f }*/ };
+		ArrVertex[0] = { { 0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
+		ArrVertex[1] = { {-0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
+		ArrVertex[2] = { {-0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
+		ArrVertex[3] = { { 0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
 
-		std::vector<UINT> ArrIndex = { 0, 2, 1, 2, 3, 1 };
+		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
@@ -210,7 +210,7 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 }
 
 // 샘플러 정보 생성
-void Ext_DirectXResourceLoader::MakeSampler() 
+void Ext_DirectXResourceLoader::MakeSampler()
 {
 	// 샘플러
 	{
@@ -253,7 +253,7 @@ void Ext_DirectXResourceLoader::MakeSampler()
 }
 
 // DirectX 블렌드 생성
-void Ext_DirectXResourceLoader::MakeBlend() 
+void Ext_DirectXResourceLoader::MakeBlend()
 {
 	{
 		D3D11_BLEND_DESC BlendInfo = { 0, };
@@ -263,14 +263,33 @@ void Ext_DirectXResourceLoader::MakeBlend()
 		BlendInfo.IndependentBlendEnable = false;
 
 		BlendInfo.RenderTarget[0].BlendEnable = true;
-		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // 자주 쓰는 조합 1
 		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-
-		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		// <<설명>>
+		/*1. BlendEnable : 블렌드 활성화 여부, true는 활성화*/
+		/*2. SrcBlend : 소스 색상에 곱할 계수, D3D11_BLEND_SRC_ALPHA면 RGBA에서 A*/
+		/*3. DestBlend : 대상 색상에 곱할 계수*/
+		/*4. BlendOp : 두 색상의 혼합 방식, ADD, SUBTRACT 등 있음*/
+		/*5. SrcBlendAlpha : 알파 채널에 대한 Scr 계수*/
+		/*6. DestBlendAlpha : 알파 채널에 대한 Scr 계수*/
+		/*7. BlendOpAlpha : 알파 채널의 혼합 연산*/
+		/*8. RenderTargetWriteMask : RGBA 쓰기 허용 여부 결정*/
+
+		// 자주쓰는 조합들
+		// 1. 알파블랜딩 : 일반적인 반투명 처리에 활용된다.
+		// SrcBlend = D3D11_BLEND_SRC_ALPHA, DestBlend = D3D11_BLEND_INV_SRC_ALPHA, BlendOp = D3D11_BLEND_OP_ADD
+		// 공식 : Final = SrcColor * SrcAlpha + DestColor * (1 - SrcAlpha)이다. 
+		// 2. 가산 합성 : 광원, 폭발, 글로우 등에 사용된다.
+		// SrcBlend = D3D11_BLEND_ONE, DestBlend = D3D11_BLEND_ONE, BlendOp = D3D11_BLEND_OP_ADD
+		// 공식 : Final = SrcColor + DestColor
+		// 3. 서브트랙티브 : 어둡게 만들거나 특정 색을 빼는 연출에 사용된다.
+		// SrcBlend = D3D11_BLEND_ONE, DestBlend = D3D11_BLEND_ONE, BlendOp = D3D11_BLEND_OP_SUBTRACT
+		// 공식 : Final = SrcColor - DestColor
 
 		Ext_DirectXBlend::CreateBlend("BaseBlend", BlendInfo);
 	}
@@ -372,7 +391,7 @@ void Ext_DirectXResourceLoader::MakeBlend()
 }
 
 // DirectX11 DepthStencilState 생성
-void Ext_DirectXResourceLoader::MakeDepth() 
+void Ext_DirectXResourceLoader::MakeDepth()
 {
 	D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
@@ -410,7 +429,7 @@ void Ext_DirectXResourceLoader::MakeDepth()
 }
 
 // DirectX11 Rasterizer 생성
-void Ext_DirectXResourceLoader::MakeRasterizer() 
+void Ext_DirectXResourceLoader::MakeRasterizer()
 {
 	D3D11_RASTERIZER_DESC Desc = {};
 
@@ -427,7 +446,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 	std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");
 	NewRenderingPipeline->SetVertexShader("Basic_VS");
 	NewRenderingPipeline->SetPixelShader("Basic_PS");
-	// NewRenderingPipeline->SetBlendState("BaseBlend");
+	NewRenderingPipeline->SetBlendState("BaseBlend");
 	NewRenderingPipeline->SetDepthState("EngineDepth");
 	NewRenderingPipeline->SetRasterizer("EngineRasterizer");
 }

@@ -5,8 +5,8 @@ class RectActor : public Ext_Actor
 {
 public:
 	// constrcuter destructer
-	RectActor();
-	~RectActor();
+	RectActor() {}
+	~RectActor() {}
 
 	// delete Function
 	RectActor(const RectActor& _Other) = delete;
@@ -19,5 +19,6 @@ protected:
 	void Update(float _DeltaTime) override;
 	
 private:
-	
+	std::shared_ptr<class Ext_MeshComponent> MeshComp;
+
 };

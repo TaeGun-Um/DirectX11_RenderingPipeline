@@ -6,6 +6,7 @@
 #include "Ext_DirectXPixelShader.h"
 #include "Ext_DirectXRasterizer.h"
 #include "Ext_DirectXDepth.h"
+#include "Ext_DirectXBlend.h"
 
 void Ext_DirectXMaterial::SetVertexShader(std::string_view _Name)
 {
@@ -32,14 +33,14 @@ void Ext_DirectXMaterial::SetPixelShader(std::string_view _Name)
 
 void Ext_DirectXMaterial::SetBlendState(std::string_view _Name)
 {
-	//std::string UpperName = Base_String::ToUpper(_Name);
-	//BlendState = Ext_DirectXBlend::Find(UpperName);
+	std::string UpperName = Base_String::ToUpper(_Name);
+	BlendState = Ext_DirectXBlend::Find(UpperName);
 
-	//if (nullptr == BlendState)
-	//{
-	//	MsgAssert("존재하지 않는 블랜드를 세팅하려고 했습니다.");
-	//	return;
-	//}
+	if (nullptr == BlendState)
+	{
+		MsgAssert("존재하지 않는 블랜드를 세팅하려고 했습니다.");
+		return;
+	}
 }
 
 void Ext_DirectXMaterial::SetDepthState(std::string_view _Name)
@@ -135,13 +136,13 @@ void Ext_DirectXMaterial::PixelShaderSetting()
 
 void Ext_DirectXMaterial::OutputMergerSetting()
 {
-	//if (nullptr == BlendState)
-	//{
-	//	MsgAssert("블랜드가 존재하지 않아 아웃풋 머저 과정을 완료할수가 없습니다.");
-	//	return;
-	//}
+	if (nullptr == BlendState)
+	{
+		MsgAssert("블랜드가 존재하지 않아 아웃풋 머저 과정을 완료할수가 없습니다.");
+		return;
+	}
 
-	//BlendStatePtr->Setting();
+	BlendState->Setting();
 
 	if (nullptr == DepthState)
 	{

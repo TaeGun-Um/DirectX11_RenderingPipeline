@@ -54,6 +54,9 @@
     <ClCompile Include="RotateFace.cpp">
       <Filter>02.Object\01.Actor</Filter>
     </ClCompile>
+    <ClCompile Include="TestActor.cpp">
+      <Filter>02.Object\01.Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrecompileHeader.h">
@@ -78,6 +81,9 @@
       <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
     <ClInclude Include="RotateFace.h">
+      <Filter>02.Object\01.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="TestActor.h">
       <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
   </ItemGroup>

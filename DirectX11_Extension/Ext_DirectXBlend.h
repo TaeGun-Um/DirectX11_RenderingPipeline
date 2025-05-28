@@ -31,8 +31,8 @@ protected:
 private:
 	void CreateBlend(const D3D11_BLEND_DESC& _Value);
 
-	D3D11_BLEND_DESC BlendInfo = {};
-	COMPTR<ID3D11BlendState> BlendState = nullptr;
+	D3D11_BLEND_DESC BlendInfo = {}; // 블렌드 설명서
+	COMPTR<ID3D11BlendState> BlendState = nullptr; // 생성된 블렌드 저장
 	
 	UINT Mask = 0xFFFFFFFF;
 	

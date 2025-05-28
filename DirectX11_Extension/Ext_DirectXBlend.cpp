@@ -2,6 +2,7 @@
 #include "Ext_DirectXBlend.h"
 #include "Ext_DirectXDevice.h"
 
+// 아웃풋머저 단계에서 호출
 void Ext_DirectXBlend::Setting()
 {
 	if (nullptr == BlendState)
@@ -15,8 +16,13 @@ void Ext_DirectXBlend::Setting()
 	}
 
 	Ext_DirectXDevice::GetContext()->OMSetBlendState(BlendState.Get(), nullptr, Mask);
+	// <<설명>>
+	// 1. 만든 블렌더 넣기
+	// 2. 블렌드 팩터 사용 안함
+	// 3. Mask 0xFFFFFFFF 전달
 }
 
+// 위를 통해 블렌드 생성
 void Ext_DirectXBlend::CreateBlend(const D3D11_BLEND_DESC& _Value)
 {
 	BlendInfo = _Value;
