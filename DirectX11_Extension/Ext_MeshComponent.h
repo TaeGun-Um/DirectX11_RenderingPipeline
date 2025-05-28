@@ -18,7 +18,8 @@ public:
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
 	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
-	
+	void SetTexture(const std::string& _TextureName);
+
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
 	void SetOwnerCamera(std::shared_ptr<class Ext_Camera> _Camera) { OwnerCamera = _Camera; }
@@ -33,6 +34,6 @@ private:
 
 	 
 	std::weak_ptr<class Ext_Camera> OwnerCamera; // 자신을 소유한 카메라
-	std::vector<std::shared_ptr<class Ext_MeshComponentUnit>> Units; // Mesh와 Pipeline 정보 모음
+	std::shared_ptr<class Ext_MeshComponentUnit> Unit; // Mesh와 Pipeline 정보 모음
 	
 };

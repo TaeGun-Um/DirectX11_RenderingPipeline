@@ -64,7 +64,7 @@ public:
 	void InsertTextureSetter(const TextureSetter& _Setter) { TextureSetters.insert(std::make_pair(_Setter.Name, _Setter)); }
 
 	// 텍스쳐값 변경하기
-	void SetTexture(std::string_view _TextureName);
+	void SetTexture(const std::string& _SettingTexture, std::string_view _TextureName);
 
 	// 상수버퍼 데이터 저장
 	template<typename Type>

@@ -61,7 +61,7 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 
 void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName)
 {
-	BufferSetter.SetTexture(_TextureName);
+	BufferSetter.SetTexture("Texture", _TextureName);
 }
 
 // Mesh, Material의 RenderingPipeline Setting

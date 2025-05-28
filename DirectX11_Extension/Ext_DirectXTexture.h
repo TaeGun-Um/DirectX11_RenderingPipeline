@@ -31,7 +31,8 @@ public:
 	{
 		std::string ResourceName = _FileName.data();
 		ResourceName = ResourceName + _ExtensionName.data();
-		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(ResourceName);
+		std::string UpperName = Base_String::ToUpper(ResourceName);
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(UpperName);
 		//NewTexture->SetPath(_Path);
 		NewTexture->TextureLoad(_Path, _ExtensionName);
 

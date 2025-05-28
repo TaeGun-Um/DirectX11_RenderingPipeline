@@ -15,6 +15,7 @@ void CubeActor::Start()
 
 	MeshComp2 = CreateComponent<Ext_MeshComponent>("BasicMesh2");
 	MeshComp2->CreateMeshComponentUnit("Box", "Basic");
+	MeshComp2->SetTexture("GReeN.png");
 	MeshComp2->GetTransform()->SetLocalPosition({ 3, 0, 0 });
 }
 

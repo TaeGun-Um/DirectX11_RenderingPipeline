@@ -38,31 +38,32 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 }
 
 // 텍스쳐 값 변경
-void Ext_DirectXBufferSetter::SetTexture(std::string_view _TextureName)
+void Ext_DirectXBufferSetter::SetTexture(const std::string& _SettingTexture, std::string_view _NewTextureName)
 {
-	std::shared_ptr<Ext_DirectXTexture> TextureResource = Ext_DirectXTexture::Find(_TextureName);
-	if (nullptr == TextureResource)
-	{
-		MsgAssert("이런 이름의 텍스쳐는 로드한 적이 없습니다.");
-		return;
-	}
-
-	std::string UpperName = Base_String::ToUpper(_TextureName);
+	std::string UpperName = Base_String::ToUpper(_SettingTexture);
 	std::multimap<std::string, TextureSetter>::iterator FindIter = TextureSetters.find(UpperName);
 
 	if (TextureSetters.end() == FindIter)
 	{
-		MsgAssert("존재하지 않는 텍스쳐를 세팅하려고 했습니다." + UpperName);
+		MsgAssert("이런 이름의 텍스쳐는 세팅한 적이 없습니다." + UpperName);
 		return;
 	}
 
 	std::multimap<std::string, TextureSetter>::iterator NameStartIter = TextureSetters.lower_bound(UpperName);
 	std::multimap<std::string, TextureSetter>::iterator NameEndIter = TextureSetters.upper_bound(UpperName);
 
+	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
+	if (nullptr == NewTexture)
+	{
+		std::string Name = _NewTextureName.data();
+		MsgAssert("이런 이름의 텍스쳐는 로드한 적이 없습니다." + Name);
+		return;
+	}
+
 	for (; NameStartIter != NameEndIter; ++NameStartIter)
 	{
 		TextureSetter& Setter = NameStartIter->second;
-		Setter.Texture = TextureResource;
+		Setter.Texture = NewTexture;
 	}
 }
 

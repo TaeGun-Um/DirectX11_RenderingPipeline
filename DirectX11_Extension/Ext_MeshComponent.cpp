@@ -9,14 +9,7 @@
 void Ext_MeshComponent::Release()
 {
 	// [1] 유닛 모두 정리
-	for (auto& Unit : Units)
-	{
-		if (Unit)
-		{
-			Unit->Release(); // 아래 정의된 유닛 Release 호출
-		}
-	}
-	Units.clear();
+	Unit.reset();
 
 	// [2] 카메라 연결 해제
 	OwnerCamera.reset();
@@ -37,9 +30,20 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 	std::shared_ptr<Ext_MeshComponentUnit> NewUnit = std::make_shared<Ext_MeshComponentUnit>();
 	NewUnit->SetOwnerMeshComponent(GetSharedFromThis<Ext_MeshComponent>());
 	NewUnit->MeshComponentUnitInitialize(_MeshName, _MaterialName);
-	Units.push_back(NewUnit);
+	Unit = NewUnit;
 
 	return NewUnit;
+}
+
+// 텍스쳐 변경하기
+void Ext_MeshComponent::SetTexture(const std::string & _TextureName)
+{
+	if (nullptr == Unit)
+	{
+		MsgAssert("유닛이 없어 텍스쳐 세팅이 불가능합니다.");
+	}
+
+	Unit->SetTexture(_TextureName);
 }
 
 void Ext_MeshComponent::Start()
