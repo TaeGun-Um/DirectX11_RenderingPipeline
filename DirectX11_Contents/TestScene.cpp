@@ -25,8 +25,6 @@ void TestScene::Start()
 	// CreateActor<CubeActor>("CubeActor");
 	CreateActor<RectActor>("RectActor");
 	CreateActor<TestActor>("TestActor");
-
-	Ext_MeshLoader::LoadModel("Path");
 }
 
 float AccTime = 0;
