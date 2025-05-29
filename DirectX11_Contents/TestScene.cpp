@@ -9,6 +9,7 @@
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
+#include <DirectX11_Extension/Ext_MeshLoader.h>
 
 TestScene::TestScene()
 {
@@ -24,6 +25,8 @@ void TestScene::Start()
 	// CreateActor<CubeActor>("CubeActor");
 	CreateActor<RectActor>("RectActor");
 	CreateActor<TestActor>("TestActor");
+
+	Ext_MeshLoader::LoadModel("Path");
 }
 
 float AccTime = 0;

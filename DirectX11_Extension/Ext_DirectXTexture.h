@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <DirectXTex.h>
 #include "Ext_ResourceManager.h"
 
 // DirectX의 Texture2D와 View(RTV, SRV, DSV)의 생성 및 저장, 관리 클래스

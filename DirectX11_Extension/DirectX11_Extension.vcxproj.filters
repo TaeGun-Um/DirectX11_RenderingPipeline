@@ -116,10 +116,13 @@
       <Filter>03.ThridParty\00.Imgui\Source</Filter>
     </ClCompile>
     <ClCompile Include="Ext_Imgui.cpp">
-      <Filter>03.ThridParty\00.Imgui</Filter>
+      <Filter>01.Process\04.Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ExtGui.cpp">
-      <Filter>03.ThridParty\00.Imgui</Filter>
+      <Filter>01.Process\04.Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_MeshLoader.cpp">
+      <Filter>02.DirectX\00.ResourceLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,9 +237,6 @@
     <ClInclude Include="imgui_internal.h">
       <Filter>03.ThridParty\00.Imgui\Source</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_Imgui.h">
-      <Filter>03.ThridParty\00.Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>03.ThridParty\00.Imgui\Source</Filter>
     </ClInclude>
@@ -249,8 +249,14 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>03.ThridParty\00.Imgui\Source</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_Imgui.h">
+      <Filter>01.Process\04.Imgui</Filter>
+    </ClInclude>
     <ClInclude Include="ExtGui.h">
-      <Filter>03.ThridParty\00.Imgui</Filter>
+      <Filter>01.Process\04.Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_MeshLoader.h">
+      <Filter>02.DirectX\00.ResourceLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +367,12 @@
     </Filter>
     <Filter Include="03.ThridParty\00.Imgui\Source">
       <UniqueIdentifier>{421babfa-83d2-44b4-859b-b73861ae2a4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ThridParty\03.assimp">
+      <UniqueIdentifier>{4400b644-85dd-4919-b3ce-e041daa70141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Process\04.Imgui">
+      <UniqueIdentifier>{47a4d5f5-c029-435e-895a-98159f462ae3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
