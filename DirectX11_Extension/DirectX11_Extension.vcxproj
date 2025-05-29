@@ -456,6 +456,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\ThirdParty\Assimp\lib.zip" />
     <None Include="..\ThirdParty\DirectXTex\lib.zip" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

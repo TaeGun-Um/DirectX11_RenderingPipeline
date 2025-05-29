@@ -379,5 +379,8 @@
     <None Include="..\ThirdParty\DirectXTex\lib.zip">
       <Filter>03.ThridParty\01.DirectXTK</Filter>
     </None>
+    <None Include="..\ThirdParty\Assimp\lib.zip">
+      <Filter>03.ThridParty\03.assimp</Filter>
+    </None>
   </ItemGroup>
 </Project>
