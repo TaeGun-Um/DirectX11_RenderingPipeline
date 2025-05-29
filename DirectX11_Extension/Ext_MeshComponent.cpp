@@ -36,14 +36,14 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponent::SetTexture(const std::string & _TextureName)
+void Ext_MeshComponent::SetTexture(const std::string& _TextureName, const std::string& _SettingTexture /*= "DefaultTex"*/)
 {
 	if (nullptr == Unit)
 	{
 		MsgAssert("유닛이 없어 텍스쳐 세팅이 불가능합니다.");
 	}
 
-	Unit->SetTexture(_TextureName);
+	Unit->SetTexture(_TextureName, _SettingTexture);
 }
 
 void Ext_MeshComponent::Start()

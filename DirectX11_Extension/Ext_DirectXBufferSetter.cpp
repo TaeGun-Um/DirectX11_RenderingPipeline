@@ -5,14 +5,6 @@
 #include "Ext_DirectXSampler.h"
 #include "Ext_DirectXTexture.h"
 
-Ext_DirectXBufferSetter::Ext_DirectXBufferSetter()
-{
-}
-
-Ext_DirectXBufferSetter::~Ext_DirectXBufferSetter()
-{
-}
-
 // 버퍼 세팅 복사/붙여넣기 실시
 void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter)
 {
@@ -40,18 +32,6 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 // 텍스쳐 값 변경
 void Ext_DirectXBufferSetter::SetTexture(const std::string& _SettingTexture, std::string_view _NewTextureName)
 {
-	std::string UpperName = Base_String::ToUpper(_SettingTexture);
-	std::multimap<std::string, TextureSetter>::iterator FindIter = TextureSetters.find(UpperName);
-
-	if (TextureSetters.end() == FindIter)
-	{
-		MsgAssert("이런 이름의 텍스쳐는 세팅한 적이 없습니다." + UpperName);
-		return;
-	}
-
-	std::multimap<std::string, TextureSetter>::iterator NameStartIter = TextureSetters.lower_bound(UpperName);
-	std::multimap<std::string, TextureSetter>::iterator NameEndIter = TextureSetters.upper_bound(UpperName);
-
 	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
 	if (nullptr == NewTexture)
 	{
@@ -60,9 +40,52 @@ void Ext_DirectXBufferSetter::SetTexture(const std::string& _SettingTexture, std
 		return;
 	}
 
-	for (; NameStartIter != NameEndIter; ++NameStartIter)
+	std::string SlotName = _SettingTexture;
+
+	// 자동 매핑 처리
+	if (Base_String::ToUpper(_SettingTexture) == "AUTO")
 	{
-		TextureSetter& Setter = NameStartIter->second;
+		std::string UpperName = Base_String::ToUpper(_NewTextureName.data());
+
+		if (UpperName.find("BASECOLOR") != std::string::npos || UpperName.find("albedo") != std::string::npos)
+		{
+			SlotName = "BaseColorTex";
+		}
+		else if (UpperName.find("NORMAL") != std::string::npos)
+		{
+			SlotName = "NormalTex";
+		}
+		else if (UpperName.find("ROUGHNESS") != std::string::npos)
+		{
+			SlotName = "RoughnessTex";
+		}
+		else if (UpperName.find("METALLIC") != std::string::npos)
+		{
+			SlotName = "MetallicTex";
+		}
+		else if (UpperName.find("EMISSIVE") != std::string::npos)
+		{
+			SlotName = "EmissiveTex";
+		}
+		else
+		{
+			MsgAssert("알 수 없는 텍스처 이름입니다. 자동 슬롯 지정 실패: " + UpperName);
+			return;
+		}
+	}
+
+	std::string UpperSlotName = Base_String::ToUpper(SlotName);
+	auto Range = TextureSetters.equal_range(UpperSlotName);
+
+	if (Range.first == Range.second)
+	{
+		MsgAssert("이런 이름의 텍스쳐 슬롯은 없습니다. " + UpperSlotName);
+		return;
+	}
+
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		TextureSetter& Setter = Iter->second;
 		Setter.Texture = NewTexture;
 	}
 }

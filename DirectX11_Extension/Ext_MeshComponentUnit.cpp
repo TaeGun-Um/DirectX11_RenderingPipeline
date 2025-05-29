@@ -59,9 +59,10 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
 }
 
-void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName)
+// 텍스쳐 변경하기
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, const std::string& _SettingTexture /*= "DefaultTex"*/)
 {
-	BufferSetter.SetTexture("Texture", _TextureName);
+	BufferSetter.SetTexture(_SettingTexture, _TextureName);
 }
 
 // Mesh, Material의 RenderingPipeline Setting

@@ -3,6 +3,7 @@
 
 #include "Ext_DirectXVertexData.h"
 
+// 로드 시 버텍스 버퍼 생성용 벡터와 인덱스 버퍼 생성용 버퍼를 전달해주면 값을 입력해줌, 그걸로 Create 실시하면 됨
 bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<Ext_DirectXVertexData>& _OutVertices, std::vector<uint32_t>& _OutIndices)
 {
     Assimp::Importer Importer;
@@ -24,7 +25,7 @@ bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<
         VertexData.NORMAL = Mesh->HasNormals() ? float4(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z) : float4::ZERO;
         if (Mesh->HasTextureCoords(0))
         {
-            // VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y); // CW
+            //VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y); // CW
             VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, 1.0f - Mesh->mTextureCoords[0][i].y); // CCW
         }
         else

@@ -45,8 +45,8 @@ class Ext_DirectXBufferSetter
 
 public:
 	// constrcuter destructer
-	Ext_DirectXBufferSetter();
-	~Ext_DirectXBufferSetter();
+	Ext_DirectXBufferSetter() {}
+	~Ext_DirectXBufferSetter() {}
 
 	// delete Function
 	Ext_DirectXBufferSetter(const Ext_DirectXBufferSetter& _Other) = delete;

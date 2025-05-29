@@ -51,7 +51,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	// 메시 로드
+	// 메시 로드(테스트용)
 	{
 		// 파일 찾아서 메시로드 한 다음, 안에 std::vector<Ext_DirectXVertexData> Vertices;랑 std::vector<UINT> Index; 전달한거 받아서 Create 3종 실시
 
@@ -76,6 +76,17 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Belorian Soldier LP", Vertices);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Belorian Soldier LP", Indices);
 		Ext_DirectXMesh::CreateMesh("Belorian Soldier LP");
+
+		Base_Directory Dir2;
+		Dir2.MakePath("../Resource/Mesh/SciCharacter/textures");
+		std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
+		for (const std::string& FilePath : Paths)
+		{
+			Dir2.SetPath(FilePath.c_str());
+			std::string ExtensionName = Dir2.GetExtension();
+			std::string FileName = Dir2.GetFileName();
+			Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
+		}
 	}
 
 	// 삼각형
@@ -431,10 +442,23 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 // 렌더링 파이프라인 생성
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
-	std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");
-	NewRenderingPipeline->SetVertexShader("Basic_VS");
-	NewRenderingPipeline->SetPixelShader("Basic_PS");
-	NewRenderingPipeline->SetBlendState("BaseBlend");
-	NewRenderingPipeline->SetDepthState("EngineDepth");
-	NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+	// 일반(단일 메시)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");
+		NewRenderingPipeline->SetVertexShader("Basic_VS");
+		NewRenderingPipeline->SetPixelShader("Basic_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+	}
+
+	// 다양한 텍스쳐가 있는 메시
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBR");
+		NewRenderingPipeline->SetVertexShader("Basic_VS");
+		NewRenderingPipeline->SetPixelShader("PBR_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+	}
 }

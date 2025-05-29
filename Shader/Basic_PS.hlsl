@@ -1,4 +1,4 @@
-Texture2D Texture : register(t0); // 텍스처 자원
+Texture2D DefaultTex : register(t0); // 텍스처 자원
 SamplerState Sampler : register(s0); // 샘플러
 
 struct PSInput
@@ -10,5 +10,5 @@ struct PSInput
 
 float4 Basic_PS(PSInput _Input) : SV_TARGET
 {
-    return Texture.Sample(Sampler, _Input.TexCoord);
+    return DefaultTex.Sample(Sampler, _Input.TexCoord);
 }

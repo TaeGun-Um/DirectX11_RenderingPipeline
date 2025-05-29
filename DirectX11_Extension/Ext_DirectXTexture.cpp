@@ -101,6 +101,7 @@ void Ext_DirectXTexture::CreateShaderResourcesView()
 	/*3. 생성된 SRV를 저장할 포인터*/
 }
 
+// 텍스쳐 로드하기
 void Ext_DirectXTexture::TextureLoad(std::string_view _Path, std::string_view _ExtensionName)
 {
 	std::wstring Path = Base_String::AnsiToUniCode(_Path);
