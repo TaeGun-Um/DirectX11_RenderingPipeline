@@ -36,7 +36,7 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponent::SetTexture(const std::string& _TextureName, const std::string& _SettingTexture /*= "DefaultTex"*/)
+void Ext_MeshComponent::SetTexture(const std::string& _TextureName, const std::string& _SettingTexture /*= "BaseColor"*/)
 {
 	if (nullptr == Unit)
 	{

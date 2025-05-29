@@ -46,8 +46,8 @@ private:
 	float Width = 0.0f;				// 너비(모니터)
 	float Height = 0.0f;				// 높이(모니터)
 	float FOV = 90.0f;				// FOV값
-	float Near = 10.f;				// 근평면
-	float Far = 100000.0f;		// 원평면
+	float Near = 0.1f;				// 근평면
+	float Far = 1000.0f;		// 원평면
 	
 
 	//////////////////////////////////// 테스트용

@@ -27,7 +27,7 @@ public:
 		return std::dynamic_pointer_cast<Type>(shared_from_this());
 	}
 
-	void SetTexture(std::string_view _TextureName, const std::string& _SettingTexture = "DefaultTex"); // 텍스쳐 지정하기
+	void SetTexture(std::string_view _TextureName, const std::string& _SettingTexture = "BaseColor"); // 텍스쳐 지정하기
 
 	// Getter, Setter
 	std::shared_ptr<class Ext_DirectXMesh> GetMesh() { return Mesh; }

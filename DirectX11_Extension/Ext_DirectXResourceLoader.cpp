@@ -66,19 +66,41 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
 		//}
 
+		//std::vector<Ext_DirectXVertexData> Vertices;
+		//std::vector<UINT> Indices;
+
+		//Base_Directory Dir;
+		//Dir.MakePath("../Resource/Mesh/SciCharacter/source/Belorian Soldier LP.obj");
+		//Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
+
+		//Ext_DirectXVertexBuffer::CreateVertexBuffer("Belorian Soldier LP", Vertices);
+		//Ext_DirectXIndexBuffer::CreateIndexBuffer("Belorian Soldier LP", Indices);
+		//Ext_DirectXMesh::CreateMesh("Belorian Soldier LP");
+
+		//Base_Directory Dir2;
+		//Dir2.MakePath("../Resource/Mesh/SciCharacter/textures");
+		//std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
+		//for (const std::string& FilePath : Paths)
+		//{
+		//	Dir2.SetPath(FilePath.c_str());
+		//	std::string ExtensionName = Dir2.GetExtension();
+		//	std::string FileName = Dir2.GetFileName();
+		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
+		//}
+
 		std::vector<Ext_DirectXVertexData> Vertices;
 		std::vector<UINT> Indices;
 
 		Base_Directory Dir;
-		Dir.MakePath("../Resource/Mesh/SciCharacter/source/Belorian Soldier LP.obj");
+		Dir.MakePath("../Resource/Mesh/Character/Mesh/Ch43_nonPBR.fbx");
 		Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
 
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Belorian Soldier LP", Vertices);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Belorian Soldier LP", Indices);
-		Ext_DirectXMesh::CreateMesh("Belorian Soldier LP");
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Ch43", Vertices);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Ch43", Indices);
+		Ext_DirectXMesh::CreateMesh("Ch43");
 
 		Base_Directory Dir2;
-		Dir2.MakePath("../Resource/Mesh/SciCharacter/textures");
+		Dir2.MakePath("../Resource/Mesh/Character/Texture");
 		std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
 		for (const std::string& FilePath : Paths)
 		{
@@ -87,6 +109,8 @@ void Ext_DirectXResourceLoader::MakeVertex()
 			std::string FileName = Dir2.GetFileName();
 			Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
 		}
+
+		int a = 0;
 	}
 
 	// 삼각형
@@ -434,6 +458,7 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 
 	Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
 	Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
+	Desc.FillMode = D3D11_FILL_SOLID;
 	// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
 
 	Ext_DirectXRasterizer::CreateRasterizer("EngineRasterizer", Desc);

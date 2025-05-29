@@ -1,4 +1,4 @@
-Texture2D DefaultTex : register(t0); // 텍스처 자원
+Texture2D BaseColorTex : register(t0); // 텍스처 자원
 SamplerState Sampler : register(s0); // 샘플러
 
 struct PSInput
@@ -10,5 +10,7 @@ struct PSInput
 
 float4 Basic_PS(PSInput _Input) : SV_TARGET
 {
-    return DefaultTex.Sample(Sampler, _Input.TexCoord);
+    float4 Color = BaseColorTex.Sample(Sampler, _Input.TexCoord);
+    Color.a = 1.0f; // ? 알파를 강제로 1로 고정
+    return Color;
 }

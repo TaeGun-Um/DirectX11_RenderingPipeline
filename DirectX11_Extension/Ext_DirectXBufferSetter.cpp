@@ -30,7 +30,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 }
 
 // 텍스쳐 값 변경
-void Ext_DirectXBufferSetter::SetTexture(const std::string& _SettingTexture, std::string_view _NewTextureName)
+void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, const std::string& _SettingTexture /*= "BaseColor"*/)
 {
 	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
 	if (nullptr == NewTexture)
@@ -40,38 +40,36 @@ void Ext_DirectXBufferSetter::SetTexture(const std::string& _SettingTexture, std
 		return;
 	}
 
-	std::string SlotName = _SettingTexture;
+	std::string UpperName = Base_String::ToUpper(_SettingTexture.data());
+	std::string SlotName;
 
-	// 자동 매핑 처리
-	if (Base_String::ToUpper(_SettingTexture) == "AUTO")
+	if (UpperName == "BASECOLOR")
 	{
-		std::string UpperName = Base_String::ToUpper(_NewTextureName.data());
-
-		if (UpperName.find("BASECOLOR") != std::string::npos || UpperName.find("albedo") != std::string::npos)
-		{
-			SlotName = "BaseColorTex";
-		}
-		else if (UpperName.find("NORMAL") != std::string::npos)
-		{
-			SlotName = "NormalTex";
-		}
-		else if (UpperName.find("ROUGHNESS") != std::string::npos)
-		{
-			SlotName = "RoughnessTex";
-		}
-		else if (UpperName.find("METALLIC") != std::string::npos)
-		{
-			SlotName = "MetallicTex";
-		}
-		else if (UpperName.find("EMISSIVE") != std::string::npos)
-		{
-			SlotName = "EmissiveTex";
-		}
-		else
-		{
-			MsgAssert("알 수 없는 텍스처 이름입니다. 자동 슬롯 지정 실패: " + UpperName);
-			return;
-		}
+		// BaseColor, Albedo, Albm 등
+		SlotName = "BaseColorTex";
+	}
+	else if (UpperName == "NORMAL")
+	{
+		// Normal. Nrmr 등
+		SlotName = "NormalTex";
+	}
+	else if (UpperName == "ROUGHNESS")
+	{
+		// ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
+		SlotName = "RoughnessTex";
+	}
+	else if (UpperName == "METALLIC")
+	{
+		SlotName = "MetallicTex";
+	}
+	else if (UpperName == "EMISSIVE")
+	{
+		SlotName = "EmissiveTex";
+	}
+	else
+	{
+		MsgAssert("알 수 없는 지정 형식입니다 : " + UpperName);
+		return;
 	}
 
 	std::string UpperSlotName = Base_String::ToUpper(SlotName);

@@ -60,9 +60,9 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, const std::string& _SettingTexture /*= "DefaultTex"*/)
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, const std::string& _SettingTexture /*= "BaseColor"*/)
 {
-	BufferSetter.SetTexture(_SettingTexture, _TextureName);
+	BufferSetter.SetTexture(_TextureName, _SettingTexture);
 }
 
 // Mesh, Material의 RenderingPipeline Setting

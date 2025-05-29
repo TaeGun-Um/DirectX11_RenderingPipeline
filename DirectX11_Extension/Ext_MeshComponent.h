@@ -19,7 +19,7 @@ public:
 
 	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
 	
-	void SetTexture(const std::string& _TextureName, const std::string& _SettingTexture = "DefaultTex"); // 텍스쳐 변경하기
+	void SetTexture(const std::string& _TextureName, const std::string& _SettingTexture = "BaseColor"); // 텍스쳐 변경하기
 
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
