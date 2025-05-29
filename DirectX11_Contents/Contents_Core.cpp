@@ -6,7 +6,6 @@
 #include "TempScene.h"
 #include "TestScene.h"
 
-#include "TriangleActor.h"
 #include "RectActor.h"
 
 /// <summary>

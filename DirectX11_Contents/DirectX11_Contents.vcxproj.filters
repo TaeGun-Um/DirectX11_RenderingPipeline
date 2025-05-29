@@ -33,9 +33,6 @@
     <ClCompile Include="PrecompileHeader.cpp">
       <Filter>00.Header\00.PrecompileHeader</Filter>
     </ClCompile>
-    <ClCompile Include="TriangleActor.cpp">
-      <Filter>02.Object\01.Actor</Filter>
-    </ClCompile>
     <ClCompile Include="RectActor.cpp">
       <Filter>02.Object\01.Actor</Filter>
     </ClCompile>
@@ -51,19 +48,16 @@
     <ClCompile Include="CubeActor.cpp">
       <Filter>02.Object\01.Actor</Filter>
     </ClCompile>
-    <ClCompile Include="RotateFace.cpp">
+    <ClCompile Include="TestActor.cpp">
       <Filter>02.Object\01.Actor</Filter>
     </ClCompile>
-    <ClCompile Include="TestActor.cpp">
+    <ClCompile Include="Character.cpp">
       <Filter>02.Object\01.Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrecompileHeader.h">
       <Filter>00.Header\00.PrecompileHeader</Filter>
-    </ClInclude>
-    <ClInclude Include="TriangleActor.h">
-      <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
     <ClInclude Include="RectActor.h">
       <Filter>02.Object\01.Actor</Filter>
@@ -80,10 +74,10 @@
     <ClInclude Include="CubeActor.h">
       <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
-    <ClInclude Include="RotateFace.h">
+    <ClInclude Include="TestActor.h">
       <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
-    <ClInclude Include="TestActor.h">
+    <ClInclude Include="Character.h">
       <Filter>02.Object\01.Actor</Filter>
     </ClInclude>
   </ItemGroup>

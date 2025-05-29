@@ -14,6 +14,7 @@
 #include "Ext_DirectXBlend.h"
 #include "Ext_DirectXRasterizer.h"
 #include "Ext_DirectXDepth.h"
+#include "Ext_MeshLoader.h"
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
@@ -30,9 +31,6 @@ void Ext_DirectXResourceLoader::Initialize()
 
 void Ext_DirectXResourceLoader::LoadTexture()
 {
-	// 셰이더 생성 규칙 : [1], [2]를 모두 만족해야 정상 컴파일 진행
-	// [1] 이름 + "_" + "Type" == Basic_PS
-	// [2] 내부 main(EntryPoint) 이름도 동일하게 설정
 	Base_Directory Dir;
 	Dir.MakePath("../Resource/Texture");
 	std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
@@ -52,6 +50,33 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+	// 메시 로드
+	{
+		// 파일 찾아서 메시로드 한 다음, 안에 std::vector<Ext_DirectXVertexData> Vertices;랑 std::vector<UINT> Index; 전달한거 받아서 Create 3종 실시
+
+		//Base_Directory Dir;
+		//Dir.MakePath("../Resource/Texture");
+		//std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
+		//for (const std::string& FilePath : Paths)
+		//{
+		//	Dir.SetPath(FilePath.c_str());
+		//	std::string ExtensionName = Dir.GetExtension();
+		//	std::string FileName = Dir.GetFileName();
+		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
+		//}
+
+		std::vector<Ext_DirectXVertexData> Vertices;
+		std::vector<UINT> Indices;
+
+		Base_Directory Dir;
+		Dir.MakePath("../Resource/Mesh/SciCharacter/source/Belorian Soldier LP.obj");
+		Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Belorian Soldier LP", Vertices);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Belorian Soldier LP", Indices);
+		Ext_DirectXMesh::CreateMesh("Belorian Soldier LP");
+	}
 
 	// 삼각형
 	{
@@ -153,43 +178,6 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Box", Vertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Box", Index);
 		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("Box");
-	}
-
-	// 테스트용
-	{
-		float AngleDeg = 45.0f;
-		float AngleRad = AngleDeg * (3.14159265f / 180.0f);
-
-		float Cos = cosf(AngleRad); // ? 0.7071
-		float Sin = sinf(AngleRad); // ? 0.7071
-
-		auto RotateY = [&](float x, float y, float z)
-			{
-				return float4(
-					x * Cos - z * Sin,
-					y,
-					x * Sin + z * Cos,
-					1.0f
-				);
-			};
-
-		std::vector<Ext_DirectXVertexData> Vertex =
-		{
-			{ RotateY(-0.5f,  0.5f, 0.0f), {1, 0, 0, 1}, {0, 0}, {0, 0, 1} }, // LT
-			{ RotateY(0.5f,  0.5f, 0.0f), {0, 1, 0, 1}, {1, 0}, {0, 0, 1} }, // RT
-			{ RotateY(0.5f, -0.5f, 0.0f), {0, 0, 1, 1}, {1, 1}, {0, 0, 1} }, // RB
-			{ RotateY(-0.5f, -0.5f, 0.0f), {1, 1, 0, 1}, {0, 1}, {0, 0, 1} }, // LB
-		};
-
-		std::vector<UINT> Index =
-		{
-			0, 1, 2,
-			2, 3, 0
-		};
-
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("RotateFace", Vertex);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("RotateFace", Index);
-		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("RotateFace");
 	}
 }
 

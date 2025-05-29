@@ -8,8 +8,8 @@ class Ext_MeshLoader
 {
 public:
 	// constrcuter destructer
-	Ext_MeshLoader();
-	~Ext_MeshLoader();
+	Ext_MeshLoader() {}
+	~Ext_MeshLoader() {}
 
 	// delete Function
 	Ext_MeshLoader(const Ext_MeshLoader& _Other) = delete;
@@ -17,25 +17,7 @@ public:
 	Ext_MeshLoader& operator=(const Ext_MeshLoader& _Other) = delete;
 	Ext_MeshLoader& operator=(Ext_MeshLoader&& _Other) noexcept = delete;
 
-    static void LoadModel(const std::string& FilePath)
-    {
-        Assimp::Importer Importer;
-
-        const aiScene* Scene = Importer.ReadFile(
-            FilePath,
-            aiProcess_Triangulate |
-            aiProcess_FlipUVs |
-            aiProcess_JoinIdenticalVertices
-        );
-
-        if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
-        {
-            std::cout << "Assimp Error: " << Importer.GetErrorString() << std::endl;
-            return;
-        }
-
-        std::cout << "Model Loaded: " << FilePath << std::endl;
-    }
+	static bool LoadMeshFromFile(const std::string& _FilePath, std::vector<class Ext_DirectXVertexData>& _OutVertices, std::vector<uint32_t>& _OutIndices);
 
 protected:
 	
