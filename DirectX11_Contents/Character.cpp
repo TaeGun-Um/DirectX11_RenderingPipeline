@@ -14,9 +14,6 @@ void Character::Start()
 	MeshComp = CreateComponent<Ext_MeshComponent>("BodyMesh");
 	MeshComp->CreateMeshComponentUnit("Ch43", "Basic");
 	MeshComp->SetTexture("Ch43_1001_Diffuse.png", "BaseColor");
-	// MeshComp->SetTexture("Ch43_1001_Normal.png", "NormalTex");
-	// MeshComp->SetTexture("Ch43_1001_Glossiness.png", "RoughnessTex");
-	// MeshComp->SetTexture("Ch43_1001_Specular.png", "MetallicTex");
 }
 
 void Character::Update(float _DeltaTime)

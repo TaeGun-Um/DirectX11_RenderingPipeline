@@ -26,7 +26,7 @@ struct VSInput
     float4 Normal : NORMAL;
 };
 
-struct VSOut
+struct VSOutput
 {
     float4 Position : SV_POSITION;
     float4 Color : COLOR;
@@ -34,9 +34,9 @@ struct VSOut
     float4 Normal : NORMAL;
 };
 
-VSOut Basic_VS(VSInput _Input)
+VSOutput Basic_VS(VSInput _Input)
 {
-    VSOut Output;
+    VSOutput Output;
     _Input.Position.w = 1.0f;
     Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
     Output.Color = _Input.Color;

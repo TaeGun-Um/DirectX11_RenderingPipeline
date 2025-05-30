@@ -122,7 +122,7 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		Vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
 		Vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
 
-		std::vector<UINT> ArrIndex = { 0, 2, 1 };
+		std::vector<UINT> ArrIndex = { 0, 1, 2 };
 
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
@@ -134,10 +134,10 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
 
-		ArrVertex[0] = { { 0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
-		ArrVertex[1] = { {-0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
-		ArrVertex[2] = { {-0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
-		ArrVertex[3] = { { 0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
+		ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
+		ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
+		ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
+		ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
 
 		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
 

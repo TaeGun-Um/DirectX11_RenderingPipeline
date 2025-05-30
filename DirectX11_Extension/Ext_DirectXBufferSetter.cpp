@@ -88,7 +88,7 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, const
 	}
 }
 
-// 상수 버퍼 데이터 저장
+// 상수 버퍼에 한하여 호출, cbuffer 슬롯 이름과 크기를 나중에 따로 지정해주기 위해 호출하는 함수
 void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size)
 {
 	std::string UpperName = Base_String::ToUpper(_Name);

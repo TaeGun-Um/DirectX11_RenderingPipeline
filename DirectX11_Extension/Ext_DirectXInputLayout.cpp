@@ -28,7 +28,7 @@ void Ext_DirectXInputLayout::CreateInputLayout(std::shared_ptr<Ext_DirectXVertex
 		static_cast<UINT>(LayOutInfo.size()),
 		_VertexShader->GetBinaryCode()->GetBufferPointer(),
 		_VertexShader->GetBinaryCode()->GetBufferSize(),
-		&InputLayout
+		InputLayout.GetAddressOf()
 	);
 	// <<설명>>
 	/*1. const D3D11_INPUT_ELEMENT_DESC* : 정점 입력 요소 배열의 시작 주소, 각 요소가 어떤 데이터인지 정의*/

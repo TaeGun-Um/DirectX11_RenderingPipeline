@@ -267,6 +267,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Ext_Imgui.cpp" />
+    <ClCompile Include="Ext_Light.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_MeshComponent.cpp">
       <SubType>
       </SubType>
@@ -409,6 +413,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_Imgui.h" />
+    <ClInclude Include="Ext_Light.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_MeshComponent.h">
       <SubType>
       </SubType>

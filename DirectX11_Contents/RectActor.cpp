@@ -10,15 +10,16 @@ void RectActor::Start()
 
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
 	MeshComp->CreateMeshComponentUnit("Rect", "Basic");
-	MeshComp->SetTexture("Cuphead.png");
+	// MeshComp->SetTexture("Cuphead.png");
+	// MeshComp->SetTexture("Cuphead.png");
+
+	MeshComp->GetTransform()->SetLocalPosition({ 0, 0, 0 });
 }
 
 void RectActor::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
 
-	//std::shared_ptr<Ext_Transform> Transform = GetTransform();
-	//
-	//float MoveSpeed = 100.0f; // 초당 100 단위 회전
-	//GetTransform()->AddLocalRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
+	float MoveSpeed = 100.0f; // 초당 100 단위 회전
+	MeshComp->GetTransform()->AddLocalRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
 }

@@ -21,25 +21,36 @@ void Base_Input::Key::Update(float _DeltaTime)
 	if (true == KeyCheck())
 	{
 		PressTime += _DeltaTime;
-		if (bIsFree)
+		if (bIsFree) // 안누르고 있었는데, 방금 누름(1틱 눌렀다)
 		{
 			bIsDown = true;
 			bIsPress = true;
 			bIsFree = false;
 		}
-		else if (bIsDown)
+		else if (bIsDown) // 누르고 있었는데, 또 누름(연속 입력중이네..)
 		{
 			bIsDown = false;
 			bIsPress = true;
 			bIsFree = false;
 		}
 	}
-	else
+	else // 아무것도 안하고있음
 	{
 		PressTime = 0.f;
 		bIsFree = true;
 		bIsDown = false;
 		bIsPress = false;
+	}
+}
+
+void Base_Input::Update(float _DeltaTime)
+{
+	std::map<std::string, Key>::iterator StartKeyIter = Keys.begin();
+	std::map<std::string, Key>::iterator EndKeyIter = Keys.end();
+
+	for (auto& Iter : Keys)
+	{
+		Iter.second.Update(_DeltaTime);
 	}
 }
 
@@ -79,15 +90,6 @@ void Base_Input::CreateKey(std::string_view _Name, int _Key)
 	Keys[UpperName].Input = _Key;
 }
 
-void Base_Input::Update(float _DeltaTime)
-{
-	std::map<std::string, Key>::iterator StartKeyIter = Keys.begin();
-	std::map<std::string, Key>::iterator EndKeyIter = Keys.end();
 
-	for (auto& Iter : Keys)
-	{
-		Iter.second.Update(_DeltaTime);
-	}
-}
 
 

@@ -10,6 +10,8 @@
 #include "Ext_DirectXPixelShader.h"
 #include "Ext_DirectXDevice.h"
 #include "Ext_Transform.h"
+#include "Ext_Scene.h"
+#include "Ext_Light.h"
 
 #include "Ext_DirectXVertexData.h"
 
@@ -52,8 +54,12 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.Copy(PixelShaderBuffers);
 
 	// [3] 트랜스폼 상수버퍼 세팅하기
-	const TransformData& Data = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
-	BufferSetter.SetConstantBufferLink("TransformData", Data);
+	const TransformData& TFData = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
+	BufferSetter.SetConstantBufferLink("TransformData", TFData);
+
+	// [4] 빛 상수버퍼 세팅하기
+	const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
+	BufferSetter.SetConstantBufferLink("LightData", LTData);
 
 	// [4] 카메라에 넣기
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);

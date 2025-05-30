@@ -1,6 +1,14 @@
 ﻿#pragma once
 #include "Ext_Actor.h"
 
+// 원근인지, 직교인지 설정
+enum class ProjectionType
+{
+	Perspective,
+	Orthogonal,
+	Unknown
+};
+
 // 화면의 렌더링을 담당하는 Actor
 class Ext_Camera : public Ext_Actor
 {
@@ -47,8 +55,7 @@ private:
 	float Height = 0.0f;				// 높이(모니터)
 	float FOV = 90.0f;				// FOV값
 	float Near = 0.1f;				// 근평면
-	float Far = 1000.0f;		// 원평면
-	
+	float Far = 10000.0f;		// 원평면
 
 	//////////////////////////////////// 테스트용
 	D3D11_VIEWPORT ViewPortData; 

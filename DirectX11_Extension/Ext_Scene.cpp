@@ -4,6 +4,7 @@
 #include "Ext_Actor.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
+#include "Ext_Light.h"
 #include "Ext_Imgui.h"
 
 // Actor 생성 시 자동 호출(이름 설정, 오너 신 설정, 오더 설정)
@@ -29,6 +30,13 @@ void Ext_Scene::PushMeshToCamera(std::shared_ptr<Ext_MeshComponent> _MeshCompone
 	FindCam->PushMeshComponent(_MeshComponent);
 }
 
+// 메인 카메라 세팅
+void Ext_Scene::SetMainCamera(std::shared_ptr<Ext_Camera> _MainCamera)
+{
+	MainCamera = _MainCamera;
+	Cameras.insert(std::make_pair("MainCamera", MainCamera));
+}
+
 // 이름으로 카메라 찾기
 std::shared_ptr<Ext_Camera> Ext_Scene::FindCamera(std::string_view _CameraName)
 {
@@ -42,6 +50,15 @@ std::shared_ptr<Ext_Camera> Ext_Scene::FindCamera(std::string_view _CameraName)
 	std::shared_ptr<Ext_Camera> FindCam = FindIter->second;
 
 	return FindCam;
+}
+
+// 디렉셔널 라이트 세팅
+void Ext_Scene::SetDirectionalLight(std::shared_ptr<Ext_Light> _Light)
+{
+	DirectionalLight = _Light;
+	DirectionalLight->SetLightType(LightType::Directional);
+	DirectionalLight->SetLightRange(1000.0f);
+	Lights.insert(std::make_pair("DirectionalLight", DirectionalLight));
 }
 
 void Ext_Scene::SceneChangeInitialize()
@@ -80,12 +97,19 @@ void Ext_Scene::Update(float _DeltaTime)
 void Ext_Scene::Rendering(float _DeltaTime)
 {
 	// Rendering 업데이트
-	for (auto& Iter : Cameras)
+	for (auto& CamIter : Cameras)
 	{
-		std::shared_ptr<Ext_Camera> CurCamera = Iter.second;
+		std::shared_ptr<Ext_Camera> CurCamera = CamIter.second;
 
 		CurCamera->CameraTransformUpdate(); // 카메라에 대한 뷰, 프로젝션, 뷰포트 행렬 최신화
-		CurCamera->Rendering(_DeltaTime);
+
+		for (auto& LightIter : Lights) // 라이트들 돌면서 업데이트
+		{
+			std::shared_ptr<Ext_Light> CurLight = LightIter.second;
+			CurLight->LightUpdate(CurCamera, _DeltaTime);
+		}
+
+		CurCamera->Rendering(_DeltaTime); // Camera의 MeshComponent들 Rendering
 	}
 
 	Ext_Imgui::Render(GetSharedFromThis<Ext_Scene>(), _DeltaTime);

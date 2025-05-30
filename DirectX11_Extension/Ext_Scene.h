@@ -37,13 +37,13 @@ public:
 	}
 
 	// 카메라 Getter, Setter
-	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; };
-	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera) 
-	{ 
-		MainCamera = _MainCamera; 
-		Cameras.insert(std::make_pair("MainCamera", MainCamera));
-	};
-	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName);
+	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; }; // 메인 카메라 가져오기
+	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera); // 메인 카메라 세팅(호출 안하는게 좋음)
+	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName); // 카메라 찾기(메인 카메라밖에 없다)
+
+	// Light Getter, Setter
+	std::shared_ptr<class Ext_Light> GetDirectionalLight() { return DirectionalLight; }; // 디렉셔널 라이트 가져오기
+	void SetDirectionalLight(std::shared_ptr<class Ext_Light> _Light); // 디렉셔널 라이트 세팅(씬이 만들어지면 바로 호출 1회)
 
 	// MeshComponent를 MainCamera의 MeshComponents에 push
 	void PushMeshToCamera(std::shared_ptr<class Ext_MeshComponent> _MeshComponent, std::string_view _CameraName);
@@ -59,7 +59,9 @@ private:
 	void Rendering(float _DeltaTime); // 렌더링 업데이트
 	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order); // Actor 생성 시 자동 호출, 이름 설정, Owner설정
 	
-	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;	// Scene에 저장된 Actor들, Order로 그룹화
-	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;		// Scene에 저장된 Camera들
-	std::shared_ptr<class Ext_Camera> MainCamera;									// 현재 Scene의 MainCamera
+	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;  // Scene에 저장된 Actor들, Order로 그룹화
+	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;    // Scene에 저장된 Camera들
+	std::map<std::string, std::shared_ptr<class Ext_Light>> Lights;            // Scene에 저장된 Light들
+	std::shared_ptr<class Ext_Camera> MainCamera;                                  // 현재 Scene의 MainCamera
+	std::shared_ptr<class Ext_Light> DirectionalLight;                                 // 현재 Scene의 Directional Light
 };
