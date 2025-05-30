@@ -58,11 +58,15 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.SetConstantBufferLink("TransformData", TFData);
 
 	// [4] 빛 상수버퍼 세팅하기
-	const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
-	BufferSetter.SetConstantBufferLink("LightData", LTData);
+	//const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
+	//BufferSetter.SetConstantBufferLink("LightData", LTData);
+}
 
-	// [4] 카메라에 넣기
-	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
+// FBX Animation의 상수버퍼 세팅을 위해 호출
+void Ext_MeshComponentUnit::SetBufferlink()
+{
+	// const AnimationMatrix& AnimData = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
+	// BufferSetter.SetConstantBufferLink("AnimationMatrix", AnimData);
 }
 
 // 텍스쳐 변경하기

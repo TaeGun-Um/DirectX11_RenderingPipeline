@@ -170,6 +170,26 @@ public:
 		return *this;
 	}
 
+	// test
+	float& operator[](int index)
+	{
+		if (index < 0 || index > 3)
+		{
+			throw std::out_of_range("float4 index out of range");
+		}
+		return Arr1D[index];
+	}
+
+	// test
+	const float& operator[](int index) const
+	{
+		if (index < 0 || index > 3)
+		{
+			throw std::out_of_range("float4 index out of range");
+		}
+		return Arr1D[index];
+	}
+
 	// float4x4는 아래에 있기 때문에, cpp로 구현부를 옮겨서 활용
 	float4 operator*(const class float4x4& _Other);
 	float4& operator*=(const class float4x4& _Other);
@@ -290,6 +310,13 @@ public:
 		return Return;
 	}
 
+	float4x4 operator*(const float4x4& _Other) const
+	{
+		float4x4 Result;
+		Result.DirectMatrix = DirectX::XMMatrixMultiply(this->DirectMatrix, _Other.DirectMatrix);
+		return Result;
+	}
+
 	float4x4& operator*=(const float4x4& _Other)
 	{
 		DirectMatrix = DirectX::XMMatrixMultiply(*this, _Other);
@@ -379,6 +406,13 @@ public:
 	{
 		float4 Rot = _Degree * Base_Math::DegreeToRadian;
 		DirectMatrix = DirectX::XMMatrixRotationRollPitchYaw(Rot.x, Rot.y, Rot.z);
+	}
+
+	// float4x4 내부에 이 멤버 함수 추가
+	void RotationQuaternion(const float4& _Quaternion)
+	{
+		Identity();
+		DirectMatrix = DirectX::XMMatrixRotationQuaternion(_Quaternion);
 	}
 
 	// 4x4 행렬의 전치(Transpose) 행렬 생성
@@ -511,5 +545,4 @@ public:
 	{
 		return DirectX::XMVector3TransformCoord(_Value, *this);
 	}
-
 };

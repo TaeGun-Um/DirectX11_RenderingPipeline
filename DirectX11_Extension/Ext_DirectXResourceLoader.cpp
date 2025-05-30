@@ -50,6 +50,8 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BONEID", DXGI_FORMAT_R32G32B32A32_SINT); // FBX Animation용
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("WEIGHT", DXGI_FORMAT_R32G32B32A32_FLOAT); // FBX Animation용
 
 	// 메시 로드(테스트용)
 	{
@@ -90,14 +92,21 @@ void Ext_DirectXResourceLoader::MakeVertex()
 
 		std::vector<Ext_DirectXVertexData> Vertices;
 		std::vector<UINT> Indices;
+		std::unordered_map<std::string, int> BoneMapping;
+		std::vector<float4x4> BoneOffsets;
+		aiNode* RootNode = nullptr;
+		std::unique_ptr<Assimp::Importer> Importer;
+		float4x4 Global;
 
 		Base_Directory Dir;
-		Dir.MakePath("../Resource/Mesh/Character/Mesh/Ch43_nonPBR.fbx");
+		Dir.MakePath("../Resource/Mesh/Character/Mesh/Girl.fbx");
 		Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
 
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Ch43", Vertices);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Ch43", Indices);
-		Ext_DirectXMesh::CreateMesh("Ch43");
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Girl", Vertices);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Girl", Indices);
+		Ext_DirectXMesh::CreateMesh("Girl");
+
+		/////////////////////////////////////////////////////////////////////////
 
 		Base_Directory Dir2;
 		Dir2.MakePath("../Resource/Mesh/Character/Texture");

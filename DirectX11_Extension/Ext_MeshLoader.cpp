@@ -1,9 +1,9 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Ext_MeshLoader.h"
 
 #include "Ext_DirectXVertexData.h"
 
-// ·Îµå ½Ã ¹öÅØ½º ¹öÆÛ »ı¼º¿ë º¤ÅÍ¿Í ÀÎµ¦½º ¹öÆÛ »ı¼º¿ë ¹öÆÛ¸¦ Àü´ŞÇØÁÖ¸é °ªÀ» ÀÔ·ÂÇØÁÜ, ±×°É·Î Create ½Ç½ÃÇÏ¸é µÊ
+// ë¡œë“œ ì‹œ ë²„í…ìŠ¤ ë²„í¼ ìƒì„±ìš© ë²¡í„°ì™€ ì¸ë±ìŠ¤ ë²„í¼ ìƒì„±ìš© ë²„í¼ë¥¼ ì „ë‹¬í•´ì£¼ë©´ ê°’ì„ ì…ë ¥í•´ì¤Œ, ê·¸ê±¸ë¡œ Create ì‹¤ì‹œí•˜ë©´ ë¨
 bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<Ext_DirectXVertexData>& _OutVertices, std::vector<uint32_t>& _OutIndices)
 {
     Assimp::Importer Importer;
@@ -11,12 +11,12 @@ bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<
 
     if (Scene == nullptr || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || Scene->mRootNode == nullptr)
     {
-        MessageBoxA(nullptr, Importer.GetErrorString(), "Assimp Error", MB_OK);
+        MessageBoxA(nullptr, Importer.GetErrorString(), "Mesh Import Error", MB_OK);
         return false;
     }
 
-    ////////////////////////////// VertexBuffer¸¦ À§ÇÑ µ¥ÀÌÅÍ ÀÔ·Â ºÎºĞ //////////////////////////////
-    aiMesh* Mesh = Scene->mMeshes[0]; // ´ÜÀÏ ¸Ş½Ã °¡Á¤
+    ////////////////////////////// VertexBufferë¥¼ ìœ„í•œ ë°ì´í„° ì…ë ¥ ë¶€ë¶„ //////////////////////////////
+    aiMesh* Mesh = Scene->mMeshes[0]; // ë‹¨ì¼ ë©”ì‹œ ê°€ì •
 
     for (unsigned int i = 0; i < Mesh->mNumVertices; ++i)
     {
@@ -25,7 +25,7 @@ bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<
         VertexData.NORMAL = Mesh->HasNormals() ? float4(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z) : float4::ZERO;
         if (Mesh->HasTextureCoords(0))
         {
-            //VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y); // CW
+            //VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y);
             VertexData.TEXCOORD = float4(Mesh->mTextureCoords[0][i].x, 1.0f - Mesh->mTextureCoords[0][i].y); // CCW
         }
         else
@@ -36,32 +36,21 @@ bool Ext_MeshLoader::LoadMeshFromFile(const std::string& _FilePath, std::vector<
         _OutVertices.push_back(VertexData);
     }
 
-    ////////////////////////////// IndexBuffer¸¦ À§ÇÑ µ¥ÀÌÅÍ ÀÔ·Â ºÎºĞ //////////////////////////////
-    // CW
-    //for (unsigned int i = 0; i < Mesh->mNumFaces; ++i)
-    //{
-    //    const aiFace& Face = Mesh->mFaces[i];
-    //    for (unsigned int j = 0; j < Face.mNumIndices; ++j)
-    //    {
-    //        _OutIndices.push_back(Face.mIndices[j]);
-    //    }
-    //}
-
     // CCW
     for (unsigned int i = 0; i < Mesh->mNumFaces; ++i)
     {
         const aiFace& Face = Mesh->mFaces[i];
 
-        if (Face.mNumIndices == 3) // »ï°¢Çü¸¸ Ã³¸®
+        if (Face.mNumIndices == 3) // ì‚¼ê°í˜•ë§Œ ì²˜ë¦¬
         {
-            // CW ¡æ CCW·Î ÀüÈ¯ (Face.mIndices[1], [2] ¼ø¼­ º¯°æ)
+            // CW â†’ CCWë¡œ ì „í™˜ (Face.mIndices[1], [2] ìˆœì„œ ë³€ê²½)
             _OutIndices.push_back(Face.mIndices[0]);
             _OutIndices.push_back(Face.mIndices[2]);
             _OutIndices.push_back(Face.mIndices[1]);
         }
         else
         {
-            // »ï°¢ÇüÀÌ ¾Æ´Ò °æ¿ì ±×´ë·Î ³Ö°Å³ª ¹«½Ã
+            // ì‚¼ê°í˜•ì´ ì•„ë‹ ê²½ìš° ê·¸ëŒ€ë¡œ ë„£ê±°ë‚˜ ë¬´ì‹œ
             for (unsigned int j = 0; j < Face.mNumIndices; ++j)
             {
                 _OutIndices.push_back(Face.mIndices[j]);

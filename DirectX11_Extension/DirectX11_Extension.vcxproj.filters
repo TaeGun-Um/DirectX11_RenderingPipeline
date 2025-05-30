@@ -127,6 +127,9 @@
     <ClCompile Include="Ext_Light.cpp">
       <Filter>03.Graphics\00.Light</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_FBXMeshComponent.cpp">
+      <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -264,6 +267,9 @@
     <ClInclude Include="Ext_Light.h">
       <Filter>03.Graphics\00.Light</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_FBXMeshComponent.h">
+      <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02.DirectX">
@@ -388,6 +394,9 @@
     </Filter>
     <Filter Include="03.Graphics\01.Shadow">
       <UniqueIdentifier>{bef21a47-0f58-4567-a770-7f6b54f5a252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Process\02.Object\04.Component\02.Animation">
+      <UniqueIdentifier>{87d2c430-8b14-42b4-9c36-ba3211c1f38e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

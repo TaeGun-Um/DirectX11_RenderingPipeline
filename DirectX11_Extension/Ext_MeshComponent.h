@@ -17,7 +17,7 @@ public:
 	Ext_MeshComponent& operator=(const Ext_MeshComponent& _Other) = delete;
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
-	std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
+	virtual std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
 	
 	void SetTexture(const std::string& _TextureName, const std::string& _SettingTexture = "BaseColor"); // 텍스쳐 변경하기
 
@@ -28,13 +28,13 @@ public:
 protected:
 	virtual void Start() override;
 	void Release() override;
+	virtual void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix); // 메시 렌더링 업데이트
 
-private:
 	void PushMeshToCamera(std::string_view _CameraName); // 메시 컴포넌트는 생성하면 카메라에 넣기 진행(지금은 메인 카메라로 들어감)
-	void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix); // 메시 렌더링 업데이트
-
-	 
+	
 	std::weak_ptr<class Ext_Camera> OwnerCamera; // 자신을 소유한 카메라
 	std::shared_ptr<class Ext_MeshComponentUnit> Unit; // Mesh와 Pipeline 정보 모음
+
+private:
 	
 };
