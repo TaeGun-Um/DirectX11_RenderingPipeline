@@ -15,9 +15,11 @@ public:
 
     std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material) override;
 
+    std::shared_ptr<class Ext_FBXAnimator> GetAnimator() { return Animator; };
+
 protected:
     void Start() override;
-    void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
+    void Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
 
 private:
     std::shared_ptr<class Ext_FBXAnimator> Animator = nullptr;

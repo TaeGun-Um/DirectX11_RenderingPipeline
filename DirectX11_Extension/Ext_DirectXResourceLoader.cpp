@@ -67,17 +67,6 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		//Ext_DirectXMesh::CreateMesh("Girl");
 
 		///////////////////////////////////////////////////////////////////////////
-
-		//Base_Directory Dir2;
-		//Dir2.MakePath("../Resource/Mesh/Character/Texture");
-		//std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
-		//for (const std::string& FilePath : Paths)
-		//{
-		//	Dir2.SetPath(FilePath.c_str());
-		//	std::string ExtensionName = Dir2.GetExtension();
-		//	std::string FileName = Dir2.GetFileName();
-		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
-		//}
 	}
 
 	// 삼각형

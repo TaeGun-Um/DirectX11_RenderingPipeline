@@ -25,142 +25,138 @@ bool Ext_FBXAnimator::LoadMeshFBX(
     std::vector<Ext_DirectXVertexData>& _OutVertices,
     std::vector<unsigned int>& _OutIndices)
 {
-    //──────────────────────────────────────────────────────────────
-    // 1) Assimp로 T-Pose FBX 읽기 (좌표계 변환 플래그 aiProcess_ConvertToLeftHanded 제거)
-    //──────────────────────────────────────────────────────────────
-    MeshScene = MeshImporter.ReadFile(_TposeFilename, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
-
-    if (!MeshScene || (MeshScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !MeshScene->mRootNode)
+    // 1) 메시 + 바인드포즈 FBX 읽기 (DirectX 좌표계로 변환)
+    MeshScene = MeshImporter.ReadFile(
+        _TposeFilename,
+        aiProcess_Triangulate
+        | aiProcess_GenSmoothNormals
+        | aiProcess_CalcTangentSpace
+        | aiProcess_JoinIdenticalVertices
+        | aiProcess_LimitBoneWeights
+        | aiProcess_ConvertToLeftHanded    // ← DirectX(LH) 기준으로 읽도록
+        | aiProcess_FlipUVs               // UV V축을 상하 반전
+    );
+    if (!MeshScene
+        || (MeshScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
+        || !MeshScene->mRootNode)
     {
         MsgAssert("FBX 메시 로드 실패");
         return false;
     }
 
-    //──────────────────────────────────────────────────────────────
-    // 2) GlobalInverseTransform 계산 (루트 노드 변환의 역행렬)
-    //──────────────────────────────────────────────────────────────
+    // 2) 루트 노드 변환 역행렬(바인드포즈 보정용)
     {
         aiMatrix4x4 inv = MeshScene->mRootNode->mTransformation;
         inv.Inverse();
         GlobalInverseTransform = inv;
     }
 
-    //──────────────────────────────────────────────────────────────
-    // 3) 본 정보만 추출 (BoneNameToInfo, BoneCount 세팅)
-    //──────────────────────────────────────────────────────────────
-    {
-        ExtractBonesFromMesh();
-        // FinalBoneMatrices 크기만큼 모두 단위행렬로 초기화
-        FinalBoneMatrices.clear();
-        FinalBoneMatrices.resize(BoneCount, aiMatrix4x4());
-    }
+    // 3) 본 정보 추출 (BoneNameToInfo, BoneCount 세팅)
+    ExtractBonesFromMesh();
+    FinalBoneMatrices.clear();
+    FinalBoneMatrices.resize(BoneCount, aiMatrix4x4());
 
-    //──────────────────────────────────────────────────────────────
-    // 4) 메시(Vertex/Index) + 본 정보(BoneID/Weight) 추출
-    //    - 여기서는 편의상 첫 번째 메시(aiMeshes[0])만 처리
-    //──────────────────────────────────────────────────────────────
+    // 4) 첫 번째 메시(aiMeshes[0])만 처리
     if (MeshScene->mNumMeshes < 1)
     {
         MsgAssert("FBX 메시 로드 실패: 메시 개수 없음");
         return false;
     }
 
-    const aiMesh* aiMeshPtr = MeshScene->mMeshes[0];
+    const aiMesh* AimeshPtr = MeshScene->mMeshes[0];
     _OutVertices.clear();
     _OutIndices.clear();
-    _OutVertices.reserve(aiMeshPtr->mNumVertices);
-    _OutIndices.reserve(aiMeshPtr->mNumFaces * 3);
+    _OutVertices.reserve(AimeshPtr->mNumVertices);
+    _OutIndices.reserve(AimeshPtr->mNumFaces * 3);
 
-    // (4-1) 정점 정보 채우기: Position, Normal, TexCoord, Color
-    for (unsigned int v = 0; v < aiMeshPtr->mNumVertices; ++v)
+    // 4-1) 정점 정보 채우기: POSITION, COLOR, TEXCOORD, NORMAL, BONEID, WEIGHT
+    for (unsigned int v = 0; v < AimeshPtr->mNumVertices; ++v)
     {
-        Ext_DirectXVertexData vData;
+        Ext_DirectXVertexData VData;
 
-        // (A) Position → float4(x,y,z,1)
-        const aiVector3D& ap = aiMeshPtr->mVertices[v];
-        vData.POSITION = float4(ap.x, ap.y, ap.z, 1.0f);
+        // (A) POSITION
+        const aiVector3D& Ap = AimeshPtr->mVertices[v];
+        VData.POSITION = float4(Ap.x, Ap.y, Ap.z, 1.0f);
 
-        // (B) Normal → float4(nx,ny,nz,0)
-        if (aiMeshPtr->HasNormals())
+        // (B) NORMAL
+        if (AimeshPtr->HasNormals())
         {
-            const aiVector3D& an = aiMeshPtr->mNormals[v];
-            vData.NORMAL = float4(an.x, an.y, an.z, 0.0f);
+            const aiVector3D& An = AimeshPtr->mNormals[v];
+            VData.NORMAL = float4(An.x, An.y, An.z, 0.0f);
         }
         else
         {
-            vData.NORMAL = float4(0, 1, 0, 0);
+            VData.NORMAL = float4(0.0f, 1.0f, 0.0f, 0.0f);
         }
 
-        // (C) TexCoord UV (0번 채널만) → float4(u, 1-v, 0, 0)
-        if (aiMeshPtr->HasTextureCoords(0))
+        // ▼ aiProcess_FlipUVs 를 켰다면, 여기서는 1.0f - y를 제거하고 그대로 써야 한다! ▼
+        if (AimeshPtr->HasTextureCoords(0))
         {
-            const aiVector3D& au = aiMeshPtr->mTextureCoords[0][v];
-            vData.TEXCOORD = float4(au.x, 1.0f - au.y, 0.0f, 0.0f);
+            const aiVector3D& Au = AimeshPtr->mTextureCoords[0][v];
+            // aiProcess_FlipUVs 가 켜지면 Assimp가 로드하면서 (0,0)이 아래에서 위로 뒤집어 놓음
+            VData.TEXCOORD = float4(Au.x, Au.y, 0.0f, 0.0f);
         }
         else
         {
-            vData.TEXCOORD = float4(0, 0, 0, 0);
+            VData.TEXCOORD = float4(0.0f, 0.0f, 0.0f, 0.0f);
         }
 
-        // (D) Color: 흰색
-        vData.COLOR = float4(1, 1, 1, 1);
+        // (D) COLOR: 기본 흰색
+        VData.COLOR = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-        // (E) BONEID, WEIGHT: 기본 생성자에서 모두 0으로 초기화되어 있음
-        //     → 5-3) 절에서 나중에 채워 줌
+        // (E) BONEID, WEIGHT: 생성자에서 모두 0으로 초기화됨
+        //     → 아래에서 aiBone 정보를 기반으로 채워 줌
 
-        _OutVertices.push_back(vData);
+        _OutVertices.push_back(VData);
     }
 
-    // (4-2) 본(Bone) 가중치 채우기 (aiBone → 정점별 BoneID, Weight)
-    //       최대 4개 본만 저장(이미 vData.WEIGHT는 0으로 초기화됨)
-    for (unsigned int b = 0; b < aiMeshPtr->mNumBones; ++b)
+    // 4-2) 본( aiBone ) 가중치 채우기 (최대 4개)
+    for (unsigned int b = 0; b < AimeshPtr->mNumBones; ++b)
     {
-        const aiBone* aiBonePtr = aiMeshPtr->mBones[b];
-        std::string    boneName(aiBonePtr->mName.C_Str());
+        const aiBone* AibonePtr = AimeshPtr->mBones[b];
+        std::string    BoneName(AibonePtr->mName.C_Str());
 
-        auto it = BoneNameToInfo.find(boneName);
-        if (it == BoneNameToInfo.end())
-        {
+        auto It = BoneNameToInfo.find(BoneName);
+        if (It == BoneNameToInfo.end())
             continue;
-        }
 
-        int boneID = it->second.ID;
-        for (unsigned int w = 0; w < aiBonePtr->mNumWeights; ++w)
+        int BoneID = It->second.ID;
+        for (unsigned int w = 0; w < AibonePtr->mNumWeights; ++w)
         {
-            unsigned int vertID = aiBonePtr->mWeights[w].mVertexId;
-            float         weight = aiBonePtr->mWeights[w].mWeight;
-            Ext_DirectXVertexData& destV = _OutVertices[vertID];
+            unsigned int VertID = AibonePtr->mWeights[w].mVertexId;
+            float         Weight = AibonePtr->mWeights[w].mWeight;
+            Ext_DirectXVertexData& DestV = _OutVertices[VertID];
 
-            // 네 슬롯(0~3) 중 빈 슬롯에 BoneID/Weight 넣기
+            // 네 슬롯(0~3) 중 빈 슬롯에 BoneID/Weight 저장
             for (int k = 0; k < 4; ++k)
             {
-                bool isEmpty = false;
+                bool IsEmpty = false;
                 switch (k)
                 {
-                case 0: isEmpty = (destV.WEIGHT.x == 0.0f); break;
-                case 1: isEmpty = (destV.WEIGHT.y == 0.0f); break;
-                case 2: isEmpty = (destV.WEIGHT.z == 0.0f); break;
-                case 3: isEmpty = (destV.WEIGHT.w == 0.0f); break;
+                case 0:  IsEmpty = (DestV.WEIGHT.x == 0.0f); break;
+                case 1:  IsEmpty = (DestV.WEIGHT.y == 0.0f); break;
+                case 2:  IsEmpty = (DestV.WEIGHT.z == 0.0f); break;
+                case 3:  IsEmpty = (DestV.WEIGHT.w == 0.0f); break;
                 }
-                if (isEmpty)
+                if (IsEmpty)
                 {
                     switch (k)
                     {
                     case 0:
-                        destV.BONEID.x = (uint32_t)boneID;
-                        destV.WEIGHT.x = weight;
+                        DestV.BONEID.x = static_cast<uint32_t>(BoneID);
+                        DestV.WEIGHT.x = Weight;
                         break;
                     case 1:
-                        destV.BONEID.y = (uint32_t)boneID;
-                        destV.WEIGHT.y = weight;
+                        DestV.BONEID.y = static_cast<uint32_t>(BoneID);
+                        DestV.WEIGHT.y = Weight;
                         break;
                     case 2:
-                        destV.BONEID.z = (uint32_t)boneID;
-                        destV.WEIGHT.z = weight;
+                        DestV.BONEID.z = static_cast<uint32_t>(BoneID);
+                        DestV.WEIGHT.z = Weight;
                         break;
                     case 3:
-                        destV.BONEID.w = (uint32_t)boneID;
-                        destV.WEIGHT.w = weight;
+                        DestV.BONEID.w = static_cast<uint32_t>(BoneID);
+                        DestV.WEIGHT.w = Weight;
                         break;
                     }
                     break;
@@ -169,21 +165,25 @@ bool Ext_FBXAnimator::LoadMeshFBX(
         }
     }
 
-    // (4-3) 인덱스 채우기 (Face마다 3개씩 → CW→CCW로 순서 뒤집기)
-    for (unsigned int f = 0; f < aiMeshPtr->mNumFaces; ++f)
+    // 4-3) 인덱스 채우기 (삼각형 → CCW 순서)
+    for (unsigned int f = 0; f < AimeshPtr->mNumFaces; ++f)
     {
-        const aiFace& face = aiMeshPtr->mFaces[f];
-        if (face.mNumIndices == 3)
+        const aiFace& Face = AimeshPtr->mFaces[f];
+        if (Face.mNumIndices == 3)
         {
-            _OutIndices.push_back(face.mIndices[0]);
-            _OutIndices.push_back(face.mIndices[2]);
-            _OutIndices.push_back(face.mIndices[1]);
+            // 원래 FBX가 CW 순서라면, (0,1,2) → CCW를 위해 (0,2,1)로 뒤집기
+            _OutIndices.push_back(Face.mIndices[0]);
+            _OutIndices.push_back(Face.mIndices[2]);
+            _OutIndices.push_back(Face.mIndices[1]);
         }
         else
         {
-            // 삼각형이 아닌 다각형일 경우, (필요하다면) 자유롭게 처리
-            for (unsigned int j = 0; j < face.mNumIndices; ++j)
-                _OutIndices.push_back(face.mIndices[j]);
+            // 삼각형이 아닌 경우, 인덱스를 있는 그대로 넣되
+            // 반드시 CCW가 되도록 FBX 에디터에서 Triangulate를 미리 수행해 두세요.
+            for (unsigned int j = 0; j < Face.mNumIndices; ++j)
+            {
+                _OutIndices.push_back(Face.mIndices[j]);
+            }
         }
     }
 
@@ -195,40 +195,37 @@ bool Ext_FBXAnimator::LoadMeshFBX(
 //─────────────────────────────────────────────────────────────────────────
 bool Ext_FBXAnimator::LoadAnimationFBX(const std::string& _AnimFilename)
 {
-    // 1) AnimScene에 애니메이션 FBX 읽기
-    AnimScene = AnimImporter.ReadFile(_AnimFilename, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
-
+    // 1) 애니메이션 FBX 읽기 → DirectX(LH) 좌표계로 변환
+    AnimScene = AnimImporter.ReadFile(
+        _AnimFilename,
+        aiProcess_Triangulate
+        | aiProcess_GenSmoothNormals
+        | aiProcess_CalcTangentSpace
+        | aiProcess_JoinIdenticalVertices
+        | aiProcess_LimitBoneWeights
+        | aiProcess_ConvertToLeftHanded    // ← 반드시 추가
+    );
     if (!AnimScene || (AnimScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !AnimScene->mRootNode)
     {
-        MsgAssert("FBX애니메이션 로드 실패");
+        MsgAssert("FBX 애니메이션 로드 실패");
         return false;
     }
 
-    // 2) 애니메이션이 하나라도 들어 있는지 확인
+    // 2) 애니메이션 개수 확인
     if (AnimScene->mNumAnimations == 0)
     {
-        MsgAssert("FBX 안에 애니메이션 없음");
+        MsgAssert("애니메이션 채널이 들어 있지 않음");
         return false;
     }
 
-    // 일단 첫 번째 애니메이션을 기본으로 선택
+    // 3) 기본 애니메이션 채널 매핑
     CurrentAnimIndex = 0;
     CurrentAnimation = AnimScene->mAnimations[0];
-
-    // 3) BoneNameToAnimChannel 맵핑 구성: 
-    //    (본 이름 → aiNodeAnim* 채널) 
     BoneNameToAnimChannel.clear();
-    for (unsigned int a = 0; a < AnimScene->mNumAnimations; ++a)
+    for (unsigned int c = 0; c < CurrentAnimation->mNumChannels; ++c)
     {
-        const aiAnimation* anim = AnimScene->mAnimations[a];
-        
-        // 각 채널마다 nodeName(=본 이름), 그 키프레임 배열 정보를 저장
-        for (unsigned int c = 0; c < anim->mNumChannels; ++c)
-        {
-            const aiNodeAnim* channel = anim->mChannels[c];
-            std::string boneName = channel->mNodeName.C_Str();
-            BoneNameToAnimChannel[boneName] = channel;
-        }
+        const aiNodeAnim* channel = CurrentAnimation->mChannels[c];
+        BoneNameToAnimChannel[channel->mNodeName.C_Str()] = channel;
     }
 
     return true;
@@ -263,18 +260,54 @@ bool Ext_FBXAnimator::SetAnimation(unsigned int _AnimIndex)
 //─────────────────────────────────────────────────────────────────────────
 void Ext_FBXAnimator::UpdateAnimation(float _TimeInSeconds)
 {
+    // 0) 유효성 검사
     if (!MeshScene || !AnimScene || !CurrentAnimation)
         return;
 
-    // (A) FinalBoneMatrices 초기화 (BoneCount만큼)
+    // 1) FinalBoneMatrices 초기화
     for (unsigned int i = 0; i < BoneCount; ++i)
     {
-        FinalBoneMatrices[i] = aiMatrix4x4(); // 단위행렬
+        FinalBoneMatrices[i] = aiMatrix4x4();
     }
 
-    // (B) MeshScene의 루트 노드를 재귀 순회하면서 본별 행렬 계산
-    aiMatrix4x4 identity; // 단위행렬
+    // ───────────────────────────────────────────────────────────────
+    // 2) “mixamorig:Hips” 노드를 찾아서, 
+    //    그 노드의 **글로벌** 바인드 포즈(=스켈레톤 전체의 루트 위치/회전/스케일)를 구한다
+    // ───────────────────────────────────────────────────────────────
+    const std::string hipName = "mixamorig:Hips";
+    const aiNode* hipNode = FindNodeByName(MeshScene->mRootNode, hipName);
+    if (!hipNode)
+    {
+        printf("[Warning] Could not find node \"%s\". Using Scene Root instead.\n", hipName.c_str());
+        hipNode = MeshScene->mRootNode;
+    }
+
+    // 2-1) “혼자 로컬로 갖고 있는 barPose”가 아니라, 
+    //       씬 루트부터 hipNode까지의 모든 Transform을 곱해서 전역 바인드 포즈를 구한다.
+    aiMatrix4x4 hipGlobalBind = GetGlobalTransform(hipNode);
+
+    // 3) GlobalInverseTransform = hipGlobalBind의 역행렬
+    aiMatrix4x4 invHipGlobal = hipGlobalBind;
+    invHipGlobal.Inverse();
+    GlobalInverseTransform = invHipGlobal;
+
+    // (디버그용: 필요하면 아래 출력하여 확인)
+    // PrintAiMatrix(hipGlobalBind,  "Hips Global Bind Pose");
+    // PrintAiMatrix(invHipGlobal,   "GlobalInverseTransform (inverse of Hips Global)");
+
+    // ───────────────────────────────────────────────────────────────
+    // 4) ReadNodeHierarchy을 씬 최상위(=RootNode)에서 호출하고,
+    //    부모 행렬로는 “identity” 넣어 주면, 
+    //    내부에서 “GlobalInverseTransform(=hipGlobalBind⁻¹)” × “ 각 노드의 글로벌 변환 ” × “OffsetMatrix” 식으로 올바르게 계산된다.
+    // ───────────────────────────────────────────────────────────────
+    aiMatrix4x4 identity; // aiMatrix4x4() 기본 생성자 = Identity
     ReadNodeHierarchy(_TimeInSeconds, MeshScene->mRootNode, identity);
+
+    PrintAiMatrix(FinalBoneMatrices[0], "FinalBone[0] (Hips) - BindPose");
+    PrintAiMatrix(FinalBoneMatrices[1], "FinalBone[1] (Spine) - BindPose");
+    PrintAiMatrix(FinalBoneMatrices[2], "FinalBone[2] (LeftUpLeg) - BindPose");
+
+    int a = 0;
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -284,22 +317,24 @@ CB_SkinnedMatrix Ext_FBXAnimator::RenderSkinnedMesh()
 {
     CB_SkinnedMatrix cb = {};
 
-    // 최종 BoneMatrices를 DirectX::XMMATRIX 배열로 복사
+    // FinalBoneMatrices[i]를 그대로 XMMATRIX 생성자에 넘겨 주면 됩니다
     for (size_t i = 0; i < FinalBoneMatrices.size() && i < MAX_BONES; ++i)
     {
-        // aiMatrix4x4 → DirectX::XMMATRIX 변환
         const aiMatrix4x4& m = FinalBoneMatrices[i];
+
+        // “행 우선(row-major)”대로 XMMATRIX 생성
         XMMATRIX xm = XMMATRIX(
             m.a1, m.a2, m.a3, m.a4,
             m.b1, m.b2, m.b3, m.b4,
             m.c1, m.c2, m.c3, m.c4,
             m.d1, m.d2, m.d3, m.d4
         );
-        
+
+        // HLSL 쪽이 row_major로 읽기 때문에, 추가 Transpose 없이 그대로 넘깁니다.
         cb.Bones[i] = xm;
     }
 
-    // 나머지는 단위행렬로 채움
+    // 나머지 본은 단위행렬로 채우기
     for (size_t i = FinalBoneMatrices.size(); i < MAX_BONES; ++i)
     {
         cb.Bones[i] = XMMatrixIdentity();
@@ -364,64 +399,60 @@ void Ext_FBXAnimator::ExtractBonesFromMesh()
 //─────────────────────────────────────────────────────────────────────────
 aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(float _TimeInSeconds, const aiNode* _Node, const aiMatrix4x4& _ParentTransform)
 {
+    // (1) 노드 이름
     std::string nodeName = _Node->mName.C_Str();
 
-    // (1) 바인드-포즈 트랜스폼
+    // (2) 바인드 포즈(기본) 행렬
     aiMatrix4x4 nodeTransform = _Node->mTransformation;
 
-    // (2) 애니메이션 채널이 있으면, 바인드-포즈를 무시하고 TRS를 보간해서 사용
+    // (3) 애니메이션 채널 보간 여부
     auto animIt = BoneNameToAnimChannel.find(nodeName);
     if (animIt != BoneNameToAnimChannel.end())
     {
         const aiNodeAnim* channel = animIt->second;
 
-        // (2-1) 시간(초)를 틱 단위로 바꾼 뒤 전체 길이를 넘어가면 래핑
+        // 초 → 틱 변환
         float ticks = TimeInTicks(_TimeInSeconds);
         float duration = static_cast<float>(CurrentAnimation->mDuration);
         float animTime = fmod(ticks, duration);
 
-        // (2-2) 보간 처리
-        aiVector3D interpPosition;
-        aiQuaternion  interpRotation;
-        aiVector3D interpScaling;
+        // 보간 후 TRS
+        aiVector3D interpPos;
+        aiQuaternion interpRot;
+        aiVector3D interpScale;
+        CalcInterpolatedPosition(interpPos, animTime, channel);
+        CalcInterpolatedRotation(interpRot, animTime, channel);
+        CalcInterpolatedScaling(interpScale, animTime, channel);
 
-        CalcInterpolatedPosition(interpPosition, animTime, channel);
-        CalcInterpolatedRotation(interpRotation, animTime, channel);
-        CalcInterpolatedScaling(interpScaling, animTime, channel);
-
-        // (2-3) T, R, S 행렬 생성
         aiMatrix4x4 T, R, S;
-        aiMatrix4x4::Translation(interpPosition, T);
-        R = aiMatrix4x4(interpRotation.GetMatrix());
-        aiMatrix4x4::Scaling(interpScaling, S);
+        aiMatrix4x4::Translation(interpPos, T);
+        R = aiMatrix4x4(interpRot.GetMatrix());
+        aiMatrix4x4::Scaling(interpScale, S);
 
         nodeTransform = T * R * S;
     }
-    else
-    {
-        // 애니메이션 채널이 없으면 바인드포즈 유지
-        printf("[ReadNodeHierarchy] Node \"%s\" no anim channel → Use bind-pose\n", nodeName.c_str());
-    }
 
-    // (3) 부모 행렬과 곱해 글로벌 행렬 계산
+    // (4) 부모 변환과 곱해 글로벌 변환 계산
     aiMatrix4x4 globalTransform = _ParentTransform * nodeTransform;
 
-    // (4) 이 노드가 실제 본인지 확인 (BoneNameToInfo에 존재하는지)
+    // (5) 이 노드가 본(BoneNameToInfo에 존재)이라면 최종 스킨 행렬 계산
     auto boneIt = BoneNameToInfo.find(nodeName);
     if (boneIt != BoneNameToInfo.end())
     {
         int boneID = boneIt->second.ID;
         const aiMatrix4x4& offset = boneIt->second.OffsetMatrix;
 
-        // 최종 스킨 행렬 = GlobalInverseTransform × globalTransform × offset
+        // 최종 스킨 행렬: GlobalInverseTransform × globalTransform × offsetMatrix
         aiMatrix4x4 finalBone = GlobalInverseTransform * globalTransform * offset;
         FinalBoneMatrices[boneID] = finalBone;
     }
 
-    // (5) 자식 노드 순회
+    // (6) 자식 노드 순회
     for (unsigned int i = 0; i < _Node->mNumChildren; ++i)
     {
-        ReadNodeHierarchy(_TimeInSeconds, _Node->mChildren[i], globalTransform);
+        ReadNodeHierarchy(_TimeInSeconds,
+            _Node->mChildren[i],
+            globalTransform);
     }
 
     return globalTransform;
@@ -548,7 +579,8 @@ float Ext_FBXAnimator::TimeInTicks(float _TimeInSeconds) const
     {
         return _TimeInSeconds * static_cast<float>(CurrentAnimation->mTicksPerSecond);
     }
-    return _TimeInSeconds * 25.0f; // 기본 25fps 가정
+    // 만약 이 애니메이션이 “TicksPerSecond = 0”이라면, 기본 25fps(틱)로 가정
+    return _TimeInSeconds * 25.0f;
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -576,4 +608,36 @@ void Ext_FBXAnimator::PrintXMMATRIX(const DirectX::XMMATRIX& xm, const char* nam
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._21, f._22, f._23, f._24);
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._31, f._32, f._33, f._34);
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._41, f._42, f._43, f._44);
+}
+
+
+
+const aiNode* Ext_FBXAnimator::FindNodeByName(const aiNode* node, const std::string& name)
+{
+    if (!node) return nullptr;
+
+    if (std::string(node->mName.C_Str()) == name)
+        return node;
+
+    for (unsigned int i = 0; i < node->mNumChildren; ++i)
+    {
+        const aiNode* found = FindNodeByName(node->mChildren[i], name);
+        if (found)
+            return found;
+    }
+    return nullptr;
+}
+
+
+// “node”의 전역 Transform(최상위(RootNode)에서부터 이 노드에 이르는 모든 mTransformation을 곱한 결과)”을 계산
+aiMatrix4x4 Ext_FBXAnimator::GetGlobalTransform(const aiNode* node)
+{
+    aiMatrix4x4 mat = node->mTransformation;
+    const aiNode* parent = node->mParent;
+    while (parent)
+    {
+        mat = parent->mTransformation * mat;
+        parent = parent->mParent;
+    }
+    return mat;
 }

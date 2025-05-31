@@ -6,6 +6,7 @@
 #include <DirectX11_Extension/Ext_Transform.h>
 #include <DirectX11_Extension/Ext_Component.h>
 #include <DirectX11_Base/Base_Math.h>
+#include <DirectX11_Extension/Ext_FBXAnimator.h>
 
 void Character::Start()
 {
@@ -23,5 +24,13 @@ void Character::Start()
 
 void Character::Update(float _DeltaTime)
 {
+	AccTime += _DeltaTime;
+
+	//if (AccTime > 3.f)
+	//{
+	//	MeshComp->GetAnimator()->SetAnimation(1);
+	//}
+
+
 	__super::Update(_DeltaTime);
 }

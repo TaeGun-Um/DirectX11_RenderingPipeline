@@ -11,7 +11,7 @@ using namespace DirectX;
 constexpr unsigned int MAX_BONES = 100;
 struct CB_SkinnedMatrix
 {
-    XMMATRIX Bones[MAX_BONES];
+    float4x4 Bones[MAX_BONES];
 };
 
 // Æò¼Ò¿¡ ¾²½Ã´ø Ext_DirectXVertexData Çì´õ¸¦ Æ÷ÇÔÇÏ¼¼¿ä.
@@ -24,49 +24,30 @@ public:
     Ext_FBXAnimator();
     ~Ext_FBXAnimator();
 
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // [1] T-Pose FBX(¸Þ½Ã + ¹ÙÀÎµå Æ÷Áî ½ºÄÌ·¹Åæ) ·Îµå
-    //
-    // - _TposeFilename: ¸Þ½Ã + ¹ÙÀÎµå Æ÷Áî ½ºÄÌ·¹ÅæÀÌ ÇÔ²² µé¾î ÀÖ´Â FBX °æ·Î
-    // - _OutVertices, _OutIndices: ÀÌ µ¥ÀÌÅÍ¸¦ GPU ¹öÆÛ·Î ¿Ã·Á¼­ ·»´õ¸µÇÒ ¼ö ÀÖµµ·Ï Ã¤¿ö ÁÝ´Ï´Ù.
-    //   µ¿½Ã¿¡ ³»ºÎÀûÀ¸·Î ExtractBonesFromMesh()¸¦ È£ÃâÇÏ¿© BoneNameToInfo, BoneCount¸¦ ¼³Á¤ÇÕ´Ï´Ù.
-    bool LoadMeshFBX(
-        const std::string& _TposeFilename,
+    CB_SkinnedMatrix CB;
+    // (3) ÃÖÁ¾ ½ºÅ² Çà·Ä(¹ÙÀÎµå º¸Á¤ ¡æ ¾Ö´Ï¸ÞÀÌ¼Ç Àû¿ë ¡æ Offset °è»ê °á°ú)À» ÀúÀåÇÏ´Â ¹è¿­
+    std::vector<aiMatrix4x4> FinalBoneMatrices;
+
+    // [1] T-pose ¸Þ½Ã + ¹ÙÀÎµå Æ÷Áî ·Îµå ¡æ ³»ºÎÀûÀ¸·Î BoneNameToInfo, BoneCount ¼¼ÆÃ
+    bool LoadMeshFBX(const std::string& _TposeFilename,
         std::vector<Ext_DirectXVertexData>& _OutVertices,
         std::vector<unsigned int>& _OutIndices);
 
-    CB_SkinnedMatrix CB;
-
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // [2] ¾Ö´Ï¸ÞÀÌ¼Ç µ¥ÀÌÅÍ¸¸ ´ã±ä FBX ·Îµå
-    //
-    // - _AnimFilename: ¿ÀÁ÷ ¾Ö´Ï¸ÞÀÌ¼Ç Ã¤³Î(Å°ÇÁ·¹ÀÓ Á¤º¸)¸¸ µé¾î ÀÖ´Â FBX °æ·Î
-    //   (¸Þ½Ã µ¥ÀÌÅÍ´Â ÀÖ¾îµµ »ó°ü¾øÀ¸³ª, ½ºÄÌ·¹Åæ/¹ÙÀÎµåÆ÷Áî °ü·Ã Á¤º¸¸¸ »ç¿ëµÇ°í ¸Þ½Ã Á¤º¸´Â ¹«½ÃµË´Ï´Ù)
-    // 
-    // ³»ºÎÀûÀ¸·Î AnimSceneÀ» ÀÐ¾î¼­ CurrentAnimation, BoneNameToAnimChannelÀ» ±¸¼ºÇÕ´Ï´Ù.
+    // [2] ¼ø¼ö ¾Ö´Ï¸ÞÀÌ¼Ç FBX ·Îµå ¡æ BoneNameToAnimChannel ¼¼ÆÃ
     bool LoadAnimationFBX(const std::string& _AnimFilename);
 
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // [3] (¼±ÅÃÀû) ¾Ö´Ï¸ÞÀÌ¼Ç Å¬¸³ÀÌ FBX ¾È¿¡ ¿©·¯ °³ ÀÖÀ» °æ¿ì ÀÎµ¦½º ÁöÁ¤
-    //      ±âº»°ªÀº Ã¹ ¹øÂ°(anim index=0)·Î ¼¼ÆÃµË´Ï´Ù.
+    // [3] (¼±ÅÃ) Àç»ýÇÒ ¾Ö´Ï¸ÞÀÌ¼Ç Å¬¸³ ÀÎµ¦½º º¯°æ
     bool SetAnimation(unsigned int _AnimIndex);
 
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // [4] ¸Å ÇÁ·¹ÀÓ È£Ãâ: _TimeInSeconds(ÃÊ ´ÜÀ§) ±âÁØÀ¸·Î FinalBoneMatrices¸¦ °è»ê
-    //
-    // ³»ºÎÀûÀ¸·Î ¡°MeshSceneÀÇ ·çÆ® ³ëµå Æ®¸®¡±¸¦ ¼øÈ¸ÇÏ¸ç,
-    // LoadAnimationFBX()·Î ·ÎµåµÈ ¾Ö´Ï¸ÞÀÌ¼Ç Ã¤³ÎµéÀÌ ¿¬°áµÈ º»µé¿¡ ´ëÇØ¼­¸¸
-    // ¹ÙÀÎµå Æ÷Áî ´ë½Å ¾Ö´Ï¸ÞÀÌ¼Ç TRS¸¦ º¸°£ÇØ¼­ Àû¿ëÇÕ´Ï´Ù.
+    // [4] ¸Å ÇÁ·¹ÀÓ È£Ãâ: (_TimeInSeconds) ±âÁØÀ¸·Î FinalBoneMatrices °»½Å
     void UpdateAnimation(float _TimeInSeconds);
+
+    // [5] ÃÖÁ¾ »À´ë Çà·ÄÀ» CB_SkinnedMatrix ÇüÅÂ·Î ¹ÝÈ¯
+    CB_SkinnedMatrix RenderSkinnedMesh();
 
     // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // [5] ½¦ÀÌ´õ¿¡ ³Ñ°ÜÁÙ ÃÖÁ¾ »À´ë Çà·Äµé(¹ÙÀÎµå Æ÷Áî º¸Á¤ ¡æ ¾Ö´Ï¸ÞÀÌ¼Ç Àç±Í °è»ê ¡æ Offset) ¹ÝÈ¯
     const std::vector<aiMatrix4x4>& GetFinalBoneMatrices() const { return FinalBoneMatrices; }
-
-    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // [6] ·»´õ ´Ü°è¿¡¼­ ¹Ù·Î CB_SkinnedMatrix ÇüÅÂ·Î ¾ò±â
-    //     (»ó¼ö ¹öÆÛ¿¡ ¸ÅÇÎÇØ¼­ ¹Ù·Î GPU·Î º¸³¾ ¼ö ÀÖµµ·Ï ÇÕ´Ï´Ù)
-    CB_SkinnedMatrix RenderSkinnedMesh();
 
 private:
     // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
@@ -95,8 +76,7 @@ private:
     // (2) º» °³¼ö(Unique Bone Count)
     unsigned int BoneCount = 0;
 
-    // (3) ÃÖÁ¾ ½ºÅ² Çà·Ä(¹ÙÀÎµå º¸Á¤ ¡æ ¾Ö´Ï¸ÞÀÌ¼Ç Àû¿ë ¡æ Offset °è»ê °á°ú)À» ÀúÀåÇÏ´Â ¹è¿­
-    std::vector<aiMatrix4x4> FinalBoneMatrices;
+
 
     // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // [B] ¾Ö´Ï¸ÞÀÌ¼Ç¿ë Ã¤³Î ¸ÅÇÎ: º» ÀÌ¸§ ¡æ aiNodeAnim*
@@ -146,4 +126,8 @@ private:
     void PrintXMMATRIX(const DirectX::XMMATRIX& xm, const char* name = "");
 
     
+    const aiNode* FindNodeByName(const aiNode* node, const std::string& name);
+
+
+    aiMatrix4x4 GetGlobalTransform(const aiNode* node);
 };
