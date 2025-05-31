@@ -6,7 +6,7 @@ class Ext_FBXMeshComponent : public Ext_MeshComponent
 {
 public:
     Ext_FBXMeshComponent();
-    ~Ext_FBXMeshComponent() override;
+    ~Ext_FBXMeshComponent() {}
 
     Ext_FBXMeshComponent(const Ext_FBXMeshComponent&) = delete;
     Ext_FBXMeshComponent(Ext_FBXMeshComponent&&) noexcept = delete;
@@ -16,8 +16,13 @@ public:
     std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material) override;
 
 protected:
+    void Start() override;
     void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
 
 private:
+    std::shared_ptr<class Ext_FBXAnimator> Animator = nullptr;
+    std::string SkinnedCBName = "CB_SkinnedMatrix"; 
+    float AccumulatedAnimTime = 0.0f; // 애니메이션 재생 시간을 누적할 변수
+    
 
 };

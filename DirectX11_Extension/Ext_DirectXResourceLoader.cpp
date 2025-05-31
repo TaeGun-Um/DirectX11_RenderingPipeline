@@ -55,32 +55,21 @@ void Ext_DirectXResourceLoader::MakeVertex()
 
 	// 메시 로드(테스트용)
 	{
-		// 파일 찾아서 메시로드 한 다음, 안에 std::vector<Ext_DirectXVertexData> Vertices;랑 std::vector<UINT> Index; 전달한거 받아서 Create 3종 실시
-
-		//Base_Directory Dir;
-		//Dir.MakePath("../Resource/Texture");
-		//std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
-		//for (const std::string& FilePath : Paths)
-		//{
-		//	Dir.SetPath(FilePath.c_str());
-		//	std::string ExtensionName = Dir.GetExtension();
-		//	std::string FileName = Dir.GetFileName();
-		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
-		//}
-
 		//std::vector<Ext_DirectXVertexData> Vertices;
 		//std::vector<UINT> Indices;
 
 		//Base_Directory Dir;
-		//Dir.MakePath("../Resource/Mesh/SciCharacter/source/Belorian Soldier LP.obj");
-		//Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
+		//Dir.MakePath("../Resource/Mesh/Character/Mesh/Girl.fbx");
+		//Ext_MeshLoader::LoadMeshWithBoneFromFile(Dir.GetPath(), Vertices, Indices);
 
-		//Ext_DirectXVertexBuffer::CreateVertexBuffer("Belorian Soldier LP", Vertices);
-		//Ext_DirectXIndexBuffer::CreateIndexBuffer("Belorian Soldier LP", Indices);
-		//Ext_DirectXMesh::CreateMesh("Belorian Soldier LP");
+		//Ext_DirectXVertexBuffer::CreateVertexBuffer("Girl", Vertices);
+		//Ext_DirectXIndexBuffer::CreateIndexBuffer("Girl", Indices);
+		//Ext_DirectXMesh::CreateMesh("Girl");
+
+		///////////////////////////////////////////////////////////////////////////
 
 		//Base_Directory Dir2;
-		//Dir2.MakePath("../Resource/Mesh/SciCharacter/textures");
+		//Dir2.MakePath("../Resource/Mesh/Character/Texture");
 		//std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
 		//for (const std::string& FilePath : Paths)
 		//{
@@ -89,37 +78,6 @@ void Ext_DirectXResourceLoader::MakeVertex()
 		//	std::string FileName = Dir2.GetFileName();
 		//	Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
 		//}
-
-		std::vector<Ext_DirectXVertexData> Vertices;
-		std::vector<UINT> Indices;
-		std::unordered_map<std::string, int> BoneMapping;
-		std::vector<float4x4> BoneOffsets;
-		aiNode* RootNode = nullptr;
-		std::unique_ptr<Assimp::Importer> Importer;
-		float4x4 Global;
-
-		Base_Directory Dir;
-		Dir.MakePath("../Resource/Mesh/Character/Mesh/Girl.fbx");
-		Ext_MeshLoader::LoadMeshFromFile(Dir.GetPath(), Vertices, Indices);
-
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Girl", Vertices);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Girl", Indices);
-		Ext_DirectXMesh::CreateMesh("Girl");
-
-		/////////////////////////////////////////////////////////////////////////
-
-		Base_Directory Dir2;
-		Dir2.MakePath("../Resource/Mesh/Character/Texture");
-		std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
-		for (const std::string& FilePath : Paths)
-		{
-			Dir2.SetPath(FilePath.c_str());
-			std::string ExtensionName = Dir2.GetExtension();
-			std::string FileName = Dir2.GetFileName();
-			Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
-		}
-
-		int a = 0;
 	}
 
 	// 삼각형
@@ -267,21 +225,6 @@ void Ext_DirectXResourceLoader::MakeSampler()
 
 		Ext_DirectXSampler::CreateSampler("BaseSampler", SamperInfo);
 	}
-	{
-		//D3D11_SAMPLER_DESC SamperInfo = {};
-
-		//SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		//SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		//SamperInfo.MipLODBias = 0.0f;
-		//SamperInfo.MaxAnisotropy = 1;
-		//SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		//SamperInfo.MinLOD = -FLT_MAX;
-		//SamperInfo.MaxLOD = FLT_MAX;
-
-		//Ext_DirectXSampler::CreateSampler("POINTSAMPLER", SamperInfo);
-	}
 }
 
 // DirectX 블렌드 생성
@@ -325,101 +268,6 @@ void Ext_DirectXResourceLoader::MakeBlend()
 
 		Ext_DirectXBlend::CreateBlend("BaseBlend", BlendInfo);
 	}
-
-	{
-		//D3D11_BLEND_DESC Desc = { 0, };
-
-		//Desc.AlphaToCoverageEnable = false;
-		//Desc.IndependentBlendEnable = false;
-
-		//Desc.RenderTarget[0].BlendEnable = true;
-		//Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		//Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-
-		//Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
-		//Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-
-		//Ext_DirectXBlend::CreateBlend("MergeBlend", Desc);
-	}
-
-	{
-		//D3D11_BLEND_DESC Desc = { 0, };
-
-		//Desc.AlphaToCoverageEnable = false;
-		//Desc.IndependentBlendEnable = false;
-
-		//Desc.RenderTarget[0].BlendEnable = true;
-		//Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		//Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX;
-		//Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-
-		//Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
-		//Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-
-		//Ext_DirectXBlend::CreateBlend("MaxMergeBlend", Desc);
-	}
-
-	{
-		//D3D11_BLEND_DESC Desc = { 0, };
-
-		//Desc.AlphaToCoverageEnable = false;
-		//Desc.IndependentBlendEnable = false;
-
-		//Desc.RenderTarget[0].BlendEnable = true;
-		//Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		//Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-
-		//Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
-		//Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-
-		//Ext_DirectXBlend::CreateBlend("LightBlend", Desc);
-	}
-
-	{
-		//D3D11_BLEND_DESC Desc = { 0, };
-
-		//Desc.AlphaToCoverageEnable = false;
-		//Desc.IndependentBlendEnable = false;
-
-		//Desc.RenderTarget[0].BlendEnable = true;
-		//Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		//Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-
-		//Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		//Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-
-		//Ext_DirectXBlend::CreateBlend("OneBlend", Desc);
-	}
-
-	{
-		//D3D11_BLEND_DESC Desc = { 0, };
-
-		//Desc.AlphaToCoverageEnable = false;
-		//Desc.IndependentBlendEnable = false;
-
-		//Desc.RenderTarget[0].BlendEnable = true;
-		//Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		//Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MIN;
-		//Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-
-		//Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
-		//Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		//Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-
-		//Ext_DirectXBlend::CreateBlend("MinBlend", Desc);
-	}
 }
 
 // DirectX11 DepthStencilState 생성
@@ -437,27 +285,6 @@ void Ext_DirectXResourceLoader::MakeDepth()
 	/*4. 스텐실 안함*/
 
 	Ext_DirectXDepth::CreateDepthStencilState("EngineDepth", DepthStencilInfo);
-
-	{
-		//D3D11_DEPTH_STENCIL_DESC Desc = { 0, };
-
-		//Desc.DepthEnable = true;
-		//Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_ALWAYS;
-		//Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
-		//Desc.StencilEnable = false;
-
-		//Ext_DirectXDepth::CreateDepthStencilState("AlwayDepth", Desc);
-	}
-	{
-		//D3D11_DEPTH_STENCIL_DESC Desc = { 0, };
-
-		//Desc.DepthEnable = true;
-		//Desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
-		//Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ZERO;
-		//Desc.StencilEnable = false;
-
-		//Ext_DirectXDepth::CreateDepthStencilState("AlphaDepth", Desc);
-	}
 }
 
 // DirectX11 Rasterizer 생성
@@ -491,6 +318,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBR");
 		NewRenderingPipeline->SetVertexShader("Basic_VS");
 		NewRenderingPipeline->SetPixelShader("PBR_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+	}
+
+	// 애니메이션
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Animation");
+		NewRenderingPipeline->SetVertexShader("Animation_VS");
+		NewRenderingPipeline->SetPixelShader("Basic_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("EngineRasterizer");

@@ -18,5 +18,8 @@
     <FxCompile Include="PBR_PS.hlsl">
       <Filter>01. PixelShader</Filter>
     </FxCompile>
+    <FxCompile Include="Animation_VS.hlsl">
+      <Filter>00. VertexShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

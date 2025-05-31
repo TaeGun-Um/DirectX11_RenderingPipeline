@@ -42,6 +42,7 @@ struct TextureSetter
 class Ext_DirectXBufferSetter
 {
 	friend class Ext_MeshComponentUnit;
+	friend class Ext_FBXMeshComponent;
 
 public:
 	// constrcuter destructer

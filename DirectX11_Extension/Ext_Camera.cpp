@@ -9,6 +9,8 @@
 #include "Ext_Transform.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_MeshComponentUnit.h"
+#include "Ext_DirectXMaterial.h"
+#include "Ext_DirectXPixelShader.h"
 
 // 여기는 요소 제거만 진행합니다.
 void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> _DeadActor)
@@ -94,7 +96,9 @@ void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshCompo
 void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _Unit, RenderPath _Path /*= RenderPath::None*/)
 {
 	int Order = _Unit->GetOwnerMeshComponent().lock()->GetOrder();
-	// RenderPath Path = _Unit->GetMaterial()->GetPixelShader()->GetRenderPath();
+	RenderPath Path; /*= _Unit->GetMaterial()->GetPixelShader()->GetRenderPath();*/
+	Path = RenderPath::Forward;
+
 	MeshComponentUnits[_Path][Order].push_back(_Unit);
 
 	// 여기서 동적, 정적으로 나눌 수도 있다.

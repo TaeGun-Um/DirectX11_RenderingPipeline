@@ -19,6 +19,6 @@ protected:
 	void Update(float _DeltaTime) override;
 	
 private:
-	std::shared_ptr<class Ext_MeshComponent> MeshComp;
+	std::shared_ptr<class Ext_FBXMeshComponent> MeshComp;
 	
 };

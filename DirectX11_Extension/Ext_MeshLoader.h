@@ -19,6 +19,7 @@ public:
 
 	// 메시 로드하기
 	static bool LoadMeshFromFile(const std::string& _FilePath, std::vector<class Ext_DirectXVertexData>& _OutVertices, std::vector<uint32_t>& _OutIndices);
+	static bool LoadMeshWithBoneFromFile(const std::string& _FilePath, std::vector<class Ext_DirectXVertexData>& _OutVertices, std::vector<uint32_t>& _OutIndices);
 
 protected:
 	

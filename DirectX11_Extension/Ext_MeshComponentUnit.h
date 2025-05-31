@@ -35,7 +35,6 @@ public:
 	std::shared_ptr<class Ext_DirectXMaterial> GetMaterial() { return Material; }
 	std::weak_ptr<class Ext_MeshComponent> GetOwnerMeshComponent() { return OwnerMeshComponent; }
 
-
 protected:
 	
 private:
@@ -51,6 +50,4 @@ private:
 	std::shared_ptr<class Ext_DirectXMaterial> Material = nullptr;				// 파이프라인 정보 저장용(셰이더, 레스터라이저 등)
 	Ext_DirectXBufferSetter BufferSetter;													// 상수버퍼 저장용(상수버퍼, 텍스처, 블렌드 등)
 
-	// FBX Animation용
-	void SetBufferlink();
 };

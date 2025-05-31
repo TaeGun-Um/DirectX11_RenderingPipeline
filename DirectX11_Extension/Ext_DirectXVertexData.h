@@ -27,6 +27,7 @@ private:
 
 };
 
+
 // 입력 레이아웃을 생성 후 저장하기 위한 클래스(InputLayoutData 활용)
 class Ext_DirectXVertexData
 {
@@ -35,6 +36,8 @@ public:
 	float4 COLOR;
 	float4 TEXCOORD;
 	float4 NORMAL;
+	DirectX::XMUINT4 BONEID;
+	float4 WEIGHT;
 
 	// Getter
 	static InputLayoutData& GetInputLayoutData() { return ILData; }

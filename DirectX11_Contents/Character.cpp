@@ -13,7 +13,7 @@ void Character::Start()
 	GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
 
 	MeshComp = CreateComponent<Ext_FBXMeshComponent>("BodyMesh");
-	MeshComp->CreateMeshComponentUnit("Girl", "Basic");
+	MeshComp->CreateMeshComponentUnit("Girl", "Animation");
 	MeshComp->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
 }
 

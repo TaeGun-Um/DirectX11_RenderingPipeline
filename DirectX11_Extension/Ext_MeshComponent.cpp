@@ -30,8 +30,6 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 	std::shared_ptr<Ext_MeshComponentUnit> NewUnit = std::make_shared<Ext_MeshComponentUnit>();
 	NewUnit->SetOwnerMeshComponent(GetSharedFromThis<Ext_MeshComponent>());
 	NewUnit->MeshComponentUnitInitialize(_MeshName, _MaterialName);
-	GetOwnerCamera().lock()->PushMeshComponentUnit(NewUnit, RenderPath::Unknown);
-	
 	Unit = NewUnit;
 
 	return NewUnit;

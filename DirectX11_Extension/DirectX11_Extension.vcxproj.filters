@@ -130,6 +130,9 @@
     <ClCompile Include="Ext_FBXMeshComponent.cpp">
       <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_FBXAnimator.cpp">
+      <Filter>02.DirectX\00.ResourceLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -269,6 +272,9 @@
     </ClInclude>
     <ClInclude Include="Ext_FBXMeshComponent.h">
       <Filter>01.Process\02.Object\04.Component\01.Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_FBXAnimator.h">
+      <Filter>02.DirectX\00.ResourceLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
