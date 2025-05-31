@@ -59,7 +59,7 @@ void Ext_FBXMeshComponent::Start()
     }
 
     Base_Directory Dir3;
-    Dir3.MakePath("../Resource/Mesh/Character/Animation/Idle.fbx");
+    Dir3.MakePath("../Resource/Mesh/Character/Animation/Walking.fbx");
     bool IsAnimLoad = Animator->LoadAnimationFBX(Dir3.GetPath());
     if (!IsAnimLoad)
     {
@@ -84,7 +84,7 @@ void Ext_FBXMeshComponent::Rendering(float _DeltaTime, const float4x4& _ViewMatr
     __super::Rendering(_DeltaTime, _ViewMatrix, _ProjectionMatrix);
 
     AccumulatedAnimTime += _DeltaTime;
-    Animator->UpdateAnimation(0.f);
+    Animator->UpdateAnimation(AccumulatedAnimTime);
     Animator->CB = Animator->RenderSkinnedMesh();
     Unit->BufferSetter.SetConstantBufferLink(SkinnedCBName, &Animator->CB, sizeof(CB_SkinnedMatrix));
 

@@ -262,7 +262,9 @@ void Ext_FBXAnimator::UpdateAnimation(float _TimeInSeconds)
 {
     // 0) 유효성 검사
     if (!MeshScene || !AnimScene || !CurrentAnimation)
+    {
         return;
+    }
 
     // 1) FinalBoneMatrices 초기화
     for (unsigned int i = 0; i < BoneCount; ++i)
@@ -270,44 +272,16 @@ void Ext_FBXAnimator::UpdateAnimation(float _TimeInSeconds)
         FinalBoneMatrices[i] = aiMatrix4x4();
     }
 
-    // ───────────────────────────────────────────────────────────────
-    // 2) “mixamorig:Hips” 노드를 찾아서, 
-    //    그 노드의 **글로벌** 바인드 포즈(=스켈레톤 전체의 루트 위치/회전/스케일)를 구한다
-    // ───────────────────────────────────────────────────────────────
-    const std::string hipName = "mixamorig:Hips";
-    const aiNode* hipNode = FindNodeByName(MeshScene->mRootNode, hipName);
-    if (!hipNode)
-    {
-        printf("[Warning] Could not find node \"%s\". Using Scene Root instead.\n", hipName.c_str());
-        hipNode = MeshScene->mRootNode;
-    }
+    const std::string NodeName = "mixamorig:Hips";
+    const aiNode* FirstNode = FindNodeByName(MeshScene->mRootNode, NodeName);
 
-    // 2-1) “혼자 로컬로 갖고 있는 barPose”가 아니라, 
-    //       씬 루트부터 hipNode까지의 모든 Transform을 곱해서 전역 바인드 포즈를 구한다.
-    aiMatrix4x4 hipGlobalBind = GetGlobalTransform(hipNode);
+    // 2-1) 루트부터 hips까지의 글로벌 바인드 포즈 구하기
+    aiMatrix4x4 NodeTransform = FirstNode->mTransformation;
+    NodeTransform.Inverse();
+    GlobalInverseTransform = NodeTransform;
 
-    // 3) GlobalInverseTransform = hipGlobalBind의 역행렬
-    aiMatrix4x4 invHipGlobal = hipGlobalBind;
-    invHipGlobal.Inverse();
-    GlobalInverseTransform = invHipGlobal;
-
-    // (디버그용: 필요하면 아래 출력하여 확인)
-    // PrintAiMatrix(hipGlobalBind,  "Hips Global Bind Pose");
-    // PrintAiMatrix(invHipGlobal,   "GlobalInverseTransform (inverse of Hips Global)");
-
-    // ───────────────────────────────────────────────────────────────
-    // 4) ReadNodeHierarchy을 씬 최상위(=RootNode)에서 호출하고,
-    //    부모 행렬로는 “identity” 넣어 주면, 
-    //    내부에서 “GlobalInverseTransform(=hipGlobalBind⁻¹)” × “ 각 노드의 글로벌 변환 ” × “OffsetMatrix” 식으로 올바르게 계산된다.
-    // ───────────────────────────────────────────────────────────────
-    aiMatrix4x4 identity; // aiMatrix4x4() 기본 생성자 = Identity
-    ReadNodeHierarchy(_TimeInSeconds, MeshScene->mRootNode, identity);
-
-    PrintAiMatrix(FinalBoneMatrices[0], "FinalBone[0] (Hips) - BindPose");
-    PrintAiMatrix(FinalBoneMatrices[1], "FinalBone[1] (Spine) - BindPose");
-    PrintAiMatrix(FinalBoneMatrices[2], "FinalBone[2] (LeftUpLeg) - BindPose");
-
-    int a = 0;
+    aiMatrix4x4 identity; // 기본 생성자 → 항등행렬
+    ReadNodeHierarchy(_TimeInSeconds, FirstNode, identity);
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -403,7 +377,8 @@ aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(float _TimeInSeconds, const aiNod
     std::string nodeName = _Node->mName.C_Str();
 
     // (2) 바인드 포즈(기본) 행렬
-    aiMatrix4x4 nodeTransform = _Node->mTransformation;
+    //aiMatrix4x4 nodeTransform = _Node->mTransformation;
+    aiMatrix4x4 Mat;
 
     // (3) 애니메이션 채널 보간 여부
     auto animIt = BoneNameToAnimChannel.find(nodeName);
@@ -429,11 +404,11 @@ aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(float _TimeInSeconds, const aiNod
         R = aiMatrix4x4(interpRot.GetMatrix());
         aiMatrix4x4::Scaling(interpScale, S);
 
-        nodeTransform = T * R * S;
+        Mat = T * R * S;
     }
 
     // (4) 부모 변환과 곱해 글로벌 변환 계산
-    aiMatrix4x4 globalTransform = _ParentTransform * nodeTransform;
+    aiMatrix4x4 globalTransform = _ParentTransform * Mat;
 
     // (5) 이 노드가 본(BoneNameToInfo에 존재)이라면 최종 스킨 행렬 계산
     auto boneIt = BoneNameToInfo.find(nodeName);
@@ -443,7 +418,7 @@ aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(float _TimeInSeconds, const aiNod
         const aiMatrix4x4& offset = boneIt->second.OffsetMatrix;
 
         // 최종 스킨 행렬: GlobalInverseTransform × globalTransform × offsetMatrix
-        aiMatrix4x4 finalBone = GlobalInverseTransform * globalTransform * offset;
+        aiMatrix4x4 finalBone = globalTransform * offset;
         FinalBoneMatrices[boneID] = finalBone;
     }
 
