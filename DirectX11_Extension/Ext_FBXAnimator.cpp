@@ -19,16 +19,19 @@ Ext_FBXAnimator::~Ext_FBXAnimator()
 //─────────────────────────────────────────────────────────────────────────
 // [1] T-Pose FBX(메시 + 바인드 포즈 스켈레톤) 로드
 //─────────────────────────────────────────────────────────────────────────
+
 bool Ext_FBXAnimator::LoadMeshFBX(
     const std::string& _TposeFilename,
     std::vector<Ext_DirectXVertexData>& _OutVertices,
     std::vector<unsigned int>& _OutIndices)
 {
-    // 1) Assimp로 T-Pose FBX 읽기
+    //──────────────────────────────────────────────────────────────
+    // 1) Assimp로 T-Pose FBX 읽기 (좌표계 변환 플래그 aiProcess_ConvertToLeftHanded 제거)
+    //──────────────────────────────────────────────────────────────
     MeshScene = MeshImporter.ReadFile(
         _TposeFilename,
         aiProcess_Triangulate
-        | aiProcess_ConvertToLeftHanded
+        //| aiProcess_ConvertToLeftHanded  // ← 좌표계 변환은 직접 처리하지 않음
         | aiProcess_GenSmoothNormals
         | aiProcess_CalcTangentSpace
         | aiProcess_JoinIdenticalVertices
@@ -39,132 +42,133 @@ bool Ext_FBXAnimator::LoadMeshFBX(
         || (MeshScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
         || !MeshScene->mRootNode)
     {
-        MsgAssert("FBX메시 로드 실패");
+        MsgAssert("FBX 메시 로드 실패");
         return false;
     }
 
-    // 2) GlobalInverseTransform 계산 (루트 노드의 변환의 역행렬)
-    GlobalInverseTransform = MeshScene->mRootNode->mTransformation;
-    GlobalInverseTransform.Inverse();
+    //──────────────────────────────────────────────────────────────
+    // 2) GlobalInverseTransform 계산 (루트 노드 변환의 역행렬)
+    //──────────────────────────────────────────────────────────────
+    {
+        aiMatrix4x4 inv = MeshScene->mRootNode->mTransformation;
+        inv.Inverse();
+        GlobalInverseTransform = inv;
+        PrintAiMatrix(GlobalInverseTransform, "GlobalInverseTransform (Inverse of Root)");
+    }
 
-    // 디버그: GlobalInverseTransform 출력
-    PrintAiMatrix(GlobalInverseTransform, "GlobalInverseTransform (Inverse of Root)");
-
+    //──────────────────────────────────────────────────────────────
     // 3) 본 정보만 추출 (BoneNameToInfo, BoneCount 세팅)
-    ExtractBonesFromMesh();
+    //──────────────────────────────────────────────────────────────
+    {
+        ExtractBonesFromMesh();
+        // FinalBoneMatrices 크기만큼 모두 단위행렬로 초기화
+        FinalBoneMatrices.clear();
+        FinalBoneMatrices.resize(BoneCount, aiMatrix4x4());
+    }
 
-    // 4) FinalBoneMatrices 초기화: BoneCount 개수만큼 단위행렬로 시작
-    FinalBoneMatrices.clear();
-    FinalBoneMatrices.resize(BoneCount, aiMatrix4x4()); // aiMatrix4x4 기본 생성자는 단위행렬입니다.
-
-    // 5) aiMesh → Ext_DirectXVertexData, _OutIndices 벡터 채우기
+    //──────────────────────────────────────────────────────────────
+    // 4) 메시(Vertex/Index) + 본 정보(BoneID/Weight) 추출
+    //    - 여기서는 편의상 첫 번째 메시(aiMeshes[0])만 처리
+    //──────────────────────────────────────────────────────────────
     if (MeshScene->mNumMeshes < 1)
     {
-        MsgAssert("FBX메시 로드 실패");
+        MsgAssert("FBX 메시 로드 실패: 메시 개수 없음");
         return false;
     }
 
-    // 여기서는 편의상 첫 번째 메시만 사용
     const aiMesh* aiMeshPtr = MeshScene->mMeshes[0];
-
-    // 5-1) 버텍스/인덱스 벡터 초기화
     _OutVertices.clear();
     _OutIndices.clear();
     _OutVertices.reserve(aiMeshPtr->mNumVertices);
     _OutIndices.reserve(aiMeshPtr->mNumFaces * 3);
 
-    // 5-2) 정점 정보 채우기: Position, Normal, TexCoord, Color, BONEID/WEIGHT는 나중에 채움
+    // (4-1) 정점 정보 채우기: Position, Normal, TexCoord, Color
     for (unsigned int v = 0; v < aiMeshPtr->mNumVertices; ++v)
     {
         Ext_DirectXVertexData vData;
 
-        // (A) 위치
-        {
-            const aiVector3D& aiPos = aiMeshPtr->mVertices[v];
-            vData.POSITION = float4(aiPos.x, aiPos.y, aiPos.z, 1.0f);
-        }
+        // (A) Position → float4(x,y,z,1)
+        const aiVector3D& ap = aiMeshPtr->mVertices[v];
+        vData.POSITION = float4(ap.x, ap.y, ap.z, 1.0f);
 
-        // (B) 법선
+        // (B) Normal → float4(nx,ny,nz,0)
         if (aiMeshPtr->HasNormals())
         {
-            const aiVector3D& aiNorm = aiMeshPtr->mNormals[v];
-            vData.NORMAL = float4(aiNorm.x, aiNorm.y, aiNorm.z, 0.0f);
+            const aiVector3D& an = aiMeshPtr->mNormals[v];
+            vData.NORMAL = float4(an.x, an.y, an.z, 0.0f);
         }
         else
         {
-            vData.NORMAL = float4(0.0f, 1.0f, 0.0f, 0.0f);
+            vData.NORMAL = float4(0, 1, 0, 0);
         }
 
-        // (C) 텍스처 좌표 (0번 채널만 사용)
+        // (C) TexCoord UV (0번 채널만) → float4(u, 1-v, 0, 0)
         if (aiMeshPtr->HasTextureCoords(0))
         {
-            const aiVector3D& aiUV = aiMeshPtr->mTextureCoords[0][v];
-            vData.TEXCOORD = float4(aiUV.x, aiUV.y, 0.0f, 0.0f);
+            const aiVector3D& au = aiMeshPtr->mTextureCoords[0][v];
+            vData.TEXCOORD = float4(au.x, 1.0f - au.y, 0.0f, 0.0f);
         }
         else
         {
-            vData.TEXCOORD = float4(0.0f, 0.0f, 0.0f, 0.0f);
+            vData.TEXCOORD = float4(0, 0, 0, 0);
         }
 
-        // (D) 컬러: 흰색 (기본값)
-        vData.COLOR = float4(1.0f, 1.0f, 1.0f, 1.0f);
+        // (D) Color: 흰색
+        vData.COLOR = float4(1, 1, 1, 1);
 
-        // (E) BONEID, WEIGHT는 Ext_DirectXVertexData 생성자에서 0으로 초기화되어 있다고 가정
-        //     →(별도 처리 없음)
+        // (E) BONEID, WEIGHT: 기본 생성자에서 모두 0으로 초기화되어 있음
+        //     → 5-3) 절에서 나중에 채워 줌
 
         _OutVertices.push_back(vData);
     }
 
-    // 5-3) aiBone → 정점별 BoneID, Weight 채우기 (최대 4개 본만 사용)
+    // (4-2) 본(Bone) 가중치 채우기 (aiBone → 정점별 BoneID, Weight)
+    //       최대 4개 본만 저장(이미 vData.WEIGHT는 0으로 초기화됨)
     for (unsigned int b = 0; b < aiMeshPtr->mNumBones; ++b)
     {
         const aiBone* aiBonePtr = aiMeshPtr->mBones[b];
-        std::string boneName = aiBonePtr->mName.C_Str();
+        std::string    boneName(aiBonePtr->mName.C_Str());
 
-        // BoneNameToInfo에서 ID 가져오기
-        auto boneIt = BoneNameToInfo.find(boneName);
-        if (boneIt == BoneNameToInfo.end())
+        auto it = BoneNameToInfo.find(boneName);
+        if (it == BoneNameToInfo.end())
             continue;
 
-        int boneID = boneIt->second.ID;
-
-        // 이 aiBone이 영향 주는 모든 (VertexID, Weight) 만큼 반복
+        int boneID = it->second.ID;
         for (unsigned int w = 0; w < aiBonePtr->mNumWeights; ++w)
         {
             unsigned int vertID = aiBonePtr->mWeights[w].mVertexId;
             float         weight = aiBonePtr->mWeights[w].mWeight;
-
             Ext_DirectXVertexData& destV = _OutVertices[vertID];
 
-            // 네 슬롯(0~3) 중 빈 슬롯을 찾아 boneID, weight 설정
+            // 네 슬롯(0~3) 중 빈 슬롯에 BoneID/Weight 넣기
             for (int k = 0; k < 4; ++k)
             {
-                bool isEmptySlot = false;
+                bool isEmpty = false;
                 switch (k)
                 {
-                case 0: isEmptySlot = (destV.WEIGHT.x == 0.0f); break;
-                case 1: isEmptySlot = (destV.WEIGHT.y == 0.0f); break;
-                case 2: isEmptySlot = (destV.WEIGHT.z == 0.0f); break;
-                case 3: isEmptySlot = (destV.WEIGHT.w == 0.0f); break;
+                case 0: isEmpty = (destV.WEIGHT.x == 0.0f); break;
+                case 1: isEmpty = (destV.WEIGHT.y == 0.0f); break;
+                case 2: isEmpty = (destV.WEIGHT.z == 0.0f); break;
+                case 3: isEmpty = (destV.WEIGHT.w == 0.0f); break;
                 }
-                if (isEmptySlot)
+                if (isEmpty)
                 {
                     switch (k)
                     {
                     case 0:
-                        destV.BONEID.x = static_cast<unsigned int>(boneID);
+                        destV.BONEID.x = (uint32_t)boneID;
                         destV.WEIGHT.x = weight;
                         break;
                     case 1:
-                        destV.BONEID.y = static_cast<unsigned int>(boneID);
+                        destV.BONEID.y = (uint32_t)boneID;
                         destV.WEIGHT.y = weight;
                         break;
                     case 2:
-                        destV.BONEID.z = static_cast<unsigned int>(boneID);
+                        destV.BONEID.z = (uint32_t)boneID;
                         destV.WEIGHT.z = weight;
                         break;
                     case 3:
-                        destV.BONEID.w = static_cast<unsigned int>(boneID);
+                        destV.BONEID.w = (uint32_t)boneID;
                         destV.WEIGHT.w = weight;
                         break;
                     }
@@ -174,13 +178,22 @@ bool Ext_FBXAnimator::LoadMeshFBX(
         }
     }
 
-    // 5-4) 인덱스 채우기 (각 Face마다 반드시 3개의 인덱스)
+    // (4-3) 인덱스 채우기 (Face마다 3개씩 → CW→CCW로 순서 뒤집기)
     for (unsigned int f = 0; f < aiMeshPtr->mNumFaces; ++f)
     {
         const aiFace& face = aiMeshPtr->mFaces[f];
-        _OutIndices.push_back(face.mIndices[0]);
-        _OutIndices.push_back(face.mIndices[2]);
-        _OutIndices.push_back(face.mIndices[1]);
+        if (face.mNumIndices == 3)
+        {
+            _OutIndices.push_back(face.mIndices[0]);
+            _OutIndices.push_back(face.mIndices[2]);
+            _OutIndices.push_back(face.mIndices[1]);
+        }
+        else
+        {
+            // 삼각형이 아닌 다각형일 경우, (필요하다면) 자유롭게 처리
+            for (unsigned int j = 0; j < face.mNumIndices; ++j)
+                _OutIndices.push_back(face.mIndices[j]);
+        }
     }
 
     return true;
@@ -195,7 +208,7 @@ bool Ext_FBXAnimator::LoadAnimationFBX(const std::string& _AnimFilename)
     AnimScene = AnimImporter.ReadFile(
         _AnimFilename,
         aiProcess_Triangulate
-        | aiProcess_ConvertToLeftHanded
+        // | aiProcess_ConvertToLeftHanded
         | aiProcess_GenSmoothNormals    // 메시가 없어도 무시되지만, 안전하게 두어도 됨
         | aiProcess_CalcTangentSpace
         | aiProcess_JoinIdenticalVertices
@@ -341,43 +354,36 @@ CB_SkinnedMatrix Ext_FBXAnimator::RenderSkinnedMesh()
 //─────────────────────────────────────────────────────────────────────────
 void Ext_FBXAnimator::ExtractBonesFromMesh()
 {
-    BoneCount = 0;
     BoneNameToInfo.clear();
+    BoneCount = 0;
 
-    // ① 모든 메시의 aiBone 이름을 모으기
-    std::set<std::string> allBoneNames;
+    std::set<std::string> uniqueBoneNames;
+    // FBX 안에 있는 모든 메시의 모든 aiBone 이름 수집
     for (unsigned int m = 0; m < MeshScene->mNumMeshes; ++m)
     {
-        const aiMesh* mesh = MeshScene->mMeshes[m];
-        if (!mesh->HasBones())
-            continue;
+        aiMesh* mesh = MeshScene->mMeshes[m];
+        if (!mesh->HasBones()) continue;
 
         for (unsigned int b = 0; b < mesh->mNumBones; ++b)
-        {
-            allBoneNames.insert(std::string(mesh->mBones[b]->mName.C_Str()));
-        }
+            uniqueBoneNames.insert(mesh->mBones[b]->mName.C_Str());
     }
 
-    // ② 중복 없는 Bone 이름 각각에 대해 첫 번째 aiBone의 OffsetMatrix를 찾아 저장
-    BoneCount = 0;
-    for (auto& boneName : allBoneNames)
+    // 수집된 고유 Bone 이름을 순서대로 BoneID 부여 및 OffsetMatrix 저장
+    for (auto& boneName : uniqueBoneNames)
     {
-        aiMatrix4x4 foundOffset;
+        // 첫 번째로 등장하는 aiBone에서 OffsetMatrix 가져오기
+        aiMatrix4x4 offset;
         bool found = false;
-
-        // 아까 모아둔 이름이 나오면 해당 aiBone의 OffsetMatrix를 가져옴
         for (unsigned int m = 0; m < MeshScene->mNumMeshes && !found; ++m)
         {
-            const aiMesh* mesh = MeshScene->mMeshes[m];
-            if (!mesh->HasBones())
-                continue;
+            aiMesh* mesh = MeshScene->mMeshes[m];
+            if (!mesh->HasBones()) continue;
 
             for (unsigned int b = 0; b < mesh->mNumBones; ++b)
             {
-                const aiBone* bone = mesh->mBones[b];
-                if (boneName == bone->mName.C_Str())
+                if (boneName == mesh->mBones[b]->mName.C_Str())
                 {
-                    foundOffset = bone->mOffsetMatrix;
+                    offset = mesh->mBones[b]->mOffsetMatrix;
                     found = true;
                     break;
                 }
@@ -386,17 +392,16 @@ void Ext_FBXAnimator::ExtractBonesFromMesh()
 
         BoneInfo bi;
         bi.ID = BoneCount;
-        bi.OffsetMatrix = foundOffset;
+        bi.OffsetMatrix = offset; // 모델공간 → 본공간
         BoneNameToInfo[boneName] = bi;
 
-        // 디버그: 본 이름, ID, OffsetMatrix 출력
-        printf("Registered Bone: \"%s\" -> ID=%d\n", boneName.c_str(), BoneCount);
-        PrintAiMatrix(foundOffset, ("OffsetMatrix_" + boneName).c_str());
+        // 디버그 출력
+        printf("Registered Bone: \"%s\"  ID=%u\n", boneName.c_str(), BoneCount);
+        PrintAiMatrix(offset, boneName.c_str());
 
         ++BoneCount;
     }
-
-    printf("Total unique bones found: %u\n", BoneCount);
+    printf("Total unique bones: %u\n", BoneCount);
 }
 
 //─────────────────────────────────────────────────────────────────────────

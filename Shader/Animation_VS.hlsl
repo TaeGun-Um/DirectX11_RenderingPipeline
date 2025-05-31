@@ -47,10 +47,6 @@ VSOutput Animation_VS(VSInput input)
 {
     VSOutput output;
 
-    //==========================================================
-    // (1) 스킨 행렬(skinMatrix) 계산: 본 배열(Bones[])과
-    //     정점 BoneID/Weight를 가중치 합산(블렌딩)하여 구함
-    //==========================================================
     float4x4 skinMatrix = float4x4(
         0, 0, 0, 0,
         0, 0, 0, 0,
@@ -58,8 +54,6 @@ VSOutput Animation_VS(VSInput input)
         0, 0, 0, 0
     );
 
-    // Bones[bIdx]는 이미 "글로벌 역행렬 × 애니메이션 적용 행렬 × OffsetMatrix" 형태로 계산됨
-    // (Ext_FBXAnimator.RenderSkinnedMesh()에서 CB_SkinnedMatrix로 전달됨)
     [unroll]
     for (int i = 0; i < 4; ++i)
     {
@@ -71,35 +65,17 @@ VSOutput Animation_VS(VSInput input)
         }
     }
 
-    //==========================================================
-    // (2) Position 스키닝: 모델 바인드포즈 공간 정점(input.Position)
-    //     을 skinMatrix로 변환
-    //==========================================================
-    // HLSL에서 행렬 인덱스 접근은 skinMatrix[row][col] 형태
     float4 skinnedPos;
-    skinnedPos.x = dot(skinMatrix[0], input.Position); // 행(row) 0 × 정점
-    skinnedPos.y = dot(skinMatrix[1], input.Position); // 행 1 × 정점
-    skinnedPos.z = dot(skinMatrix[2], input.Position); // 행 2 × 정점
-    skinnedPos.w = dot(skinMatrix[3], input.Position); // 행 3 × 정점
+    skinnedPos.x = dot(skinMatrix[0], input.Position); // row0 · [x y z 1]
+    skinnedPos.y = dot(skinMatrix[1], input.Position); // row1 · [x y z 1]
+    skinnedPos.z = dot(skinMatrix[2], input.Position); // row2 · [x y z 1]
+    skinnedPos.w = dot(skinMatrix[3], input.Position); // row3 · [x y z 1]
 
-    //==========================================================
-    // (3) 모델 공간 → 월드 공간 변환
-    //==========================================================
-    float4 worldPos = mul(WorldMatrix, skinnedPos);
-
-    //==========================================================
-    // (4) 기존 C++에서 넘겨준 “W * V * P” 를 그대로 사용하기 위해,
-    //     여기서는 skinnedPos(= 모델 공간) 대신 “row-vector” 형식으로 곱셈
-    //     즉, skinnedPos * (W * V * P) = ( ( (skinnedPos * W) * V ) * P )
-    //
-    //   * HLSL 에서는 mul(rowVector, matrix) 형태로 쓰면
-    //     “rowVector × matrix” 연산이 이루어집니다.
-    //==========================================================
-    output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
-
-    //==========================================================
-    // (5) 법선 스키닝 + 월드 변환
-    //==========================================================
+    //output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
+    float4 worldPos = mul(skinnedPos, WorldMatrix); // -> 월드 좌표계(row 형태)
+    float4 viewPos = mul(worldPos, ViewMatrix); // -> 뷰 좌표계
+    output.Position = mul(viewPos, ProjectionMatrix);
+    
     float3 skinnedNormal3;
     {
         float3 row0 = float3(skinMatrix[0][0], skinMatrix[0][1], skinMatrix[0][2]);
@@ -114,12 +90,9 @@ VSOutput Animation_VS(VSInput input)
 
     float3 worldNormal3 = normalize(mul((float3x3) WorldMatrix, skinnedNormal3));
 
-    //==========================================================
-    // (6) 픽셀 셰이더로 전달할 데이터: 모두 float4 형식
-    //==========================================================
     output.Normal = float4(worldNormal3, 0.0f);
-    output.TexCoord = float4(input.TexCoord.xy, 0.0f, 0.0f);
     output.Color = input.Color;
+    output.TexCoord = float4(input.TexCoord.xy, 0.0f, 0.0f);
 
     return output;
 }

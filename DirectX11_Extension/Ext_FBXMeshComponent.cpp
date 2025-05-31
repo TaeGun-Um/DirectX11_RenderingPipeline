@@ -49,11 +49,11 @@ void Ext_FBXMeshComponent::Start()
         Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
     }
 
-    Base_Directory Dir3;
-    Dir3.MakePath("../Resource/Mesh/Character/Animation/Idle.fbx");
-
-    Animator->LoadAnimationFBX(Dir3.GetPath());
-    Animator->SetAnimation(0); // 첫 번째 애니메이션 선택
+     Base_Directory Dir3;
+     Dir3.MakePath("../Resource/Mesh/Character/Animation/Walking.fbx");
+     
+     Animator->LoadAnimationFBX(Dir3.GetPath());
+     Animator->SetAnimation(0); // 첫 번째 애니메이션 선택
 }
 
 // 메시 컴포넌트에 필요한 유닛 생성 및 저장
@@ -78,8 +78,8 @@ void Ext_FBXMeshComponent::Rendering(float _Deltatime, const float4x4& _ViewMatr
 
     // ※ 여기서 GPU Map/Unmap 은 하지 않고, 단지 BufferSetter에 “어디에 얼마 크기 데이터를 복사할지” 만 지정
         // [3] 트랜스폼 상수버퍼 세팅하기
-    //const TransformData& TFData = *(GetTransform()->GetTransformData().get());
-    //Unit->BufferSetter.SetConstantBufferLink("TransformData", TFData);
+    // const TransformData& TFData = *(GetTransform()->GetTransformData().get());
+    // Unit->BufferSetter.SetConstantBufferLink("TransformData", TFData);
     Unit->BufferSetter.SetConstantBufferLink(SkinnedCBName, &Animator->CB, sizeof(CB_SkinnedMatrix));
 
     // ▶ 4. 이후 Unit->Rendering()에서 실제 GPU에 복사(Map/Unmap) 및 드로우 콜이 수행된다.

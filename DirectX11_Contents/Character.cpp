@@ -15,6 +15,10 @@ void Character::Start()
 	MeshComp = CreateComponent<Ext_FBXMeshComponent>("BodyMesh");
 	MeshComp->CreateMeshComponentUnit("Girl", "Animation");
 	MeshComp->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
+
+	//MeshComp2 = CreateComponent<Ext_MeshComponent>("BodyMesh");
+	//MeshComp2->CreateMeshComponentUnit("Girl", "Basic");
+	//MeshComp2->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
 }
 
 void Character::Update(float _DeltaTime)

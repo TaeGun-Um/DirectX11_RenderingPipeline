@@ -20,5 +20,6 @@ protected:
 	
 private:
 	std::shared_ptr<class Ext_FBXMeshComponent> MeshComp;
+	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
 	
 };
