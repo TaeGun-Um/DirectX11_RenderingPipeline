@@ -28,19 +28,9 @@ bool Ext_FBXAnimator::LoadMeshFBX(
     //──────────────────────────────────────────────────────────────
     // 1) Assimp로 T-Pose FBX 읽기 (좌표계 변환 플래그 aiProcess_ConvertToLeftHanded 제거)
     //──────────────────────────────────────────────────────────────
-    MeshScene = MeshImporter.ReadFile(
-        _TposeFilename,
-        aiProcess_Triangulate
-        //| aiProcess_ConvertToLeftHanded  // ← 좌표계 변환은 직접 처리하지 않음
-        | aiProcess_GenSmoothNormals
-        | aiProcess_CalcTangentSpace
-        | aiProcess_JoinIdenticalVertices
-        | aiProcess_LimitBoneWeights
-    );
+    MeshScene = MeshImporter.ReadFile(_TposeFilename, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
 
-    if (!MeshScene
-        || (MeshScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
-        || !MeshScene->mRootNode)
+    if (!MeshScene || (MeshScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !MeshScene->mRootNode)
     {
         MsgAssert("FBX 메시 로드 실패");
         return false;
@@ -53,7 +43,6 @@ bool Ext_FBXAnimator::LoadMeshFBX(
         aiMatrix4x4 inv = MeshScene->mRootNode->mTransformation;
         inv.Inverse();
         GlobalInverseTransform = inv;
-        PrintAiMatrix(GlobalInverseTransform, "GlobalInverseTransform (Inverse of Root)");
     }
 
     //──────────────────────────────────────────────────────────────
@@ -131,7 +120,9 @@ bool Ext_FBXAnimator::LoadMeshFBX(
 
         auto it = BoneNameToInfo.find(boneName);
         if (it == BoneNameToInfo.end())
+        {
             continue;
+        }
 
         int boneID = it->second.ID;
         for (unsigned int w = 0; w < aiBonePtr->mNumWeights; ++w)
@@ -205,19 +196,9 @@ bool Ext_FBXAnimator::LoadMeshFBX(
 bool Ext_FBXAnimator::LoadAnimationFBX(const std::string& _AnimFilename)
 {
     // 1) AnimScene에 애니메이션 FBX 읽기
-    AnimScene = AnimImporter.ReadFile(
-        _AnimFilename,
-        aiProcess_Triangulate
-        // | aiProcess_ConvertToLeftHanded
-        | aiProcess_GenSmoothNormals    // 메시가 없어도 무시되지만, 안전하게 두어도 됨
-        | aiProcess_CalcTangentSpace
-        | aiProcess_JoinIdenticalVertices
-        | aiProcess_LimitBoneWeights
-    );
+    AnimScene = AnimImporter.ReadFile(_AnimFilename, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
 
-    if (!AnimScene
-        || (AnimScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
-        || !AnimScene->mRootNode)
+    if (!AnimScene || (AnimScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !AnimScene->mRootNode)
     {
         MsgAssert("FBX애니메이션 로드 실패");
         return false;
@@ -240,18 +221,13 @@ bool Ext_FBXAnimator::LoadAnimationFBX(const std::string& _AnimFilename)
     for (unsigned int a = 0; a < AnimScene->mNumAnimations; ++a)
     {
         const aiAnimation* anim = AnimScene->mAnimations[a];
-        printf(">>> Anim[%u] Name=\"%s\", Channels=%u\n",
-            a,
-            anim->mName.C_Str(),
-            anim->mNumChannels);
-
+        
         // 각 채널마다 nodeName(=본 이름), 그 키프레임 배열 정보를 저장
         for (unsigned int c = 0; c < anim->mNumChannels; ++c)
         {
             const aiNodeAnim* channel = anim->mChannels[c];
             std::string boneName = channel->mNodeName.C_Str();
             BoneNameToAnimChannel[boneName] = channel;
-            printf("    Channel[%u]: boneName=\"%s\"\n", c, boneName.c_str());
         }
     }
 
@@ -296,15 +272,9 @@ void Ext_FBXAnimator::UpdateAnimation(float _TimeInSeconds)
         FinalBoneMatrices[i] = aiMatrix4x4(); // 단위행렬
     }
 
-    // 디버그: 호출 시점 시간 출력
-    printf("=== UpdateAnimation: Time(%.4f sec) ===\n", _TimeInSeconds);
-
     // (B) MeshScene의 루트 노드를 재귀 순회하면서 본별 행렬 계산
     aiMatrix4x4 identity; // 단위행렬
     ReadNodeHierarchy(_TimeInSeconds, MeshScene->mRootNode, identity);
-
-    // 디버그: 계산된 본 개수 확인
-    printf("[UpdateAnimation] FinalBoneMatrices size = %zu\n", FinalBoneMatrices.size());
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -325,19 +295,8 @@ CB_SkinnedMatrix Ext_FBXAnimator::RenderSkinnedMesh()
             m.c1, m.c2, m.c3, m.c4,
             m.d1, m.d2, m.d3, m.d4
         );
+        
         cb.Bones[i] = xm;
-
-        // 첫 몇 개만 디버그 출력 (예: i < 3)
-        if (i < 3)
-        {
-            XMFLOAT4X4 f;
-            XMStoreFloat4x4(&f, xm);
-            printf("[RenderSkinnedMesh] Bone[%zu] XMMatrix:\n", i);
-            printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._11, f._12, f._13, f._14);
-            printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._21, f._22, f._23, f._24);
-            printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._31, f._32, f._33, f._34);
-            printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._41, f._42, f._43, f._44);
-        }
     }
 
     // 나머지는 단위행렬로 채움
@@ -395,23 +354,15 @@ void Ext_FBXAnimator::ExtractBonesFromMesh()
         bi.OffsetMatrix = offset; // 모델공간 → 본공간
         BoneNameToInfo[boneName] = bi;
 
-        // 디버그 출력
-        printf("Registered Bone: \"%s\"  ID=%u\n", boneName.c_str(), BoneCount);
-        PrintAiMatrix(offset, boneName.c_str());
-
         ++BoneCount;
     }
-    printf("Total unique bones: %u\n", BoneCount);
 }
 
 //─────────────────────────────────────────────────────────────────────────
 // [E] 재귀적으로 노드 트리 순회하며 바인드포즈 or 애니메이션 TRS를 적용해서
 //     최종 본 행렬(FinalBoneMatrices)에 넣어 주는 함수
 //─────────────────────────────────────────────────────────────────────────
-aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(
-    float _TimeInSeconds,
-    const aiNode* _Node,
-    const aiMatrix4x4& _ParentTransform)
+aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(float _TimeInSeconds, const aiNode* _Node, const aiMatrix4x4& _ParentTransform)
 {
     std::string nodeName = _Node->mName.C_Str();
 
@@ -423,7 +374,6 @@ aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(
     if (animIt != BoneNameToAnimChannel.end())
     {
         const aiNodeAnim* channel = animIt->second;
-        printf("[ReadNodeHierarchy] Bone \"%s\" has anim channel → Interpolate TRS\n", nodeName.c_str());
 
         // (2-1) 시간(초)를 틱 단위로 바꾼 뒤 전체 길이를 넘어가면 래핑
         float ticks = TimeInTicks(_TimeInSeconds);
@@ -466,10 +416,6 @@ aiMatrix4x4 Ext_FBXAnimator::ReadNodeHierarchy(
         // 최종 스킨 행렬 = GlobalInverseTransform × globalTransform × offset
         aiMatrix4x4 finalBone = GlobalInverseTransform * globalTransform * offset;
         FinalBoneMatrices[boneID] = finalBone;
-
-        // 디버그: 최종 본 행렬 출력
-        printf("[ReadNodeHierarchy] FinalBoneMatrices[%d] for \"%s\":\n", boneID, nodeName.c_str());
-        PrintAiMatrix(finalBone, ("FinalBone_" + nodeName).c_str());
     }
 
     // (5) 자식 노드 순회
@@ -519,8 +465,6 @@ void Ext_FBXAnimator::CalcInterpolatedPosition(aiVector3D& _Out, float _AnimTime
     if (_NodeAnim->mNumPositionKeys == 1)
     {
         _Out = _NodeAnim->mPositionKeys[0].mValue;
-        printf("  [CalcPosition] Single key: (%.4f, %.4f, %.4f)\n",
-            _Out.x, _Out.y, _Out.z);
         return;
     }
 
@@ -529,8 +473,6 @@ void Ext_FBXAnimator::CalcInterpolatedPosition(aiVector3D& _Out, float _AnimTime
     if (nextIndex >= _NodeAnim->mNumPositionKeys)
     {
         _Out = _NodeAnim->mPositionKeys[index].mValue;
-        printf("  [CalcPosition] Last key: index=%u, pos=(%.4f, %.4f, %.4f)\n",
-            index, _Out.x, _Out.y, _Out.z);
         return;
     }
 
@@ -541,9 +483,6 @@ void Ext_FBXAnimator::CalcInterpolatedPosition(aiVector3D& _Out, float _AnimTime
     const aiVector3D& start = _NodeAnim->mPositionKeys[index].mValue;
     const aiVector3D& end = _NodeAnim->mPositionKeys[nextIndex].mValue;
 
-    printf("  [CalcPosition] idx=%u,next=%u,time0=%.4f,time1=%.4f,fact=%.4f\n",
-        index, nextIndex, time0, time1, factor);
-
     _Out = start + (end - start) * factor;
 }
 
@@ -552,8 +491,6 @@ void Ext_FBXAnimator::CalcInterpolatedRotation(aiQuaternion& _Out, float _AnimTi
     if (_NodeAnim->mNumRotationKeys == 1)
     {
         _Out = _NodeAnim->mRotationKeys[0].mValue;
-        printf("  [CalcRotation] Single key quat=(%.4f,%.4f,%.4f,%.4f)\n",
-            _Out.x, _Out.y, _Out.z, _Out.w);
         return;
     }
 
@@ -572,9 +509,6 @@ void Ext_FBXAnimator::CalcInterpolatedRotation(aiQuaternion& _Out, float _AnimTi
     const aiQuaternion& startQ = _NodeAnim->mRotationKeys[index].mValue;
     const aiQuaternion& endQ = _NodeAnim->mRotationKeys[nextIndex].mValue;
 
-    printf("  [CalcRotation] idx=%u,next=%u,time0=%.4f,time1=%.4f,fact=%.4f\n",
-        index, nextIndex, time0, time1, factor);
-
     aiQuaternion::Interpolate(_Out, startQ, endQ, factor);
     _Out = _Out.Normalize();
 }
@@ -584,8 +518,6 @@ void Ext_FBXAnimator::CalcInterpolatedScaling(aiVector3D& _Out, float _AnimTime,
     if (_NodeAnim->mNumScalingKeys == 1)
     {
         _Out = _NodeAnim->mScalingKeys[0].mValue;
-        printf("  [CalcScaling] Single key: (%.4f, %.4f, %.4f)\n",
-            _Out.x, _Out.y, _Out.z);
         return;
     }
 
@@ -594,8 +526,6 @@ void Ext_FBXAnimator::CalcInterpolatedScaling(aiVector3D& _Out, float _AnimTime,
     if (nextIndex >= _NodeAnim->mNumScalingKeys)
     {
         _Out = _NodeAnim->mScalingKeys[index].mValue;
-        printf("  [CalcScaling] Last key: idx=%u, scale=(%.4f,%.4f,%.4f)\n",
-            index, _Out.x, _Out.y, _Out.z);
         return;
     }
 
@@ -605,9 +535,6 @@ void Ext_FBXAnimator::CalcInterpolatedScaling(aiVector3D& _Out, float _AnimTime,
 
     const aiVector3D& startS = _NodeAnim->mScalingKeys[index].mValue;
     const aiVector3D& endS = _NodeAnim->mScalingKeys[nextIndex].mValue;
-
-    printf("  [CalcScaling] idx=%u,next=%u,time0=%.4f,time1=%.4f,fact=%.4f\n",
-        index, nextIndex, time0, time1, factor);
 
     _Out = startS + (endS - startS) * factor;
 }
@@ -645,7 +572,6 @@ void Ext_FBXAnimator::PrintXMMATRIX(const DirectX::XMMATRIX& xm, const char* nam
 
     XMFLOAT4X4 f;
     XMStoreFloat4x4(&f, xm);
-
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._11, f._12, f._13, f._14);
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._21, f._22, f._23, f._24);
     printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._31, f._32, f._33, f._34);
