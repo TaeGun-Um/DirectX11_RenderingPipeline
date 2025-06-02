@@ -15,7 +15,7 @@ public:
 
     std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material = "Animation") override; // 메시 컴포넌트에 필요한 유닛 생성 및 저장
     void CreateAnimation(std::string_view _FilePath);
-    void SetAnimation(int _Index);
+    void SetAnimation(std::string_view _AnimName);
 
     std::shared_ptr<class Ext_Animator> GetAnimator() { return Animator; };
 
@@ -24,7 +24,7 @@ protected:
     void Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
 
 private:
-    float AccumulatedAnimTime = 0.0f; // 애니메이션 재생 시간을 누적할 변수
+    float AccumulatedTime = 0.0f; // 애니메이션 재생 시간을 누적할 변수
     std::string SkinnedCBName = "CB_SkinnedMatrix"; 
     std::shared_ptr<class Ext_Animator> Animator = nullptr; // 
 };

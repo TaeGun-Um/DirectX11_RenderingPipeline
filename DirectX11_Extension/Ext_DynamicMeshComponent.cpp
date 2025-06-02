@@ -36,14 +36,9 @@ void Ext_DynamicMeshComponent::CreateAnimation(std::string_view _FilePath)
     Animator->LoadAnimation(_FilePath);
 }
 
-void Ext_DynamicMeshComponent::SetAnimation(int _Index)
+void Ext_DynamicMeshComponent::SetAnimation(std::string_view _AnimName)
 {
-    Animator->SetAnimation(_Index);
-}
-
-void Ext_DynamicMeshComponent::ChangeAnimation(int _Index)
-{
-    Animator->ChangeAnimation(_Index);
+    Animator->SetAnimation(_AnimName);
 }
 
 void Ext_DynamicMeshComponent::Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
@@ -51,6 +46,5 @@ void Ext_DynamicMeshComponent::Rendering(float _DeltaTime, const float4x4& _View
     // 기본 렌더링 (Transform / Material 셋업 후)
     __super::Rendering(_DeltaTime, _ViewMatrix, _ProjectionMatrix);
 
-    AccumulatedAnimTime += _DeltaTime;
-    Animator->UpdateAnimation(AccumulatedAnimTime);
+    Animator->UpdateAnimation(_DeltaTime);
 }

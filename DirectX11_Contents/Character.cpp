@@ -32,7 +32,11 @@ void Character::Start()
 
 	Base_Directory Dir3;
 	Dir3.MakePath("../Resource/Mesh/Character/Animation/Idle.fbx");
+
+	Base_Directory Dir4;
+	Dir4.MakePath("../Resource/Mesh/Character/Animation/Walking.fbx");
 	MeshComp->CreateAnimation(Dir3.GetPath());
+	MeshComp->CreateAnimation(Dir4.GetPath());
 
 	//MeshComp2 = CreateComponent<Ext_MeshComponent>("BodyMesh");
 	//MeshComp2->CreateMeshComponentUnit("Girl", "Basic");
@@ -45,19 +49,19 @@ void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
 
-	//if (AccTime > 3.f)
-	//{
-	//	AccTime = 0.f;
-	//	Switch = !Switch;
-	//	if (Switch)
-	//	{
-	//		MeshComp->SetAnimation(1);
-	//	}
-	//	else
-	//	{
-	//		MeshComp->SetAnimation(0);
-	//	}
-	//}
+	if (AccTime > 3.f)
+	{
+		AccTime = 0.f;
+		Switch = !Switch;
+		if (Switch)
+		{
+			MeshComp->SetAnimation("Idle");
+		}
+		else
+		{
+			MeshComp->SetAnimation("Walking");
+		}
+	}
 
 	__super::Update(_DeltaTime);
 }

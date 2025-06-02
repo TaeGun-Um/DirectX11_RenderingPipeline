@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 #include "Ext_DirectXMesh.h"
 
-#include <cstdio>  // printf
+#include <DirectX11_Base//Base_Directory.h>
 
 // 스켈레탈 메시 적용
 void Ext_Animator::SetSkeltalMesh(std::string_view _MeshName)
@@ -16,68 +16,91 @@ void Ext_Animator::SetSkeltalMesh(std::string_view _MeshName)
 // 애니메이션 생성
 bool Ext_Animator::LoadAnimation(std::string_view _FilePath)
 {
+    std::shared_ptr<AnimationData> NewAnimData = std::make_shared<AnimationData>();
+
     // 1) 애니메이션 FBX 읽기 → DirectX(LH) 좌표계로 변환
-    AIAnimScene = AnimImporter.ReadFile(_FilePath.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
-    if (!AIAnimScene || (AIAnimScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) /*|| !AnimSceneAIAnimScenemRootNode*/)
+    const aiScene* NewAnimScene = NewAnimData->AnimImporter.ReadFile(_FilePath.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
+    if (!NewAnimScene || (NewAnimScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) /*|| !AnimSceneAIAnimScenemRootNode*/)
     {
         MsgAssert("FBX 애니메이션 로드 실패");
         return false;
     }
 
     // 2) 애니메이션 개수 확인
-    if (AIAnimScene->mNumAnimations == 0)
+    if (NewAnimScene->mNumAnimations == 0)
     {
         MsgAssert("애니메이션 채널이 들어 있지 않음");
         return false;
     }
 
     // 3) 기본 애니메이션 채널 매핑
-    //CurrentAnimIndex = 0;
-    CurrentAnimation = AIAnimScene->mAnimations[0];
+    std::vector<std::string> TranslationNodes; // 루트모션 끄려고 찾는것
+    CurrentAnimation = NewAnimScene->mAnimations[0];
     BoneNameToAnimChannel.clear();
     for (unsigned int c = 0; c < CurrentAnimation->mNumChannels; ++c)
     {
-        const aiNodeAnim* channel = CurrentAnimation->mChannels[c];
-        BoneNameToAnimChannel[channel->mNodeName.C_Str()] = channel;
+        const aiNodeAnim* Channel = CurrentAnimation->mChannels[c];
+        BoneNameToAnimChannel[Channel->mNodeName.C_Str()] = Channel;
+        
+        if (Channel->mNumPositionKeys > 0) // 위치 키가 하나라도 있으면 Translation이 움직이는것
+        {
+            TranslationNodes.push_back(Channel->mNodeName.C_Str());
+        }
     }
+
+    NewAnimData->AIAnimScene = NewAnimScene;
+    std::string NewName = Base_Directory::GetFileName(_FilePath);
+    std::string UpperName = Base_String::ToUpper(NewName);
+
+    if (AnimationDatas.find(UpperName) != AnimationDatas.end())
+    {
+        MsgAssert("이미 동일한 이름의 애니메이션이 등록되어 있습니다. " + UpperName);
+        return false;
+    }
+
+    const aiNode* RootNode = SkeletalMesh->GetMeshScene()->mRootNode; // 씬 루트 노드 가져오기
+    RootMotionBoneName = FindRootMotionNode(RootNode, TranslationNodes); // 최상위 Translation 채널(부모가 없는 채널)을 찾아서 저장
+
+    AnimationDatas[UpperName] = NewAnimData; // 다 끝났으면 저장
 
     return true;
 }
 
 // 재생할 애니메이션 선택
-bool Ext_Animator::SetAnimation(UINT _AnimIndex)
+bool Ext_Animator::SetAnimation(std::string_view _AnimName)
 {
-    if (!AIAnimScene)
+    std::string UpperName = Base_String::ToUpper(_AnimName.data());
+    auto Iter = AnimationDatas.find(UpperName);
+    if (Iter == AnimationDatas.end())
+    {
+        MsgAssert("이런 이름의 애니메이션은 등록된 적이 없습니다. " + UpperName);
+        return false;
+    }
+
+    std::shared_ptr<AnimationData> CurAnimData = Iter->second;
+
+    if (!CurAnimData->AIAnimScene)
     {
         MsgAssert("애니메이션을 만들지 않아 재생할 수 없습니다.");
         return false;
     }
 
-    if (_AnimIndex >= AIAnimScene->mNumAnimations)
-    {
-        return false;
-    }
-
-    CurrentAnimIndex = _AnimIndex;
-    CurrentAnimation = AIAnimScene->mAnimations[CurrentAnimIndex];
-
+    AccumulatedTime = 0.f;
+    // (2) CurrentAnimation 지정 및 채널 맵 갱신
+    CurrentAnimation = CurAnimData->AIAnimScene->mAnimations[0];
     BoneNameToAnimChannel.clear();
-    for (unsigned int c = 0; c < CurrentAnimation->mNumChannels; ++c)
+    for (size_t i = 0; i < CurrentAnimation->mNumChannels; ++i)
     {
-        const aiNodeAnim* channel = CurrentAnimation->mChannels[c];
-        std::string boneName = channel->mNodeName.C_Str();
-        BoneNameToAnimChannel[boneName] = channel;
+        const aiNodeAnim* Channel = CurrentAnimation->mChannels[i];
+        std::string BoneName = Channel->mNodeName.C_Str();
+        BoneNameToAnimChannel[BoneName] = Channel;
     }
+
     return true;
 }
 
-bool Ext_Animator::ChangeAnimation(UINT _AnimIndex)
-{
-    return false;
-}
-
 // 선택된 애니메이션 재생
-void Ext_Animator::UpdateAnimation(float _TimeInSeconds)
+void Ext_Animator::UpdateAnimation(float _DeltaTime)
 {
     if (!CurrentAnimation) // aiScene이 없거나
     {
@@ -90,79 +113,145 @@ void Ext_Animator::UpdateAnimation(float _TimeInSeconds)
         FinalBoneMatrices[i] = aiMatrix4x4();
     }
 
-    const std::string NodeName = "mixamorig:Hips";
-    const aiNode* FirstNode = FindNodeByName(SkeletalMesh->GetMeshScene()->mRootNode, NodeName);
+    AccumulatedTime += _DeltaTime;
 
-    // 2-1) 루트부터 hips까지의 글로벌 바인드 포즈 구하기
-    aiMatrix4x4 NodeTransform = FirstNode->mTransformation;
-
-    aiMatrix4x4 identity; // 기본 생성자 → 항등행렬
-    ReadNodeHierarchy(_TimeInSeconds, FirstNode, identity);
+    const aiNode* RootNode = SkeletalMesh->GetMeshScene()->mRootNode;
+    aiMatrix4x4 Identity; // 기본 생성자 → 항등행렬
+    ReadNodeHierarchy(AccumulatedTime, RootNode, Identity);
 
     RenderSkinnedMesh(); // 다 돌았으면 CB에 값 저장
 }
 
-// 재귀적으로 노드 트리를 순회하여 FinalBoneMatrices에 값 적용
-aiMatrix4x4 Ext_Animator::ReadNodeHierarchy(float _TimeInSeconds, const aiNode* _Node, const aiMatrix4x4& _ParentTransform)
-{
-    // (1) 노드 이름
-    std::string nodeName = _Node->mName.C_Str();
+static constexpr char ROOT_BONE_NAME[] = "mixamorig:Hips";
 
-    // (2) 바인드 포즈(기본) 행렬
-    //aiMatrix4x4 nodeTransform = _Node->mTransformation;
+// 재귀적으로 노드 트리를 순회하여 FinalBoneMatrices에 값 적용
+aiMatrix4x4 Ext_Animator::ReadNodeHierarchy(float _AccumulatedTime, const aiNode* _CurNode, const aiMatrix4x4& _ParentTransform)
+{
+    // 현재 노드 이름
+    std::string CurNodeName = _CurNode->mName.C_Str();
     aiMatrix4x4 Mat;
 
-    // (3) 애니메이션 채널 보간 여부
-    auto animIt = BoneNameToAnimChannel.find(nodeName);
-    if (animIt != BoneNameToAnimChannel.end())
+    // 애니메이션 채널 보간 여부
+    auto AnimIter = BoneNameToAnimChannel.find(CurNodeName);
+    if (AnimIter != BoneNameToAnimChannel.end())
     {
-        const aiNodeAnim* channel = animIt->second;
+        const aiNodeAnim* Channel = AnimIter->second;
 
         // 초 → 틱 변환
-        float ticks = TimeInTicks(_TimeInSeconds);
-        float duration = static_cast<float>(CurrentAnimation->mDuration);
-        float animTime = fmod(ticks, duration);
+        float Ticks = TimeInTicks(_AccumulatedTime);
+        float Duration = static_cast<float>(CurrentAnimation->mDuration);
+        float AnimTime = fmod(Ticks, Duration);
 
         // 보간 후 TRS
-        aiVector3D interpPos;
-        aiQuaternion interpRot;
-        aiVector3D interpScale;
-        CalcInterpolatedPosition(interpPos, animTime, channel);
-        CalcInterpolatedRotation(interpRot, animTime, channel);
-        CalcInterpolatedScaling(interpScale, animTime, channel);
+        aiVector3D InterpPosition;
+        aiQuaternion InterpRotation;
+        aiVector3D InterpScale;
+        CalcInterpolatedPosition(InterpPosition, AnimTime, Channel);
+        CalcInterpolatedRotation(InterpRotation, AnimTime, Channel);
+        CalcInterpolatedScaling(InterpScale, AnimTime, Channel);
 
-        aiMatrix4x4 T, R, S;
-        aiMatrix4x4::Translation(interpPos, T);
-        R = aiMatrix4x4(interpRot.GetMatrix());
-        aiMatrix4x4::Scaling(interpScale, S);
 
-        Mat = T * R * S;
+        if (CurNodeName == RootMotionBoneName)
+        {
+            InterpPosition.x = 0.0f;
+            InterpPosition.y = 0.0f;
+            InterpPosition.z = 0.0f;
+        }
+
+        // 일단 사용(루트모션 제거용)
+        //InterpPosition.z = 0.0f;
+
+        aiMatrix4x4 TranslationMat;
+        aiMatrix4x4 RotationMat;
+        aiMatrix4x4 ScaleMat;
+        aiMatrix4x4::Translation(InterpPosition, TranslationMat);
+        RotationMat = aiMatrix4x4(InterpRotation.GetMatrix());
+        aiMatrix4x4::Scaling(InterpScale, ScaleMat);
+
+        Mat = TranslationMat * RotationMat * ScaleMat;
     }
 
-    // (4) 부모 변환과 곱해 글로벌 변환 계산
-    aiMatrix4x4 globalTransform = _ParentTransform * Mat;
+    // 부모 변환과 곱해 글로벌 변환 계산
+    aiMatrix4x4 GlobalTransform = _ParentTransform * Mat;
 
-    // (5) 이 노드가 본(BoneNameToInfo에 존재)이라면 최종 스킨 행렬 계산
-    auto boneIt = SkeletalMesh->GetBoneInfomations().find(nodeName);
-    if (boneIt != SkeletalMesh->GetBoneInfomations().end())
+    // 이 노드가 본(BoneNameToInfo에 존재)이라면 최종 스킨 행렬 계산
+    auto BoneIter = SkeletalMesh->GetBoneInfomations().find(CurNodeName);
+    if (BoneIter != SkeletalMesh->GetBoneInfomations().end())
     {
-        int boneID = boneIt->second.ID;
-        const aiMatrix4x4& offset = boneIt->second.OffsetMatrix;
+        int BoneID = BoneIter->second.ID;
+        const aiMatrix4x4& OffsetMat = BoneIter->second.OffsetMatrix;
 
-        // 최종 스킨 행렬: GlobalInverseTransform × globalTransform × offsetMatrix
-        aiMatrix4x4 finalBone = globalTransform * offset;
-        FinalBoneMatrices[boneID] = finalBone;
+        aiMatrix4x4 FinalBoneTransform = GlobalTransform * OffsetMat;
+        FinalBoneMatrices[BoneID] = FinalBoneTransform;
     }
 
     // (6) 자식 노드 순회
-    for (unsigned int i = 0; i < _Node->mNumChildren; ++i)
+    for (unsigned int i = 0; i < _CurNode->mNumChildren; ++i)
     {
-        ReadNodeHierarchy(_TimeInSeconds,
-            _Node->mChildren[i],
-            globalTransform);
+        ReadNodeHierarchy(_AccumulatedTime, _CurNode->mChildren[i], GlobalTransform);
     }
 
-    return globalTransform;
+    return GlobalTransform;
+}
+
+std::string Ext_Animator::FindRootMotionNode(const aiNode* _RootNode, const std::vector<std::string>& _TranslationNodes)
+{
+    // 씬 트리에서 이름으로 aiNode*를 찾아주는 람다(내부 사용)
+    auto FindNodeByName = [&](auto&& _Self, const aiNode* _Node, const std::string& _Name) -> const aiNode*
+        {
+            if (!_Node) return nullptr;
+            if (_Node->mName.C_Str() == _Name)
+            {
+                return _Node;
+            }
+            for (unsigned int i = 0; i < _Node->mNumChildren; ++i)
+            {
+                const aiNode* found = _Self(_Self, _Node->mChildren[i], _Name);
+                if (found)
+                {
+                    return found;
+                }
+            }
+            return nullptr;
+        };
+
+    // “Translation이 있는 채널 이름들” 중 최상위 노드를 찾는다.
+    for (const auto& BoneName : _TranslationNodes)
+    {
+        // 씬 트리에서 그 이름의 aiNode*를 찾는다
+        const aiNode* Node = FindNodeByName(FindNodeByName, _RootNode, BoneName);
+        if (!Node)
+        {
+            continue;
+        }
+
+        // 부모 계층을 타고 올라가면서, 부모가 채널 맵에 속하는지 검사
+        const aiNode* Parent = Node->mParent;
+        bool hasParentChannel = false;
+        while (Parent != nullptr)
+        {
+            if (BoneNameToAnimChannel.find(Parent->mName.C_Str()) != BoneNameToAnimChannel.end())
+            {
+                hasParentChannel = true;
+                break;
+            }
+            Parent = Parent->mParent;
+        }
+
+        // 부모 채널이 없으면 “최상위 Translation 채널”로 간주
+        if (!hasParentChannel)
+        {
+            return BoneName;
+        }
+    }
+
+    // 후보가 하나도 없거나, 모두 부모가 있으면, 그냥 첫 번째를 반환
+    if (!_TranslationNodes.empty())
+    {
+        return _TranslationNodes.front();
+    }
+
+    return "";  // _TranslationNodes가 비어 있으면 빈 문자열 반환
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -176,7 +265,7 @@ void Ext_Animator::RenderSkinnedMesh()
         const aiMatrix4x4& m = FinalBoneMatrices[i];
 
         // “행 우선(row-major)”대로 XMMATRIX 생성
-        XMMATRIX xm = XMMATRIX(
+        DirectX::XMMATRIX xm = DirectX::XMMATRIX(
             m.a1, m.a2, m.a3, m.a4,
             m.b1, m.b2, m.b3, m.b4,
             m.c1, m.c2, m.c3, m.c4,
@@ -190,8 +279,19 @@ void Ext_Animator::RenderSkinnedMesh()
     // 나머지 본은 단위행렬로 채우기
     for (size_t i = FinalBoneMatrices.size(); i < MAX_BONES; ++i)
     {
-        CBMat.Bones[i] = XMMatrixIdentity();
+        CBMat.Bones[i] = DirectX::XMMatrixIdentity();
     }
+}
+
+// 델타 타임을 assimp 틱 단위로 변환
+float Ext_Animator::TimeInTicks(float _AccumulatedTime) const
+{
+    if (CurrentAnimation && CurrentAnimation->mTicksPerSecond != 0.0f)
+    {
+        return _AccumulatedTime * static_cast<float>(CurrentAnimation->mTicksPerSecond);
+    }
+    // 만약 이 애니메이션이 “TicksPerSecond = 0”이라면, 기본 25fps(틱)로 가정
+    return _AccumulatedTime * 25.0f;
 }
 
 //─────────────────────────────────────────────────────────────────────────
@@ -304,76 +404,4 @@ void Ext_Animator::CalcInterpolatedScaling(aiVector3D& _Out, float _AnimTime, co
     const aiVector3D& endS = _NodeAnim->mScalingKeys[nextIndex].mValue;
 
     _Out = startS + (endS - startS) * factor;
-}
-
-//─────────────────────────────────────────────────────────────────────────
-// [G] 초 단위 → Assimp 틱 단위 변환
-//─────────────────────────────────────────────────────────────────────────
-float Ext_Animator::TimeInTicks(float _TimeInSeconds) const
-{
-    if (CurrentAnimation && CurrentAnimation->mTicksPerSecond != 0.0f)
-    {
-        return _TimeInSeconds * static_cast<float>(CurrentAnimation->mTicksPerSecond);
-    }
-    // 만약 이 애니메이션이 “TicksPerSecond = 0”이라면, 기본 25fps(틱)로 가정
-    return _TimeInSeconds * 25.0f;
-}
-
-//─────────────────────────────────────────────────────────────────────────
-// [H] aiMatrix4x4 디버깅용 출력
-//─────────────────────────────────────────────────────────────────────────
-void Ext_Animator::PrintAiMatrix(const aiMatrix4x4& m, const char* name)
-{
-    if (name && name[0] != '\0')
-        printf("[%s]\n", name);
-
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", m.a1, m.a2, m.a3, m.a4);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", m.b1, m.b2, m.b3, m.b4);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", m.c1, m.c2, m.c3, m.c4);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", m.d1, m.d2, m.d3, m.d4);
-}
-
-void Ext_Animator::PrintXMMATRIX(const DirectX::XMMATRIX& xm, const char* name)
-{
-    if (name && name[0] != '\0')
-        printf("[%s]\n", name);
-
-    XMFLOAT4X4 f;
-    XMStoreFloat4x4(&f, xm);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._11, f._12, f._13, f._14);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._21, f._22, f._23, f._24);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._31, f._32, f._33, f._34);
-    printf("  [ %8.4f  %8.4f  %8.4f  %8.4f ]\n", f._41, f._42, f._43, f._44);
-}
-
-
-
-const aiNode* Ext_Animator::FindNodeByName(const aiNode* node, const std::string& name)
-{
-    if (!node) return nullptr;
-
-    if (std::string(node->mName.C_Str()) == name)
-        return node;
-
-    for (unsigned int i = 0; i < node->mNumChildren; ++i)
-    {
-        const aiNode* found = FindNodeByName(node->mChildren[i], name);
-        if (found)
-            return found;
-    }
-    return nullptr;
-}
-
-
-// “node”의 전역 Transform(최상위(RootNode)에서부터 이 노드에 이르는 모든 mTransformation을 곱한 결과)”을 계산
-aiMatrix4x4 Ext_Animator::GetGlobalTransform(const aiNode* node)
-{
-    aiMatrix4x4 mat = node->mTransformation;
-    const aiNode* parent = node->mParent;
-    while (parent)
-    {
-        mat = parent->mTransformation * mat;
-        parent = parent->mParent;
-    }
-    return mat;
 }
