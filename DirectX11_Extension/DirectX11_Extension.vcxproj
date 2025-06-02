@@ -287,10 +287,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Ext_MeshLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Ext_Object.cpp">
       <SubType>
       </SubType>
@@ -438,10 +434,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_MeshComponentUnit.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Ext_MeshLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

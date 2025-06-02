@@ -66,6 +66,15 @@ void Ext_FBXMeshComponent::Start()
         MsgAssert("FBX 애니메이션 로드 실패");
         return;
     }
+
+    Base_Directory Dir4;
+    Dir4.MakePath("../Resource/Mesh/Character/Animation/Idle.fbx");
+    IsAnimLoad = Animator->LoadAnimationFBX(Dir4.GetPath());
+    if (!IsAnimLoad)
+    {
+        MsgAssert("FBX 애니메이션 로드 실패");
+        return;
+    }
      
     Animator->SetAnimation(0); // 첫 번째 애니메이션 선택
 }

@@ -22,14 +22,25 @@ void Character::Start()
 	//MeshComp2->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
 }
 
+bool Switch = false;
+
 void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
 
-	//if (AccTime > 3.f)
-	//{
-	//	MeshComp->GetAnimator()->SetAnimation(1);
-	//}
+	if (AccTime > 3.f)
+	{
+		AccTime = 0.f;
+		Switch = !Switch;
+		if (Switch)
+		{
+			MeshComp->GetAnimator()->SetAnimation(1);
+		}
+		else
+		{
+			MeshComp->GetAnimator()->SetAnimation(0);
+		}
+	}
 
 
 	__super::Update(_DeltaTime);

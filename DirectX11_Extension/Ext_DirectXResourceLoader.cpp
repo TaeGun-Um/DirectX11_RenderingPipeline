@@ -14,7 +14,6 @@
 #include "Ext_DirectXBlend.h"
 #include "Ext_DirectXRasterizer.h"
 #include "Ext_DirectXDepth.h"
-#include "Ext_MeshLoader.h"
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
@@ -52,22 +51,6 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BONEID", DXGI_FORMAT_R32G32B32A32_SINT); // FBX Animation용
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("WEIGHT", DXGI_FORMAT_R32G32B32A32_FLOAT); // FBX Animation용
-
-	// 메시 로드(테스트용)
-	{
-		//std::vector<Ext_DirectXVertexData> Vertices;
-		//std::vector<UINT> Indices;
-
-		//Base_Directory Dir;
-		//Dir.MakePath("../Resource/Mesh/Character/Mesh/Girl.fbx");
-		//Ext_MeshLoader::LoadMeshWithBoneFromFile(Dir.GetPath(), Vertices, Indices);
-
-		//Ext_DirectXVertexBuffer::CreateVertexBuffer("Girl", Vertices);
-		//Ext_DirectXIndexBuffer::CreateIndexBuffer("Girl", Indices);
-		//Ext_DirectXMesh::CreateMesh("Girl");
-
-		///////////////////////////////////////////////////////////////////////////
-	}
 
 	// 삼각형
 	{

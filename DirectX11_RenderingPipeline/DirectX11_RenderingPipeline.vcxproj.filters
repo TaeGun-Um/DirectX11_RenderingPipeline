@@ -2,23 +2,26 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>00.PrecompileHeader</Filter>
+      <Filter>00.Process\00.Header</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>01.main</Filter>
+      <Filter>00.Process\01.main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="00.PrecompileHeader">
-      <UniqueIdentifier>{45dce3fc-bb53-4cb2-a97d-7803268a1ea9}</UniqueIdentifier>
+    <Filter Include="00.Process">
+      <UniqueIdentifier>{cf844f2f-d7da-4c60-8b54-4f7782b92572}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.main">
+    <Filter Include="00.Process\01.main">
       <UniqueIdentifier>{231dfcb5-b5b8-4d3d-b0ba-0ddc38fdf80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Process\00.Header">
+      <UniqueIdentifier>{45dce3fc-bb53-4cb2-a97d-7803268a1ea9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrecompileHeader.h">
-      <Filter>00.PrecompileHeader</Filter>
+      <Filter>00.Process\00.Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

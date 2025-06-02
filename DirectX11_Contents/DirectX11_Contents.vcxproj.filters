@@ -1,84 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="00.Header">
-      <UniqueIdentifier>{2055584f-6c26-4809-a561-072fdf72ae67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00.Header\00.PrecompileHeader">
-      <UniqueIdentifier>{0cf3cf20-acac-4a17-8534-31920ea9e718}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00.Header\01.Enum">
-      <UniqueIdentifier>{685cb6b7-08af-4ef9-b383-8050474fb042}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Process">
+    <Filter Include="00.Process">
       <UniqueIdentifier>{e0a0a9e5-c02f-47e8-85e3-dea02cac9412}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Process\00.Core">
+    <Filter Include="00.Process\00.Header">
+      <UniqueIdentifier>{2055584f-6c26-4809-a561-072fdf72ae67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Process\01.Core">
       <UniqueIdentifier>{7255c0d4-d962-4df5-aa4d-1db364e91215}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Process\01.Manager">
-      <UniqueIdentifier>{c412d8a7-2daa-48ca-847c-719b8e87f880}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object">
+    <Filter Include="01.Object">
       <UniqueIdentifier>{886db13d-b447-4d0e-a7f4-fd51b0016059}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\00.Scene">
+    <Filter Include="01.Object\00.Scene">
       <UniqueIdentifier>{6d031e4b-218c-41f7-8348-d3c7006413d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\01.Actor">
+    <Filter Include="01.Object\01.Actor">
       <UniqueIdentifier>{50d754b1-2bd0-42ed-906d-a3900809fe3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PrecompileHeader.cpp">
-      <Filter>00.Header\00.PrecompileHeader</Filter>
-    </ClCompile>
     <ClCompile Include="RectActor.cpp">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClCompile>
     <ClCompile Include="TestScene.cpp">
-      <Filter>02.Object\00.Scene</Filter>
+      <Filter>01.Object\00.Scene</Filter>
     </ClCompile>
     <ClCompile Include="TempScene.cpp">
-      <Filter>02.Object\00.Scene</Filter>
+      <Filter>01.Object\00.Scene</Filter>
     </ClCompile>
     <ClCompile Include="Contents_Core.cpp">
-      <Filter>01.Process\00.Core</Filter>
+      <Filter>00.Process\01.Core</Filter>
     </ClCompile>
     <ClCompile Include="CubeActor.cpp">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClCompile>
     <ClCompile Include="TestActor.cpp">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="PrecompileHeader.cpp">
+      <Filter>00.Process\00.Header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PrecompileHeader.h">
-      <Filter>00.Header\00.PrecompileHeader</Filter>
-    </ClInclude>
     <ClInclude Include="RectActor.h">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClInclude>
     <ClInclude Include="TestScene.h">
-      <Filter>02.Object\00.Scene</Filter>
+      <Filter>01.Object\00.Scene</Filter>
     </ClInclude>
     <ClInclude Include="TempScene.h">
-      <Filter>02.Object\00.Scene</Filter>
+      <Filter>01.Object\00.Scene</Filter>
     </ClInclude>
     <ClInclude Include="Contents_Core.h">
-      <Filter>01.Process\00.Core</Filter>
+      <Filter>00.Process\01.Core</Filter>
     </ClInclude>
     <ClInclude Include="CubeActor.h">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClInclude>
     <ClInclude Include="TestActor.h">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>02.Object\01.Actor</Filter>
+      <Filter>01.Object\01.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="PrecompileHeader.h">
+      <Filter>00.Process\00.Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

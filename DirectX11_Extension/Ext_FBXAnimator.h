@@ -85,11 +85,6 @@ private:
     // UpdateAnimation()에서 “본 이름 기준으로 aiNodeAnim* 해당 노드 정보를 찾아 TRS 보간”에 사용합니다.
     std::unordered_map<std::string, const aiNodeAnim*> BoneNameToAnimChannel;
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // [C] T-Pose FBX의 “루트 노드” 변환의 역행렬
-    //     ReadNodeHierarchy()에서 최종 본 행렬을 구할 때 사용(바인드 포즈 보정)
-    aiMatrix4x4 GlobalInverseTransform;
-
 private:
     // ─────────────────────────────────────────────────────────────────────────────
     // [D] T-Pose FBX에서 본 정보를 수집(BoneCount, BoneNameToInfo)하는 함수
