@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <DirectXTex.h>
+#include <DirectX11_Base/Base_Directory.h>
 #include "Ext_ResourceManager.h"
 
 // DirectX의 Texture2D와 View(RTV, SRV, DSV)의 생성 및 저장, 관리 클래스
@@ -28,14 +29,15 @@ public:
 	}
 
 	// 텍스쳐 로드
-	static std::shared_ptr<Ext_DirectXTexture> LoadTexture(std::string_view _Path, std::string_view _FileName, std::string_view _ExtensionName)
+	static std::shared_ptr<Ext_DirectXTexture> LoadTexture(std::string_view _Path)
 	{
-		std::string ResourceName = _FileName.data();
-		ResourceName = ResourceName + _ExtensionName.data();
+		std::string ResourceName = Base_Directory::GetFileName(_Path);
+		std::string ExtensionName = Base_Directory::GetExtension(_Path);
+		ResourceName += ExtensionName;
+
 		std::string UpperName = Base_String::ToUpper(ResourceName);
 		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(UpperName);
-		//NewTexture->SetPath(_Path);
-		NewTexture->TextureLoad(_Path, _ExtensionName);
+		NewTexture->TextureLoad(_Path, ExtensionName.c_str());
 
 		return NewTexture;
 	}

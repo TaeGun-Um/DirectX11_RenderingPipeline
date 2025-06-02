@@ -38,7 +38,7 @@ void Ext_DirectXResourceLoader::LoadTexture()
 		Dir.SetPath(FilePath.c_str());
 		std::string ExtensionName = Dir.GetExtension();
 		std::string FileName = Dir.GetFileName();
-		Ext_DirectXTexture::LoadTexture(FilePath.c_str(), FileName.c_str(), ExtensionName.c_str());
+		Ext_DirectXTexture::LoadTexture(FilePath.c_str());
 	}
 }
 

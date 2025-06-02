@@ -53,7 +53,7 @@
       <Filter>01.Object\02.Actor\00.Camera</Filter>
     </ClCompile>
     <ClCompile Include="Ext_Scene.cpp">
-      <Filter>01.Object\01Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClCompile>
     <ClCompile Include="Ext_DirectXVertexShader.cpp">
       <Filter>03.DirectX\02.Resource\03.Shader\00.Shader</Filter>
@@ -109,7 +109,7 @@
     <ClCompile Include="Ext_ResourceManager.cpp">
       <Filter>03.DirectX\00.Management</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_FBXAnimator.cpp">
+    <ClCompile Include="Ext_MeshLoader.cpp">
       <Filter>00.Process\02.Loader</Filter>
     </ClCompile>
     <ClCompile Include="Ext_Actor.cpp">
@@ -127,7 +127,10 @@
     <ClCompile Include="Ext_MeshComponentUnit.cpp">
       <Filter>01.Object\03.Component\01.Mesh\00.Base</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_FBXMeshComponent.cpp">
+    <ClCompile Include="Ext_DynamicMeshComponent.cpp">
+      <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_Animator.cpp">
       <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
     </ClCompile>
   </ItemGroup>
@@ -184,7 +187,7 @@
       <Filter>01.Object\02.Actor\00.Camera</Filter>
     </ClInclude>
     <ClInclude Include="Ext_Scene.h">
-      <Filter>01.Object\01Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClInclude>
     <ClInclude Include="Ext_DirectXVertexShader.h">
       <Filter>03.DirectX\02.Resource\03.Shader\00.Shader</Filter>
@@ -249,7 +252,7 @@
     <ClInclude Include="Ext_ResourceManager.h">
       <Filter>03.DirectX\00.Management</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_FBXAnimator.h">
+    <ClInclude Include="Ext_MeshLoader.h">
       <Filter>00.Process\02.Loader</Filter>
     </ClInclude>
     <ClInclude Include="Ext_Actor.h">
@@ -267,7 +270,10 @@
     <ClInclude Include="Ext_MeshComponentUnit.h">
       <Filter>01.Object\03.Component\01.Mesh\00.Base</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_FBXMeshComponent.h">
+    <ClInclude Include="Ext_DynamicMeshComponent.h">
+      <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_Animator.h">
       <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
     </ClInclude>
   </ItemGroup>
@@ -374,9 +380,6 @@
     <Filter Include="01.Object\00.Base">
       <UniqueIdentifier>{eba9b065-f49e-4596-aaa2-debf803b7814}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01Scene">
-      <UniqueIdentifier>{03f935b3-bfa3-463c-a046-b8ae797dad67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Object\02.Actor">
       <UniqueIdentifier>{04cb66e1-b185-4ac6-ad2a-efcc7a9d025c}</UniqueIdentifier>
     </Filter>
@@ -400,6 +403,9 @@
     </Filter>
     <Filter Include="01.Object\03.Component\01.Mesh\01.FBX">
       <UniqueIdentifier>{fb2ec04e-65ec-4f43-bd93-bf67e72e9ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\01.Scene">
+      <UniqueIdentifier>{03f935b3-bfa3-463c-a046-b8ae797dad67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ class Ext_MeshComponentUnit : public std::enable_shared_from_this<Ext_MeshCompon
 {
 	friend class Ext_Camera;
 	friend class Ext_MeshComponent;
-	friend class Ext_FBXMeshComponent;
+	friend class Ext_DynamicMeshComponent;
 
 public:
 	// constrcuter destructer
@@ -34,6 +34,7 @@ public:
 	std::shared_ptr<class Ext_DirectXMesh> GetMesh() { return Mesh; }
 	std::shared_ptr<class Ext_DirectXMaterial> GetMaterial() { return Material; }
 	std::weak_ptr<class Ext_MeshComponent> GetOwnerMeshComponent() { return OwnerMeshComponent; }
+	Ext_DirectXBufferSetter& GetBufferSetter() { return BufferSetter; }
 
 protected:
 	

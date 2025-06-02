@@ -8,7 +8,6 @@
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
-#include <DirectX11_Extension/Ext_MeshLoader.h>
 
 TestScene::TestScene()
 {

@@ -60,10 +60,24 @@ std::string Base_Directory::GetFileName()
 	return CurrentPath.stem().string();
 }
 
+// Path 인자에서 파일명 가져오기
+std::string Base_Directory::GetFileName(std::string_view _Path)
+{
+	std::filesystem::path CurrentPath(_Path);
+	return CurrentPath.stem().string();
+}
+
 // 확장자명 가져오기
 std::string Base_Directory::GetExtension()
 {
 	std::filesystem::path CurrentPath(Path);
+	return CurrentPath.extension().string();
+}
+
+// Path 인자에서 파일 확장자명 가져오기
+std::string Base_Directory::GetExtension(std::string_view _Path)
+{
+	std::filesystem::path CurrentPath(_Path);
 	return CurrentPath.extension().string();
 }
 

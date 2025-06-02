@@ -19,7 +19,7 @@ protected:
 	void Update(float _DeltaTime) override;
 	
 private:
-	std::shared_ptr<class Ext_FBXMeshComponent> MeshComp;
+	std::shared_ptr<class Ext_DynamicMeshComponent> MeshComp;
 	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
 	
 	float AccTime = 0.f;
