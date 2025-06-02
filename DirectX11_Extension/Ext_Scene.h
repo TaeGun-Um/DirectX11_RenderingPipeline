@@ -48,6 +48,21 @@ public:
 	// MeshComponent를 MainCamera의 MeshComponents에 push
 	void PushMeshToCamera(std::shared_ptr<class Ext_MeshComponent> _MeshComponent, std::string_view _CameraName);
 
+	// Collision을 Scene에게 저장
+	void PushCollision(std::shared_ptr<class Ext_CollisionComponent> _CollisionComponent, int _Order);
+
+	std::vector<std::shared_ptr<class Ext_CollisionComponent>>* FindCollsionGroup(int _Order)
+	{
+		auto Iter = Collisions.find(_Order);
+		if (Iter == Collisions.end())
+		{
+			MsgAssert("없는 충돌체 그룹은 찾을 수 없습니다.");
+			return nullptr;
+		}
+
+		return &(Iter->second);
+	}
+
 protected:
 	virtual void SceneChangeInitialize(); // Scene 변경 시 호출
 	virtual void SceneChangeEnd(); // Scene 변경 시 호출
@@ -60,6 +75,7 @@ private:
 	void ActorInitialize(std::shared_ptr<class Ext_Actor> _Actor, std::weak_ptr<class Ext_Scene> _Level, std::string_view _Name, int _Order); // Actor 생성 시 자동 호출, 이름 설정, Owner설정
 	
 	std::map<int, std::vector<std::shared_ptr<class Ext_Actor>>> Actors;  // Scene에 저장된 Actor들, Order로 그룹화
+	std::map<int, std::vector<std::shared_ptr<class Ext_CollisionComponent>>> Collisions; // Scene에 저장된 Collision들, Order로 그룹화
 	std::map<std::string, std::shared_ptr<class Ext_Camera>> Cameras;    // Scene에 저장된 Camera들
 	std::map<std::string, std::shared_ptr<class Ext_Light>> Lights;            // Scene에 저장된 Light들
 	std::shared_ptr<class Ext_Camera> MainCamera;                                  // 현재 Scene의 MainCamera

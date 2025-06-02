@@ -1,5 +1,6 @@
 ﻿#include "PrecompileHeader.h"
 #include "Ext_Transform.h"
+#include "Ext_CollisionComponent.h"
 
 /////////////////////////////////////// TransformData ///////////////////////////////////////
 

@@ -136,6 +136,9 @@
     <ClCompile Include="Ext_FSM.cpp">
       <Filter>00.Process\03.Pattern</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_CollisionComponent.cpp">
+      <Filter>01.Object\03.Component\02.Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -282,6 +285,9 @@
     <ClInclude Include="Ext_FSM.h">
       <Filter>00.Process\03.Pattern</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_CollisionComponent.h">
+      <Filter>01.Object\03.Component\02.Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.Process">
@@ -415,6 +421,9 @@
     </Filter>
     <Filter Include="00.Process\03.Pattern">
       <UniqueIdentifier>{a0b0f254-c42c-4d90-a5d8-dd35591b20a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\03.Component\02.Collision">
+      <UniqueIdentifier>{e217fd8a-2900-4a1e-8775-4f19e1729e9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,12 @@ void Ext_Scene::PushMeshToCamera(std::shared_ptr<Ext_MeshComponent> _MeshCompone
 	FindCam->PushMeshComponent(_MeshComponent);
 }
 
+// 콜리전들 저장
+void Ext_Scene::PushCollision(std::shared_ptr<class Ext_CollisionComponent> _CollisionComponent, int _Order)
+{
+	Collisions[_Order].push_back(_CollisionComponent);
+}
+
 // 메인 카메라 세팅
 void Ext_Scene::SetMainCamera(std::shared_ptr<Ext_Camera> _MainCamera)
 {

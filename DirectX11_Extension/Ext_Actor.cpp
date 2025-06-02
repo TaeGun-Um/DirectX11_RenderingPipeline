@@ -85,7 +85,7 @@ void Ext_Actor::ComponentInitialize(std::shared_ptr<Ext_Component> _Component, s
 	_Component->SetOrder(_Order);
 	_Component->Start(); // ✅ Transform 생성 이후
 
-	if (auto CompTransform = _Component->GetTransform())
+	if (std::shared_ptr<Ext_Transform> CompTransform = _Component->GetTransform())
 	{
 		CompTransform->SetOwnerComponent(_Component);
 		CompTransform->SetParent(GetTransform()); // ✅ 부모 설정

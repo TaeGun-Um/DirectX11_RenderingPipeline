@@ -180,6 +180,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_CollisionComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_DirectXBufferSetter.cpp">
       <SubType>
       </SubType>
@@ -333,6 +337,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_Animator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_CollisionComponent.h">
       <SubType>
       </SubType>
     </ClInclude>

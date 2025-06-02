@@ -33,9 +33,10 @@ struct TransformData
 class Ext_Transform : public std::enable_shared_from_this<Ext_Transform>
 {
 	friend class Ext_Camera;
-	friend class Ext_MeshComponent;
-	friend class Ext_Component;
 	friend class Ext_Actor;
+	friend class Ext_Component;
+	friend class Ext_MeshComponent;
+	friend class Ext_CollisionComponent;
 
 public:
 	// constrcuter destructer
