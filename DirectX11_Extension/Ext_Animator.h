@@ -27,11 +27,12 @@ public:
     void SetSkeltalMesh(std::string_view _MeshName); // 스켈레탈 메시 적용
     bool LoadAnimation(std::string_view _FilePath); // 애니메이션 생성
 
-    bool SetAnimation(std::string_view _AnimName); // 재생할 애니메이션 선택
+    bool SetAnimation(std::string_view _AnimName, bool _bIsLoop = false); // 재생할 애니메이션 선택
     void UpdateAnimation(float _AccumulatedTime); // 선택된 애니메이션 재생
     
     // Getter
     const CB_SkinnedMatrix& GetCBMat() { return CBMat; }
+    bool IsAnimationEnd() { return bIsAnimationEnd; }
 
 private:
     aiMatrix4x4 ReadNodeHierarchy(float _AccumulatedTime, const aiNode* _Node, const aiMatrix4x4& _ParentTransform); // 재귀적으로 노드 트리를 순회하여 FinalBoneMatrices에 값 적용
@@ -50,8 +51,8 @@ private:
 
     std::shared_ptr<class Ext_SkeltalMesh> SkeletalMesh; // 스켈레톤 정보(assimp 정보 포함)
     std::map<std::string, std::shared_ptr<AnimationData>> AnimationDatas; // 애니메이션들
-    const aiAnimation* CurrentAnimation = nullptr; // 현재 선택한 애니메이션
     std::string RootMotionBoneName; // 애니메이션 루트모션을 담은 노드 이름
+    const aiAnimation* CurrentAnimation = nullptr; // 현재 애니메이션
     float AccumulatedTime = 0.f;
 
     // LoadAnimationFBX()를 호출할 때 채워지며, UpdateAnimation()에서 “본 이름 기준으로 aiNodeAnim* 해당 노드 정보를 찾아 TRS 보간”에 사용
@@ -59,4 +60,8 @@ private:
     std::vector<aiMatrix4x4> FinalBoneMatrices; // 애니메이션 적용 → Offset 계산 결과 저장 최종 스킨 행렬
     CB_SkinnedMatrix CBMat; // 상수버퍼에 사용될 값
     
+    // IsAnimationEnd()와 Loop를 위한 것들
+    double AnimationLengthSec = 0.0;   // CurrentAnimation의 전체 길이(초)
+    bool bIsLoop = false;   // 이 애니메이션을 루프 재생할지 여부
+    bool bIsAnimationEnd = false;   // 이 애니메이션을 루프 재생할지 여부
 };

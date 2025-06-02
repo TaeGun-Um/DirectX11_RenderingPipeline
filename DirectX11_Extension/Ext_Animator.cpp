@@ -67,7 +67,7 @@ bool Ext_Animator::LoadAnimation(std::string_view _FilePath)
 }
 
 // 재생할 애니메이션 선택
-bool Ext_Animator::SetAnimation(std::string_view _AnimName)
+bool Ext_Animator::SetAnimation(std::string_view _AnimName, bool _bIsLoop /*= false*/)
 {
     std::string UpperName = Base_String::ToUpper(_AnimName.data());
     auto Iter = AnimationDatas.find(UpperName);
@@ -96,6 +96,10 @@ bool Ext_Animator::SetAnimation(std::string_view _AnimName)
         BoneNameToAnimChannel[BoneName] = Channel;
     }
 
+    double TicksPerSec = (CurrentAnimation->mTicksPerSecond != 0.0) ? CurrentAnimation->mTicksPerSecond : 25.0;
+    AnimationLengthSec = CurrentAnimation->mDuration / TicksPerSec;
+    bIsLoop = _bIsLoop; // 기본은 1번만 재생
+
     return true;
 }
 
@@ -114,6 +118,22 @@ void Ext_Animator::UpdateAnimation(float _DeltaTime)
     }
 
     AccumulatedTime += _DeltaTime;
+
+    // 애니메이션 끝났는지 검사
+    bIsAnimationEnd = false;
+    bool HasEnded = (AccumulatedTime >= AnimationLengthSec);
+    if (HasEnded)
+    {
+        bIsAnimationEnd = true;
+        if (bIsLoop)
+        {
+            AccumulatedTime = fmod(AccumulatedTime, (float)AnimationLengthSec); // 루핑 재생이라면, 누적 시간을 “mod”해 주거나 리셋
+        }
+        else
+        {
+            AccumulatedTime = (float)AnimationLengthSec; // 비루핑(딱 한 번 재생)이라면, AccumulatedTime을 최대 길이로 고정
+        }
+    }
 
     const aiNode* RootNode = SkeletalMesh->GetMeshScene()->mRootNode;
     aiMatrix4x4 Identity; // 기본 생성자 → 항등행렬
@@ -151,7 +171,7 @@ aiMatrix4x4 Ext_Animator::ReadNodeHierarchy(float _AccumulatedTime, const aiNode
         CalcInterpolatedScaling(InterpScale, AnimTime, Channel);
 
 
-        if (CurNodeName == RootMotionBoneName)
+        if ("" != RootMotionBoneName && CurNodeName == RootMotionBoneName)
         {
             InterpPosition.x = 0.0f;
             InterpPosition.y = 0.0f;

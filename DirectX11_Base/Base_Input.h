@@ -28,9 +28,10 @@ public:
 	Base_Input& operator=(Base_Input&& _Other) noexcept = delete;
 
 	static void CreateKey(std::string_view _Name, int _Key);
-	static bool IsDown(std::string_view _Name);
 	static void Update(float _DeltaTime);
+	static bool IsDown(std::string_view _Name);
 	static bool IsPress(std::string_view _Name);
+	static bool IsFree(std::string_view _Name);
 
 protected:
 	

@@ -1,5 +1,14 @@
 #pragma once
 #include <DirectX11_Extension/Ext_Actor.h>
+#include <DirectX11_Extension/Ext_FSM.h>
+
+enum Character_FSM
+{
+	Idle,
+	Walking,
+	Jump,
+	Attack
+};
 
 class Character : public Ext_Actor
 {
@@ -19,8 +28,14 @@ protected:
 	void Update(float _DeltaTime) override;
 	
 private:
-	std::shared_ptr<class Ext_DynamicMeshComponent> MeshComp;
+	void CreateInput();
+	void CreateFSM();
+
+	Ext_FSM PlayerFSM;
+
+	std::shared_ptr<class Ext_DynamicMeshComponent> BodyMesh;
 	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
 	
+	bool IsJump = false;
 	float AccTime = 0.f;
 };

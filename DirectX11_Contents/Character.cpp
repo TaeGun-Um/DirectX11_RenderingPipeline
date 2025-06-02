@@ -2,6 +2,7 @@
 #include "Character.h"
 
 #include <DirectX11_Base/Base_Directory.h>
+#include <DirectX11_Base/Base_Input.h>
 
 #include <DirectX11_Extension/Ext_DirectXMesh.h>
 #include <DirectX11_Extension/Ext_DirectXTexture.h>
@@ -11,6 +12,9 @@
 
 void Character::Start()
 {
+	CreateInput();
+	CreateFSM();
+
 	GetTransform()->SetLocalPosition({ 0, 0, 5 });
 	GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
 
@@ -26,42 +30,126 @@ void Character::Start()
 		Ext_DirectXTexture::LoadTexture(FilePath.c_str());
 	}
 
-	MeshComp = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
-	MeshComp->CreateMeshComponentUnit("Girl", "Animation");
-	MeshComp->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
+	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
+	BodyMesh->CreateMeshComponentUnit("Girl", "Animation");
+	BodyMesh->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
 
 	Base_Directory Dir3;
-	Dir3.MakePath("../Resource/Mesh/Character/Animation/Idle.fbx");
+	Dir3.MakePath("../Resource/Mesh/Character/Animation");
+	std::vector<std::string> Pathse = Dir3.GetAllFile({ "fbx" });
+	for (const std::string& FilePath : Pathse)
+	{
+		BodyMesh->CreateAnimation(FilePath);
+	}
 
-	Base_Directory Dir4;
-	Dir4.MakePath("../Resource/Mesh/Character/Animation/Walking.fbx");
-	MeshComp->CreateAnimation(Dir3.GetPath());
-	MeshComp->CreateAnimation(Dir4.GetPath());
-
-	//MeshComp2 = CreateComponent<Ext_MeshComponent>("BodyMesh");
-	//MeshComp2->CreateMeshComponentUnit("Girl", "Basic");
-	//MeshComp2->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
+	BodyMesh->SetAnimation("Idle", true);
+	PlayerFSM.ChangeState(Character_FSM::Idle);
 }
-
-bool Switch = false;
 
 void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
-
-	if (AccTime > 3.f)
-	{
-		AccTime = 0.f;
-		Switch = !Switch;
-		if (Switch)
-		{
-			MeshComp->SetAnimation("Idle");
-		}
-		else
-		{
-			MeshComp->SetAnimation("Walking");
-		}
-	}
+	PlayerFSM.Update(_DeltaTime);
 
 	__super::Update(_DeltaTime);
+}
+
+void Character::CreateInput()
+{
+	//Base_Input::CreateKey("OnOff", 'Q');
+	//Base_Input::CreateKey("Forword", 'W');
+	//Base_Input::CreateKey("Back", 'S');
+	//Base_Input::CreateKey("Right", 'D');
+	//Base_Input::CreateKey("Left", 'A');
+	//Base_Input::CreateKey("Up", VK_SPACE);
+}
+
+void Character::CreateFSM()
+{
+	PlayerFSM.CreateState({
+		.StateValue = Character_FSM::Idle,
+		.Start = [=] 
+		{
+			BodyMesh->SetAnimation("Idle", true);
+		},
+		.Update = [=](float _DeltaTime)
+		{
+			if (Base_Input::IsDown("Forword"))
+			{
+				PlayerFSM.ChangeState(Character_FSM::Walking);
+				return;
+			}
+		},
+		.End = [=]
+		{
+
+		}
+		}
+	);
+
+	PlayerFSM.CreateState({
+		.StateValue = Character_FSM::Walking,
+		.Start = [=]
+		{
+			BodyMesh->SetAnimation("Walking", true);
+		},
+		.Update = [=](float _DeltaTime)
+		{
+			if (Base_Input::IsFree("Forword"))
+			{
+				PlayerFSM.ChangeState(Character_FSM::Idle);
+				return;
+			}
+
+			if (Base_Input::IsDown("Up"))
+			{
+				PlayerFSM.ChangeState(Character_FSM::Jump);
+				return;
+			}
+		},
+		.End = [=]
+		{
+
+		}
+		}
+	);
+
+	PlayerFSM.CreateState({
+		.StateValue = Character_FSM::Jump,
+		.Start = [=]
+		{
+			IsJump = true;
+			BodyMesh->SetAnimation("Jump", true);
+		},
+		.Update = [=](float _DeltaTime)
+		{
+			if (true == BodyMesh->IsAnimationEnd())
+			{
+				PlayerFSM.ChangeState(Character_FSM::Idle);
+				return;
+			}
+		},
+		.End = [=]
+		{
+			IsJump = false;
+		}
+		}
+	);
+
+	PlayerFSM.CreateState({
+		.StateValue = Character_FSM::Attack,
+		.Start = [=]
+		{
+
+		},
+		.Update = [=](float _DeltaTime)
+		{
+
+		},
+		.End = [=]
+		{
+
+		}
+		}
+	);
 }

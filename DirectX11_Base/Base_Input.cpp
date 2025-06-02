@@ -78,6 +78,18 @@ bool Base_Input::IsPress(std::string_view _Name)
 	return Keys[UpperName].bIsPress;
 }
 
+bool Base_Input::IsFree(std::string_view _Name)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+
+	if (Keys.end() == Keys.find(UpperName))
+	{
+		MsgAssert("존재하지 않는 키를 사용하려고 했습니다." + UpperName);
+	}
+
+	return Keys[UpperName].bIsFree;
+}
+
 void Base_Input::CreateKey(std::string_view _Name, int _Key)
 {
 	std::string UpperName = Base_String::ToUpper(_Name);

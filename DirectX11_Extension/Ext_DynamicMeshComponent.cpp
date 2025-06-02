@@ -36,9 +36,14 @@ void Ext_DynamicMeshComponent::CreateAnimation(std::string_view _FilePath)
     Animator->LoadAnimation(_FilePath);
 }
 
-void Ext_DynamicMeshComponent::SetAnimation(std::string_view _AnimName)
+void Ext_DynamicMeshComponent::SetAnimation(std::string_view _AnimName, bool _IsLoop /*= false*/)
 {
-    Animator->SetAnimation(_AnimName);
+    Animator->SetAnimation(_AnimName, _IsLoop);
+}
+
+bool Ext_DynamicMeshComponent::IsAnimationEnd()
+{
+    return Animator->IsAnimationEnd();
 }
 
 void Ext_DynamicMeshComponent::Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
