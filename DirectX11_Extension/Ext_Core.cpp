@@ -76,7 +76,7 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 	Ext_Imgui::Initialize();
 	Ext_Imgui::CreateImgui<ExtGui>("ExtGui");
 
-	Base_Input::CreateKey("OnOff", 'Q');
+	Base_Input::CreateKey("OnOff", VK_F1);
 	Base_Input::CreateKey("Forword", 'W');
 	Base_Input::CreateKey("Back", 'S');
 	Base_Input::CreateKey("Right", 'D');

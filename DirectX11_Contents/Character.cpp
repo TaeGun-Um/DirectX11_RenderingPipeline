@@ -73,76 +73,77 @@ void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
 
-	if (GetOwnerScene().lock()->GetMainCamera()->IsCameraAcc()) return;
-
-	if (!BodyCollision->Collision(CollisionGroup::Platform))
+	if (!GetOwnerScene().lock()->GetMainCamera()->IsCameraAcc())
 	{
-		GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f });
-	}
-	else
-	{
-		bIsGround = true;
-	}
-
-	PlayerFSM.Update(_DeltaTime);
-
-	{
-		// 1) 윈도우 핸들을 구하고(Ext_Camera나 Base_Windows에서)
-		HWND hWnd = Base_Windows::GetHWnd();
-
-		// 2) 클라이언트 영역 크기 구하기
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		// 클라이언트 영역 왼쪽 상단이 (0,0), 오른쪽 하단이 (Width, Height)
-
-		// 3) 클라이언트 영역의 중앙 좌표 (클라이언트 내부 좌표계)
-		POINT clientCenter =
+		if (!BodyCollision->Collision(CollisionGroup::Platform))
 		{
-			(rc.right - rc.left) / 2,
-			(rc.bottom - rc.top) / 2
-		};
+			GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f });
+		}
+		else
+		{
+			bIsGround = true;
+		}
 
-		// 4) 그것을 “스크린 좌표계”로 바꿔주자 (ClientToScreen)
-		POINT screenCenter = clientCenter;
-		ClientToScreen(hWnd, &screenCenter);
-		// 이제 screenCenter는 실제 모니터 전체 화면 상에서 윈도우 중앙 좌표
+		PlayerFSM.Update(_DeltaTime);
 
-		// 5) 현재 커서를 스크린 좌표로 읽어온다
-		POINT curMouse;
-		GetCursorPos(&curMouse);
+		{
+			// 1) 윈도우 핸들을 구하고(Ext_Camera나 Base_Windows에서)
+			HWND hWnd = Base_Windows::GetHWnd();
 
-		// 6) Δ 계산 (스크린 좌표 기준으로)
-		int deltaX = curMouse.x - screenCenter.x;
-		int deltaY = curMouse.y - screenCenter.y;
+			// 2) 클라이언트 영역 크기 구하기
+			RECT rc;
+			GetClientRect(hWnd, &rc);
+			// 클라이언트 영역 왼쪽 상단이 (0,0), 오른쪽 하단이 (Width, Height)
 
-		// 7) Δ가 0이 아닐 때만 회전값에 반영
-		//    (Δ가 0이라면 마우스를 움직이지 않은 거니까 회전도 0)
-		CamYaw += deltaX * MouseSensitivity;
-		CamPitch -= deltaY * MouseSensitivity;
+			// 3) 클라이언트 영역의 중앙 좌표 (클라이언트 내부 좌표계)
+			POINT clientCenter =
+			{
+				(rc.right - rc.left) / 2,
+				(rc.bottom - rc.top) / 2
+			};
 
-		CamPitch = std::clamp(CamPitch, 15.0f, 15.0f);
+			// 4) 그것을 “스크린 좌표계”로 바꿔주자 (ClientToScreen)
+			POINT screenCenter = clientCenter;
+			ClientToScreen(hWnd, &screenCenter);
+			// 이제 screenCenter는 실제 모니터 전체 화면 상에서 윈도우 중앙 좌표
 
-		// 9) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
-		SetCursorPos(screenCenter.x, screenCenter.y);
+			// 5) 현재 커서를 스크린 좌표로 읽어온다
+			POINT curMouse;
+			GetCursorPos(&curMouse);
 
-		// 10) 로컬 회전에 적용 (X=Pitch, Y=Yaw)
-		GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
-	}
+			// 6) Δ 계산 (스크린 좌표 기준으로)
+			int deltaX = curMouse.x - screenCenter.x;
+			int deltaY = curMouse.y - screenCenter.y;
 
-	// ───────────────────────────────────────────────────────────────────────────
-	// [카메라 위치 갱신] : Character 월드 위치 얻어서, 로컬 Up/Forward 기반 오프셋만큼 이동
-	// ───────────────────────────────────────────────────────────────────────────
-	{
-		float4 charWorldPos = GetTransform()->GetWorldPosition();
-		float4 camLocalUp = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalUpVector();
-		float4 camLocalFwd = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalForwardVector();
+			// 7) Δ가 0이 아닐 때만 회전값에 반영
+			//    (Δ가 0이라면 마우스를 움직이지 않은 거니까 회전도 0)
+			CamYaw += deltaX * MouseSensitivity;
+			CamPitch -= deltaY * MouseSensitivity;
 
-		float4 desiredCamPos =
-			charWorldPos
-			+ camLocalUp * CameraHeight
-			- camLocalFwd * CameraDistance;
+			CamPitch = std::clamp(CamPitch, 15.0f, 15.0f);
 
-		GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalPosition(desiredCamPos);
+			// 9) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
+			SetCursorPos(screenCenter.x, screenCenter.y);
+
+			// 10) 로컬 회전에 적용 (X=Pitch, Y=Yaw)
+			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+		}
+
+		// ───────────────────────────────────────────────────────────────────────────
+		// [카메라 위치 갱신] : Character 월드 위치 얻어서, 로컬 Up/Forward 기반 오프셋만큼 이동
+		// ───────────────────────────────────────────────────────────────────────────
+		{
+			float4 charWorldPos = GetTransform()->GetWorldPosition();
+			float4 camLocalUp = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalUpVector();
+			float4 camLocalFwd = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalForwardVector();
+
+			float4 desiredCamPos =
+				charWorldPos
+				+ camLocalUp * CameraHeight
+				- camLocalFwd * CameraDistance;
+
+			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalPosition(desiredCamPos);
+		}
 	}
 
 	__super::Update(_DeltaTime);
@@ -490,7 +491,8 @@ void Character::CreateFSM()
 		.StateValue = Character_FSM::Attack,
 		.Start = [=]
 		{
-
+			GetTransform()->SetLocalRotation({ 0.f, GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalRotation().y, 0.f });
+			BodyMesh->SetAnimation("Attack");
 		},
 		.Update = [=](float _DeltaTime)
 		{
