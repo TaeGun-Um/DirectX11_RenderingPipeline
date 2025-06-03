@@ -119,7 +119,7 @@ void Ext_DirectXMaterial::RasterizerSetting()
 		return;
 	}
 
-	Rasterizer->SetFILL_MODE(FILL_MODE);
+	// Rasterizer->SetFILL_MODE(FILL_MODE);
 	Rasterizer->Setting();
 }
 

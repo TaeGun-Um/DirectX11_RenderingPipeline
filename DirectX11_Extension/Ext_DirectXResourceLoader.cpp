@@ -52,107 +52,12 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BONEID", DXGI_FORMAT_R32G32B32A32_SINT); // FBX Animation용
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("WEIGHT", DXGI_FORMAT_R32G32B32A32_FLOAT); // FBX Animation용
 
-	// 삼각형
-	{
-		std::vector<Ext_DirectXVertexData> Vertices;
-		Vertices.resize(3);
-
-		Vertices[0] = { { 0.0f, 0.5f, 0.0 }, { 1, 0, 0, 1 } };
-		Vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
-		Vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
-
-		std::vector<UINT> ArrIndex = { 0, 1, 2 };
-
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
-		Ext_DirectXMesh::CreateMesh("Triangle");
-	}
-
-	// 기본 메쉬 생성, Rect
-	{
-		std::vector<Ext_DirectXVertexData> ArrVertex;
-		ArrVertex.resize(4);
-
-		ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
-		ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
-		ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
-		ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
-
-		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
-
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
-		Ext_DirectXMesh::CreateMesh("Rect");
-	}
-
-	// 정육면체
-	{
-		std::vector<Ext_DirectXVertexData> Vertex =
-		{
-			// Front (+Z)
-			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, 1} },
-			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, 1} },
-			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, 1} },
-			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, 1} },
-
-			// Back (-Z)
-			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} },
-			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} },
-			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} },
-			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} },
-
-			// Left (-X)
-			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {-1, 0, 0} },
-			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {-1, 0, 0} },
-			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {-1, 0, 0} },
-			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {-1, 0, 0} },
-
-			// Right (+X)
-			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {1, 0, 0} },
-			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {1, 0, 0} },
-			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {1, 0, 0} },
-			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {1, 0, 0} },
-
-			// Top (+Y)
-			{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 1, 0} },
-			{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 1, 0} },
-			{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 1, 0} },
-			{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 1, 0} },
-
-			// Bottom (-Y)
-			{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, -1, 0} },
-			{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, -1, 0} },
-			{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, -1, 0} },
-			{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, -1, 0} },
-		};
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		std::vector<UINT> Index =
-		{
-			// Front (+Z)
-			0, 1, 2,    0, 2, 3,
-
-			// Back (-Z)
-			4, 5, 6,    4, 6, 7,
-
-			// Left (-X)
-			8, 9, 10,   8, 10, 11,
-
-			// Right (+X)
-			12, 13, 14, 12, 14, 15,
-
-			// Top (+Y)
-			16, 17, 18, 16, 18, 19,
-
-			// Bottom (-Y)
-			20, 21, 22, 20, 22, 23
-		};
-
-		Ext_DirectXVertexBuffer::CreateVertexBuffer("Box", Vertex);
-		Ext_DirectXIndexBuffer::CreateIndexBuffer("Box", Index);
-		std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("Box");
-	}
+	// 너무 길어져서 밑으로 뺌
+	CreateTriangle(); // 삼각형 메시 만들기
+	CreateRect(); // 사각형 메시 만들기
+	CreateCube(); // 정육면체 만들기
+	CreateSphere(); // 구체 만들기
+	CreateCylinder(); // 원기둥 만들기
 }
 
 // 셰이더 정보 생성(Shader 오토컴파일, ConstantBuffer)
@@ -276,12 +181,13 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 	{
 		D3D11_RASTERIZER_DESC Desc = {};
 
-		Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
+		Desc.CullMode = D3D11_CULL_NONE; // 뒷면 제거(백페이스 컬링 활성화)
 		Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
-		Desc.FillMode = D3D11_FILL_WIREFRAME;
+		Desc.FillMode = D3D11_FILL_SOLID;
 		// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
 
-		Ext_DirectXRasterizer::CreateRasterizer("WireRasterizer", Desc);
+		std::shared_ptr<Ext_DirectXRasterizer> NewRast = Ext_DirectXRasterizer::CreateRasterizer("DebugRasterizer", Desc);
+		NewRast->SetFILL_MODE(D3D11_FILL_WIREFRAME);
 	}
 }
 
@@ -323,10 +229,346 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 	// 와이어프레임
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Debug");
-		NewRenderingPipeline->SetVertexShader("Basic_VS");
-		NewRenderingPipeline->SetPixelShader("Basic_PS");
+		NewRenderingPipeline->SetVertexShader("Debug_VS");
+		NewRenderingPipeline->SetPixelShader("Debug_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("WireRasterizer");
+		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
 	}
+}
+
+void Ext_DirectXResourceLoader::CreateTriangle()
+{
+	std::vector<Ext_DirectXVertexData> Vertices;
+	Vertices.resize(3);
+
+	Vertices[0] = { { 0.0f, 0.5f, 0.0 }, { 1, 0, 0, 1 } };
+	Vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0, 1, 0, 1 } };
+	Vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0, 0, 1, 1 } };
+
+	std::vector<UINT> ArrIndex = { 0, 1, 2 };
+
+	Ext_DirectXVertexBuffer::CreateVertexBuffer("Triangle", Vertices);
+	Ext_DirectXIndexBuffer::CreateIndexBuffer("Triangle", ArrIndex);
+	Ext_DirectXMesh::CreateMesh("Triangle");
+}
+
+void Ext_DirectXResourceLoader::CreateRect()
+{
+	std::vector<Ext_DirectXVertexData> ArrVertex;
+	ArrVertex.resize(4);
+
+	ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
+	ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
+	ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
+	ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
+
+	std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
+
+	Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
+	Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
+	Ext_DirectXMesh::CreateMesh("Rect");
+}
+
+void Ext_DirectXResourceLoader::CreateCube()
+{
+	std::vector<Ext_DirectXVertexData> Vertex =
+	{
+		// Front (+Z)
+		{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, 1} },
+		{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, 1} },
+		{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, 1} },
+		{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, 1} },
+
+		// Back (-Z)
+		{ { 0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} },
+		{ {-0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} },
+		{ {-0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} },
+		{ { 0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} },
+
+		// Left (-X)
+		{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {-1, 0, 0} },
+		{ {-0.5f,  0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {-1, 0, 0} },
+		{ {-0.5f, -0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {-1, 0, 0} },
+		{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {-1, 0, 0} },
+
+		// Right (+X)
+		{ { 0.5f,  0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {1, 0, 0} },
+		{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {1, 0, 0} },
+		{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {1, 0, 0} },
+		{ { 0.5f, -0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {1, 0, 0} },
+
+		// Top (+Y)
+		{ {-0.5f,  0.5f, -0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, 1, 0} },
+		{ { 0.5f,  0.5f, -0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, 1, 0} },
+		{ { 0.5f,  0.5f,  0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, 1, 0} },
+		{ {-0.5f,  0.5f,  0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, 1, 0} },
+
+		// Bottom (-Y)
+		{ {-0.5f, -0.5f,  0.5f, 1.0f}, {1, 0, 0, 1}, {1, 0}, {0, -1, 0} },
+		{ { 0.5f, -0.5f,  0.5f, 1.0f}, {0, 1, 0, 1}, {0, 0}, {0, -1, 0} },
+		{ { 0.5f, -0.5f, -0.5f, 1.0f}, {0, 0, 1, 1}, {0, 1}, {0, -1, 0} },
+		{ {-0.5f, -0.5f, -0.5f, 1.0f}, {1, 1, 0, 1}, {1, 1}, {0, -1, 0} },
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	std::vector<UINT> Index =
+	{
+		// Front (+Z)
+		0, 1, 2,    0, 2, 3,
+
+		// Back (-Z)
+		4, 5, 6,    4, 6, 7,
+
+		// Left (-X)
+		8, 9, 10,   8, 10, 11,
+
+		// Right (+X)
+		12, 13, 14, 12, 14, 15,
+
+		// Top (+Y)
+		16, 17, 18, 16, 18, 19,
+
+		// Bottom (-Y)
+		20, 21, 22, 20, 22, 23
+	};
+
+	Ext_DirectXVertexBuffer::CreateVertexBuffer("Box", Vertex);
+	Ext_DirectXIndexBuffer::CreateIndexBuffer("Box", Index);
+	std::shared_ptr<Ext_DirectXMesh> Mesh = Ext_DirectXMesh::CreateMesh("Box");
+}
+
+void Ext_DirectXResourceLoader::CreateSphere()
+{
+	const int SliceCount = 20;      // 경도 분할 수
+	const int StackCount = 20;      // 위도 분할 수
+	const float Radius = 0.5f;  // 구 반지름 (Box의 절반 크기와 비슷하게 0.5f 설정)
+	const float PI = 3.1415926535f;
+
+	// 1) 정점 생성
+	std::vector<Ext_DirectXVertexData> Vertices;
+	Vertices.reserve((StackCount + 1) * (SliceCount + 1));
+
+	for (int i = 0; i <= StackCount; ++i)
+	{
+		// 위도 각도 (0 ~ PI)
+		float Phi = static_cast<float>(i) * PI / static_cast<float>(StackCount);
+
+		for (int j = 0; j <= SliceCount; ++j)
+		{
+			// 경도 각도 (0 ~ 2PI)
+			float Theta = static_cast<float>(j) * 2.0f * PI / static_cast<float>(SliceCount);
+
+			float x = Radius * sinf(Phi) * cosf(Theta);
+			float y = Radius * cosf(Phi);
+			float z = Radius * sinf(Phi) * sinf(Theta);
+
+			// 텍스처 좌표 (u, v)
+			float u = Theta / (2.0f * PI);
+			float v = Phi / PI;
+
+			// 컬러를 흰색으로 통일
+			float r = 1.0f, g = 1.0f, b = 1.0f, a = 1.0f;
+
+			// 노말은 반지름을 1로 정규화한 방향 벡터
+			float nx = x / Radius;
+			float ny = y / Radius;
+			float nz = z / Radius;
+
+			Vertices.push_back(
+				{
+					{ x, y, z, 1.0f },     // Position (float4)
+					{ r, g, b, a },        // Color    (float4)
+					{ u, v },              // TexCoord (float2)
+					{ nx, ny, nz }         // Normal   (float3)
+				});
+		}
+	}
+
+	// 2) 인덱스 생성 (각 스택과 슬라이스마다 두 개의 삼각형)
+	std::vector<UINT> Indices;
+	for (int i = 0; i < StackCount; ++i)
+	{
+		for (int j = 0; j < SliceCount; ++j)
+		{
+			// 현재 스택-슬라이스 위치의 첫 번째 정점 인덱스
+			int First = i * (SliceCount + 1) + j;
+			int Second = (i + 1) * (SliceCount + 1) + j;
+
+			// 삼각형1: First, Second, First+1
+			Indices.push_back(static_cast<UINT>(First));
+			Indices.push_back(static_cast<UINT>(Second));
+			Indices.push_back(static_cast<UINT>(First + 1));
+
+			// 삼각형2: Second, Second+1, First+1
+			Indices.push_back(static_cast<UINT>(Second));
+			Indices.push_back(static_cast<UINT>(Second + 1));
+			Indices.push_back(static_cast<UINT>(First + 1));
+		}
+	}
+
+	// 3) 버퍼 생성 및 메시 등록
+	Ext_DirectXVertexBuffer::CreateVertexBuffer("Sphere", Vertices);
+	Ext_DirectXIndexBuffer::CreateIndexBuffer("Sphere", Indices);
+	Ext_DirectXMesh::CreateMesh("Sphere");
+}
+
+void Ext_DirectXResourceLoader::CreateCylinder()
+{
+	const int    SliceCount = 20;            // 원 둘레 분할 수
+	const float  Radius = 0.5f;          // 반지름
+	const float  Height = 1.0f;          // 높이
+	const float  HalfHeight = Height * 0.5f; // 절반 높이
+	const float  PI = 3.1415926535f;
+
+	// 1) 정점 생성
+	std::vector<Ext_DirectXVertexData> Vertices;
+
+	// -- Top Center
+	Vertices.push_back(
+		{
+			{ 0.0f,  HalfHeight,  0.0f, 1.0f },   // Position
+			{ 1.0f, 1.0f, 1.0f, 1.0f },           // Color (흰색)
+			{ 0.5f, 0.5f },                       // TexCoord (중앙 매핑)
+			{ 0.0f, 1.0f, 0.0f }                  // Normal (위쪽)
+		});
+
+	// -- Top Circle Edge (SliceCount + 1개, 마지막은 첫 정점과 동일하여 링을 닫음)
+	for (int i = 0; i <= SliceCount; ++i)
+	{
+		float Theta = (static_cast<float>(i) * 2.0f * PI) / static_cast<float>(SliceCount);
+		float x = Radius * cosf(Theta);
+		float z = Radius * sinf(Theta);
+		float u = (x / Radius + 1.0f) * 0.5f; // 텍스처 매핑: x/r ∈ [-1,1] → u ∈ [0,1]
+		float v = (z / Radius + 1.0f) * 0.5f; // 텍스처 매핑: z/r ∈ [-1,1] → v ∈ [0,1]
+
+		Vertices.push_back(
+			{
+				{ x,  HalfHeight, z, 1.0f },        // Position (Y = +HalfHeight)
+				{ 1.0f, 1.0f, 1.0f, 1.0f },         // Color (흰색)
+				{ u, v },                           // TexCoord (원형 매핑)
+				{ 0.0f, 1.0f, 0.0f }                // Normal (위쪽)
+			});
+	}
+
+	// -- Bottom Center
+	Vertices.push_back(
+		{
+			{ 0.0f, -HalfHeight, 0.0f, 1.0f },    // Position
+			{ 1.0f, 1.0f, 1.0f, 1.0f },           // Color (흰색)
+			{ 0.5f, 0.5f },                       // TexCoord (중앙 매핑)
+			{ 0.0f, -1.0f, 0.0f }                 // Normal (아래쪽)
+		});
+
+	// -- Bottom Circle Edge (SliceCount + 1개)
+	for (int i = 0; i <= SliceCount; ++i)
+	{
+		float Theta = (static_cast<float>(i) * 2.0f * PI) / static_cast<float>(SliceCount);
+		float x = Radius * cosf(Theta);
+		float z = Radius * sinf(Theta);
+		float u = (x / Radius + 1.0f) * 0.5f;
+		float v = (z / Radius + 1.0f) * 0.5f;
+
+		Vertices.push_back(
+			{
+				{ x, -HalfHeight, z, 1.0f },        // Position (Y = -HalfHeight)
+				{ 1.0f, 1.0f, 1.0f, 1.0f },         // Color (흰색)
+				{ u, v },                           // TexCoord
+				{ 0.0f, -1.0f, 0.0f }               // Normal (아래쪽)
+			});
+	}
+
+	// -- Side: Bottom Ring (SliceCount + 1개)
+	for (int i = 0; i <= SliceCount; ++i)
+	{
+		float Theta = (static_cast<float>(i) * 2.0f * PI) / static_cast<float>(SliceCount);
+		float x = Radius * cosf(Theta);
+		float z = Radius * sinf(Theta);
+		float nx = x / Radius;             // 노말(측면) X
+		float nz = z / Radius;             // 노말(측면) Z
+		float u = static_cast<float>(i) / static_cast<float>(SliceCount); // 텍스처 가로 위치
+		float v = 1.0f;                   // 아래쪽 테두리
+
+		Vertices.push_back(
+			{
+				{ x, -HalfHeight, z, 1.0f },      // Position (아래쪽 원주)
+				{ 1.0f, 1.0f, 1.0f, 1.0f },       // Color (흰색)
+				{ u, v },                         // TexCoord
+				{ nx, 0.0f, nz }                  // Normal (측면)
+			});
+	}
+
+	// -- Side: Top Ring (SliceCount + 1개)
+	for (int i = 0; i <= SliceCount; ++i)
+	{
+		float Theta = (static_cast<float>(i) * 2.0f * PI) / static_cast<float>(SliceCount);
+		float x = Radius * cosf(Theta);
+		float z = Radius * sinf(Theta);
+		float nx = x / Radius;
+		float nz = z / Radius;
+		float u = static_cast<float>(i) / static_cast<float>(SliceCount);
+		float v = 0.0f;                   // 위쪽 테두리
+
+		Vertices.push_back(
+			{
+				{ x,  HalfHeight, z, 1.0f },      // Position (위쪽 원주)
+				{ 1.0f, 1.0f, 1.0f, 1.0f },       // Color (흰색)
+				{ u, v },                         // TexCoord
+				{ nx, 0.0f, nz }                  // Normal (측면)
+			});
+	}
+
+	// 2) 인덱스 생성
+	std::vector<UINT> Indices;
+
+	const int OffsetTopCenter = 0;
+	const int OffsetTopRingStart = OffsetTopCenter + 1;                    // 1
+	const int OffsetBottomCenter = OffsetTopRingStart + (SliceCount + 1);  // 1 + (SliceCount+1)
+	const int OffsetBottomRingStart = OffsetBottomCenter + 1;                 // ...
+	const int OffsetSideBotStart = OffsetBottomRingStart + (SliceCount + 1);
+	const int OffsetSideTopStart = OffsetSideBotStart + (SliceCount + 1);
+
+	// -- Top Cap (OffsetTopCenter, OffsetTopRingStart ~ OffsetTopRingStart+SliceCount)
+	//    (Center → Curr → Next) 순서로 CCW 윈딩을 맞춥니다.
+	for (int i = 0; i < SliceCount; ++i)
+	{
+		Indices.push_back(static_cast<UINT>(OffsetTopCenter));               // 중심
+		Indices.push_back(static_cast<UINT>(OffsetTopRingStart + i));        // 현재 링 정점
+		Indices.push_back(static_cast<UINT>(OffsetTopRingStart + i + 1));    // 다음 링 정점
+	}
+
+	// -- Bottom Cap (OffsetBottomCenter, OffsetBottomRingStart ~ OffsetBottomRingStart+SliceCount)
+	//    (Center → Next → Curr) 순서로 CCW 윈딩을 맞춥니다.
+	for (int i = 0; i < SliceCount; ++i)
+	{
+		Indices.push_back(static_cast<UINT>(OffsetBottomCenter));            // 중심
+		Indices.push_back(static_cast<UINT>(OffsetBottomRingStart + i + 1)); // 다음 링 정점
+		Indices.push_back(static_cast<UINT>(OffsetBottomRingStart + i));     // 현재 링 정점
+	}
+
+	// -- Side Surface
+	//    (CurrBot → NextBot → NextTop) 과 (CurrBot → NextTop → CurrTop) 순서가 CCW 윈딩입니다.
+	for (int i = 0; i < SliceCount; ++i)
+	{
+		int CurrBot = OffsetSideBotStart + i;
+		int NextBot = OffsetSideBotStart + i + 1;
+		int CurrTop = OffsetSideTopStart + i;
+		int NextTop = OffsetSideTopStart + i + 1;
+
+		// 삼각형1: 아래현재 → 아래다음 → 위다음
+		Indices.push_back(static_cast<UINT>(CurrBot));
+		Indices.push_back(static_cast<UINT>(NextBot));
+		Indices.push_back(static_cast<UINT>(NextTop));
+
+		// 삼각형2: 아래현재 → 위다음 → 위현재
+		Indices.push_back(static_cast<UINT>(CurrBot));
+		Indices.push_back(static_cast<UINT>(NextTop));
+		Indices.push_back(static_cast<UINT>(CurrTop));
+	}
+
+	// 3) 버퍼 생성 및 메시 등록
+	Ext_DirectXVertexBuffer::CreateVertexBuffer("Cylinder", Vertices);
+	Ext_DirectXIndexBuffer::CreateIndexBuffer("Cylinder", Indices);
+	Ext_DirectXMesh::CreateMesh("Cylinder");
 }

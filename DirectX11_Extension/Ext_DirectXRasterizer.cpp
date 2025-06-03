@@ -21,10 +21,10 @@ void Ext_DirectXRasterizer::Setting()
 }
 
 // ID3D11RasterizerState 생성, 와이어프레임과 솔리드 상태 모두 미리 생성함, 설정 상태는 D3D11_FILL_SOLID임
-void Ext_DirectXRasterizer::CreateRasterizer(const D3D11_RASTERIZER_DESC& _Value)
+void Ext_DirectXRasterizer::CreateRasterizer(const D3D11_RASTERIZER_DESC& _Desc)
 {
 	Release();
-	RaterizerInfo = _Value;
+	RaterizerInfo = _Desc;
 
 	RaterizerInfo.FillMode = D3D11_FILL_WIREFRAME;
 	if (S_OK != Ext_DirectXDevice::GetDevice()->CreateRasterizerState(&RaterizerInfo, &WireframeState))

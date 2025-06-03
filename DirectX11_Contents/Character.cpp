@@ -50,7 +50,7 @@ void Character::Start()
 	BodyCollision->SetCollsionType(CollsionType::AABB3D);
 
 	BodyCollisionMesh = CreateComponent<Ext_MeshComponent>("BodyCollisionMesh");
-	BodyCollisionMesh->CreateMeshComponentUnit("Box", "Basic");
+	BodyCollisionMesh->CreateMeshComponentUnit("Sphere", "Debug");
 
 	BodyCollisionMesh->GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 	BodyCollision->GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });

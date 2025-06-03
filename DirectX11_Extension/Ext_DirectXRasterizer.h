@@ -41,11 +41,7 @@ public:
 		}
 	}
 
-	inline void SetCULL_MODE(D3D11_CULL_MODE _Value)
-	{
-		RaterizerInfo.CullMode = _Value;
-		CreateRasterizer(RaterizerInfo);
-	}
+	COMPTR<ID3D11RasterizerState>& GetCurState() { return CurState; };
 
 protected:
 	void CreateRasterizer(const D3D11_RASTERIZER_DESC& _Value);

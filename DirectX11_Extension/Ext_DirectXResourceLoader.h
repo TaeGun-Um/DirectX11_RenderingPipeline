@@ -25,4 +25,10 @@ private:
 	static void MakeRasterizer();		// 레스터라이저 세팅
 	static void MakeMaterial();			// 머티리얼 생성
 
+	///////////////////////////////////////////////////////////////
+	static void CreateTriangle();
+	static void CreateRect();
+	static void CreateCube();
+	static void CreateSphere();
+	static void CreateCylinder();
 };
