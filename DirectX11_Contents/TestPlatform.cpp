@@ -12,8 +12,8 @@ void TestPlatform::Start()
 	PlatformBodyMesh = CreateComponent<Ext_MeshComponent>("PlatformBodyMesh");
 	PlatformBodyMesh->CreateMeshComponentUnit("Box", "Debug");
 
-	PlatformBodyMesh->GetTransform()->SetLocalScale({ 10.f, 2.f, 10.f });
-	PlatformBody->GetTransform()->SetLocalScale({ 10.f, 2.f, 2.f });
+	PlatformBodyMesh->GetTransform()->SetLocalScale({ 100.f, 2.f, 100.f });
+	PlatformBody->GetTransform()->SetLocalScale({ 100.f, 2.f, 100.f });
 }
 
 void TestPlatform::Update(float _DletaTime)
