@@ -72,7 +72,8 @@ void Character::Start()
 void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
-	PlayerFSM.Update(_DeltaTime);
+
+	if (GetOwnerScene().lock()->GetMainCamera()->IsCameraAcc()) return;
 
 	if (!BodyCollision->Collision(CollisionGroup::Platform))
 	{
@@ -82,6 +83,8 @@ void Character::Update(float _DeltaTime)
 	{
 		bIsGround = true;
 	}
+
+	PlayerFSM.Update(_DeltaTime);
 
 	{
 		// 1) 윈도우 핸들을 구하고(Ext_Camera나 Base_Windows에서)

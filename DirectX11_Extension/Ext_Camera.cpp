@@ -173,64 +173,83 @@ void Ext_Camera::Update(float _Deltatime)
 	if (GetSharedFromThis<Ext_Camera>() != GetOwnerScene().lock()->GetMainCamera()) return;
 
 	AccTime += _Deltatime;
-
-	if (Base_Input::IsDown("OnOff") && AccTime >= 1.0f)
+	if (Base_Input::IsDown("OnOff") && AccTime >= 0.3f)
 	{
 		AccTime = 0.f;
 		bIsCameraSwitch();
 	}
 
 	if (!bIsCameraAcc) return;
-
-	static POINT PrevMouse = { static_cast<long>(Base_Windows::GetScreenSize().x / 2), static_cast<long>(Base_Windows::GetScreenSize().y / 2) };
-	POINT CurMouse;
-	GetCursorPos(&CurMouse); // 현재 마우스 위치를 화면 기준 좌표계로 얻어옴, 이값과 PrevMouse 차이를 통해 마우스가 얼마나 움직였나 파악 가능
-
-	int DeltaX = CurMouse.x - PrevMouse.x;
-	int DeltaY = CurMouse.y - PrevMouse.y;
-
-	float Sensitivity = 0.1f; // 움직임 대비 회전량 강도(클수록 더 크게 회전)
-	Yaw += DeltaX * Sensitivity;     // 좌우 (Y축 회전)
-	Pitch += DeltaY * Sensitivity;   // 상하 (X축 회전, Y 반전 적용됨)
-
-	Pitch = std::clamp(Pitch, -89.9f, 89.9f); // 상하 극단적 회전 제한
-
-	GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
-
-	// 커서 중앙 고정
-	SetCursorPos(PrevMouse.x, PrevMouse.y);
-
-	// 회전 이후 현재 방향 벡터 얻기
-	float4 Forward = GetTransform()->GetLocalForwardVector(); // Z축
-	float4 Right = GetTransform()->GetLocalRightVector();     // X축
-	float4 Up = GetTransform()->GetLocalUpVector();           // Y축
-
-	float MoveSpeed = 10.f * _Deltatime;
-	float4 MoveDelta = { 0.f, 0.f, 0.f };
-	if (Base_Input::IsPress("Forword"))
+	if (!bPrevCameraAcc && bIsCameraAcc)
 	{
-		MoveDelta += Forward * MoveSpeed;
+		// (A) 캐릭터 추적 모드 → 이제 자유 모드 진입
+		// 이전에 저장해 둔 자유 카메라 위치/회전이 있으면 복원
+		GetTransform()->SetLocalPosition(SavedPos);
+		GetTransform()->SetLocalRotation(SavedRot);
 	}
-	if (Base_Input::IsPress("Back"))
+	else if (bPrevCameraAcc && !bIsCameraAcc)
 	{
-		MoveDelta -= Forward * MoveSpeed;
-	}
-	if (Base_Input::IsPress("Right"))
-	{
-		MoveDelta += Right * MoveSpeed;
-	}
-	if (Base_Input::IsPress("Left"))
-	{
-		MoveDelta -= Right * MoveSpeed;
-	}
-	if (Base_Input::IsPress("Up"))
-	{
-		MoveDelta += Up * MoveSpeed;
-	}
-	if (Base_Input::IsPress("Down"))
-	{
-		MoveDelta -= Up * MoveSpeed;
+		// (B) 자유 모드 → 캐릭터 추적 모드로 복귀
+		// 이때, 자유 모드 중의 위치/회전을 저장해두자
+		SavedPos = GetTransform()->GetWorldPosition();
+		SavedRot = GetTransform()->GetLocalRotation();
+		// 캐릭터 쪽에서 Update() 를 호출하여 자동으로 따라가게 될 예정
 	}
 
-	GetTransform()->AddLocalPosition(MoveDelta);
+	bPrevCameraAcc = bIsCameraAcc;
+
+	if (bIsCameraAcc)
+	{
+		static POINT PrevMouse = { static_cast<long>(Base_Windows::GetScreenSize().x / 2), static_cast<long>(Base_Windows::GetScreenSize().y / 2) };
+		POINT CurMouse;
+		GetCursorPos(&CurMouse); // 현재 마우스 위치를 화면 기준 좌표계로 얻어옴, 이값과 PrevMouse 차이를 통해 마우스가 얼마나 움직였나 파악 가능
+
+		int DeltaX = CurMouse.x - PrevMouse.x;
+		int DeltaY = CurMouse.y - PrevMouse.y;
+
+		float Sensitivity = 0.1f; // 움직임 대비 회전량 강도(클수록 더 크게 회전)
+		Yaw += DeltaX * Sensitivity;     // 좌우 (Y축 회전)
+		Pitch += DeltaY * Sensitivity;   // 상하 (X축 회전, Y 반전 적용됨)
+
+		Pitch = std::clamp(Pitch, -89.9f, 89.9f); // 상하 극단적 회전 제한
+
+		GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
+
+		// 커서 중앙 고정
+		SetCursorPos(PrevMouse.x, PrevMouse.y);
+
+		// 회전 이후 현재 방향 벡터 얻기
+		float4 Forward = GetTransform()->GetLocalForwardVector(); // Z축
+		float4 Right = GetTransform()->GetLocalRightVector();     // X축
+		float4 Up = GetTransform()->GetLocalUpVector();           // Y축
+
+		float MoveSpeed = 10.f * _Deltatime;
+		float4 MoveDelta = { 0.f, 0.f, 0.f };
+		if (Base_Input::IsPress("Forword"))
+		{
+			MoveDelta += Forward * MoveSpeed;
+		}
+		if (Base_Input::IsPress("Back"))
+		{
+			MoveDelta -= Forward * MoveSpeed;
+		}
+		if (Base_Input::IsPress("Right"))
+		{
+			MoveDelta += Right * MoveSpeed;
+		}
+		if (Base_Input::IsPress("Left"))
+		{
+			MoveDelta -= Right * MoveSpeed;
+		}
+		if (Base_Input::IsPress("Up"))
+		{
+			MoveDelta += Up * MoveSpeed;
+		}
+		if (Base_Input::IsPress("Down"))
+		{
+			MoveDelta -= Up * MoveSpeed;
+		}
+
+		GetTransform()->AddLocalPosition(MoveDelta);
+	}
 }
