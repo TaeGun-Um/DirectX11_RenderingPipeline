@@ -31,7 +31,7 @@ void Ext_DirectXResourceLoader::Initialize()
 void Ext_DirectXResourceLoader::LoadTexture()
 {
 	Base_Directory Dir;
-	Dir.MakePath("../Resource/Texture");
+	Dir.MakePath("../Resource/Basic");
 	std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
 	for (const std::string& FilePath : Paths)
 	{
@@ -262,15 +262,30 @@ void Ext_DirectXResourceLoader::MakeDepth()
 // DirectX11 Rasterizer 생성
 void Ext_DirectXResourceLoader::MakeRasterizer()
 {
-	D3D11_RASTERIZER_DESC Desc = {};
+	{
+		D3D11_RASTERIZER_DESC Desc = {};
 
-	Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
-	Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
-	Desc.FillMode = D3D11_FILL_SOLID;
-	// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
+		Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
+		Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
+		Desc.FillMode = D3D11_FILL_SOLID;
+		// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
 
-	Ext_DirectXRasterizer::CreateRasterizer("EngineRasterizer", Desc);
+		Ext_DirectXRasterizer::CreateRasterizer("BasicRasterizer", Desc);
+	}
+
+	{
+		D3D11_RASTERIZER_DESC Desc = {};
+
+		Desc.CullMode = D3D11_CULL_BACK; // 뒷면 제거(백페이스 컬링 활성화)
+		Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
+		Desc.FillMode = D3D11_FILL_WIREFRAME;
+		// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
+
+		Ext_DirectXRasterizer::CreateRasterizer("WireRasterizer", Desc);
+	}
 }
+
+// CurState = WireframeState;
 
 // 렌더링 파이프라인 생성
 void Ext_DirectXResourceLoader::MakeMaterial()
@@ -282,7 +297,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetPixelShader("Basic_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
 	// 다양한 텍스쳐가 있는 메시
@@ -292,7 +307,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetPixelShader("PBR_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
 	// 애니메이션
@@ -302,6 +317,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetPixelShader("Basic_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("EngineRasterizer");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 와이어프레임
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Debug");
+		NewRenderingPipeline->SetVertexShader("Basic_VS");
+		NewRenderingPipeline->SetPixelShader("Basic_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("WireRasterizer");
 	}
 }

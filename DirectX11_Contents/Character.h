@@ -6,7 +6,12 @@ enum Character_FSM
 {
 	Idle,
 	Walking,
+	WalkingLeft,
+	WalkingRight,
+	WalkingBackward,
 	Jump,
+	JumpFront,
+	JumpBackward,
 	Attack
 };
 
@@ -34,7 +39,8 @@ private:
 	Ext_FSM PlayerFSM;
 
 	std::shared_ptr<class Ext_DynamicMeshComponent> BodyMesh;
-	std::shared_ptr<class Ext_MeshComponent> MeshComp2;
+	std::shared_ptr<class Ext_CollisionComponent> BodyCollision;
+	std::shared_ptr<class Ext_MeshComponent> BodyCollisionMesh;
 	
 	bool IsJump = false;
 	float AccTime = 0.f;

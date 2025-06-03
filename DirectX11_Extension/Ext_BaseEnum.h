@@ -9,17 +9,28 @@ enum class ShaderType
     Unknown
 };
 
-//enum class SortType
-//{
-//    ZSort,
-//    YSort,
-//    Unknown
-//};
-
 enum class RenderPath
 {
     Forward,
     Deferred,
     Alpha,
+    Unknown
+};
+
+enum class CollsionType
+{
+    Sphere3D,
+    AABB3D,
+    OBB3D,
+    Unknown,
+};
+
+enum class CollisionGroup
+{
+    Player,
+    PlayerAttack,
+    Platform,
+    Wall,
+    Box,
     Unknown
 };

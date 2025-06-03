@@ -5,6 +5,7 @@
 #include "CubeActor.h"
 #include "TestActor.h"
 #include "Character.h"
+#include "TestPlatform.h"
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
@@ -25,6 +26,7 @@ void TestScene::Start()
 	// CreateActor<TestActor>("TestActor");
 
 	CreateActor<Character>("Character");
+	CreateActor<TestPlatform>("TestPlatform");
 }
 
 float AccTime = 0;

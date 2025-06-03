@@ -19,11 +19,17 @@
     <Filter Include="01.Object\01.Actor">
       <UniqueIdentifier>{50d754b1-2bd0-42ed-906d-a3900809fe3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Object\01.Actor\00.TestActor">
+      <UniqueIdentifier>{a3adec1c-0ffd-4c1a-bfbe-261c9627263a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\01.Actor\01.Character">
+      <UniqueIdentifier>{f761fadb-555f-48b7-aa5a-699e046cda90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\01.Actor\02.Env">
+      <UniqueIdentifier>{eaa9c4df-2848-4323-b1bb-cb4c34eb4a25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RectActor.cpp">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClCompile>
     <ClCompile Include="TestScene.cpp">
       <Filter>01.Object\00.Scene</Filter>
     </ClCompile>
@@ -33,23 +39,26 @@
     <ClCompile Include="Contents_Core.cpp">
       <Filter>00.Process\01.Core</Filter>
     </ClCompile>
-    <ClCompile Include="CubeActor.cpp">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="TestActor.cpp">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClCompile>
     <ClCompile Include="PrecompileHeader.cpp">
       <Filter>00.Process\00.Header</Filter>
     </ClCompile>
+    <ClCompile Include="CubeActor.cpp">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClCompile>
+    <ClCompile Include="RectActor.cpp">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClCompile>
+    <ClCompile Include="TestActor.cpp">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>01.Object\01.Actor\01.Character</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlatform.cpp">
+      <Filter>01.Object\01.Actor\02.Env</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RectActor.h">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClInclude>
     <ClInclude Include="TestScene.h">
       <Filter>01.Object\00.Scene</Filter>
     </ClInclude>
@@ -59,17 +68,23 @@
     <ClInclude Include="Contents_Core.h">
       <Filter>00.Process\01.Core</Filter>
     </ClInclude>
-    <ClInclude Include="CubeActor.h">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="TestActor.h">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>01.Object\01.Actor</Filter>
-    </ClInclude>
     <ClInclude Include="PrecompileHeader.h">
       <Filter>00.Process\00.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeActor.h">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClInclude>
+    <ClInclude Include="RectActor.h">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClInclude>
+    <ClInclude Include="TestActor.h">
+      <Filter>01.Object\01.Actor\00.TestActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>01.Object\01.Actor\01.Character</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlatform.h">
+      <Filter>01.Object\01.Actor\02.Env</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,17 +1,6 @@
 #pragma once
 #include "Ext_Component.h"
 
-enum class CollsionType
-{
-	Sphere2D,
-	AABB2D,
-	OBB2D,
-	Sphere3D,
-	AABB3D,
-	OBB3D,
-	Unknown,
-};
-
 class CollisionData
 {
 public:
@@ -25,20 +14,12 @@ public:
 		DirectX::BoundingOrientedBox OBB;
 	};
 
-	//void ScaleABS()
-	//{
-	//	OBB.Extents.x = abs(OBB.Extents.x);
-	//	OBB.Extents.y = abs(OBB.Extents.y);
-	//	OBB.Extents.z = abs(OBB.Extents.z);
-	//}
-};
-
-class CollisionParameter
-{
-public:
-	std::shared_ptr<class Ext_Transform> _OtherTrans = nullptr;
-	CollsionType ThisType = CollsionType::Sphere3D;
-	CollsionType OtherType = CollsionType::Sphere3D;
+	void ScaleABS()
+	{
+		OBB.Extents.x = abs(OBB.Extents.x);
+		OBB.Extents.y = abs(OBB.Extents.y);
+		OBB.Extents.z = abs(OBB.Extents.z);
+	}
 };
 
 // 충돌체를 위한 클래스
@@ -58,12 +39,12 @@ public:
 	Ext_CollisionComponent& operator=(Ext_CollisionComponent&& _Other) noexcept = delete;
 
 	template<typename EnumType>
-	std::shared_ptr<Ext_CollisionComponent> CollisionCheck(EnumType _TargetGroup, CollsionType _ThisColType = CollsionType::Unknown, CollsionType _OtherColType = CollsionType::Unknown)
+	std::shared_ptr<Ext_CollisionComponent> Collision(EnumType _TargetGroup, CollsionType _ThisColType = CollsionType::Unknown, CollsionType _OtherColType = CollsionType::Unknown)
 	{
 		return Collision(static_cast<int>(_TargetGroup), _ThisColType, _OtherColType);
 	}
 
-	std::shared_ptr<Ext_CollisionComponent> CollisionCheck(int _TargetGroup, CollsionType _ThisColType = CollsionType::Unknown, CollsionType _OtherColType = CollsionType::Unknown);
+	std::shared_ptr<Ext_CollisionComponent> Collision(int _TargetGroup, CollsionType _ThisColType = CollsionType::Unknown, CollsionType _OtherColType = CollsionType::Unknown);
 
 	void SetCollsionType(CollsionType _Type) { ColType = _Type; }
 	CollsionType GetCollisionType() { return ColType; }
@@ -71,12 +52,14 @@ public:
 
 protected:
 	void Start() override;
-	// void Update(float _DeltaTime) override;
+	void Update(float _DeltaTime) override;
 	
 private:
 	static std::function<bool(const CollisionData&, const CollisionData&)> CollisionFunction[static_cast<int>(CollsionType::Unknown)][static_cast<int>(CollsionType::Unknown)];
 	CollsionType ColType = CollsionType::Sphere3D; // 미지정시, 기본은 Sphere3D
 	CollisionData ColData;
+
+	bool CollisionCheck(std::shared_ptr<Ext_CollisionComponent> _ThisCollision, std::shared_ptr<Ext_CollisionComponent> _OtherCollision);
 
 	static bool SphereToSpehre(const CollisionData&, const CollisionData&);
 	static bool SphereToAABB(const CollisionData&, const CollisionData&);
@@ -89,16 +72,4 @@ private:
 	static bool OBBToSpehre(const CollisionData&, const CollisionData&);
 	static bool OBBToAABB(const CollisionData&, const CollisionData&);
 	static bool OBBToOBB(const CollisionData&, const CollisionData&);
-
-	static bool Sphere2DToSpehre2D(const CollisionData&, const CollisionData&);
-	static bool Sphere2DToAABB2D(const CollisionData&, const CollisionData&);
-	static bool Sphere2DToOBB2D(const CollisionData&, const CollisionData&);
-
-	static bool AABB2DToSpehre2D(const CollisionData&, const CollisionData&);
-	static bool AABB2DToAABB2D(const CollisionData&, const CollisionData&);
-	static bool AABB2DToOBB2D(const CollisionData&, const CollisionData&);
-
-	static bool OBB2DToSpehre2D(const CollisionData&, const CollisionData&);
-	static bool OBB2DToAABB2D(const CollisionData&, const CollisionData&);
-	static bool OBB2DToOBB2D(const CollisionData&, const CollisionData&);
 };
