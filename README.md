@@ -13,17 +13,17 @@
 - 언어 표준 : ISO C++20 표준
 - DirectX SDK : Wondows SDK에 포함된 DirectX 11 헤더 및 라이브러리 활용
 - 외부 라이브러리
-  1. assimp : Mesh 로드용
-  2. DirectTex : Texture 로드용
-  3. imgui : UI 라이브러리
+-> assimp : Mesh 로드용
+-> DirectTex : Texture 로드용
+-> imgui : UI 라이브러리
 
 [빌드]
 1. Solution 폴더 내 Unzip.bat 실행
-  - assimp 라이브러리, DirectTex 라이브러리 파일 설치용
+-> assimp 라이브러리, DirectTex 라이브러리 파일 설치용
 2. Configuration : x64 Debug, Release platform 중 선택
 3. 솔루션 전체 빌드(F7), 혹은 디버깅(F5)로 실행
-  a. 솔루션 빌드 시 : "..\x64\{Configuration}\03. DirectX11_RenderingPipeline.exe” 파일 실행
-  b. 컴파일 시 : [03. DirectX11_RenderingPipeline]을 시작 프로젝트로 선택하여 실행
+-> 솔루션 빌드 시 : "..\x64\{Configuration}\03. DirectX11_RenderingPipeline.exe” 파일 실행
+-? 컴파일 시 : [03. DirectX11_RenderingPipeline]을 시작 프로젝트로 선택하여 실행
 
 [기본 단축키]
 - W/A/S/D : 이동
