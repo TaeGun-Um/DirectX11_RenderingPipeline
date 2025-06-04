@@ -35,7 +35,7 @@ void Character::Start()
 	}
 	
 	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
-	BodyMesh->CreateMeshComponentUnit("Girl", "Animation");
+	BodyMesh->CreateMeshComponentUnit("Girl", "DynamicNonG");
 	BodyMesh->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
 	
 	Base_Directory Dir3;

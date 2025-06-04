@@ -55,7 +55,7 @@ private:
 	float4x4 ViewPortMatrix;		// 카메라 기준 뷰포트 행렬
 	float Width = 0.0f;				// 너비(모니터)
 	float Height = 0.0f;				// 높이(모니터)
-	float FOV = 90.0f;				// FOV값
+	float FOV = 80.0f;				// FOV값
 	float Near = 0.1f;				// 근평면
 	float Far = 10000.0f;		// 원평면
 

@@ -34,7 +34,7 @@ struct VSOutput
     float4 Normal : NORMAL;
 };
 
-VSOutput Debug_VS(VSInput _Input)
+VSOutput Grapics_VS(VSInput _Input)
 {
     VSOutput Output;
     // _Input.Position.w = 1.0f;
@@ -44,7 +44,7 @@ VSOutput Debug_VS(VSInput _Input)
     Output.Position = mul(ViewPos, ProjectionMatrix);
     // Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
     
-    Output.Color = float4(0.0f, 1.0f, 0.0f, 1.0f);
+    Output.Color = _Input.Color;
     Output.TexCoord = _Input.TexCoord;
     Output.Normal = _Input.Normal;
    

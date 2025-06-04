@@ -37,8 +37,13 @@ struct VSOutput
 VSOutput Basic_VS(VSInput _Input)
 {
     VSOutput Output;
-    _Input.Position.w = 1.0f;
-    Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
+    // _Input.Position.w = 1.0f;
+    
+    float4 WorldPos = mul(_Input.Position, WorldMatrix);
+    float4 ViewPos = mul(WorldPos, ViewMatrix);
+    Output.Position = mul(ViewPos, ProjectionMatrix);
+    // Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
+    
     Output.Color = _Input.Color;
     Output.TexCoord = _Input.TexCoord;
     Output.Normal = _Input.Normal;

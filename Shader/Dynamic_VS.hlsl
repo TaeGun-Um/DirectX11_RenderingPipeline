@@ -43,7 +43,7 @@ struct VSOutput
     float4 Normal : NORMAL; //여전히 float4로 유지
 };
 
-VSOutput Animation_VS(VSInput input)
+VSOutput Dynamic_VS(VSInput input)
 {
     VSOutput output;
 

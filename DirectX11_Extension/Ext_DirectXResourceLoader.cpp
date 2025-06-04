@@ -196,11 +196,41 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 // 렌더링 파이프라인 생성
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
-	// 일반(단일 메시)
+	// 일반 스태틱 메시
 	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Basic");
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticNonG");
 		NewRenderingPipeline->SetVertexShader("Basic_VS");
 		NewRenderingPipeline->SetPixelShader("Basic_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 그래픽스 스태틱 메시
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Static");
+		NewRenderingPipeline->SetVertexShader("Grapics_VS");
+		NewRenderingPipeline->SetPixelShader("Grapics_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 일반 다이나믹 메시
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DynamicNonG");
+		NewRenderingPipeline->SetVertexShader("Dynamic_VS");
+		NewRenderingPipeline->SetPixelShader("Basic_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 그래픽스 다이나믹 메시
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Dynamic");
+		NewRenderingPipeline->SetVertexShader("Dynamic_VS");
+		NewRenderingPipeline->SetPixelShader("Grapics_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
@@ -208,25 +238,15 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 
 	// 다양한 텍스쳐가 있는 메시
 	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBR");
-		NewRenderingPipeline->SetVertexShader("Basic_VS");
-		NewRenderingPipeline->SetPixelShader("PBR_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBR");
+		//NewRenderingPipeline->SetVertexShader("Basic_VS");
+		//NewRenderingPipeline->SetPixelShader("PBR_PS");
+		//NewRenderingPipeline->SetBlendState("BaseBlend");
+		//NewRenderingPipeline->SetDepthState("EngineDepth");
+		//NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
-	// 애니메이션
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Animation");
-		NewRenderingPipeline->SetVertexShader("Animation_VS");
-		NewRenderingPipeline->SetPixelShader("Basic_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
-	}
-
-	// 와이어프레임
+	// 와이어프레임(디버깅용)
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Debug");
 		NewRenderingPipeline->SetVertexShader("Debug_VS");

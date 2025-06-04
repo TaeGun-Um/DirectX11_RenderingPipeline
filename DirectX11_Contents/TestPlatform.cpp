@@ -10,10 +10,11 @@ void TestPlatform::Start()
 	PlatformBody->SetCollsionType(CollsionType::AABB3D);
 
 	PlatformBodyMesh = CreateComponent<Ext_MeshComponent>("PlatformBodyMesh");
-	PlatformBodyMesh->CreateMeshComponentUnit("Box", "Debug");
+	PlatformBodyMesh->CreateMeshComponentUnit("Box", "StaticNonG");
+	PlatformBodyMesh->SetTexture("Gray.png");
 
-	PlatformBodyMesh->GetTransform()->SetLocalScale({ 100.f, 2.f, 100.f });
-	PlatformBody->GetTransform()->SetLocalScale({ 100.f, 2.f, 100.f });
+	PlatformBodyMesh->GetTransform()->SetLocalScale({ 300.f, 2.f, 300.f });
+	PlatformBody->GetTransform()->SetLocalScale({ 300.f, 2.f, 300.f });
 }
 
 void TestPlatform::Update(float _DletaTime)

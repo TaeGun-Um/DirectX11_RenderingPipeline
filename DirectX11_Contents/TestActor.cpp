@@ -9,7 +9,7 @@ void TestActor::Start()
 	GetTransform()->SetLocalPosition({ -3, 0, 2.5 });
 
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Rect", "Basic");
+	MeshComp->CreateMeshComponentUnit("Rect", "StaticNonG");
 	MeshComp->SetTexture("Cuphead.png");
 }
 

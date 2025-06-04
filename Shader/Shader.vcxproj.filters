@@ -18,13 +18,19 @@
     <FxCompile Include="PBR_PS.hlsl">
       <Filter>01. PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Animation_VS.hlsl">
+    <FxCompile Include="Dynamic_VS.hlsl">
       <Filter>00. VertexShader</Filter>
     </FxCompile>
     <FxCompile Include="Debug_PS.hlsl">
       <Filter>01. PixelShader</Filter>
     </FxCompile>
     <FxCompile Include="Debug_VS.hlsl">
+      <Filter>00. VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Grapics_PS.hlsl">
+      <Filter>01. PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Grapics_VS.hlsl">
       <Filter>00. VertexShader</Filter>
     </FxCompile>
   </ItemGroup>

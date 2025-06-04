@@ -25,7 +25,7 @@ void Ext_MeshComponent::PushMeshToCamera(std::string_view _CameraName)
 }
 
 // 메시 컴포넌트에 필요한 유닛 생성 및 저장, 따로 설정하지 않으면 Basic Material로 고정
-std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, std::string_view _MaterialName /*= "Basic"*/)
+std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, std::string_view _MaterialName /*= "StaticNonG"*/)
 {
 	std::shared_ptr<Ext_MeshComponentUnit> NewUnit = std::make_shared<Ext_MeshComponentUnit>();
 	NewUnit->SetOwnerMeshComponent(GetSharedFromThis<Ext_MeshComponent>());

@@ -1,26 +1,26 @@
-ï»¿#include "PrecompileHeader.h"
-#include "CubeActor.h"
+#include "PrecompileHeader.h"
+#include "CylinderActor.h"
 
 #include <DirectX11_Extension/Ext_MeshComponent.h>
 #include <DirectX11_Extension/Ext_Transform.h>
 #include <DirectX11_Extension/Ext_Component.h>
 
-void CubeActor::Start()
+void CylinderActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Box", "StaticNonG");
+	MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
 	MeshComp->SetTexture("Green.png");
 
 	GetTransform()->SetLocalScale({ 2.5f, 2.5f, 2.5f });
 }
 
-void CubeActor::Update(float _DeltaTime)
+void CylinderActor::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
 
 	if (bIsRotation)
 	{
-		float MoveSpeed = 50.0f; // ì´ˆë‹¹ 100 ë‹¨ìœ„ íšŒì „
+		float MoveSpeed = 50.0f; // ÃÊ´ç 100 ´ÜÀ§ È¸Àü
 		MeshComp->GetTransform()->AddLocalRotation({ 0.f, MoveSpeed * _DeltaTime, 0.f });
 	}
 }

@@ -168,15 +168,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Character.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="Contents_Core.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="CubeActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="CylinderActor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -188,11 +189,15 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TempScene.h">
+    <ClInclude Include="SphereActor.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TestActor.h">
+    <ClInclude Include="StaticMeshActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TempScene.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -204,17 +209,22 @@
       <SubType>
       </SubType>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Character.cpp">
+    <ClInclude Include="TriangleActor.h">
       <SubType>
       </SubType>
-    </ClCompile>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Contents_Core.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="CubeActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="CylinderActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -230,11 +240,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TempScene.cpp">
+    <ClCompile Include="SphereActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TestActor.cpp">
+    <ClCompile Include="StaticMeshActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="TempScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -243,6 +257,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="TestScene.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="TriangleActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
