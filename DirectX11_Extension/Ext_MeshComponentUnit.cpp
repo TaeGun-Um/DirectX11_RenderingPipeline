@@ -58,8 +58,11 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.SetConstantBufferLink("TransformData", TFData);
 
 	// [4] 빛 상수버퍼 세팅하기
-	//const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
-	//BufferSetter.SetConstantBufferLink("LightData", LTData);
+	if (_MaterialName == "Static" || _MaterialName == "Dynamic")
+	{
+		const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
+		BufferSetter.SetConstantBufferLink("LightData", LTData);
+	}
 
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
 }

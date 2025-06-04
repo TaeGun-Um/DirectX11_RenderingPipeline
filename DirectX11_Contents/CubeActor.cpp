@@ -8,10 +8,11 @@
 void CubeActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Box", "StaticNonG");
+	//MeshComp->CreateMeshComponentUnit("Box", "StaticNonG");
+	MeshComp->CreateMeshComponentUnit("Box", "Static");
 	MeshComp->SetTexture("Green.png");
 
-	GetTransform()->SetLocalScale({ 2.5f, 2.5f, 2.5f });
+	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }
 
 void CubeActor::Update(float _DeltaTime)

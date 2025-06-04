@@ -18,21 +18,6 @@ void Character::Start()
 {
 	CreateInput();
 	CreateFSM();
-
-	GetTransform()->SetLocalPosition({ 0, 0, 5 });
-	GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
-
-	Base_Directory Dir1;
-	Dir1.MakePath("../Resource/Character/Mesh/Girl.fbx");
-	Ext_DirectXMesh::CreateDynamicMesh(Dir1.GetPath());
-	
-	Base_Directory Dir2;
-	Dir2.MakePath("../Resource/Character/Texture");
-	std::vector<std::string> Paths = Dir2.GetAllFile({ "png", "tga", "dss" });
-	for (const std::string& FilePath : Paths)
-	{
-		Ext_DirectXTexture::LoadTexture(FilePath.c_str());
-	}
 	
 	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
 	BodyMesh->CreateMeshComponentUnit("Girl", "DynamicNonG");
@@ -67,6 +52,9 @@ void Character::Start()
 	//GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetParent(GetTransform());
 	GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalPosition({ 0.f, CameraHeight, -CameraDistance });
 	GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+
+	GetTransform()->SetLocalPosition({ 0, 100, 0 });
+	// GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
 }
 
 void Character::Update(float _DeltaTime)
@@ -468,12 +456,6 @@ void Character::CreateFSM()
 			{
 				// 지면에 닿았으므로 상태 종료(Idle 이동)
 				GetTransform()->AddLocalPosition({ 0.f, /*착지 보정 필요 시*/ 0.f, 0.f });
-				PlayerFSM.ChangeState(Character_FSM::Idle);
-				return;
-			}
-
-			if (true == BodyMesh->IsAnimationEnd())
-			{
 				PlayerFSM.ChangeState(Character_FSM::Idle);
 				return;
 			}

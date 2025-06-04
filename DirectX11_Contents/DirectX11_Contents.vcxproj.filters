@@ -13,43 +13,40 @@
     <Filter Include="01.Object">
       <UniqueIdentifier>{886db13d-b447-4d0e-a7f4-fd51b0016059}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\00.Scene">
+    <Filter Include="01.Object\01.Scene">
       <UniqueIdentifier>{6d031e4b-218c-41f7-8348-d3c7006413d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor">
+    <Filter Include="01.Object\02.Actor">
       <UniqueIdentifier>{50d754b1-2bd0-42ed-906d-a3900809fe3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor">
+    <Filter Include="01.Object\02.Actor\00.TestActor">
       <UniqueIdentifier>{a3adec1c-0ffd-4c1a-bfbe-261c9627263a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\02.Env">
-      <UniqueIdentifier>{eaa9c4df-2848-4323-b1bb-cb4c34eb4a25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Triangle">
-      <UniqueIdentifier>{1afd2669-0271-4a1e-b00c-e10e1fc69ad1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Cube">
+    <Filter Include="01.Object\02.Actor\00.TestActor\Cube">
       <UniqueIdentifier>{ec6e2106-a37a-4d4d-a867-57fb8bc3b62b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Cylinder">
+    <Filter Include="01.Object\02.Actor\00.TestActor\Cylinder">
       <UniqueIdentifier>{51b11362-76ec-429e-92f7-adb762101430}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Sphere">
+    <Filter Include="01.Object\02.Actor\00.TestActor\Sphere">
       <UniqueIdentifier>{abace78d-6174-4dfc-883e-4f736226e6ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Rect">
+    <Filter Include="01.Object\02.Actor\00.TestActor\Rect">
       <UniqueIdentifier>{f87af132-e987-4c75-b468-94490e075c6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\01.Actor\00.TestActor\Mesh">
+    <Filter Include="01.Object\02.Actor\00.TestActor\Mesh">
       <UniqueIdentifier>{63e2924d-b9df-4c93-b377-296c0c0ede60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\02.Actor\02.Env">
+      <UniqueIdentifier>{eaa9c4df-2848-4323-b1bb-cb4c34eb4a25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestScene.cpp">
-      <Filter>01.Object\00.Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClCompile>
     <ClCompile Include="TempScene.cpp">
-      <Filter>01.Object\00.Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClCompile>
     <ClCompile Include="Contents_Core.cpp">
       <Filter>00.Process\01.Core</Filter>
@@ -58,36 +55,33 @@
       <Filter>00.Process\00.Header</Filter>
     </ClCompile>
     <ClCompile Include="TestPlatform.cpp">
-      <Filter>01.Object\01.Actor\02.Env</Filter>
+      <Filter>01.Object\02.Actor\02.Env</Filter>
     </ClCompile>
     <ClCompile Include="CubeActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Cube</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Cube</Filter>
     </ClCompile>
     <ClCompile Include="CylinderActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Cylinder</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Cylinder</Filter>
     </ClCompile>
     <ClCompile Include="RectActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Rect</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Rect</Filter>
     </ClCompile>
     <ClCompile Include="SphereActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Sphere</Filter>
-    </ClCompile>
-    <ClCompile Include="TriangleActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Triangle</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshActor.cpp">
-      <Filter>01.Object\01.Actor\00.TestActor\Mesh</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>01.Object\01.Actor</Filter>
+      <Filter>01.Object\02.Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScene.h">
-      <Filter>01.Object\00.Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClInclude>
     <ClInclude Include="TempScene.h">
-      <Filter>01.Object\00.Scene</Filter>
+      <Filter>01.Object\01.Scene</Filter>
     </ClInclude>
     <ClInclude Include="Contents_Core.h">
       <Filter>00.Process\01.Core</Filter>
@@ -96,28 +90,25 @@
       <Filter>00.Process\00.Header</Filter>
     </ClInclude>
     <ClInclude Include="TestPlatform.h">
-      <Filter>01.Object\01.Actor\02.Env</Filter>
+      <Filter>01.Object\02.Actor\02.Env</Filter>
     </ClInclude>
     <ClInclude Include="CubeActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Cube</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Cube</Filter>
     </ClInclude>
     <ClInclude Include="CylinderActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Cylinder</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="RectActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Rect</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Rect</Filter>
     </ClInclude>
     <ClInclude Include="SphereActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Sphere</Filter>
-    </ClInclude>
-    <ClInclude Include="TriangleActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Triangle</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshActor.h">
-      <Filter>01.Object\01.Actor\00.TestActor\Mesh</Filter>
+      <Filter>01.Object\02.Actor\00.TestActor\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>01.Object\01.Actor</Filter>
+      <Filter>01.Object\02.Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

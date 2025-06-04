@@ -13,8 +13,8 @@ void TestPlatform::Start()
 	PlatformBodyMesh->CreateMeshComponentUnit("Box", "StaticNonG");
 	PlatformBodyMesh->SetTexture("Gray.png");
 
-	PlatformBodyMesh->GetTransform()->SetLocalScale({ 300.f, 2.f, 300.f });
-	PlatformBody->GetTransform()->SetLocalScale({ 300.f, 2.f, 300.f });
+	GetTransform()->SetLocalScale({ 2000.f, 50.f, 2000.f });
+	GetTransform()->SetLocalPosition({ 0.f, -25.f, 0.f });
 }
 
 void TestPlatform::Update(float _DletaTime)

@@ -209,10 +209,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TriangleActor.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
@@ -257,10 +253,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="TestScene.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="TriangleActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -223,7 +223,7 @@ void Ext_Camera::Update(float _Deltatime)
 		float4 Right = GetTransform()->GetLocalRightVector();     // X축
 		float4 Up = GetTransform()->GetLocalUpVector();           // Y축
 
-		float MoveSpeed = 10.f * _Deltatime;
+		float MoveSpeed = 200.f * _Deltatime;
 		float4 MoveDelta = { 0.f, 0.f, 0.f };
 		if (Base_Input::IsPress("Forword"))
 		{

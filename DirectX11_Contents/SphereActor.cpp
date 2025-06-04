@@ -8,10 +8,11 @@
 void SphereActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Sphere", "StaticNonG");
+	//MeshComp->CreateMeshComponentUnit("Sphere", "StaticNonG");
+	MeshComp->CreateMeshComponentUnit("Sphere", "Static");
 	MeshComp->SetTexture("Green.png");
 
-	GetTransform()->SetLocalScale({ 2.5f, 2.5f, 2.5f });
+	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }
 
 void SphereActor::Update(float _DeltaTime)

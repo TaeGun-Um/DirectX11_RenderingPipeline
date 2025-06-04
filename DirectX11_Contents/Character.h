@@ -43,8 +43,8 @@ private:
 	
 	// 카메라
 	std::shared_ptr<class Ext_Camera> PlayerCamera;
-	float CameraDistance = 7.0f;
-	float CameraHeight = 6.0f;
+	float CameraDistance = 130.0f;
+	float CameraHeight = 100.0f;
 
 	// 카메라 회전용 각도 (라디안)
 	float CamYaw = 0.0f;
@@ -52,13 +52,13 @@ private:
 	float MouseSensitivity = 0.1f;
 
 	float AccTime = 0.f;
-	float MoveSpeed = 10.f;
+	float MoveSpeed = 150.f;
 	
 	// 점프
 	float JumpAccTime = 0.f;
 	bool bIsGround = false;
 	bool bIsJump = false;
 	float VerticalVelocity = 0.0f;     // 수직 속도 (단위: 월드 유닛/초)
-	float JumpStrength = 28.0f;   // 점프 시작 시 위쪽으로 부여할 초기 속도
-	float Gravity = 20.0f;  // 중력 가속도 (단위: 월드 유닛/초^2)
+	float JumpStrength = 220.0f;   // 점프 시작 시 위쪽으로 부여할 초기 속도
+	float Gravity = 150.0f;  // 중력 가속도 (단위: 월드 유닛/초^2)
 };

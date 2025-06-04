@@ -8,10 +8,11 @@
 void CylinderActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
+	//MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
+	MeshComp->CreateMeshComponentUnit("Cylinder", "Static");
 	MeshComp->SetTexture("Green.png");
 
-	GetTransform()->SetLocalScale({ 2.5f, 2.5f, 2.5f });
+	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }
 
 void CylinderActor::Update(float _DeltaTime)
