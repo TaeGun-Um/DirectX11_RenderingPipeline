@@ -65,11 +65,11 @@ void Character::Update(float _DeltaTime)
 	{
 		if (!BodyCollision->Collision(CollisionGroup::Platform))
 		{
-			GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f });
+			GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f }); // 충돌이 없을 경우, 여기를 진행
 		}
 		else
 		{
-			bIsGround = true;
+			bIsGround = true; // 충돌한 경우, 여기를 진행
 		}
 
 		PlayerFSM.Update(_DeltaTime);

@@ -14,6 +14,8 @@ void Ext_Light::SetLightRange(float _Range)
 	LTData->LightFar = _Range;
 }
 
+bool first = false;
+
 void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTime)
 {
 	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
