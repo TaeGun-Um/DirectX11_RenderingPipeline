@@ -8,11 +8,11 @@
 void RectActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	//MeshComp->CreateMeshComponentUnit("Rect", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Rect", "Static");
-	MeshComp->SetTexture("Green.png");
+	MeshComp->CreateMeshComponentUnit("Rect", "StaticNonG");
+	// MeshComp->CreateMeshComponentUnit("Rect", "Static");
+	MeshComp->SetTexture("Manual.png");
 
-	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
+	GetTransform()->SetLocalScale({ 200.f, 200.f, 200.f });
 }
 
 void RectActor::Update(float _DeltaTime)

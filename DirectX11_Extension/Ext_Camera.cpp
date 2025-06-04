@@ -173,82 +173,103 @@ void Ext_Camera::Update(float _Deltatime)
 	if (GetSharedFromThis<Ext_Camera>() != GetOwnerScene().lock()->GetMainCamera()) return;
 
 	AccTime += _Deltatime;
-	if (Base_Input::IsDown("OnOff") && AccTime >= 0.3f)
+
+	// (A) 카메라 모드(추적/자유) 전환 체크
+	if (Base_Input::IsDown("OnOff") && AccTime >= 0.2f)
 	{
 		AccTime = 0.f;
 		bIsCameraSwitch();
 	}
 
-	if (!bIsCameraAcc) return;
+	// 마우스 포커스 토글 (F4 키를 눌렀을 때)
+	// “ToggleMouse”라는 입력을 F4 키에 매핑했다고 가정
+	if (Base_Input::IsDown("Escape"))
+	{
+		// 마우스 캡처 상태를 반전시키고, 
+		// 캡처 중일 때는 커서를 숨기고 중앙 고정, 
+		// 캡처 해제 시에는 커서를 보이도록
+		bIsEscape = !bIsEscape;
+		if (bIsEscape)
+		{
+			// 캡처 상태: 화면 중앙으로 커서를 가져오고, 커서 숨기기
+			POINT center = {
+				static_cast<long>(Base_Windows::GetScreenSize().x / 2),
+				static_cast<long>(Base_Windows::GetScreenSize().y / 2)
+			};
+			SetCursorPos(center.x, center.y);
+			ShowCursor(FALSE);
+		}
+		else
+		{
+			// 캡처 해제: 커서 보이기 (이후 사용자가 자유롭게 움직일 수 있음)
+			ShowCursor(TRUE);
+		}
+	}
+
+	if (!bIsCameraAcc)
+		return;
+
 	if (!bPrevCameraAcc && bIsCameraAcc)
 	{
-		// (A) 캐릭터 추적 모드 → 이제 자유 모드 진입
-		// 이전에 저장해 둔 자유 카메라 위치/회전이 있으면 복원
+		// (A) 캐릭터 추적 모드 → 자유 모드 진입
 		GetTransform()->SetLocalPosition(SavedPos);
 		GetTransform()->SetLocalRotation(SavedRot);
+
+		// 자유 모드로 바뀔 때, 마우스 캡처를 자동으로 활성화(원한다면)
+		// bIsEscape = true;
+		// ShowCursor(FALSE);
 	}
 	else if (bPrevCameraAcc && !bIsCameraAcc)
 	{
 		// (B) 자유 모드 → 캐릭터 추적 모드로 복귀
-		// 이때, 자유 모드 중의 위치/회전을 저장해두자
 		SavedPos = GetTransform()->GetWorldPosition();
 		SavedRot = GetTransform()->GetLocalRotation();
-		// 캐릭터 쪽에서 Update() 를 호출하여 자동으로 따라가게 될 예정
+		// 이때 마우스 캡처 해제 (원한다면)
+		// bIsEscape = false;
+		// ShowCursor(TRUE);
 	}
 
 	bPrevCameraAcc = bIsCameraAcc;
 
-	if (bIsCameraAcc)
+	// ★ “자유 모드이면서” “마우스 캡처 모드일 때만” 마우스Δ 계산 및 카메라 이동/회전 실행
+	if (bIsCameraAcc && bIsEscape)
 	{
-		static POINT PrevMouse = { static_cast<long>(Base_Windows::GetScreenSize().x / 2), static_cast<long>(Base_Windows::GetScreenSize().y / 2) };
+		// 커서 기준점(화면 중앙) 미리 계산해 둠
+		static POINT PrevMouse = {
+			static_cast<long>(Base_Windows::GetScreenSize().x / 2),
+			static_cast<long>(Base_Windows::GetScreenSize().y / 2)
+		};
+
 		POINT CurMouse;
-		GetCursorPos(&CurMouse); // 현재 마우스 위치를 화면 기준 좌표계로 얻어옴, 이값과 PrevMouse 차이를 통해 마우스가 얼마나 움직였나 파악 가능
+		GetCursorPos(&CurMouse);
 
 		int DeltaX = CurMouse.x - PrevMouse.x;
 		int DeltaY = CurMouse.y - PrevMouse.y;
 
-		float Sensitivity = 0.1f; // 움직임 대비 회전량 강도(클수록 더 크게 회전)
-		Yaw += DeltaX * Sensitivity;     // 좌우 (Y축 회전)
-		Pitch += DeltaY * Sensitivity;   // 상하 (X축 회전, Y 반전 적용됨)
-
-		Pitch = std::clamp(Pitch, -89.9f, 89.9f); // 상하 극단적 회전 제한
+		float Sensitivity = 0.1f;
+		Yaw += DeltaX * Sensitivity;
+		Pitch += DeltaY * Sensitivity;
+		Pitch = std::clamp(Pitch, -89.9f, 89.9f);
 
 		GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
 
-		// 커서 중앙 고정
+		// 마우스 Δ 처리가 끝났으면 다시 중앙으로 고정
 		SetCursorPos(PrevMouse.x, PrevMouse.y);
 
-		// 회전 이후 현재 방향 벡터 얻기
-		float4 Forward = GetTransform()->GetLocalForwardVector(); // Z축
-		float4 Right = GetTransform()->GetLocalRightVector();     // X축
-		float4 Up = GetTransform()->GetLocalUpVector();           // Y축
+		// 카메라 이동
+		float4 Forward = GetTransform()->GetLocalForwardVector();
+		float4 Right = GetTransform()->GetLocalRightVector();
+		float4 Up = GetTransform()->GetLocalUpVector();
 
 		float MoveSpeed = 200.f * _Deltatime;
 		float4 MoveDelta = { 0.f, 0.f, 0.f };
-		if (Base_Input::IsPress("Forword"))
-		{
-			MoveDelta += Forward * MoveSpeed;
-		}
-		if (Base_Input::IsPress("Back"))
-		{
-			MoveDelta -= Forward * MoveSpeed;
-		}
-		if (Base_Input::IsPress("Right"))
-		{
-			MoveDelta += Right * MoveSpeed;
-		}
-		if (Base_Input::IsPress("Left"))
-		{
-			MoveDelta -= Right * MoveSpeed;
-		}
-		if (Base_Input::IsPress("Up"))
-		{
-			MoveDelta += Up * MoveSpeed;
-		}
-		if (Base_Input::IsPress("Down"))
-		{
-			MoveDelta -= Up * MoveSpeed;
-		}
+
+		if (Base_Input::IsPress("Forword"))  MoveDelta += Forward * MoveSpeed;
+		if (Base_Input::IsPress("Back"))     MoveDelta -= Forward * MoveSpeed;
+		if (Base_Input::IsPress("Right"))    MoveDelta += Right * MoveSpeed;
+		if (Base_Input::IsPress("Left"))     MoveDelta -= Right * MoveSpeed;
+		if (Base_Input::IsPress("Up"))       MoveDelta += Up * MoveSpeed;
+		if (Base_Input::IsPress("Down"))     MoveDelta -= Up * MoveSpeed;
 
 		GetTransform()->AddLocalPosition(MoveDelta);
 	}

@@ -6,6 +6,7 @@
 #include "CylinderActor.h"
 #include "StaticMeshActor.h"
 #include "Character.h"
+#include "RectActor.h"
 #include "TestPlatform.h"
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
@@ -85,6 +86,10 @@ void TestScene::Start()
 	std::shared_ptr<StaticMeshActor> StaticMeshActor2 = CreateActor<StaticMeshActor>("StaticMeshActor2");
 	StaticMeshActor2->GetTransform()->SetLocalPosition({ 200.f, 180.f, 100.f });
 	StaticMeshActor2->SetRotate();
+
+	std::shared_ptr<RectActor> Manual = CreateActor<RectActor>("RectActor");
+	Manual->GetTransform()->SetLocalPosition({ 0.f, 300.f, -500.f });
+	Manual->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
 }
 
 void TestScene::Update(float _DeltaTime)

@@ -61,76 +61,107 @@ void Character::Update(float _DeltaTime)
 {
 	AccTime += _DeltaTime;
 
+	// 메인 카메라가 자유 모드가 아닐 때만(즉, 추적 모드일 때만) 이 코드를 실행
 	if (!GetOwnerScene().lock()->GetMainCamera()->IsCameraAcc())
 	{
 		if (!BodyCollision->Collision(CollisionGroup::Platform))
 		{
-			GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f }); // 충돌이 없을 경우, 여기를 진행
+			GetTransform()->AddLocalPosition({ 0.f, -Gravity * _DeltaTime, 0.f });
 		}
 		else
 		{
-			bIsGround = true; // 충돌한 경우, 여기를 진행
+			bIsGround = true;
 		}
 
 		PlayerFSM.Update(_DeltaTime);
 
+		// -------------------------------
+		// 1) F4 눌러서 마우스 포커스 토글
+		// -------------------------------
+		if (Base_Input::IsDown("Escape"))
 		{
-			// 1) 윈도우 핸들을 구하고(Ext_Camera나 Base_Windows에서)
+			GetOwnerScene().lock()->GetMainCamera()->bIsEscapeSwitch();
+			if (GetOwnerScene().lock()->GetMainCamera()->IsEscape())
+			{
+				// 화면 중앙 → 스크린 좌표로 변환 → 커서 숨김
+				HWND hWnd = Base_Windows::GetHWnd();
+				RECT rc;
+				GetClientRect(hWnd, &rc);
+				POINT clientCenter = {
+					(rc.right - rc.left) / 2,
+					(rc.bottom - rc.top) / 2
+				};
+				POINT screenCenter = clientCenter;
+				ClientToScreen(hWnd, &screenCenter);
+
+				SetCursorPos(screenCenter.x, screenCenter.y);
+				ShowCursor(FALSE);
+			}
+			else
+			{
+				ShowCursor(TRUE);
+			}
+		}
+
+		// ---------------------------------------------
+		// 2) “카메라 자유(조종) 모드”이면서 “마우스 캡처 중”일 때만 Δ 계산
+		// ---------------------------------------------
+		if (GetOwnerScene().lock()->GetMainCamera()->IsEscape())
+		{
+			// (A) 윈도우 핸들 가져오기
 			HWND hWnd = Base_Windows::GetHWnd();
 
-			// 2) 클라이언트 영역 크기 구하기
+			// (B) 클라이언트 영역 크기 구하기
 			RECT rc;
 			GetClientRect(hWnd, &rc);
-			// 클라이언트 영역 왼쪽 상단이 (0,0), 오른쪽 하단이 (Width, Height)
-
-			// 3) 클라이언트 영역의 중앙 좌표 (클라이언트 내부 좌표계)
-			POINT clientCenter =
-			{
+			POINT clientCenter = {
 				(rc.right - rc.left) / 2,
 				(rc.bottom - rc.top) / 2
 			};
-
-			// 4) 그것을 “스크린 좌표계”로 바꿔주자 (ClientToScreen)
 			POINT screenCenter = clientCenter;
 			ClientToScreen(hWnd, &screenCenter);
-			// 이제 screenCenter는 실제 모니터 전체 화면 상에서 윈도우 중앙 좌표
 
-			// 5) 현재 커서를 스크린 좌표로 읽어온다
+			// (C) 현재 커서 위치 읽기
 			POINT curMouse;
 			GetCursorPos(&curMouse);
 
-			// 6) Δ 계산 (스크린 좌표 기준으로)
+			// (D) Δ 계산
 			int deltaX = curMouse.x - screenCenter.x;
 			int deltaY = curMouse.y - screenCenter.y;
 
-			// 7) Δ가 0이 아닐 때만 회전값에 반영
-			//    (Δ가 0이라면 마우스를 움직이지 않은 거니까 회전도 0)
+			// (E) Δ를 카메라 회전에 반영
 			CamYaw += deltaX * MouseSensitivity;
 			CamPitch -= deltaY * MouseSensitivity;
+			CamPitch = std::clamp(CamPitch, 15.0f, 15.0f); // 예: 상하 회전 제한
 
-			CamPitch = std::clamp(CamPitch, 15.0f, 15.0f);
-
-			// 9) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
+			// (F) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
 			SetCursorPos(screenCenter.x, screenCenter.y);
 
-			// 10) 로컬 회전에 적용 (X=Pitch, Y=Yaw)
-			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+			// (G) 카메라 회전 적용 (X=Pitch, Y=Yaw)
+			GetOwnerScene().lock()->GetMainCamera()->GetTransform()
+				->SetLocalRotation({ CamPitch, CamYaw, 0.f });
 		}
+		// 만약 bMouseCaptured == false라면 Δ 계산 없이 커서 제어도 하지 않으므로, 
+		// 사용자는 자유롭게 커서를 움직일 수 있고, 카메라도 회전하지 않음
 
-		// ───────────────────────────────────────────────────────────────────────────
-		// [카메라 위치 갱신] : Character 월드 위치 얻어서, 로컬 Up/Forward 기반 오프셋만큼 이동
-		// ───────────────────────────────────────────────────────────────────────────
+		// ------------------------------------------------------------
+		// 3) 카메라 위치 갱신 : Character 월드 위치 기반으로 항상 따라다님
+		//    (bMouseCaptured 여부와 관계없이 항상 카메라 위치만 업데이트)
+		// ------------------------------------------------------------
 		{
 			float4 charWorldPos = GetTransform()->GetWorldPosition();
-			float4 camLocalUp = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalUpVector();
-			float4 camLocalFwd = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalForwardVector();
+			float4 camLocalUp = GetOwnerScene().lock()->GetMainCamera()
+				->GetTransform()->GetLocalUpVector();
+			float4 camLocalFwd = GetOwnerScene().lock()->GetMainCamera()
+				->GetTransform()->GetLocalForwardVector();
 
 			float4 desiredCamPos =
 				charWorldPos
 				+ camLocalUp * CameraHeight
 				- camLocalFwd * CameraDistance;
 
-			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalPosition(desiredCamPos);
+			GetOwnerScene().lock()->GetMainCamera()
+				->GetTransform()->SetLocalPosition(desiredCamPos);
 		}
 	}
 

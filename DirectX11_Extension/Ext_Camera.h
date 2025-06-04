@@ -35,6 +35,8 @@ public:
 	void SetCameraType(ProjectionType _CameraType) { CameraType = _CameraType; }
 
 	bool IsCameraAcc() { return bIsCameraAcc; }
+	bool IsEscape() { return bIsEscape; }
+	void bIsEscapeSwitch() { bIsEscape = !bIsEscape; }
 
 protected:
 	void Start() override;
@@ -62,6 +64,7 @@ private:
 	//////////////////////////////////// 테스트용
 	D3D11_VIEWPORT ViewPortData; 
 	void bIsCameraSwitch() { bIsCameraAcc = !bIsCameraAcc; }
+	bool bIsEscape = true;
 	bool bIsCameraAcc = false;           // Q를 눌러 자유 모드인지 아닌지
 	bool bPrevCameraAcc = false;          // 이전 프레임의 bIsCameraAcc 값
 	float AccTime = 0.f;
