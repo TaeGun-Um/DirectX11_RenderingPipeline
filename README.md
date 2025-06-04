@@ -19,7 +19,7 @@
 
 [빌드]
 1. Solution 폴더 내 Unzip.bat 실행
-  > assimp 라이브러리, DirectTex 라이브러리 파일 설치
+  - assimp 라이브러리, DirectTex 라이브러리 파일 설치용
 2. Configuration : x64 Debug, Release platform 중 선택
 3. 솔루션 전체 빌드(F7), 혹은 디버깅(F5)로 실행
   a. 솔루션 빌드 시 : "..\x64\{Configuration}\03. DirectX11_RenderingPipeline.exe” 파일 실행
