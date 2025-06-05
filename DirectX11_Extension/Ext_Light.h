@@ -13,12 +13,16 @@ struct LightData
 {
 	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.1f }; // RGB(색), w(강도)
 	
-	float4 LightWorldPosition; // 라이트 현재 위치(월드)
-	float4 LightForward; // 라이트 전방 방향
+	float4 LightWorldPosition; // 라이트 월드 공간 위치
+	float4 LightViewPosition; // 라이트 뷰 공간 위치
+	float4 LightForwardVector; // 월드 입사 벡터
+	float4 LightBackwordVector; // 월드 입사 벡터 반대 방향
+	float4 LightViewForwardVector; // 뷰 입사 벡터
 
-	float4 LightViewSpacePosition; // 라이트 뷰스페이스
-	float4 LightViewSpaceForward; // 라이트 뷰스페이스 전방 방향
-	float4 LightViewSpaceBack; // 라이트 뷰스페이스 후방 빙향
+	float4 CameraWorldPosition; // 시점 월드 공간 위치
+	float4 CameraViewPosition; // 시점 뷰 공간 위치
+	float4 CameraForwardVector; // 월드 시점 벡터
+	float4 CameraViewForwardVector; // 뷰 시점 벡터
 
 	float LightNear = 1.0f;
 	float LightFar = 1.0f;

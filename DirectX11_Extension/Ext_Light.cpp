@@ -16,15 +16,26 @@ void Ext_Light::SetLightRange(float _Range)
 
 bool first = false;
 
+// 여기서의 Camera는 바라보는 시선, 위치를 의미함
 void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTime)
 {
+	//if (!first)
+	//{
+	//	first = true;
+	//	GetTransform()->AddLocalRotation({ 45.0f, 0.f, 0.f});
+	//	GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
+	//}
+
 	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
-	LTData->LightForward = GetTransform()->GetLocalForwardVector();
-	LTData->LightViewSpacePosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
-	LTData->LightViewSpaceForward = LTData->LightForward * _Camera->GetViewMatrix();
-	LTData->LightViewSpaceBack = -LTData->LightForward;
-	// LightDatas.CameraPosition = _Camera->GetTransform()->GetWorldPosition() * _Camera->GetViewMatrix();
-	// LightDatas.CameraWorldPosition = _Camera->GetTransform()->GetWorldPosition();
+	LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
+	LTData->LightForwardVector = GetTransform()->GetLocalForwardVector();
+	LTData->LightBackwordVector = -LTData->LightForwardVector;
+	LTData->LightViewForwardVector = LTData->LightForwardVector * _Camera->GetViewMatrix();
+
+	LTData->CameraWorldPosition = _Camera->GetTransform()->GetWorldPosition();
+	LTData->CameraViewPosition = _Camera->GetTransform()->GetWorldPosition() * _Camera->GetViewMatrix();
+	LTData->CameraForwardVector = _Camera->GetTransform()->GetLocalForwardVector();
+	LTData->CameraViewForwardVector = LTData->CameraForwardVector * _Camera->GetViewMatrix();
 
 	if (LTData->LightType == static_cast<int>(LightType::Directional))
 	{
