@@ -26,16 +26,16 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 	//	GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
 	//}
 
-	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
-	LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
+	//LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
+	//LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
 	LTData->LightForwardVector = GetTransform()->GetLocalForwardVector();
-	LTData->LightBackwordVector = -LTData->LightForwardVector;
-	LTData->LightViewForwardVector = LTData->LightForwardVector * _Camera->GetViewMatrix();
+	//LTData->LightBackwordVector = -LTData->LightForwardVector;
+	//LTData->LightViewForwardVector = LTData->LightForwardVector * _Camera->GetViewMatrix();
 
 	LTData->CameraWorldPosition = _Camera->GetTransform()->GetWorldPosition();
-	LTData->CameraViewPosition = _Camera->GetTransform()->GetWorldPosition() * _Camera->GetViewMatrix();
-	LTData->CameraForwardVector = _Camera->GetTransform()->GetLocalForwardVector();
-	LTData->CameraViewForwardVector = LTData->CameraForwardVector * _Camera->GetViewMatrix();
+	//LTData->CameraViewPosition = _Camera->GetTransform()->GetWorldPosition() * _Camera->GetViewMatrix();
+	//LTData->CameraForwardVector = _Camera->GetTransform()->GetLocalForwardVector();
+	//LTData->CameraViewForwardVector = LTData->CameraForwardVector * _Camera->GetViewMatrix();
 
 	if (LTData->LightType == static_cast<int>(LightType::Directional))
 	{

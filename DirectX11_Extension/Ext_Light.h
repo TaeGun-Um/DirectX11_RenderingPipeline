@@ -11,18 +11,26 @@ enum class LightType
 
 struct LightData
 {
-	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.1f }; // RGB(색), w(강도)
-	
-	float4 LightWorldPosition; // 라이트 월드 공간 위치
-	float4 LightViewPosition; // 라이트 뷰 공간 위치
-	float4 LightForwardVector; // 월드 입사 벡터
-	float4 LightBackwordVector; // 월드 입사 벡터 반대 방향
-	float4 LightViewForwardVector; // 뷰 입사 벡터
+	//float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.25f }; // RGB(색), w(강도)
+	//
+	//float4 LightWorldPosition; // 라이트 월드 공간 위치
+	//float4 LightViewPosition; // 라이트 뷰 공간 위치
+	//float4 LightForwardVector; // 월드 입사 벡터
+	//float4 LightBackwordVector; // 월드 입사 벡터 반대 방향
+	//float4 LightViewForwardVector; // 뷰 입사 벡터
 
+	//float4 CameraWorldPosition; // 시점 월드 공간 위치
+	//float4 CameraViewPosition; // 시점 뷰 공간 위치
+	//float4 CameraForwardVector; // 월드 시점 벡터
+	//float4 CameraViewForwardVector; // 뷰 시점 벡터
+
+	//float LightNear = 1.0f;
+	//float LightFar = 1.0f;
+	//int LightType = 0;
+
+	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.25f };// RGB(색), w(강도)
+	float4 LightForwardVector; // 월드 입사 벡터
 	float4 CameraWorldPosition; // 시점 월드 공간 위치
-	float4 CameraViewPosition; // 시점 뷰 공간 위치
-	float4 CameraForwardVector; // 월드 시점 벡터
-	float4 CameraViewForwardVector; // 뷰 시점 벡터
 
 	float LightNear = 1.0f;
 	float LightFar = 1.0f;
