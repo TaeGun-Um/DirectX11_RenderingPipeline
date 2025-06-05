@@ -31,12 +31,31 @@ void Ext_MeshComponentUnit::Release()
 	OwnerMeshComponent.reset();
 }
 
-// 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅
-void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName)
+std::string MaterialSettingToString(MaterialSetting _Setting)
 {
+	std::string MaterialString;
+
+	switch (_Setting)
+	{
+	case MaterialSetting::Static: MaterialString = "Static"; break;
+	case MaterialSetting::StaticNonG: MaterialString = "StaticNonG"; break;
+	case MaterialSetting::Dynamic: MaterialString = "Dynamic"; break;
+	case MaterialSetting::DynamicNonG: MaterialString = "DynamicNonG"; break;
+	case MaterialSetting::Debug: MaterialString = "Debug"; break;
+	case MaterialSetting::Unknown: MsgAssert("뭔가 잘못됨"); break;
+	}
+
+	return MaterialString;
+}
+
+// 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅
+void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, MaterialSetting _SettingValue)
+{
+	std::string MaterialName = MaterialSettingToString(_SettingValue);
+
 	Mesh = Ext_DirectXMesh::Find(_MeshName); // 메시 설정
-	Material = Ext_DirectXMaterial::Find(_MaterialName); // 머티리얼 설정
-	
+	Material = Ext_DirectXMaterial::Find(MaterialName); // 머티리얼 설정
+
 	if (nullptr == Mesh || nullptr == Material)
 	{
 		MsgAssert("존재하지 않는 메시나 머티리얼을 메시유닛에 넣을 수는 없습니다.")
@@ -57,8 +76,8 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	const TransformData& TFData = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
 	BufferSetter.SetConstantBufferLink("TransformData", TFData);
 
-	// [4] 빛 상수버퍼 세팅하기
-	if (_MaterialName == "Static" || _MaterialName == "Dynamic")
+	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
+	if (_SettingValue == MaterialSetting::Static || _SettingValue == MaterialSetting::Dynamic)
 	{
 		const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
 		BufferSetter.SetConstantBufferLink("LightData", LTData);
@@ -68,9 +87,9 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, const std::string& _SettingTexture /*= "BaseColor"*/)
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, TextureSlot _SlottVlaue /*= TextureSlot::BaseColor*/)
 {
-	BufferSetter.SetTexture(_TextureName, _SettingTexture);
+	BufferSetter.SetTexture(_TextureName, _SlottVlaue);
 }
 
 // Mesh, Material의 RenderingPipeline Setting

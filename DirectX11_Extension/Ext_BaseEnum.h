@@ -17,6 +17,33 @@ enum class RenderPath
     Unknown
 };
 
+enum class MaterialSetting
+{
+    Static,
+    StaticNonG,
+    Dynamic,
+    DynamicNonG,
+    Debug,
+    Unknown
+};
+
+enum class TextureSlot
+{
+    BaseColor,
+    Normal,
+    Roughness,
+    Metalic,
+    Emissive,
+    Unknown
+};
+
+enum class ActorOrder
+{
+    Normal,
+    Specific,
+    Unknown
+};
+
 enum class CollsionType
 {
     Sphere3D,

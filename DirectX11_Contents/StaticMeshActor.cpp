@@ -9,8 +9,8 @@ void StaticMeshActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BookMesh");
 	//MeshComp->CreateMeshComponentUnit("Book", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Book", "Static");
-	MeshComp->SetTexture("Book_BaseColor.jpg", "BaseColor");
+	MeshComp->CreateMeshComponentUnit("Book", MaterialSetting::Static);
+	MeshComp->SetTexture("Book_BaseColor.jpg");
 
 	//GetTransform()->AddLocalRotation({ 0.f, 0.f, 90.f });
 	//GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });

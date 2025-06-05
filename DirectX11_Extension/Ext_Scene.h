@@ -19,16 +19,23 @@ public:
 
 	// Actor 생성 및 저장
 	template<typename ActorType>
+	std::shared_ptr<ActorType> CreateActor(std::string_view _Name, ActorOrder _Order)
+	{
+		CreateActor(_Name, static_cast<int>(_Order));
+	}
+
+	// Actor 생성 및 저장
+	template<typename ActorType>
 	std::shared_ptr<ActorType> CreateActor(std::string_view _Name, int _Order = 0)
 	{
-		std::shared_ptr<Ext_Actor> NewActor = std::make_shared<ActorType>();
-		std::string NewName = _Name.data();
 		if (_Name == "")
 		{
-			const type_info& Info = typeid(ActorType);
-			NewName = Info.name();
-			NewName.replace(0, 6, "");
+			MsgAssert("Actor 생성 시에는 이름을 지정해주세요");
+			return 0;
 		}
+
+		std::shared_ptr<Ext_Actor> NewActor = std::make_shared<ActorType>();
+		std::string NewName = _Name.data();
 
 		ActorInitialize(NewActor, GetSharedFromThis<Ext_Scene>(), NewName.c_str(), _Order);
 		Actors[GetOrder()].push_back(NewActor);

@@ -40,6 +40,9 @@
     <Filter Include="01.Object\02.Actor\02.Env">
       <UniqueIdentifier>{eaa9c4df-2848-4323-b1bb-cb4c34eb4a25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Object\03.GUI">
+      <UniqueIdentifier>{1b563df2-de7b-4a10-bab0-7cddb18d3100}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestScene.cpp">
@@ -75,6 +78,9 @@
     <ClCompile Include="Character.cpp">
       <Filter>01.Object\02.Actor</Filter>
     </ClCompile>
+    <ClCompile Include="InformationGUI.cpp">
+      <Filter>01.Object\03.GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScene.h">
@@ -109,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>01.Object\02.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="InformationGUI.h">
+      <Filter>01.Object\03.GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

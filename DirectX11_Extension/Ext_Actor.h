@@ -17,22 +17,29 @@ public:
 	Ext_Actor& operator=(const Ext_Actor& _Other) = delete;
 	Ext_Actor& operator=(Ext_Actor&& _Other) noexcept = delete;
 
+	// 충돌체 컴포넌트 생성 후 저장
+	template<typename ComponentType>
+	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, CollisionGroup _Group)
+	{
+		CreateComponent(_Name, static_cast<int>(_Group));
+	}
+
 	// 컴포넌트 생성 후 저장
 	template<typename ComponentType>
 	std::shared_ptr<ComponentType> CreateComponent(std::string_view _Name, int _Order = 0)
 	{
-		std::shared_ptr<Ext_Component> NewComponent = std::make_shared<ComponentType>();
-		std::string NewName = _Name.data();
 		if (_Name == "")
 		{
-			const type_info& Info = typeid(ComponentType);
-			NewName = Info.name();
-			NewName.replace(0, 6, "");
+			MsgAssert("Component 생성 시에는 이름을 지정해주세요");
+			return nullptr;
 		}
+
+		std::shared_ptr<Ext_Component> NewComponent = std::make_shared<ComponentType>();
+		std::string NewName = _Name.data();
 
 		if (Components.find(NewName) != Components.end())
 		{
-			MsgAssert("이미 존재하는 이름의 Component가 있습니다.");
+			MsgAssert("해당 Actor 내에 이미 동일한 이름의 Component가 존재합니다.");
 			return nullptr;
 		}
 

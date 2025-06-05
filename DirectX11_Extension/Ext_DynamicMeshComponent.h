@@ -13,7 +13,7 @@ public:
     Ext_DynamicMeshComponent& operator=(const Ext_DynamicMeshComponent&) = delete;
     Ext_DynamicMeshComponent& operator=(Ext_DynamicMeshComponent&&) noexcept = delete;
 
-    std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, std::string_view _Material = "Animation") override; // 메시 컴포넌트에 필요한 유닛 생성 및 저장
+    std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, MaterialSetting _SettingValue) override; // 메시 컴포넌트에 필요한 유닛 생성 및 저장
     void CreateAnimation(std::string_view _FilePath);
     void SetAnimation(std::string_view _AnimName, bool _IsLoop = false);
     bool IsAnimationEnd();

@@ -9,7 +9,7 @@ void CylinderActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
 	//MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Cylinder", "Static");
+	MeshComp->CreateMeshComponentUnit("Cylinder", MaterialSetting::Static);
 	MeshComp->SetTexture("Green.png");
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });

@@ -14,6 +14,12 @@ public:
 	template<typename SceneType>
 	static std::shared_ptr<SceneType> CreateScene(std::string_view _Name)
 	{
+		if (_Name == "")
+		{
+			MsgAssert("Scene 생성 시에는 이름을 지정해주세요.");
+			return nullptr;
+		}
+
 		std::shared_ptr<Ext_Scene> NewLevel = std::make_shared<SceneType>();
 		std::string NewName = _Name.data();
 
@@ -28,7 +34,7 @@ public:
 
 		if (Scenes.end() != Scenes.find(NewName))
 		{
-			MsgAssert("같은 이름의 Scene을 2개 만들수는 없습니다.");
+			MsgAssert("이미 동일한 이름의 Scene이 생성됐습니다.");
 			return nullptr;
 		}
 

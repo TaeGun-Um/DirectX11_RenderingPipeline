@@ -20,8 +20,8 @@ void Character::Start()
 	CreateFSM();
 	
 	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
-	BodyMesh->CreateMeshComponentUnit("Girl", "DynamicNonG");
-	BodyMesh->SetTexture("Ch03_1001_Diffuse.png", "BaseColor");
+	BodyMesh->CreateMeshComponentUnit("Girl", MaterialSetting::DynamicNonG);
+	BodyMesh->SetTexture("Ch03_1001_Diffuse.png");
 	
 	Base_Directory Dir3;
 	Dir3.MakePath("../Resource/Character/Animation");
@@ -38,7 +38,7 @@ void Character::Start()
 	BodyCollision->SetCollsionType(CollsionType::AABB3D);
 
 	BodyCollisionMesh = CreateComponent<Ext_MeshComponent>("BodyCollisionMesh");
-	BodyCollisionMesh->CreateMeshComponentUnit("Sphere", "Debug");
+	BodyCollisionMesh->CreateMeshComponentUnit("Sphere", MaterialSetting::Debug);
 
 	BodyCollisionMesh->GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 	BodyCollision->GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });

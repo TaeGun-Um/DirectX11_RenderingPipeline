@@ -30,7 +30,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 }
 
 // 텍스쳐 값 변경
-void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, const std::string& _SettingTexture /*= "BaseColor"*/)
+void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, TextureSlot _SlotValue /*= TextureSlot::BaseColor*/)
 {
 	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
 	if (nullptr == NewTexture)
@@ -40,36 +40,15 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, const
 		return;
 	}
 
-	std::string UpperName = Base_String::ToUpper(_SettingTexture.data());
 	std::string SlotName;
-
-	if (UpperName == "BASECOLOR")
+	switch (_SlotValue)
 	{
-		// BaseColor, Albedo, Albm 등
-		SlotName = "BaseColorTex";
-	}
-	else if (UpperName == "NORMAL")
-	{
-		// Normal. Nrmr 등
-		SlotName = "NormalTex";
-	}
-	else if (UpperName == "ROUGHNESS")
-	{
-		// ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
-		SlotName = "RoughnessTex";
-	}
-	else if (UpperName == "METALLIC")
-	{
-		SlotName = "MetallicTex";
-	}
-	else if (UpperName == "EMISSIVE")
-	{
-		SlotName = "EmissiveTex";
-	}
-	else
-	{
-		MsgAssert("알 수 없는 지정 형식입니다 : " + UpperName);
-		return;
+	case TextureSlot::BaseColor: SlotName = "BaseColorTex"; break; // BaseColor, Albedo, Albm 등
+	case TextureSlot::Normal: SlotName = "NormalTex"; break; // Normal. Nrmr 등
+	case TextureSlot::Roughness: SlotName = "RoughnessTex"; break; // ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
+	case TextureSlot::Metalic: SlotName = "MetallicTex"; break;
+	case TextureSlot::Emissive: SlotName = "EmissiveTex"; break;
+	case TextureSlot::Unknown: MsgAssert("SetTexture는 형식을 지정해야합니다."); break;
 	}
 
 	std::string UpperSlotName = Base_String::ToUpper(SlotName);

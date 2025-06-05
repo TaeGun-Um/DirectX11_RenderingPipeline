@@ -10,7 +10,7 @@ void TestPlatform::Start()
 	PlatformBody->SetCollsionType(CollsionType::AABB3D);
 
 	PlatformBodyMesh = CreateComponent<Ext_MeshComponent>("PlatformBodyMesh");
-	PlatformBodyMesh->CreateMeshComponentUnit("Box", "StaticNonG");
+	PlatformBodyMesh->CreateMeshComponentUnit("Box", MaterialSetting::StaticNonG);
 	PlatformBodyMesh->SetTexture("Gray.png");
 
 	GetTransform()->SetLocalScale({ 2000.f, 50.f, 2000.f });

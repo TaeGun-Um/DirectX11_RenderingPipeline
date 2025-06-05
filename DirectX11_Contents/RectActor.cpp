@@ -8,7 +8,7 @@
 void RectActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Rect", "StaticNonG");
+	MeshComp->CreateMeshComponentUnit("Rect", MaterialSetting::StaticNonG);
 	// MeshComp->CreateMeshComponentUnit("Rect", "Static");
 	MeshComp->SetTexture("Manual.png");
 
