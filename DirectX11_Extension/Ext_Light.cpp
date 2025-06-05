@@ -10,8 +10,8 @@ Ext_Light::Ext_Light()
 
 void Ext_Light::SetLightRange(float _Range)
 {
-	LTData->LightNear = 1.0f;
-	LTData->LightFar = _Range;
+	LTData->NearDistance = 1.0f;
+	LTData->FarDistance = _Range;
 }
 
 bool first = false;
@@ -26,7 +26,7 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 	//	GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
 	//}
 
-	//LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
+	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
 	//LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
 	LTData->LightForwardVector = GetTransform()->GetLocalForwardVector();
 	//LTData->LightBackwordVector = -LTData->LightForwardVector;

@@ -27,14 +27,20 @@ struct LightData
 	//float LightNear = 1.0f;
 	//float LightFar = 1.0f;
 	//int LightType = 0;
-
 	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.25f };// RGB(색), w(강도)
+	float4 LightWorldPosition; // 라이트 월드 공간 위치
 	float4 LightForwardVector; // 월드 입사 벡터
 	float4 CameraWorldPosition; // 시점 월드 공간 위치
 
-	float LightNear = 1.0f;
-	float LightFar = 1.0f;
+	float NearDistance = 1.0f;
+	float FarDistance = 100.0f;
 	int LightType = 0;
+};
+
+struct LightDatas
+{
+	int LightCount = 0;
+	LightData Lights[64];
 };
 
 class Ext_Light : public Ext_Actor
