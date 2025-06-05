@@ -30,7 +30,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 }
 
 // 텍스쳐 값 변경
-void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, TextureSlot _SlotValue /*= TextureSlot::BaseColor*/)
+void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, TextureType _SlotValue /*= TextureType::BaseColor*/)
 {
 	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
 	if (nullptr == NewTexture)
@@ -43,12 +43,12 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, Textu
 	std::string SlotName;
 	switch (_SlotValue)
 	{
-	case TextureSlot::BaseColor: SlotName = "BaseColorTex"; break; // BaseColor, Albedo, Albm 등
-	case TextureSlot::Normal: SlotName = "NormalTex"; break; // Normal. Nrmr 등
-	case TextureSlot::Roughness: SlotName = "RoughnessTex"; break; // ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
-	case TextureSlot::Metalic: SlotName = "MetallicTex"; break;
-	case TextureSlot::Emissive: SlotName = "EmissiveTex"; break;
-	case TextureSlot::Unknown: MsgAssert("SetTexture는 형식을 지정해야합니다."); break;
+	case TextureType::BaseColor: SlotName = "BaseColorTex"; break; // BaseColor, Albedo, Albm 등
+	case TextureType::Normal: SlotName = "NormalTex"; break; // Normal. Nrmr 등
+	case TextureType::Roughness: SlotName = "RoughnessTex"; break; // ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
+	case TextureType::Metalic: SlotName = "MetallicTex"; break;
+	case TextureType::Emissive: SlotName = "EmissiveTex"; break;
+	case TextureType::Unknown: MsgAssert("SetTexture는 형식을 지정해야합니다."); break;
 	}
 
 	std::string UpperSlotName = Base_String::ToUpper(SlotName);
@@ -64,6 +64,35 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, Textu
 	{
 		TextureSetter& Setter = Iter->second;
 		Setter.Texture = NewTexture;
+	}
+}
+
+// 텍스쳐 값 변경
+void Ext_DirectXBufferSetter::SetSampler(SamplerType _TypeValue)
+{
+	std::string FindName = "";
+
+	switch (_TypeValue)
+	{
+	case SamplerType::LinearClamp: FindName = "LinearClampSampler"; break;
+	case SamplerType::LinearMirror: FindName = "LinearMirrorSampler"; break;
+	case SamplerType::LinearWrap: FindName = "LinearWrapSampler"; break;
+	case SamplerType::PointClamp: FindName = "PointClampSampler"; break;
+	case SamplerType::PointMirror: FindName = "PointMirrorSampler"; break;
+	case SamplerType::PointWrap: FindName = "PointWrapSampler"; break;
+	case SamplerType::Unknown: MsgAssert("뭔가 잘못됨"); break;
+	}
+
+	std::shared_ptr<Ext_DirectXSampler> NewSampler = Ext_DirectXSampler::Find(FindName);
+	
+	// 샘플러 기본 슬롯 이름은 "Sampler"임
+	std::string UpperSlotName = Base_String::ToUpper("Sampler");
+	auto Range = SamplerSetters.equal_range(UpperSlotName);
+
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		SamplerSetter& Setter = Iter->second;
+		Setter.Sampler = NewSampler;
 	}
 }
 

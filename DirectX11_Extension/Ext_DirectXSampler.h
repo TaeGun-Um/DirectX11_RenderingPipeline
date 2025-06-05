@@ -24,13 +24,14 @@ public:
 		return NewSampler;
 	}
 
-	static std::shared_ptr<Ext_DirectXSampler> SamplerSetting(std::string_view _Name, const D3D11_SAMPLER_DESC& Desc)
+	// Sampler 변경
+	static std::shared_ptr<Ext_DirectXSampler> ChangeSampler(std::string_view _Name, const D3D11_SAMPLER_DESC& Desc)
 	{
 		std::shared_ptr<Ext_DirectXSampler> NewSampler = Ext_ResourceManager::Find(_Name);
 
 		if (nullptr == NewSampler)
 		{
-			MsgAssert("존재하지 않는 샘플러의 옵션을 변경하려고 했습니다.");
+			MsgAssert("존재하지 않는 샘플러로 변경하려 했습니다.");
 			return nullptr;
 		}
 

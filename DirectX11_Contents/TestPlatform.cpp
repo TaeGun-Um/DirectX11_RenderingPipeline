@@ -10,8 +10,9 @@ void TestPlatform::Start()
 	PlatformBody->SetCollsionType(CollsionType::AABB3D);
 
 	PlatformBodyMesh = CreateComponent<Ext_MeshComponent>("PlatformBodyMesh");
-	PlatformBodyMesh->CreateMeshComponentUnit("Box", MaterialSetting::StaticNonG);
-	PlatformBodyMesh->SetTexture("Gray.png");
+	PlatformBodyMesh->CreateMeshComponentUnit("Box", MaterialType::StaticNonG);
+	PlatformBodyMesh->SetSampler(SamplerType::PointMirror);
+	PlatformBodyMesh->SetTexture("Red.png");
 
 	GetTransform()->SetLocalScale({ 2000.f, 50.f, 2000.f });
 	GetTransform()->SetLocalPosition({ 0.f, -25.f, 0.f });

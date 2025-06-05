@@ -21,7 +21,7 @@ void Ext_DynamicMeshComponent::Start()
 }
 
 // 메시 컴포넌트에 필요한 유닛 생성 및 저장, DynamicMesh는 Animator 생성
-std::shared_ptr<Ext_MeshComponentUnit> Ext_DynamicMeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, MaterialSetting _SettingValue)
+std::shared_ptr<Ext_MeshComponentUnit> Ext_DynamicMeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, MaterialType _SettingValue)
 {
     std::shared_ptr<Ext_MeshComponentUnit> NewUnit = __super::CreateMeshComponentUnit(_MeshName, _SettingValue);
     Animator = std::make_shared<Ext_Animator>();

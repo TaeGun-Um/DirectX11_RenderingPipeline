@@ -79,7 +79,7 @@ void Ext_DirectXResourceLoader::ShaderCompile()
 // 샘플러 정보 생성
 void Ext_DirectXResourceLoader::MakeSampler()
 {
-	// 샘플러
+	// 리니어 클램프 샘플러, 
 	{
 		D3D11_SAMPLER_DESC SamperInfo = {};
 
@@ -100,7 +100,92 @@ void Ext_DirectXResourceLoader::MakeSampler()
 		/*7. ComparisonFunc : 그림자 맵 등에서 비교 연산 시 항상 통과한다는 설정, 일반 텍스쳐는 보통 ALWAYS를 설정한다.*/
 		/*8~9. MinLOD, MaxLOD : 밉맵 레벨 범위 제한, -FLT_MAX ~ FLT_MAX면 전체를 허용하는 것*/
 
-		Ext_DirectXSampler::CreateSampler("BaseSampler", SamperInfo);
+		Ext_DirectXSampler::CreateSampler("LinearClampSampler", SamperInfo);
+	}
+
+	// 리니어 미러 샘플러
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("LinearMirrorSampler", SamperInfo);
+	}
+
+	// 리니어 랩 샘플러
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("LinearWrapSampler", SamperInfo);
+	}
+
+	// 포인트 클램프 샘플러
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("PointClampSampler", SamperInfo);
+	}
+
+	// 포인트 미러 샘플러
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("PointMirrorSampler", SamperInfo);
+	}
+
+	// 포인트 랩 샘플러
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("PointWrapSampler", SamperInfo);
 	}
 }
 

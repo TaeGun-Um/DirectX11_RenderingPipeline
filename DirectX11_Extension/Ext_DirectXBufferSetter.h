@@ -65,9 +65,11 @@ public:
 	void InsertTextureSetter(const TextureSetter& _Setter) { TextureSetters.insert(std::make_pair(_Setter.Name, _Setter)); }
 
 	// 텍스쳐값 변경하기
-	void SetTexture(std::string_view _TextureName, TextureSlot _SlotValue);
+	void SetTexture(std::string_view _TextureName, TextureType _TypeValue);
 
-	// 상수버퍼 데이터 저장
+	// 샘플러값 변경하기
+	void SetSampler(SamplerType _TypeValue);
+
 	template<typename Type>
 	void SetConstantBufferLink(std::string_view _Name, const Type& _Data)
 	{

@@ -17,7 +17,7 @@ enum class RenderPath
     Unknown
 };
 
-enum class MaterialSetting
+enum class MaterialType
 {
     Static,
     StaticNonG,
@@ -27,7 +27,18 @@ enum class MaterialSetting
     Unknown
 };
 
-enum class TextureSlot
+enum class SamplerType
+{
+    LinearClamp,
+    LinearMirror,
+    LinearWrap,
+    PointClamp,
+    PointMirror,
+    PointWrap,
+    Unknown
+};
+
+enum class TextureType
 {
     BaseColor,
     Normal,
@@ -36,6 +47,8 @@ enum class TextureSlot
     Emissive,
     Unknown
 };
+
+
 
 enum class ActorOrder
 {

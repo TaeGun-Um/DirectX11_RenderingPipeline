@@ -31,25 +31,25 @@ void Ext_MeshComponentUnit::Release()
 	OwnerMeshComponent.reset();
 }
 
-std::string MaterialSettingToString(MaterialSetting _Setting)
+std::string MaterialSettingToString(MaterialType _Setting)
 {
 	std::string MaterialString;
 
 	switch (_Setting)
 	{
-	case MaterialSetting::Static: MaterialString = "Static"; break;
-	case MaterialSetting::StaticNonG: MaterialString = "StaticNonG"; break;
-	case MaterialSetting::Dynamic: MaterialString = "Dynamic"; break;
-	case MaterialSetting::DynamicNonG: MaterialString = "DynamicNonG"; break;
-	case MaterialSetting::Debug: MaterialString = "Debug"; break;
-	case MaterialSetting::Unknown: MsgAssert("뭔가 잘못됨"); break;
+	case MaterialType::Static: MaterialString = "Static"; break;
+	case MaterialType::StaticNonG: MaterialString = "StaticNonG"; break;
+	case MaterialType::Dynamic: MaterialString = "Dynamic"; break;
+	case MaterialType::DynamicNonG: MaterialString = "DynamicNonG"; break;
+	case MaterialType::Debug: MaterialString = "Debug"; break;
+	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 
 	return MaterialString;
 }
 
 // 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅
-void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, MaterialSetting _SettingValue)
+void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, MaterialType _SettingValue)
 {
 	std::string MaterialName = MaterialSettingToString(_SettingValue);
 
@@ -77,7 +77,7 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.SetConstantBufferLink("TransformData", TFData);
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
-	if (_SettingValue == MaterialSetting::Static || _SettingValue == MaterialSetting::Dynamic)
+	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic)
 	{
 		const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
 		BufferSetter.SetConstantBufferLink("LightData", LTData);
@@ -87,9 +87,15 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, TextureSlot _SlottVlaue /*= TextureSlot::BaseColor*/)
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, TextureType _TypeVlaue /*= TextureSlot::BaseColor*/)
 {
-	BufferSetter.SetTexture(_TextureName, _SlottVlaue);
+	BufferSetter.SetTexture(_TextureName, _TypeVlaue);
+}
+
+// 샘플러 변경하기
+void Ext_MeshComponentUnit::SetSampler(SamplerType _TypeVlaue)
+{
+	BufferSetter.SetSampler(_TypeVlaue);
 }
 
 // Mesh, Material의 RenderingPipeline Setting

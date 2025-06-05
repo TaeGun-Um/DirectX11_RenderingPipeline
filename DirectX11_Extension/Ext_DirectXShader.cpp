@@ -165,7 +165,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 		{
 			// 바인딩 슬롯 이름과 동일한 샘플러를 찾지 못하면, 기본 Base 샘플러로 변경
 			std::shared_ptr<Ext_DirectXSampler> SamplerResource = Ext_DirectXSampler::Find(UpperName);
-			if (nullptr == SamplerResource) SamplerResource = Ext_DirectXSampler::Find("BaseSampler");
+			if (nullptr == SamplerResource) SamplerResource = Ext_DirectXSampler::Find("LinearClampSampler");
 
 			// 샘플러 세터 데이터 입력 후 저장
 			SamplerSetter Set;

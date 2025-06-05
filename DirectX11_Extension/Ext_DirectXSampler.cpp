@@ -6,9 +6,9 @@
 // 샘플러 생성
 void Ext_DirectXSampler::CreateSampler(const D3D11_SAMPLER_DESC& _Desc)
 {
-	if (nullptr != SmplerState)
+	if (nullptr != SmplerState) // 기존 샘플러 있을 경우, 해제한 뒤 다시 사용
 	{
-		SmplerState.Reset(); // 기존 샘플러 있을 경우, 해제한 뒤 다시 사용
+		SmplerState.Reset(); 
 	}
 
 	SamplerInfo = _Desc;

@@ -25,7 +25,7 @@ void Ext_MeshComponent::PushMeshToCamera(std::string_view _CameraName)
 }
 
 // 메시 컴포넌트에 필요한 유닛 생성 및 저장, 따로 설정하지 않으면 Basic Material로 고정
-std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, MaterialSetting _SettingValue)
+std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUnit(std::string_view _MeshName, MaterialType _SettingValue)
 {
 	std::shared_ptr<Ext_MeshComponentUnit> NewUnit = std::make_shared<Ext_MeshComponentUnit>();
 	NewUnit->SetOwnerMeshComponent(GetSharedFromThis<Ext_MeshComponent>());
@@ -36,14 +36,19 @@ std::shared_ptr<Ext_MeshComponentUnit> Ext_MeshComponent::CreateMeshComponentUni
 }
 
 // 텍스쳐 변경하기
-void Ext_MeshComponent::SetTexture(std::string_view _TextureName, TextureSlot _SlotValue /*= TextureSlot::BaseColor*/)
+void Ext_MeshComponent::SetTexture(std::string_view _TextureName, TextureType _TypeValue /*= TextureSlot::BaseColor*/)
 {
 	if (nullptr == Unit)
 	{
 		MsgAssert("유닛이 없어 텍스쳐 세팅이 불가능합니다.");
 	}
 
-	Unit->SetTexture(_TextureName, _SlotValue);
+	Unit->SetTexture(_TextureName, _TypeValue);
+}
+
+void Ext_MeshComponent::SetSampler(SamplerType _TypeValue)
+{
+	Unit->SetSampler(_TypeValue);
 }
 
 void Ext_MeshComponent::Start()
