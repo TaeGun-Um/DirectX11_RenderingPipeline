@@ -34,7 +34,7 @@ struct PSInput
 float4 Grapics_PS(PSInput _Input) : SV_TARGET
 {
     // 텍스처 색상
-    float4 Albedo = BaseColorTex.Sample(Sampler, _Input.TexCoord);
+    float4 Albedo = BaseColorTex.Sample(Sampler, _Input.TexCoord.xy);
     
     // 월드공간 기준 픽셀(표면) 위치와 법선 단위 벡터
     float3 PixelPosition = _Input.WorldPosition;

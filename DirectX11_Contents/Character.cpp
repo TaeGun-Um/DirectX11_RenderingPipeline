@@ -20,7 +20,7 @@ void Character::Start()
 	CreateFSM();
 	
 	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
-	BodyMesh->CreateMeshComponentUnit("Girl", MaterialType::DynamicNonG);
+	BodyMesh->CreateMeshComponentUnit("Girl", MaterialType::Dynamic);
 	BodyMesh->SetTexture("Ch03_1001_Diffuse.png");
 	
 	Base_Directory Dir3;

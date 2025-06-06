@@ -40,14 +40,15 @@ struct VSOutput
     float4 Position : SV_POSITION;
     float4 Color : COLOR;
     float4 TexCoord : TEXCOORD;
-    float4 Normal : NORMAL; //¿©ÀüÈ÷ float4·Î À¯Áö
+    float4 WorldNormal : NORMAL;
+    float3 WorldPosition : POSITION;
 };
 
-VSOutput Dynamic_VS(VSInput input)
+VSOutput Dynamic_VS(VSInput _Input)
 {
-    VSOutput output;
+    VSOutput Output;
 
-    float4x4 skinMatrix = float4x4(
+    float4x4 SkinMatrix = float4x4(
         0, 0, 0, 0,
         0, 0, 0, 0,
         0, 0, 0, 0,
@@ -57,42 +58,43 @@ VSOutput Dynamic_VS(VSInput input)
     [unroll]
     for (int i = 0; i < 4; ++i)
     {
-        uint bIdx = input.BoneID[i];
-        float w = input.Weight[i];
+        uint bIdx = _Input.BoneID[i];
+        float w = _Input.Weight[i];
         if (w > 0.0f && bIdx < MAX_BONES)
         {
-            skinMatrix += Bones[bIdx] * w;
+            SkinMatrix += Bones[bIdx] * w;
         }
     }
 
-    float4 skinnedPos;
-    skinnedPos.x = dot(skinMatrix[0], input.Position); // row0 ¡¤ [x y z 1]
-    skinnedPos.y = dot(skinMatrix[1], input.Position); // row1 ¡¤ [x y z 1]
-    skinnedPos.z = dot(skinMatrix[2], input.Position); // row2 ¡¤ [x y z 1]
-    skinnedPos.w = dot(skinMatrix[3], input.Position); // row3 ¡¤ [x y z 1]
+    float4 SkinnedPos;
+    SkinnedPos.x = dot(SkinMatrix[0], _Input.Position); // row0 ¡¤ [x y z 1]
+    SkinnedPos.y = dot(SkinMatrix[1], _Input.Position); // row1 ¡¤ [x y z 1]
+    SkinnedPos.z = dot(SkinMatrix[2], _Input.Position); // row2 ¡¤ [x y z 1]
+    SkinnedPos.w = dot(SkinMatrix[3], _Input.Position); // row3 ¡¤ [x y z 1]
 
-    //output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
-    float4 worldPos = mul(skinnedPos, WorldMatrix); // -> ¿ùµå ÁÂÇ¥°è(row ÇüÅÂ)
-    float4 viewPos = mul(worldPos, ViewMatrix); // -> ºä ÁÂÇ¥°è
-    output.Position = mul(viewPos, ProjectionMatrix);
+    //Output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
+    float4 WorldPos = mul(SkinnedPos, WorldMatrix); // -> ¿ùµå ÁÂÇ¥°è(row ÇüÅÂ)
+    Output.WorldPosition = WorldPos.xyz;
+    float4 ViewPos = mul(WorldPos, ViewMatrix); // -> ºä ÁÂÇ¥°è
+    Output.Position = mul(ViewPos, ProjectionMatrix);
     
-    float3 skinnedNormal3;
+    float3 SkinnedNormal;
     {
-        float3 row0 = float3(skinMatrix[0][0], skinMatrix[0][1], skinMatrix[0][2]);
-        float3 row1 = float3(skinMatrix[1][0], skinMatrix[1][1], skinMatrix[1][2]);
-        float3 row2 = float3(skinMatrix[2][0], skinMatrix[2][1], skinMatrix[2][2]);
+        float3 row0 = float3(SkinMatrix[0][0], SkinMatrix[0][1], SkinMatrix[0][2]);
+        float3 row1 = float3(SkinMatrix[1][0], SkinMatrix[1][1], SkinMatrix[1][2]);
+        float3 row2 = float3(SkinMatrix[2][0], SkinMatrix[2][1], SkinMatrix[2][2]);
 
-        skinnedNormal3.x = dot(row0, input.Normal.xyz);
-        skinnedNormal3.y = dot(row1, input.Normal.xyz);
-        skinnedNormal3.z = dot(row2, input.Normal.xyz);
-        skinnedNormal3 = normalize(skinnedNormal3);
+        SkinnedNormal.x = dot(row0, _Input.Normal.xyz);
+        SkinnedNormal.y = dot(row1, _Input.Normal.xyz);
+        SkinnedNormal.z = dot(row2, _Input.Normal.xyz);
+        SkinnedNormal = normalize(SkinnedNormal);
     }
 
-    float3 worldNormal3 = normalize(mul((float3x3) WorldMatrix, skinnedNormal3));
+    float3 WorldNormal = normalize(mul((float3x3) WorldMatrix, SkinnedNormal));
 
-    output.Normal = float4(worldNormal3, 0.0f);
-    output.Color = input.Color;
-    output.TexCoord = float4(input.TexCoord.xy, 0.0f, 0.0f);
+    Output.WorldNormal = float4(WorldNormal, 0.0f);
+    Output.Color = _Input.Color;
+    Output.TexCoord = float4(_Input.TexCoord.xy, 0.0f, 0.0f);
 
-    return output;
+    return Output;
 }
