@@ -21,7 +21,6 @@ cbuffer TransformData : register(b0)
 struct VSInput
 {
     float4 Position : POSITION;
-    float4 Color : COLOR;
     float4 TexCoord : TEXCOORD;
     float4 Normal : NORMAL;
 };

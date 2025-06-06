@@ -12,7 +12,7 @@ void StoneWallActor::Start()
 	WallBodyMesh = CreateComponent<Ext_MeshComponent>("WallBodyMesh");
 	WallBodyMesh->CreateMeshComponentUnit("MirrorRect", MaterialType::Static);
 	WallBodyMesh->SetTexture("StoneWall_BaseColor.jpg", TextureType::BaseColor);
-	WallBodyMesh->SetSampler(SamplerType::LinearWrap);
+	//WallBodyMesh->SetSampler(SamplerType::LinearWrap);
 
 	GetTransform()->SetLocalScale({ 300.f, 300.f, 0.f });
 }

@@ -27,10 +27,9 @@ cbuffer CB_SkinnedMatrix : register(b1)
 
 struct VSInput
 {
-    float4 Position : POSITION; // ÀÌ¹Ì float4
-    float4 Color : COLOR;
+    float4 Position : POSITION;
     float4 TexCoord : TEXCOORD;
-    float4 Normal : NORMAL; // float4 ÀÔ·Â
+    float4 Normal : NORMAL;
     uint4 BoneID : BONEID;
     float4 Weight : WEIGHT;
 };
@@ -38,10 +37,9 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_POSITION;
-    float4 Color : COLOR;
     float4 TexCoord : TEXCOORD;
-    float4 WorldNormal : NORMAL;
     float3 WorldPosition : POSITION;
+    float3 WorldNormal : NORMAL;
 };
 
 VSOutput Dynamic_VS(VSInput _Input)
@@ -74,7 +72,7 @@ VSOutput Dynamic_VS(VSInput _Input)
 
     //Output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
     float4 WorldPos = mul(SkinnedPos, WorldMatrix); // -> ¿ùµå ÁÂÇ¥°è(row ÇüÅÂ)
-    Output.WorldPosition = WorldPos.xyz;
+    Output.WorldNormal = WorldPos;
     float4 ViewPos = mul(WorldPos, ViewMatrix); // -> ºä ÁÂÇ¥°è
     Output.Position = mul(ViewPos, ProjectionMatrix);
     
@@ -92,8 +90,7 @@ VSOutput Dynamic_VS(VSInput _Input)
 
     float3 WorldNormal = normalize(mul((float3x3) WorldMatrix, SkinnedNormal));
 
-    Output.WorldNormal = float4(WorldNormal, 0.0f);
-    Output.Color = _Input.Color;
+    Output.WorldNormal = WorldNormal;
     Output.TexCoord = float4(_Input.TexCoord.xy, 0.0f, 0.0f);
 
     return Output;
