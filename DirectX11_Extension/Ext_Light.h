@@ -34,13 +34,15 @@ struct LightData
 
 	float NearDistance = 1.0f;
 	float FarDistance = 100.0f;
+	float AttenuationValue = 1.0f; // 거리감쇠값에 사용
 	int LightType = 0;
 };
 
+constexpr unsigned int MAX_LIGHTS = 64;
 struct LightDatas
 {
 	int LightCount = 0;
-	LightData Lights[64];
+	LightData Lights[MAX_LIGHTS];
 };
 
 class Ext_Light : public Ext_Actor
@@ -57,8 +59,16 @@ public:
 	Ext_Light& operator=(Ext_Light&& _Other) noexcept = delete;
 
 	void LightUpdate(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime);
+
 	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); };
-	void SetLightRange(float _Range);
+	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; };
+	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; };
+	void SetLightRange(float _Range)
+	{
+		LTData->NearDistance = 1.0f;
+		LTData->FarDistance = _Range;
+	}
+
 	std::shared_ptr<LightData> GetLightData() { return LTData; }
 
 protected:

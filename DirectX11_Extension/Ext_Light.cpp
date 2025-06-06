@@ -8,12 +8,6 @@ Ext_Light::Ext_Light()
 	LTData = std::make_shared<LightData>();
 }
 
-void Ext_Light::SetLightRange(float _Range)
-{
-	LTData->NearDistance = 1.0f;
-	LTData->FarDistance = _Range;
-}
-
 bool first = false;
 
 // 여기서의 Camera는 바라보는 시선, 위치를 의미함

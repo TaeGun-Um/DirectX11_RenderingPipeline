@@ -79,8 +79,8 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
 	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic)
 	{
-		const LightData& LTData = *(OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetDirectionalLight()->GetLightData().get());
-		BufferSetter.SetConstantBufferLink("LightData", LTData);
+		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
+		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	}
 
 	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);

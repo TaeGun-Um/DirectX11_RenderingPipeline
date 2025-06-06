@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Ext_Object.h"
+#include "Ext_Light.h"
 
 // Scene 속성을 담당하는 클래스
 class Ext_Scene : public Ext_Object
@@ -50,6 +51,7 @@ public:
 
 	// Light Getter, Setter
 	std::shared_ptr<class Ext_Light> GetDirectionalLight() { return DirectionalLight; }; // 디렉셔널 라이트 가져오기
+	const LightDatas& GetLightDataBuffer() { return LightDataBuffer; }; // 디렉셔널 라이트 가져오기
 	void SetDirectionalLight(std::shared_ptr<class Ext_Light> _Light); // 디렉셔널 라이트 세팅(씬이 만들어지면 바로 호출 1회)
 
 	// MeshComponent를 MainCamera의 MeshComponents에 push
@@ -57,6 +59,9 @@ public:
 
 	// Collision을 Scene에게 저장
 	void PushCollision(std::shared_ptr<class Ext_CollisionComponent> _CollisionComponent, int _Order);
+
+	// Light를 Scene에게 저장
+	void PushLight(std::shared_ptr<class Ext_Light> _Light, std::string_view _LightName);
 
 	std::vector<std::shared_ptr<class Ext_CollisionComponent>>* FindCollsionGroup(int _Order)
 	{
@@ -87,4 +92,6 @@ private:
 	std::map<std::string, std::shared_ptr<class Ext_Light>> Lights;            // Scene에 저장된 Light들
 	std::shared_ptr<class Ext_Camera> MainCamera;                                  // 현재 Scene의 MainCamera
 	std::shared_ptr<class Ext_Light> DirectionalLight;                                 // 현재 Scene의 Directional Light
+	LightDatas LightDataBuffer; // 현재 Scene Light의 Data들
+
 };
