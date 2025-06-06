@@ -8,9 +8,9 @@
 void CubeActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	//MeshComp->CreateMeshComponentUnit("Box", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Box", MaterialType::Static);
+	MeshComp->CreateMeshComponentUnit("Box", MaterialType::PBR);
 	MeshComp->SetTexture("StoneWall_BaseColor.jpg");
+	MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

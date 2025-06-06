@@ -8,9 +8,9 @@
 void SphereActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	//MeshComp->CreateMeshComponentUnit("Sphere", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::Static);
+	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::PBR);
 	MeshComp->SetTexture("StoneWall_BaseColor.jpg");
+	MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

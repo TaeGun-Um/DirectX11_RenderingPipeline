@@ -13,7 +13,6 @@ void StoneWallActor::Start()
 	WallBodyMesh->CreateMeshComponentUnit("Rect", MaterialType::PBR);
 	WallBodyMesh->SetTexture("StoneWall_BaseColor.jpg", TextureType::BaseColor);
 	WallBodyMesh->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
-	//WallBodyMesh->SetSampler(SamplerType::LinearWrap);
 
 	GetTransform()->SetLocalScale({ 300.f, 300.f, 1.f });
 }
