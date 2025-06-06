@@ -42,6 +42,7 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::Dynamic: MaterialString = "Dynamic"; break;
 	case MaterialType::DynamicNonG: MaterialString = "DynamicNonG"; break;
 	case MaterialType::Debug: MaterialString = "Debug"; break;
+	case MaterialType::PBR: MaterialString = "PBR"; break;
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 

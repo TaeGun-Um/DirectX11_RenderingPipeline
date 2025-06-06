@@ -24,6 +24,7 @@ enum class MaterialType
     Dynamic,
     DynamicNonG,
     Debug,
+    PBR, // Test
     Unknown
 };
 
@@ -43,7 +44,7 @@ enum class TextureType
     BaseColor,
     Normal,
     Roughness,
-    Metalic,
+    Specular, // Metalic
     Emissive,
     Unknown
 };

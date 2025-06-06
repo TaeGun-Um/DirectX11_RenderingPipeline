@@ -14,12 +14,12 @@ bool first = false;
 // 여기서의 Camera는 바라보는 시선, 위치를 의미함
 void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTime)
 {
-	//if (!first)
-	//{
-	//	first = true;
-	//	GetTransform()->AddLocalRotation({ 45.0f, 0.f, 0.f});
-	//	GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
-	//}
+	if (!first && "DirectionalLight" == this->GetName())
+	{
+		first = true;
+		GetTransform()->AddLocalRotation({ 45.0f, 0.f, 0.f});
+		GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
+	}
 
 	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
 	//LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();

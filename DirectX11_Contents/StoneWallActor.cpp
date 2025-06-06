@@ -10,16 +10,14 @@ void StoneWallActor::Start()
 	WallBody->SetCollsionType(CollsionType::OBB3D);
 
 	WallBodyMesh = CreateComponent<Ext_MeshComponent>("WallBodyMesh");
-	WallBodyMesh->CreateMeshComponentUnit("MirrorRect", MaterialType::Static);
+	WallBodyMesh->CreateMeshComponentUnit("Rect", MaterialType::Static);
 	WallBodyMesh->SetTexture("StoneWall_BaseColor.jpg", TextureType::BaseColor);
 	//WallBodyMesh->SetSampler(SamplerType::LinearWrap);
 
-	GetTransform()->SetLocalScale({ 300.f, 300.f, 0.f });
+	GetTransform()->SetLocalScale({ 300.f, 300.f, 1.f });
 }
 
 void StoneWallActor::Update(float _DletaTime)
 {
-
-
 	__super::Update(_DletaTime);
 }
