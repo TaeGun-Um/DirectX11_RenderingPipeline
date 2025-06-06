@@ -6,6 +6,7 @@
 Ext_Light::Ext_Light()
 {
 	LTData = std::make_shared<LightData>();
+	LTData->bIsLightSet = true;
 }
 
 bool first = false;

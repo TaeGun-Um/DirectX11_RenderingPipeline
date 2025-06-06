@@ -9,6 +9,7 @@ struct LightData
     float FarDistance;
     float AttenuationValue;
     int LightType;
+    bool bIsLightSet;
 };
 
 cbuffer LightDatas : register(b1)
@@ -45,6 +46,11 @@ float4 Grapics_PS(PSInput _Input) : SV_TARGET
     for (int i = 0; i < LightCount; ++i)
     {
         LightData LTData = Lights[i];
+        
+        if (LTData.bIsLightSet == false)
+        {
+            continue;
+        }
         
         // 공통분모
         float3 FinalLight = float3(0.0f, 0.0f, 0.0f);

@@ -36,6 +36,7 @@ struct LightData
 	float FarDistance = 100.0f;
 	float AttenuationValue = 1.0f; // 거리감쇠값에 사용
 	int LightType = 0;
+	bool bIsLightSet = false;
 };
 
 constexpr unsigned int MAX_LIGHTS = 64;
