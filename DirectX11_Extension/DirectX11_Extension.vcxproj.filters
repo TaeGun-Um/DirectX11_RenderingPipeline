@@ -109,9 +109,6 @@
     <ClCompile Include="Ext_ResourceManager.cpp">
       <Filter>03.DirectX\00.Management</Filter>
     </ClCompile>
-    <ClCompile Include="Ext_MeshLoader.cpp">
-      <Filter>00.Process\02.Loader</Filter>
-    </ClCompile>
     <ClCompile Include="Ext_Actor.cpp">
       <Filter>01.Object\02.Actor\00.Base</Filter>
     </ClCompile>
@@ -134,7 +131,7 @@
       <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
     </ClCompile>
     <ClCompile Include="Ext_FSM.cpp">
-      <Filter>00.Process\03.Pattern</Filter>
+      <Filter>00.Process\02.Pattern</Filter>
     </ClCompile>
     <ClCompile Include="Ext_CollisionComponent.cpp">
       <Filter>01.Object\03.Component\02.Collision</Filter>
@@ -258,9 +255,6 @@
     <ClInclude Include="Ext_ResourceManager.h">
       <Filter>03.DirectX\00.Management</Filter>
     </ClInclude>
-    <ClInclude Include="Ext_MeshLoader.h">
-      <Filter>00.Process\02.Loader</Filter>
-    </ClInclude>
     <ClInclude Include="Ext_Actor.h">
       <Filter>01.Object\02.Actor\00.Base</Filter>
     </ClInclude>
@@ -283,7 +277,7 @@
       <Filter>01.Object\03.Component\01.Mesh\01.FBX</Filter>
     </ClInclude>
     <ClInclude Include="Ext_FSM.h">
-      <Filter>00.Process\03.Pattern</Filter>
+      <Filter>00.Process\02.Pattern</Filter>
     </ClInclude>
     <ClInclude Include="Ext_CollisionComponent.h">
       <Filter>01.Object\03.Component\02.Collision</Filter>
@@ -346,9 +340,6 @@
     </Filter>
     <Filter Include="03.DirectX\00.Management">
       <UniqueIdentifier>{42b31d88-f3ec-4905-a0e5-d4ae90d3b620}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00.Process\02.Loader">
-      <UniqueIdentifier>{723b925f-c86e-49d6-94d4-65f03ca86d65}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.DirectX\02.Resource\00.Texture&amp;View">
       <UniqueIdentifier>{876cba7e-de67-434f-9c8f-1987e56c41bd}</UniqueIdentifier>
@@ -419,11 +410,11 @@
     <Filter Include="01.Object\01.Scene">
       <UniqueIdentifier>{03f935b3-bfa3-463c-a046-b8ae797dad67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Process\03.Pattern">
-      <UniqueIdentifier>{a0b0f254-c42c-4d90-a5d8-dd35591b20a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Object\03.Component\02.Collision">
       <UniqueIdentifier>{e217fd8a-2900-4a1e-8775-4f19e1729e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Process\02.Pattern">
+      <UniqueIdentifier>{a0b0f254-c42c-4d90-a5d8-dd35591b20a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

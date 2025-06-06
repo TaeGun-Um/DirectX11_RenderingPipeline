@@ -8,6 +8,7 @@
 #include "Character.h"
 #include "RectActor.h"
 #include "TestPlatform.h"
+#include "StoneWallActor.h"
 
 #include "InformationGUI.h"
 
@@ -65,6 +66,20 @@ void TestScene::Start()
 		}
 	}
 
+	// StoneWall 텍스쳐 로드
+	{
+		Base_Directory Dir;
+		Dir.MakePath("../Resource/StaticMesh/Wall/Texture");
+		std::vector<std::string> Paths = Dir.GetAllFile({ "jpg" });
+		for (const std::string& FilePath : Paths)
+		{
+			Dir.SetPath(FilePath.c_str());
+			std::string ExtensionName = Dir.GetExtension();
+			std::string FileName = Dir.GetFileName();
+			Ext_DirectXTexture::LoadTexture(FilePath.c_str());
+		}
+	}
+
 	// 액터 생성
 	{
 		CreateActor<Character>("Character");
@@ -101,6 +116,10 @@ void TestScene::Start()
 		std::shared_ptr<RectActor> Manual = CreateActor<RectActor>("RectActor");
 		Manual->GetTransform()->SetLocalPosition({ 0.f, 300.f, -500.f });
 		Manual->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
+
+		std::shared_ptr<StoneWallActor> StoneWall = CreateActor<StoneWallActor>("StoneWallActor");
+		StoneWall->GetTransform()->SetLocalPosition({ 350.f, 150.f, -100.f });
+		StoneWall->GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });
 	}
 	
 }

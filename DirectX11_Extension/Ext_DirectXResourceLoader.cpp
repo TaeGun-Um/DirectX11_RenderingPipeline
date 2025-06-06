@@ -30,15 +30,18 @@ void Ext_DirectXResourceLoader::Initialize()
 
 void Ext_DirectXResourceLoader::LoadTexture()
 {
-	Base_Directory Dir;
-	Dir.MakePath("../Resource/Basic");
-	std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
-	for (const std::string& FilePath : Paths)
+	// 기본 텍스쳐들 로드
 	{
-		Dir.SetPath(FilePath.c_str());
-		std::string ExtensionName = Dir.GetExtension();
-		std::string FileName = Dir.GetFileName();
-		Ext_DirectXTexture::LoadTexture(FilePath.c_str());
+		Base_Directory Dir;
+		Dir.MakePath("../Resource/Basic");
+		std::vector<std::string> Paths = Dir.GetAllFile({ "png", "tga", "dss" });
+		for (const std::string& FilePath : Paths)
+		{
+			Dir.SetPath(FilePath.c_str());
+			std::string ExtensionName = Dir.GetExtension();
+			std::string FileName = Dir.GetFileName();
+			Ext_DirectXTexture::LoadTexture(FilePath.c_str());
+		}
 	}
 }
 
@@ -360,19 +363,39 @@ void Ext_DirectXResourceLoader::CreateTriangle()
 
 void Ext_DirectXResourceLoader::CreateRect()
 {
-	std::vector<Ext_DirectXVertexData> ArrVertex;
-	ArrVertex.resize(4);
+	// 일반 Rect
+	{
+		std::vector<Ext_DirectXVertexData> ArrVertex;
+		ArrVertex.resize(4);
 
-	ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
-	ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
-	ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
-	ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
+		ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {1, 0}, {0, 0, -1} };
+		ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0, 0}, {0, 0, -1} };
+		ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0, 1}, {0, 0, -1} };
+		ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {1, 1}, {0, 0, -1} };
 
-	std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
+		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
 
-	Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
-	Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
-	Ext_DirectXMesh::CreateMesh("Rect");
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("Rect", ArrVertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("Rect", ArrIndex);
+		Ext_DirectXMesh::CreateMesh("Rect");
+	}
+
+	// 테스트용 미러렉트
+	{
+		std::vector<Ext_DirectXVertexData> ArrVertex;
+		ArrVertex.resize(4);
+
+		ArrVertex[0] = { { 0.5f,  0.5f, }, {1, 0, 0, 1}, {0.55f, 0.45f}, {0, 0, -1} };
+		ArrVertex[1] = { {-0.5f,  0.5f, }, {0, 1, 0, 1}, {0.45f, 0.45f}, {0, 0, -1} };
+		ArrVertex[2] = { {-0.5f, -0.5f, }, {0, 0, 1, 1}, {0.45f, 0.55f}, {0, 0, -1} };
+		ArrVertex[3] = { { 0.5f, -0.5f, }, {1, 1, 0, 1}, {0.55f, 0.55f}, {0, 0, -1} };
+
+		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("MirrorRect", ArrVertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("MirrorRect", ArrIndex);
+		Ext_DirectXMesh::CreateMesh("MirrorRect");
+	}
 }
 
 void Ext_DirectXResourceLoader::CreateCube()

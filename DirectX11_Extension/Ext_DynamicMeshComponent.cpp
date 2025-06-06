@@ -5,7 +5,6 @@
 
 #include "Ext_DirectXVertexData.h"
 #include <DirectX11_Base/Base_Directory.h>
-#include "Ext_MeshLoader.h"
 #include "Ext_DirectXVertexBuffer.h"
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXMesh.h"

@@ -81,6 +81,9 @@
     <ClCompile Include="InformationGUI.cpp">
       <Filter>01.Object\03.GUI</Filter>
     </ClCompile>
+    <ClCompile Include="StoneWallActor.cpp">
+      <Filter>01.Object\02.Actor\02.Env</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScene.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="InformationGUI.h">
       <Filter>01.Object\03.GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="StoneWallActor.h">
+      <Filter>01.Object\02.Actor\02.Env</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

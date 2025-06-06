@@ -35,7 +35,7 @@ void Character::Start()
 	PlayerFSM.ChangeState(Character_FSM::Idle);
 
 	BodyCollision = CreateComponent<Ext_CollisionComponent>("BodyCollision", static_cast<int>(CollisionGroup::Player));
-	BodyCollision->SetCollsionType(CollsionType::AABB3D);
+	BodyCollision->SetCollsionType(CollsionType::Sphere3D);
 
 	BodyCollisionMesh = CreateComponent<Ext_MeshComponent>("BodyCollisionMesh");
 	BodyCollisionMesh->CreateMeshComponentUnit("Sphere", MaterialType::Debug);
