@@ -46,6 +46,7 @@ VSOutput Dynamic_VS(VSInput _Input)
 {
     VSOutput Output;
 
+    // 1. 스키닝 매트릭스 계산
     float4x4 SkinMatrix = float4x4(
         0, 0, 0, 0,
         0, 0, 0, 0,
@@ -64,18 +65,13 @@ VSOutput Dynamic_VS(VSInput _Input)
         }
     }
 
+    // 스키닝된 모델 공간의 좌표/노말 계산
     float4 SkinnedPos;
     SkinnedPos.x = dot(SkinMatrix[0], _Input.Position); // row0 · [x y z 1]
     SkinnedPos.y = dot(SkinMatrix[1], _Input.Position); // row1 · [x y z 1]
     SkinnedPos.z = dot(SkinMatrix[2], _Input.Position); // row2 · [x y z 1]
     SkinnedPos.w = dot(SkinMatrix[3], _Input.Position); // row3 · [x y z 1]
-
-    //Output.Position = mul(skinnedPos, WorldViewProjectionMatrix);
-    float4 WorldPos = mul(SkinnedPos, WorldMatrix); // -> 월드 좌표계(row 형태)
-    Output.WorldNormal = WorldPos;
-    float4 ViewPos = mul(WorldPos, ViewMatrix); // -> 뷰 좌표계
-    Output.Position = mul(ViewPos, ProjectionMatrix);
-    
+ 
     float3 SkinnedNormal;
     {
         float3 row0 = float3(SkinMatrix[0][0], SkinMatrix[0][1], SkinMatrix[0][2]);
@@ -87,10 +83,20 @@ VSOutput Dynamic_VS(VSInput _Input)
         SkinnedNormal.z = dot(row2, _Input.Normal.xyz);
         SkinnedNormal = normalize(SkinnedNormal);
     }
-
+    
+    // 월드 공간 좌표 계산
+    float4 WorldPos = mul(SkinnedPos, WorldMatrix);
+    Output.WorldPosition = WorldPos.xyz;
+    
+    // 월드 공간 노말 계산
     float3 WorldNormal = normalize(mul((float3x3) WorldMatrix, SkinnedNormal));
-
     Output.WorldNormal = WorldNormal;
+
+    // 클립 공간 좌표 계산
+    float4 ViewPos = mul(WorldPos, ViewMatrix);
+    Output.Position = mul(ViewPos, ProjectionMatrix);
+
+    // UV도 계산
     Output.TexCoord = float4(_Input.TexCoord.xy, 0.0f, 0.0f);
 
     return Output;
