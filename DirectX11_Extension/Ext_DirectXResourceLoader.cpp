@@ -52,10 +52,10 @@ void Ext_DirectXResourceLoader::MakeVertex()
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TEXCOORD", DXGI_FORMAT_R32G32B32A32_FLOAT);
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("NORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT);
-	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BONEID", DXGI_FORMAT_R32G32B32A32_SINT); // FBX Animation용
-	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("WEIGHT", DXGI_FORMAT_R32G32B32A32_FLOAT); // FBX Animation용
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("TANGENT", DXGI_FORMAT_R32G32B32A32_FLOAT); // Normal Mapping용
 	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BINORMAL", DXGI_FORMAT_R32G32B32A32_FLOAT); // Normal Mapping용
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("BONEID", DXGI_FORMAT_R32G32B32A32_SINT); // FBX Animation용
+	Ext_DirectXVertexData::GetInputLayoutData().AddInputLayoutDesc("WEIGHT", DXGI_FORMAT_R32G32B32A32_FLOAT); // FBX Animation용
 
 	// 너무 길어져서 밑으로 뺌
 	CreateTriangle(); // 삼각형 메시 만들기
@@ -370,10 +370,10 @@ void Ext_DirectXResourceLoader::CreateRect()
 		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
 
-		ArrVertex[0] = { {  0.5f,  0.5f,  0.0f, 1.0f },  {1, 0, 0, 1},  {1, 0}, {0, 0, -1} };
-		ArrVertex[1] = { { -0.5f,  0.5f,  0.0f, 1.0f },  {0, 1, 0, 1},  {0, 0}, {0, 0, -1} };
-		ArrVertex[2] = { { -0.5f, -0.5f,  0.0f, 1.0f },  {0, 0, 1, 1},  {0, 1}, {0, 0, -1} };
-		ArrVertex[3] = { {  0.5f, -0.5f,  0.0f, 1.0f },  {1, 1, 0, 1},  {1, 1}, {0, 0, -1} };
+		ArrVertex[0] = { {  0.5f,  0.5f,  0.0f, 1.0f },  {1, 0, 0, 1},  {1, 0}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[1] = { { -0.5f,  0.5f,  0.0f, 1.0f },  {0, 1, 0, 1},  {0, 0}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[2] = { { -0.5f, -0.5f,  0.0f, 1.0f },  {0, 0, 1, 1},  {0, 1}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[3] = { {  0.5f, -0.5f,  0.0f, 1.0f },  {1, 1, 0, 1},  {1, 1}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
 
 		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
 
@@ -387,10 +387,10 @@ void Ext_DirectXResourceLoader::CreateRect()
 		std::vector<Ext_DirectXVertexData> ArrVertex;
 		ArrVertex.resize(4);
 
-		ArrVertex[0] = { {  0.5f,  0.5f,  0.0f, 1.0f }, {1, 0, 0, 1}, {4.f, -4.f}, {0, 0, -1} };
-		ArrVertex[1] = { { -0.5f,  0.5f,  0.0f, 1.0f }, {0, 1, 0, 1}, {-4.f, -4.f}, {0, 0, -1} };
-		ArrVertex[2] = { { -0.5f, -0.5f,  0.0f, 1.0f }, {0, 0, 1, 1}, {-4.f, -4.f}, {0, 0, -1} };
-		ArrVertex[3] = { {  0.5f, -0.5f,  0.0f, 1.0f }, {1, 1, 0, 1}, {4.f, 4.f}, {0, 0, -1} };
+		ArrVertex[0] = { {  0.5f,  0.5f,  0.0f, 1.0f }, {1, 0, 0, 1}, {4.f, -4.f}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[1] = { { -0.5f,  0.5f,  0.0f, 1.0f }, {0, 1, 0, 1}, {-4.f, -4.f}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[2] = { { -0.5f, -0.5f,  0.0f, 1.0f }, {0, 0, 1, 1}, {-4.f, -4.f}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
+		ArrVertex[3] = { {  0.5f, -0.5f,  0.0f, 1.0f }, {1, 1, 0, 1}, {4.f, 4.f}, {0, 0, -1}, {-1, 0, 0}, {0, -1, 0} };
 
 		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3, };
 

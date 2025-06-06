@@ -67,6 +67,9 @@ std::shared_ptr<Ext_DirectXMesh> Ext_DirectXMesh::CreateStaticMesh(std::string_v
         Ext_DirectXVertexData VertexData;
         VertexData.POSITION = float4(AIMesh->mVertices[i].x, AIMesh->mVertices[i].y, AIMesh->mVertices[i].z);
         VertexData.NORMAL = AIMesh->HasNormals() ? float4(AIMesh->mNormals[i].x, AIMesh->mNormals[i].y, AIMesh->mNormals[i].z) : float4::ZERO;
+        VertexData.TANGENT = AIMesh->HasTangentsAndBitangents() ? float4(AIMesh->mTangents[i].x, AIMesh->mTangents[i].y, AIMesh->mTangents[i].z) : float4::ZERO;
+        VertexData.BINORMAL = AIMesh->HasTangentsAndBitangents() ? float4(AIMesh->mBitangents[i].x, AIMesh->mBitangents[i].y, AIMesh->mBitangents[i].z) : float4::ZERO;
+
         if (AIMesh->HasTextureCoords(0))
         {
             //VertexData.TEXCOORD = float4(AIMesh->mTextureCoords[0][i].x, AIMesh->mTextureCoords[0][i].y);
@@ -138,6 +141,8 @@ std::shared_ptr<Ext_DirectXMesh>Ext_DirectXMesh::CreateDynamicMesh(std::string_v
         Ext_DirectXVertexData VertexData;
         VertexData.POSITION = float4(AIMesh->mVertices[i].x, AIMesh->mVertices[i].y, AIMesh->mVertices[i].z);
         VertexData.NORMAL = AIMesh->HasNormals() ? float4(AIMesh->mNormals[i].x, AIMesh->mNormals[i].y, AIMesh->mNormals[i].z) : float4::ZERO;
+        VertexData.TANGENT = AIMesh->HasTangentsAndBitangents() ? float4(AIMesh->mTangents[i].x, AIMesh->mTangents[i].y, AIMesh->mTangents[i].z) : float4::ZERO;
+        VertexData.BINORMAL = AIMesh->HasTangentsAndBitangents() ? float4(AIMesh->mBitangents[i].x, AIMesh->mBitangents[i].y, AIMesh->mBitangents[i].z) : float4::ZERO;
         if (AIMesh->HasTextureCoords(0))
         {
             //VertexData.TEXCOORD = float4(AIMesh->mTextureCoords[0][i].x, AIMesh->mTextureCoords[0][i].y);

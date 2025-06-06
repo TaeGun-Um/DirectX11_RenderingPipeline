@@ -36,10 +36,10 @@ public:
 	float4 COLOR;
 	float4 TEXCOORD;
 	float4 NORMAL;
-	DirectX::XMUINT4 BONEID; // 스키닝 ID
-	float4 WEIGHT;	// 스키닝 가중치
 	float4 TANGENT; // 로컬 접선
 	float4 BINORMAL; // 로컬 이접선
+	DirectX::XMUINT4 BONEID; // 스키닝 ID
+	float4 WEIGHT;	// 스키닝 가중치
 
 	// Getter
 	static InputLayoutData& GetInputLayoutData() { return ILData; }

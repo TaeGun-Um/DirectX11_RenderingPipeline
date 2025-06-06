@@ -78,7 +78,7 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.SetConstantBufferLink("TransformData", TFData);
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
-	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic)
+	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
 	{
 		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
 		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);

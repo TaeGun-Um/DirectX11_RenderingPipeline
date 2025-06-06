@@ -20,8 +20,10 @@ cbuffer LightDatas : register(b1)
 
 Texture2D BaseColorTex : register(t0);
 Texture2D NormalTex : register(t1);
-Texture2D RoughnessTex : register(t2);
-Texture2D SpecularTex : register(t3);
+// Texture2D RoughnessTex : register(t2);
+// Texture2D SpecularTex : register(t3);
+// Texture2D AmbientTex : register(t3);
+// Texture2D EmissiveTex : register(t3);
 SamplerState Sampler : register(s0); // 샘플러
 
 struct PSInput
@@ -30,6 +32,8 @@ struct PSInput
     float4 TexCoord : TEXCOORD;
     float3 WorldPosition : POSITION;
     float3 WorldNormal : NORMAL;
+    float3 WorldTangent : TANGENT;
+    float3 WorldBinormal : BINORMAL;
 };
 
 // 각 벡터에 normalize를 해주는 이유는, 명시적으로 normalize된 벡터를 넣어줬다 하더라도 
@@ -41,10 +45,21 @@ float4 PBR_PS(PSInput _Input) : SV_TARGET
     
     // 월드공간 기준 픽셀(표면) 위치와 법선 단위 벡터
     float3 PixelPosition = _Input.WorldPosition;
-    float3 PixelNormal = normalize(_Input.WorldNormal);
     
     // 누적 조명 컬러 (RGB)
     float3 AccumLightColor = float3(0, 0, 0);
+    
+    // 노말 맵 샘플링 (Tangent-space 노말 → [-1, 1] 범위)
+    float3 SampledNormalTS = NormalTex.Sample(Sampler, _Input.TexCoord.xy).xyz * 2.0f - 1.0f;
+    SampledNormalTS = normalize(SampledNormalTS);
+    
+    // TBN 매트릭스 구성 (열(column) 단위로 저장)
+    float3x3 TBNMatrix;
+    TBNMatrix[0] = normalize(_Input.WorldTangent); // T
+    TBNMatrix[1] = normalize(_Input.WorldBinormal); // B
+    TBNMatrix[2] = normalize(_Input.WorldNormal); // N
+    
+    float3 MappedWorldNormal = normalize(mul(SampledNormalTS, TBNMatrix));
     
     for (int i = 0; i < LightCount; ++i)
     {
@@ -69,10 +84,10 @@ float4 PBR_PS(PSInput _Input) : SV_TARGET
         if (LTData.LightType == 0) // Directional Light
         {
             // Diffuse Light 계산
-            float DiffuseLight = saturate(dot(LightDirection, PixelNormal));
+            float DiffuseLight = saturate(dot(LightDirection, MappedWorldNormal));
         
             // Specular Light 계산, Phong 모델을 사용하기 때문에 R = reflect(L, N)
-            float3 ReflectionVector = normalize(2.0f * PixelNormal * dot(LightDirection, PixelNormal) - LightDirection); // 반사벡터
+            float3 ReflectionVector = normalize(2.0f * MappedWorldNormal * dot(LightDirection, MappedWorldNormal) - LightDirection); // 반사벡터
             float RDotV = max(0.0f, dot(ReflectionVector, EyeDirection));
             float3 SpecularLight = pow(RDotV, Shininess);
         
@@ -100,10 +115,10 @@ float4 PBR_PS(PSInput _Input) : SV_TARGET
             float Attenuation = 1.0f / (C0 + C1 * Distance + C2 * Distance * Distance);
 
             // Diffuse Light 계산
-            float DiffuseLight = saturate(dot(PixelNormal, Vector));
+            float DiffuseLight = saturate(dot(MappedWorldNormal, Vector));
 
             // Specular Light 계산, Phong 모델을 사용하기 때문에 R = reflect(L, N)
-            float3 ReflectionVector = normalize(2.0f * PixelNormal * dot(Vector, PixelNormal) - Vector);
+            float3 ReflectionVector = normalize(2.0f * MappedWorldNormal * dot(Vector, MappedWorldNormal) - Vector);
             float RDotV = max(0.0f, dot(ReflectionVector, EyeDirection));
             float3 SpecularLight = pow(RDotV, Shininess);
 
