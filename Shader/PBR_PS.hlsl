@@ -13,6 +13,12 @@ struct LightData
     float AttenuationValue;
     int LightType;
     bool bIsLightSet;
+    
+    float4x4 LightViewMatrix;
+    float4x4 LightViewInverseMatrix;
+    float4x4 LightProjectionMatrix;
+    float4x4 LightProjectionInverseMatrix;
+    float4x4 LightViewProjectionMatrix;
 };
 
 cbuffer LightDatas : register(b1)

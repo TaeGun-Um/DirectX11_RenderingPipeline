@@ -9,6 +9,7 @@
 #include "Ext_Transform.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_MeshComponentUnit.h"
+#include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXMaterial.h"
 #include "Ext_DirectXPixelShader.h"
 
@@ -121,7 +122,7 @@ void Ext_Camera::Start()
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	// ✅ 전체 유닛 Z정렬 후 렌더링
+	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
 	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
 	{
@@ -149,21 +150,72 @@ void Ext_Camera::Rendering(float _Deltatime)
 			 > (BMesh->GetTransform()->GetWorldPosition() - CamPos).Size();
 		});
 
+	// 정렬 완료, 렌더링 실시
 	std::unordered_set<std::shared_ptr<Ext_MeshComponent>> UpdatedComponents;
-
 	for (auto& Unit : AllRenderUnits)
 	{
 		auto Owner = Unit->GetOwnerMeshComponent().lock();
-		if (!Owner)
-			continue;
+		if (!Owner) continue;
 
-		// ✅ View/Projection은 한 번만 업데이트
+		// View/Projection은 한 번만 업데이트
 		if (UpdatedComponents.insert(Owner).second)
 		{
 			Owner->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix());
 		}
 
 		Unit->Rendering(_Deltatime);
+	}
+
+	// 빛
+	std::map<std::string, std::shared_ptr<class Ext_Light>> Lights = GetOwnerScene().lock()->GetLights();
+	GetOwnerScene().lock()->LightDataBuffer.LightCount = Lights.size();
+	for (auto& Light : Lights)
+	{
+		std::shared_ptr<Ext_Light> CurLight = Light.second;
+
+		// if (false == CurLight->IsShadow()) continue;
+		// if (false == CurLight->IsDynamicLight) continue;
+
+		std::shared_ptr<Ext_DirectXMaterial> Pipe = nullptr;
+		Pipe = Ext_DirectXMaterial::Find("PShadow");
+
+		std::vector<LightViewData>&  ViewDatas = CurLight->GetLightViewDatas();
+		size_t Size = ViewDatas.size();
+		for (size_t i = 0; i < Size; i++)
+		{
+			if (nullptr == CurLight->GetShadowRenderTarget()) continue;
+
+			CurLight->LightViewSetting(i);
+			CurLight->GetShadowRenderTarget()->RenderTargetSetting(i);
+
+			for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
+			{
+				for (auto& [IndexKey, UnitList] : UnitMap)
+				{
+					for (auto& Unit : UnitList)
+					{
+						if (!Unit->GetOwnerMeshComponent().lock()->IsUpdate()
+							|| !Unit->GetOwnerMeshComponent().lock()
+							|| !Unit->GetIsShadow())
+						{
+							continue;
+						}
+
+						std::string Name = Unit->GetOwnerMeshComponent().lock()->GetName();
+
+						std::vector<LightViewData>& CurViewDatas = CurLight->GetLightViewDatas();
+
+						Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(CurViewDatas[i].LightViewMatrix, CurViewDatas[i].LightProjectionMatrix);
+						Unit->RenderUnitShadowSetting();
+						Pipe->VertexShaderSetting();
+						Pipe->RasterizerSetting();
+						Pipe->PixelShaderSetting();
+						Pipe->OutputMergerSetting();
+						Unit->RenderUnitDraw();
+					}
+				}
+			}
+		}
 	}
 }
 

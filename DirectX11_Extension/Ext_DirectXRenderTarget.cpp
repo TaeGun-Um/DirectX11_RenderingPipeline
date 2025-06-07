@@ -117,17 +117,15 @@ void Ext_DirectXRenderTarget::RenderTargetViewsClear()
 }
 
 // 렌더링 시작 시 깊이 및 스텐실 버퍼를 초기화하여, 이전 프레임에 남아있는 데이터 제거
+// 메인 렌더타겟 외에는 아마 뎁스 안만들어서 이렇게 해야할듯
 void Ext_DirectXRenderTarget::DepthStencilViewClear()
 {
-	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV(); // 깊이/스텐실 텍스쳐를 담고 있는 객체
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture != nullptr ? DepthTexture->GetDSV() : nullptr;
 
-	if (nullptr == DSV)
+	if (nullptr != DSV)
 	{
-		MsgAssert("존재하지 않는 뎁스스텐실뷰를 클리어할 수는 없음");
-		return;
+		Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
-
-	Ext_DirectXDevice::GetContext()->ClearDepthStencilView(DSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	// 1. 클리어 대상
 	// 2. 어떻게 클리어 할것인가
 	// 3. 깊이 클리어값(가장 멀리)
@@ -153,11 +151,10 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 
 	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture->GetDSV(); // 깊이 텍스처에서 DSV(DepthStencilView) 획득
 
-
-	//if (false == DepthSetting)
-	//{
-	//	DSV = nullptr;
-	//}
+	if (false == DepthSetting)
+	{
+		DSV = nullptr;
+	}
 
 	if (nullptr == DSV)
 	{
@@ -169,4 +166,25 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 	// 2. RTV의 시작 주소
 	// 3. 깊이/스텐실 뷰 포인터(딱히 없으면nullptr 가능)
 	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]); // Rasterizer 스테이지에 현재 프레임에서 사용할 ViewPort 영역 설정, 이게 있어야 NDC > 픽셀 공간 변환이 올바르게 수행됨
+}
+
+// 렌더 타겟 바인딩 담당, Draw(), Clear(), Shader Binding 등이 올바른 렌더 타겟에 수행될 수 있도록 설정
+void Ext_DirectXRenderTarget::RenderTargetSetting(size_t _Index)
+{
+	COMPTR<ID3D11RenderTargetView> RTV = Textures[0]->GetRTV(_Index);
+
+	if (nullptr == RTV)
+	{
+		MsgAssert("랜더타겟 뷰가 존재하지 않아서 클리어가 불가능합니다.");
+	}
+
+	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture != nullptr ? DepthTexture->GetDSV() : nullptr;
+
+	if (false == DepthSetting)
+	{
+		DSV = nullptr;
+	}
+
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(1, RTV.GetAddressOf(), DSV.Get());
+	Ext_DirectXDevice::GetContext()->RSSetViewports(static_cast<UINT>(ViewPorts.size()), &ViewPorts[0]);
 }

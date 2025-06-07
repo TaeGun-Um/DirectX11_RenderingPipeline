@@ -36,6 +36,11 @@ public:
 	std::weak_ptr<class Ext_MeshComponent> GetOwnerMeshComponent() { return OwnerMeshComponent; }
 	Ext_DirectXBufferSetter& GetBufferSetter() { return BufferSetter; }
 
+	// 그림자용
+	void ShadowOn(); // 그림자 세팅하기, 없으면 만들어줌
+	void ShadowOff(); // 그림자 끄기
+	bool GetIsShadow() { return bIsShadow; }
+
 protected:
 	
 private:
@@ -43,6 +48,7 @@ private:
 	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
 	void RenderUnitSetting(); // Mesh, Material Setting
 	void RenderUnitDraw(); // 정점 정보들과 셰이더를 통해 메시 Draw 실시(DrawIndexed Call)
+	void RenderUnitShadowSetting(); // 셰도우를 위한 Mesh, Material Setting
 	void Release();
 
 	std::weak_ptr<class Ext_MeshComponent> OwnerMeshComponent;		// 자신을 소유한 카메라
@@ -51,4 +57,6 @@ private:
 	std::shared_ptr<class Ext_DirectXMaterial> Material = nullptr;				// 파이프라인 정보 저장용(셰이더, 레스터라이저 등)
 	Ext_DirectXBufferSetter BufferSetter;													// 상수버퍼 저장용(상수버퍼, 텍스처, 블렌드 등)
 
+	std::shared_ptr<class Ext_DirectXInputLayout> ShadowInputLayout = nullptr; // (셰도우용)Vertex Buffer와 Vertex Shader로 생성된 인풋 레이아웃 정보 저장용
+	bool bIsShadow = false; // 셰도우용 OnOff
 };

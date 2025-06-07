@@ -36,5 +36,11 @@
     <FxCompile Include="PBR_VS.hlsl">
       <Filter>00. VertexShader</Filter>
     </FxCompile>
+    <FxCompile Include="Shadow_VS.hlsl">
+      <Filter>00. VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shadow_PS.hlsl">
+      <Filter>01. PixelShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -22,6 +22,7 @@ void Character::Start()
 	BodyMesh = CreateComponent<Ext_DynamicMeshComponent>("BodyMesh");
 	BodyMesh->CreateMeshComponentUnit("Girl", MaterialType::Dynamic);
 	BodyMesh->SetTexture("Ch03_1001_Diffuse.png", TextureType::BaseColor);
+	BodyMesh->ShadowOn();
 	
 	Base_Directory Dir3;
 	Dir3.MakePath("../Resource/Character/Animation");

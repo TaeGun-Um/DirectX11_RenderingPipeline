@@ -257,6 +257,7 @@ void Ext_DirectXResourceLoader::MakeDepth()
 // DirectX11 Rasterizer 생성
 void Ext_DirectXResourceLoader::MakeRasterizer()
 {
+	// 일반 백페이스 컬링용 레스터라이저
 	{
 		D3D11_RASTERIZER_DESC Desc = {};
 
@@ -268,13 +269,24 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 		Ext_DirectXRasterizer::CreateRasterizer("BasicRasterizer", Desc);
 	}
 
+	// None컬링 레스터라이저
 	{
 		D3D11_RASTERIZER_DESC Desc = {};
 
-		Desc.CullMode = D3D11_CULL_NONE; // 뒷면 제거(백페이스 컬링 활성화)
-		Desc.FrontCounterClockwise = TRUE; // 반시계방향이 앞면(앞면 기준을 CCW로 지정)
+		Desc.CullMode = D3D11_CULL_NONE;
+		Desc.FrontCounterClockwise = FALSE;
 		Desc.FillMode = D3D11_FILL_SOLID;
-		// Desc.DepthClipEnable = FALSE;          // Z-Clipping 안함
+
+		std::shared_ptr<Ext_DirectXRasterizer> NewRast = Ext_DirectXRasterizer::CreateRasterizer("NonCullingRasterizer", Desc);
+	}
+
+	// 디버깅용 와이어프레임 레스터라이저
+	{
+		D3D11_RASTERIZER_DESC Desc = {};
+
+		Desc.CullMode = D3D11_CULL_NONE;
+		Desc.FrontCounterClockwise = FALSE;
+		Desc.FillMode = D3D11_FILL_SOLID;
 
 		std::shared_ptr<Ext_DirectXRasterizer> NewRast = Ext_DirectXRasterizer::CreateRasterizer("DebugRasterizer", Desc);
 		NewRast->SetFILL_MODE(D3D11_FILL_WIREFRAME);
@@ -344,6 +356,26 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
+	}
+
+	// 직교 그림자
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PShadow");
+		NewRenderingPipeline->SetVertexShader("Shadow_VS");
+		NewRenderingPipeline->SetPixelShader("Shadow_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend"); // MinBlend?
+		NewRenderingPipeline->SetDepthState("EngineDepth"); 
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// 원교 그림자
+	{
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("OShadow");
+		//NewRenderingPipeline->SetVertexShader("");
+		//NewRenderingPipeline->SetPixelShader("");
+		//NewRenderingPipeline->SetBlendState("BaseBlend"); // MinBlend
+		//NewRenderingPipeline->SetDepthState("EngineDepth");
+		//NewRenderingPipeline->SetRasterizer("DebugRasterizer"); // Engine2DBase
 	}
 }
 

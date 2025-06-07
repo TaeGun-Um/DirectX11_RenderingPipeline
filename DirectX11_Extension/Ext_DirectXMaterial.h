@@ -5,6 +5,7 @@
 class Ext_DirectXMaterial : public Ext_ResourceManager<Ext_DirectXMaterial>
 {
 	friend class Ext_MeshComponentUnit;
+	friend class Ext_Camera;
 
 public:
 	// constrcuter destructer

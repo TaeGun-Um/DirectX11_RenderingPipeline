@@ -11,18 +11,27 @@ Ext_Light::Ext_Light()
 	LTData->bIsLightSet = true;
 	LTData->ShadowTargetSizeX = 1024;
 	LTData->ShadowTargetSizeY = 1024;
+	ShadowRange.x = 1024.0f;
+	ShadowRange.y = 1024.0f;
 }
 
 void Ext_Light::Start()
 {
+	std::string SceneName = GetOwnerScene().lock()->GetName();
+	std::string Name = GetName();
+
 	GetOwnerScene().lock()->PushLight(GetSharedFromThis<Ext_Light>(), GetName());
 	LightType Type = this->GetLightType();
-	CreateShadowTarget(ShadowRenderTarget, Type);
+
+	if ("PointLight1" != Name)
+	{
+		CreateShadowTarget(Type);
+	}
 }
 
 bool first = false;
 
-// 여기서의 Camera는 바라보는 시선, 위치를 의미함
+// 라이트 연산 정보 업데이트, 여기서의 Camera는 바라보는 시선, 위치를 의미함
 void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTime)
 {
 	if (!first && "DirectionalLight" == this->GetName())
@@ -45,11 +54,17 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 
 	if (LTData->LightType == static_cast<int>(LightType::Directional))
 	{
-		// LightDatas.LightViewMatrix.LookToLH(GetTransform()->GetWorldPosition(), GetTransform()->GetLocalForwardVector(),	GetTransform()->GetLocalUpVector());
-		// LightDatas.LightViewInverseMatrix = LightDatas.LightViewMatrix.InverseReturn();
-		// LightDatas.LightProjectionMatrix.OrthographicLH( ShadowRange.x, ShadowRange.y, LightDatas.LightNear, LightDatas.LightFar * 2.0f);
-		// LightDatas.LightProjectionInverseMatrix = LightDatas.LightProjectionMatrix.InverseReturn();
-		// LightDatas.LightViewProjectionMatrix = LightDatas.LightViewMatrix * LightDatas.LightProjectionMatrix;
+		if (1 != LightViewDatas.size())
+		{
+			LightViewDatas.resize(1);
+		}
+
+		std::shared_ptr<class Ext_Transform> LT = GetTransform();
+		LightViewDatas[0].LightViewMatrix.LookToLH(LT->GetWorldPosition(), LT->GetLocalForwardVector(), LT->GetLocalUpVector());
+		LightViewDatas[0].LightViewInverseMatrix = LightViewDatas[0].LightViewMatrix.InverseReturn();
+		LightViewDatas[0].LightProjectionMatrix.OrthographicLH(ShadowRange.x, ShadowRange.y, LTData->NearDistance, LTData->FarDistance/* * 2.0f*/);
+		LightViewDatas[0].LightProjectionInverseMatrix = LightViewDatas[0].LightProjectionMatrix.InverseReturn();
+		LightViewDatas[0].LightViewProjectionMatrix = LightViewDatas[0].LightViewMatrix * LightViewDatas[0].LightProjectionMatrix;
 	}
 	//else if (LightDataValue.LightType == static_cast<int>(LightType::Point))
 	//{
@@ -119,7 +134,23 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 	//}
 }
 
-void Ext_Light::CreateShadowTarget(std::shared_ptr<Ext_DirectXRenderTarget> _Target, LightType _Type)
+// 라이트 데이터에 모두 전달
+void Ext_Light::LightViewSetting(size_t _Index)
+{
+	if (LightViewDatas.size() <= _Index)
+	{
+		MsgAssert("Light View Data를 초과해 세팅하려 했습니다");
+		_Index = 0;
+	}
+
+	LTData->LightViewMatrix = LightViewDatas[_Index].LightViewMatrix;
+	LTData->LightViewInverseMatrix = LightViewDatas[_Index].LightViewInverseMatrix;
+	LTData->LightProjectionMatrix = LightViewDatas[_Index].LightProjectionMatrix;
+	LTData->LightProjectionInverseMatrix = LightViewDatas[_Index].LightProjectionInverseMatrix;
+	LTData->LightViewProjectionMatrix = LightViewDatas[_Index].LightViewProjectionMatrix;
+}
+
+void Ext_Light::CreateShadowTarget(LightType _Type)
 {
 	switch (_Type)
 	{
@@ -137,7 +168,7 @@ void Ext_Light::CreateShadowTarget(std::shared_ptr<Ext_DirectXRenderTarget> _Tar
 
 	default:
 	{
-		_Target = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R16_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::RED);
+		ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R16_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::ZERO);
 		int a = 0;
 	}
 	break;

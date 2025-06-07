@@ -7,6 +7,9 @@
 class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarget>
 {
 	friend class Ext_DirectXDevice;
+	friend class Ext_Scene;
+	friend class Ext_Camera;
+
 public:
 	// constrcuter destructer
 	Ext_DirectXRenderTarget() {};
@@ -58,6 +61,7 @@ private:
 	void CreateRT(DXGI_FORMAT _Format, float4 _Scale, float4 _Color); // 텍스쳐를 생성해서 렌더타겟 생성
 	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
 	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
+	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
 	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
 

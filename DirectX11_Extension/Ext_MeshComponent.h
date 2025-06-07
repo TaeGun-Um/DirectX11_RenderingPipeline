@@ -25,6 +25,8 @@ public:
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
 	void SetOwnerCamera(std::shared_ptr<class Ext_Camera> _Camera) { OwnerCamera = _Camera; }
+	void ShadowOn();
+	void ShadowOff();
 
 protected:
 	virtual void Start() override;

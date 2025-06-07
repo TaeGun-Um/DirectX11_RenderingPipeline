@@ -18,6 +18,18 @@ void Ext_MeshComponent::Release()
 	Ext_Component::Release();
 }
 
+void Ext_MeshComponent::Start()
+{
+	//GetTransform()->SetOwnerComponent(_Component);
+	PushMeshToCamera("MainCamera");
+}
+
+// 각 메시들의 Rendering() 함수를 매틱 실행
+void Ext_MeshComponent::Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
+{
+	GetTransform()->SetCameraMatrix(_ViewMatrix, _ProjectionMatrix); // 뷰, 프로젝션 세팅
+}
+
 // 생성하면 카메라에도 저장하기 위해 실행
 void Ext_MeshComponent::PushMeshToCamera(std::string_view _CameraName)
 {
@@ -51,15 +63,13 @@ void Ext_MeshComponent::SetSampler(SamplerType _TypeValue)
 	Unit->SetSampler(_TypeValue);
 }
 
-void Ext_MeshComponent::Start()
+void Ext_MeshComponent::ShadowOn()
 {
-	//GetTransform()->SetOwnerComponent(_Component);
-	PushMeshToCamera("MainCamera");
+	Unit->ShadowOn();
 }
 
-// 각 메시들의 Rendering() 함수를 매틱 실행
-void Ext_MeshComponent::Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
+void Ext_MeshComponent::ShadowOff()
 {
-	GetTransform()->SetCameraMatrix(_ViewMatrix, _ProjectionMatrix); // 뷰, 프로젝션 세팅
+	Unit->ShadowOff();
 }
 

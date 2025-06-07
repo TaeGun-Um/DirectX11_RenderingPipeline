@@ -2,8 +2,9 @@
 #include "Ext_Scene.h"
 
 #include "Ext_Actor.h"
-#include "Ext_MeshComponent.h"
 #include "Ext_Camera.h"
+#include "Ext_MeshComponent.h"
+#include "Ext_DirectXRenderTarget.h"
 #include "Ext_Light.h"
 #include "Ext_Imgui.h"
 
@@ -42,14 +43,36 @@ void Ext_Scene::Update(float _DeltaTime)
 // Camera들의 Rendering 호출
 void Ext_Scene::Rendering(float _DeltaTime)
 {
+	for (auto& Light : Lights)
+	{
+		// if (false == Light->IsShadow()) continue;
+
+		std::shared_ptr<Ext_DirectXRenderTarget> ShadowRenderTarget = Light.second->GetShadowRenderTarget();
+		// std::shared_ptr<Ext_DirectXRenderTarget> BakeTarget = Light->GetBakeTarget(Light->GetBakeTargetIndex());
+
+		if (nullptr != ShadowRenderTarget)
+		{
+			ShadowRenderTarget->RenderTargetClear();
+
+			//if (Light->GetLightData().LightType == static_cast<int>(LightType::Point))
+			//{
+			//	ShadowTarget->MergeCubemap(BakeTarget);
+			//}
+			//else
+			//{
+			//	ShadowTarget->Merge(BakeTarget);
+			//}
+		}
+	}
+
 	// Rendering 업데이트
 	for (auto& CamIter : Cameras)
 	{
 		std::shared_ptr<Ext_Camera> CurCamera = CamIter.second;
 
 		CurCamera->CameraTransformUpdate(); // 카메라에 대한 뷰, 프로젝션, 뷰포트 행렬 최신화
-		LightDataBuffer.LightCount = 0; // 라이트 업데이트 전, 상수버퍼 갯수 초기화(순회하면서 값 넣어줘야하기 때문)
 
+		LightDataBuffer.LightCount = 0; // 라이트 업데이트 전, 상수버퍼 갯수 초기화(순회하면서 값 넣어줘야하기 때문)
 		for (auto& LightIter : Lights) // 라이트들 돌면서 업데이트
 		{
 			std::shared_ptr<Ext_Light> CurLight = LightIter.second;
@@ -167,5 +190,5 @@ void Ext_Scene::SetDirectionalLight(std::shared_ptr<Ext_Light> _Light)
 {
 	DirectionalLight = _Light;
 	DirectionalLight->SetLightType(LightType::Directional);
-	DirectionalLight->SetLightRange(1000.0f); // 별로 의미는 없음
+	DirectionalLight->SetLightRange(10000.0f); // 별로 의미는 없음
 }

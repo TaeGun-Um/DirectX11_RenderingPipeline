@@ -6,6 +6,7 @@
 class Ext_Scene : public Ext_Object
 {
 	friend class Ext_Core;
+	friend class Ext_Camera;
 
 public:
 	// constrcuter destructer
@@ -48,6 +49,7 @@ public:
 	std::shared_ptr<class Ext_Camera> GetMainCamera() { return MainCamera; }; // 메인 카메라 가져오기
 	void SetMainCamera(std::shared_ptr<class Ext_Camera> _MainCamera); // 메인 카메라 세팅(호출 안하는게 좋음)
 	std::shared_ptr<Ext_Camera> FindCamera(std::string_view _CameraName); // 카메라 찾기(메인 카메라밖에 없다)
+	std::map<std::string, std::shared_ptr<class Ext_Light>>& GetLights() { return Lights; }
 
 	// Light Getter, Setter
 	std::shared_ptr<class Ext_Light> GetDirectionalLight() { return DirectionalLight; }; // 디렉셔널 라이트 가져오기

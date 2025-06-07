@@ -135,3 +135,38 @@ void Ext_MeshComponentUnit::Rendering(float _Deltatime)
 	RenderUnitSetting();
 	RenderUnitDraw();
 }
+
+void Ext_MeshComponentUnit::ShadowOn()
+{
+	bIsShadow = true;
+	
+	if (nullptr == ShadowInputLayout)
+	{
+		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("Shadow_VS");
+		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
+		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowPtr);
+	}
+}
+
+void Ext_MeshComponentUnit::ShadowOff()
+{
+	bIsShadow = false;
+}
+
+void Ext_MeshComponentUnit::RenderUnitShadowSetting()
+{
+	if (nullptr == Mesh)
+	{
+		MsgAssert("매쉬가 존재하지 않는 유니트 입니다");
+	}
+
+	if (nullptr == Material)
+	{
+		MsgAssert("파이프라인이 존재하지 않는 유니트 입니다");
+	}
+
+	ShadowInputLayout->InputLayoutSetting(); // InputLayout으로 IASetInputLayout 호출
+	Mesh->MeshSetting();
+	Material->MaterialSetting();
+	BufferSetter.BufferSetting();
+}
