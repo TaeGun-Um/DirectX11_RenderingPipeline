@@ -9,7 +9,7 @@ class Ext_Actor : public Ext_Object
 public:
 	// constrcuter destructer
 	Ext_Actor();
-	~Ext_Actor();
+	~Ext_Actor() {}
 
 	// delete Function
 	Ext_Actor(const Ext_Actor& _Other) = delete;

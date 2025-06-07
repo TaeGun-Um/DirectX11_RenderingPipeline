@@ -168,5 +168,4 @@ void Ext_Scene::SetDirectionalLight(std::shared_ptr<Ext_Light> _Light)
 	DirectionalLight = _Light;
 	DirectionalLight->SetLightType(LightType::Directional);
 	DirectionalLight->SetLightRange(1000.0f); // 별로 의미는 없음
-	Lights.insert(std::make_pair("DirectionalLight", DirectionalLight));
 }

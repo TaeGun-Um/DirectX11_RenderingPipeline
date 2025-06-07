@@ -22,7 +22,15 @@ public:
 	static std::shared_ptr<Ext_DirectXRenderTarget> CreateRenderTarget(std::string_view _Name, std::shared_ptr<class Ext_DirectXTexture> _Texture, const float4& _Color)
 	{
 		std::shared_ptr<Ext_DirectXRenderTarget> NewRenderTarget = Ext_ResourceManager::CreateNameResource(_Name);
-		NewRenderTarget->CreateRenderTarget(_Texture, _Color);
+		NewRenderTarget->CreateRT(_Texture, _Color);
+		return NewRenderTarget;
+	}
+
+	// 텍스쳐를 생성해서 렌더타겟 생성
+	static std::shared_ptr<Ext_DirectXRenderTarget> CreateRenderTarget(DXGI_FORMAT _Format, const float4& _Scale, const float4& _Color)
+	{
+		std::shared_ptr<Ext_DirectXRenderTarget> NewRenderTarget = Ext_ResourceManager::CreateResource();
+		NewRenderTarget->CreateRT(_Format, _Scale, _Color);
 		return NewRenderTarget;
 	}
 
@@ -46,7 +54,8 @@ public:
 protected:
 	
 private:
-	void CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
+	void CreateRT(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
+	void CreateRT(DXGI_FORMAT _Format, float4 _Scale, float4 _Color); // 텍스쳐를 생성해서 렌더타겟 생성
 	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
 	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
@@ -59,9 +68,8 @@ private:
 	std::shared_ptr<Ext_DirectXTexture> DepthTexture = {};
 	std::vector<D3D11_VIEWPORT> ViewPorts = {}; // 생성 주체의 ViewPort 정보 저장 컨테이너
 	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // 렌더타겟뷰들 저장
+	std::vector<COMPTR<ID3D11ShaderResourceView>> SRVs = {}; // 셰이더리소스뷰들 저장
 
-	// std::vector<ID3D11RenderTargetView*> RTVs = {}; // 생성 주체의 렌더타겟뷰 정보 저장 컨테이너
-	// std::vector<ID3D11ShaderResourceView*> SRVs = {}; // 생성 주체의 셰이더리소스뷰 정보 저장 컨테이너
 };
 // [RenderTarget]
 // 렌더 타겟은 렌더링 결과를 기록하는 최종 목적지가 된다. 즉, 셰이더의 출력 결과가 그려지는 공간이다.

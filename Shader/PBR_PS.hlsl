@@ -5,6 +5,9 @@ struct LightData
     float4 LightForwardVector; // 월드 입사 벡터
     float4 CameraWorldPosition; // 시점 월드 공간 위치
 
+    float ShadowTargetSizeX;
+    float ShadowTargetSizeY;
+    
     float NearDistance;
     float FarDistance;
     float AttenuationValue;

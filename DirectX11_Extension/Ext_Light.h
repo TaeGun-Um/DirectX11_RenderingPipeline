@@ -32,6 +32,9 @@ struct LightData
 	float4 LightForwardVector; // 월드 입사 벡터
 	float4 CameraWorldPosition; // 시점 월드 공간 위치
 
+	float ShadowTargetSizeX;
+	float ShadowTargetSizeY;
+
 	float NearDistance = 1.0f;
 	float FarDistance = 100.0f;
 	float AttenuationValue = 1.0f; // 거리감쇠값에 사용
@@ -61,9 +64,10 @@ public:
 
 	void LightUpdate(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime);
 
-	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); };
-	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; };
-	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; };
+	LightType GetLightType() { return Type; }
+	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); }
+	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; }
+	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; }
 	void SetLightRange(float _Range)
 	{
 		LTData->NearDistance = 1.0f;
@@ -71,11 +75,17 @@ public:
 	}
 
 	std::shared_ptr<LightData> GetLightData() { return LTData; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetShadowTarget() { return ShadowTarget; }
+	float4 GetShadowTextureScale() { float4(LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY, 0.f, 0.f); }
 
 protected:
+	void Start() override;
 	
 private:
 	std::shared_ptr<LightData> LTData = nullptr;
 	LightType Type = LightType::Unknown;
 
+	std::shared_ptr<class Ext_DirectXRenderTarget> ShadowRenderTarget = nullptr;
+
+	void CreateShadowTarget(std::shared_ptr<class Ext_DirectXRenderTarget> _Target, LightType _Type);
 };

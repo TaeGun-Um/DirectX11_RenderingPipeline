@@ -8,10 +8,6 @@ Ext_Actor::Ext_Actor()
 	Transform = std::make_shared<Ext_Transform>();
 }
 
-Ext_Actor::~Ext_Actor()
-{
-}
-
 void Ext_Actor::RemoveDeadComponents()
 {
 	for (auto Iter = Components.begin(); Iter != Components.end(); )

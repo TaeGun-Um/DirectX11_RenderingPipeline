@@ -3,7 +3,7 @@
 #include "Ext_DirectXDevice.h"
 
 // View를 기반으로 렌더타겟 생성
-void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color)
+void Ext_DirectXRenderTarget::CreateRT(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color)
 {
 	Colors.push_back(_Color);
 
@@ -23,13 +23,42 @@ void Ext_DirectXRenderTarget::CreateRenderTarget(std::shared_ptr<Ext_DirectXText
 	/*5. MinDepth : 깊이값 최소 (보통 0.0f)*/
 	/*6. MaxDepth : 깊이값 최대 (보통 1.0f)*/
 
-	Textures.push_back(_Texture); // Ext_DirectXTexture 저장
-	ViewPorts.push_back(ViewPortData); // D3D11_VIEWPORT 저장
-	
+	Textures.push_back(_Texture);
+	ViewPorts.push_back(ViewPortData);
 	RTVs.push_back(_Texture->GetRTV());
-	
-	//SRVs.push_back(_Texture->GetSRV()); // ID3D11ShaderResourceView 저장
-	//RTVs.push_back(_Texture->GetRTV()); // ID3D11RenderTargetView 저장
+	// SRVs.push_back(_Texture->GetSRV());
+}
+
+// 텍스쳐를 생성해서 렌더타겟 생성
+void Ext_DirectXRenderTarget::CreateRT(DXGI_FORMAT _Format, float4 _Scale, float4 _Color)
+{
+	Colors.push_back(_Color);
+
+	D3D11_TEXTURE2D_DESC Desc = { 0 };
+	Desc.ArraySize = 1;
+	Desc.Width = _Scale.uix();
+	Desc.Height = _Scale.uiy();
+	Desc.Format = _Format;
+	Desc.SampleDesc.Count = 1;
+	Desc.SampleDesc.Quality = 0;
+	Desc.MipLevels = 1;
+	Desc.Usage = D3D11_USAGE_DEFAULT;
+	Desc.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+
+	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::CreateViews(Desc);
+
+	D3D11_VIEWPORT ViewPortData;
+	ViewPortData.TopLeftX = 0;
+	ViewPortData.TopLeftY = 0;
+	ViewPortData.Width = _Scale.x;
+	ViewPortData.Height = _Scale.y;
+	ViewPortData.MinDepth = 0.0f;
+	ViewPortData.MaxDepth = 1.0f;
+
+	ViewPorts.push_back(ViewPortData);
+	Textures.push_back(Tex);
+	RTVs.push_back(Tex->GetRTV());
+	SRVs.push_back(Tex->GetSRV());
 }
 
 // 뎁스텍스쳐 생성(기본 형식)

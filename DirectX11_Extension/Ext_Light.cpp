@@ -1,12 +1,23 @@
 #include "PrecompileHeader.h"
 #include "Ext_Light.h"
+#include "Ext_Scene.h"
 #include "Ext_Camera.h"
 #include "Ext_Transform.h"
+#include "Ext_DirectXRenderTarget.h"
 
 Ext_Light::Ext_Light()
 {
 	LTData = std::make_shared<LightData>();
 	LTData->bIsLightSet = true;
+	LTData->ShadowTargetSizeX = 1024;
+	LTData->ShadowTargetSizeY = 1024;
+}
+
+void Ext_Light::Start()
+{
+	GetOwnerScene().lock()->PushLight(GetSharedFromThis<Ext_Light>(), GetName());
+	LightType Type = this->GetLightType();
+	CreateShadowTarget(ShadowRenderTarget, Type);
 }
 
 bool first = false;
@@ -106,4 +117,29 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 
 	//	ViewDatas[0].LightViewProjectionMatrix = ViewDatas[0].LightViewMatrix * ViewDatas[0].LightProjectionMatrix;
 	//}
+}
+
+void Ext_Light::CreateShadowTarget(std::shared_ptr<Ext_DirectXRenderTarget> _Target, LightType _Type)
+{
+	switch (_Type)
+	{
+	case LightType::Point:
+	{
+		//_Target->AddNewCubeTexture(DXGI_FORMAT_R16_FLOAT, { LightDataValue.ShadowTargetSizeX, LightDataValue.ShadowTargetSizeY }, float4(100000, 0, 0, 1.0f));
+	}
+	break;
+
+	case LightType::Spot:
+	{
+		//_Target->AddNewTexture(DXGI_FORMAT_R16_FLOAT, { LightDataValue.ShadowTargetSizeX, LightDataValue.ShadowTargetSizeY }, float4(100000, 0, 0, 1.0f));
+	}
+	break;
+
+	default:
+	{
+		_Target = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R16_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::RED);
+		int a = 0;
+	}
+	break;
+	}
 }
