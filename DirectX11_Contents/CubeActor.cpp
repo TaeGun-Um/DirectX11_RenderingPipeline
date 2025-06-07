@@ -11,6 +11,7 @@ void CubeActor::Start()
 	MeshComp->CreateMeshComponentUnit("Box", MaterialType::PBR);
 	MeshComp->SetTexture("StoneWall_BaseColor.jpg");
 	MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
+	MeshComp->ShadowOn();
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

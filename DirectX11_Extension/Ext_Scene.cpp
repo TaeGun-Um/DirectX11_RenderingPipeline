@@ -43,25 +43,14 @@ void Ext_Scene::Update(float _DeltaTime)
 // Camera들의 Rendering 호출
 void Ext_Scene::Rendering(float _DeltaTime)
 {
+	// 셰도우 렌더타겟 클리어 실시
 	for (auto& Light : Lights)
 	{
-		// if (false == Light->IsShadow()) continue;
-
-		std::shared_ptr<Ext_DirectXRenderTarget> ShadowRenderTarget = Light.second->GetShadowRenderTarget();
-		// std::shared_ptr<Ext_DirectXRenderTarget> BakeTarget = Light->GetBakeTarget(Light->GetBakeTargetIndex());
-
-		if (nullptr != ShadowRenderTarget)
+		std::shared_ptr<Ext_Light> CurLight = Light.second;
+		std::shared_ptr<Ext_DirectXRenderTarget> CurShadowTarget = CurLight->GetShadowRenderTarget();
+		if (nullptr != CurShadowTarget)
 		{
-			ShadowRenderTarget->RenderTargetClear();
-
-			//if (Light->GetLightData().LightType == static_cast<int>(LightType::Point))
-			//{
-			//	ShadowTarget->MergeCubemap(BakeTarget);
-			//}
-			//else
-			//{
-			//	ShadowTarget->Merge(BakeTarget);
-			//}
+			CurShadowTarget->RenderTargetClear();
 		}
 	}
 

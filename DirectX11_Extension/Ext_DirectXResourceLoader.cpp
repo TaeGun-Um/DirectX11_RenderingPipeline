@@ -14,6 +14,7 @@
 #include "Ext_DirectXBlend.h"
 #include "Ext_DirectXRasterizer.h"
 #include "Ext_DirectXDepth.h"
+#include "Ext_DirectXRenderTarget.h"
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()
@@ -203,14 +204,16 @@ void Ext_DirectXResourceLoader::MakeBlend()
 		// Desc.AlphaToCoverageEnable = false; == 자동으로 알파부분을 제거하여 출력해준다. 너무 느려서 사용 안함.
 		BlendInfo.AlphaToCoverageEnable = false;
 		BlendInfo.IndependentBlendEnable = false;
-
 		BlendInfo.RenderTarget[0].BlendEnable = true;
+
 		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // 자주 쓰는 조합 1
 		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
 		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
 		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 		// <<설명>>
 		/*1. BlendEnable : 블렌드 활성화 여부, true는 활성화*/
@@ -235,23 +238,99 @@ void Ext_DirectXResourceLoader::MakeBlend()
 
 		Ext_DirectXBlend::CreateBlend("BaseBlend", BlendInfo);
 	}
+
+	// Min 블렌드(그림자에 쓰는)
+	{
+		D3D11_BLEND_DESC BlendInfo = { 0, };
+
+		BlendInfo.AlphaToCoverageEnable = false;
+		BlendInfo.IndependentBlendEnable = false;
+
+		BlendInfo.RenderTarget[0].BlendEnable = true;
+		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MIN;
+
+		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+
+		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		Ext_DirectXBlend::CreateBlend("MinBlend", BlendInfo);
+	}
+
+	// Merge용 블렌드
+	{
+		D3D11_BLEND_DESC BlendInfo = { 0, };
+
+		BlendInfo.AlphaToCoverageEnable = false;
+		BlendInfo.IndependentBlendEnable = false;
+		BlendInfo.RenderTarget[0].BlendEnable = true;
+
+		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+
+		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		Ext_DirectXBlend::CreateBlend("MergeBlend", BlendInfo);
+	}
+
+	// One 블렌드, Deffered용
+	{
+		D3D11_BLEND_DESC BlendInfo = { 0, };
+
+		BlendInfo.AlphaToCoverageEnable = false;
+		BlendInfo.IndependentBlendEnable = false;
+		BlendInfo.RenderTarget[0].BlendEnable = true;
+
+		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		Ext_DirectXBlend::CreateBlend("OneBlend", BlendInfo);
+	}
 }
 
 // DirectX11 DepthStencilState 생성
 void Ext_DirectXResourceLoader::MakeDepth()
 {
-	D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
-	DepthStencilInfo.DepthEnable = true;
-	DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
-	DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
-	DepthStencilInfo.StencilEnable = false;
-	/*1. 깊이 테스트 수행함(true)*/
-	/*2. 깊이 값을 Z버퍼에 기록*/
-	/*3. 새 픽셀이 더 가깝거나 같으면 통과*/
-	/*4. 스텐실 안함*/
+		DepthStencilInfo.DepthEnable = true;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+		DepthStencilInfo.StencilEnable = false;
+		/*1. 깊이 테스트 수행함(true)*/
+		/*2. 깊이 값을 Z버퍼에 기록*/
+		/*3. 새 픽셀이 더 가깝거나 같으면 통과*/
+		/*4. 스텐실 안함*/
 
-	Ext_DirectXDepth::CreateDepthStencilState("EngineDepth", DepthStencilInfo);
+		Ext_DirectXDepth::CreateDepthStencilState("EngineDepth", DepthStencilInfo);
+	}
+
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+
+		DepthStencilInfo.DepthEnable = true;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_ALWAYS;
+		DepthStencilInfo.StencilEnable = false;
+
+		Ext_DirectXDepth::CreateDepthStencilState("AlwayDepth", DepthStencilInfo);
+	}
 }
 
 // DirectX11 Rasterizer 생성
@@ -358,24 +437,50 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
 	}
 
-	// 직교 그림자
+	// 원근 그림자
 	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PShadow");
-		NewRenderingPipeline->SetVertexShader("Shadow_VS");
-		NewRenderingPipeline->SetPixelShader("Shadow_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend"); // MinBlend?
-		NewRenderingPipeline->SetDepthState("EngineDepth"); 
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PerspectiveShadow");
+		NewRenderingPipeline->SetVertexShader("PerspectiveShadow_VS");
+		NewRenderingPipeline->SetPixelShader("PerspectiveShadow_PS");
+		NewRenderingPipeline->SetBlendState("MinBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
-	// 원교 그림자
+	// 직교 그림자
 	{
-		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("OShadow");
-		//NewRenderingPipeline->SetVertexShader("");
-		//NewRenderingPipeline->SetPixelShader("");
-		//NewRenderingPipeline->SetBlendState("BaseBlend"); // MinBlend
-		//NewRenderingPipeline->SetDepthState("EngineDepth");
-		//NewRenderingPipeline->SetRasterizer("DebugRasterizer"); // Engine2DBase
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("OrthogonalShadow");
+		NewRenderingPipeline->SetVertexShader("OrthogonalShadow_VS");
+		NewRenderingPipeline->SetPixelShader("OrthogonalShadow_PS");
+		NewRenderingPipeline->SetBlendState("MinBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// 렌더타겟 간 Merge를 위한 머티리얼
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Merge");
+
+		NewRenderingPipeline->SetVertexShader("Merge_VS");
+		NewRenderingPipeline->SetPixelShader("Merge_PS");
+		NewRenderingPipeline->SetBlendState("MergeBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// Deffered
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredLight");
+		NewRenderingPipeline->SetVertexShader("DeferredLight_VS");
+		NewRenderingPipeline->SetPixelShader("DeferredLight_PS");
+		NewRenderingPipeline->SetBlendState("OneBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth"); // 이라는걸  모든 오브젝트가 순서 맞춰서 다 그려진 다음에 벌어지는 일이라.
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출
+	{
+		Ext_DirectXRenderTarget::RenderTargetMergeUnitInitialize();
 	}
 }
 
@@ -429,6 +534,23 @@ void Ext_DirectXResourceLoader::CreateRect()
 		Ext_DirectXVertexBuffer::CreateVertexBuffer("MirrorRect", ArrVertex);
 		Ext_DirectXIndexBuffer::CreateIndexBuffer("MirrorRect", ArrIndex);
 		Ext_DirectXMesh::CreateMesh("MirrorRect");
+	}
+
+	// Merge용 FullRect
+	{
+		std::vector<Ext_DirectXVertexData> ArrVertex;
+		ArrVertex.resize(4);
+
+		ArrVertex[0] = { { 1.0f, 1.0f, 0.0f, 1.0f }, {1, 0, 0, 1},  {1, 0} };
+		ArrVertex[1] = { { -1.0f, 1.0f, 0.0f, 1.0f }, {0, 1, 0, 1}, {0, 0} };
+		ArrVertex[2] = { { -1.0f, -1.0f, 0.0f, 1.0f }, {0, 0, 1, 1}, {0, 1} };
+		ArrVertex[3] = { { 1.0f, -1.0f, 0.0f, 1.0f }, {1, 1, 0, 1},  {1, 1} };
+
+		std::vector<UINT> ArrIndex = { 0, 1, 2, 0, 2, 3 };
+
+		Ext_DirectXVertexBuffer::CreateVertexBuffer("FullRect", ArrVertex);
+		Ext_DirectXIndexBuffer::CreateIndexBuffer("FullRect", ArrIndex);
+		Ext_DirectXMesh::CreateMesh("FullRect");
 	}
 }
 

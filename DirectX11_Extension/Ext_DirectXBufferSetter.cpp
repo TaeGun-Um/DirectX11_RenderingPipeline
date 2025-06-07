@@ -29,7 +29,7 @@ void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSe
 	//}
 }
 
-// 텍스쳐 값 변경
+// 텍스쳐 값 변경, 정해진 값에서 선택하여 변경
 void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, TextureType _SlotValue /*= TextureType::BaseColor*/)
 {
 	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
@@ -65,6 +65,31 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, Textu
 	{
 		TextureSetter& Setter = Iter->second;
 		Setter.Texture = NewTexture;
+	}
+}
+
+// 텍스쳐 값 변경, 슬롯을 직접 지정하여 변경
+void Ext_DirectXBufferSetter::SetTexture(std::shared_ptr<Ext_DirectXTexture> _Texture, std::string_view _SlotName)
+{
+	if (nullptr == _Texture)
+	{
+		MsgAssert("nullptr인 텍스쳐는 세팅할 수 없습니다.");
+		return;
+	}
+
+	std::string UpperSlotName = Base_String::ToUpper(_SlotName);
+	auto Range = TextureSetters.equal_range(UpperSlotName);
+
+	if (Range.first == Range.second)
+	{
+		MsgAssert("이런 이름의 텍스쳐 슬롯은 없습니다. " + UpperSlotName);
+		return;
+	}
+
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		TextureSetter& Setter = Iter->second;
+		Setter.Texture = _Texture;
 	}
 }
 
@@ -241,6 +266,19 @@ void TextureSetter::TextureSetting()
 	}
 }
 
+void Ext_DirectXBufferSetter::AllTextureResourceReset()
+{
+	std::multimap<std::string, TextureSetter>::iterator StartIter = TextureSetters.begin();
+	std::multimap<std::string, TextureSetter>::iterator EndIter = TextureSetters.end();
+
+	for (; StartIter != EndIter; ++StartIter)
+	{
+		TextureSetter& Setter = StartIter->second;
+		Setter.TextureReset();
+	}
+}
+
+// RenderTargetUnit을 위한 리셋
 void TextureSetter::TextureReset()
 {
 	ShaderType Type = OwnerShader.lock()->GetType();

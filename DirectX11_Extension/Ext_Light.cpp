@@ -41,6 +41,8 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 		GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
 	}
 
+	LTData->CameraViewInverseMatrix = _Camera->GetViewMatrix().InverseReturn();
+
 	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
 	//LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
 	LTData->LightForwardVector = GetTransform()->GetLocalForwardVector();
@@ -170,7 +172,6 @@ void Ext_Light::CreateShadowTarget(LightType _Type)
 	{
 		ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R16_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::ZERO);
 		ShadowRenderTarget->CreateDepthTexture();
-		int a = 0;
 	}
 	break;
 	}

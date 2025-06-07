@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Ext_Actor.h"
+#include "Ext_MeshComponentUnit.h"
 
 // 원근인지, 직교인지 설정
 enum class ProjectionType
@@ -60,6 +61,10 @@ private:
 	float FOV = 80.0f;				// FOV값
 	float Near = 0.1f;				// 근평면
 	float Far = 10000.0f;		// 원평면
+
+	// 렌더타겟들
+	Ext_MeshComponentUnit LightUnit;
+	std::shared_ptr<class Ext_DirectXRenderTarget> AllRenderTarget;
 
 	//////////////////////////////////// 테스트용
 	D3D11_VIEWPORT ViewPortData; 

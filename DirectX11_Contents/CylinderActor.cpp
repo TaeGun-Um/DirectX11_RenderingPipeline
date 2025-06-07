@@ -11,6 +11,7 @@ void CylinderActor::Start()
 	//MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
 	MeshComp->CreateMeshComponentUnit("Cylinder", MaterialType::Static);
 	MeshComp->SetTexture("Gray.png");
+	MeshComp->ShadowOn();
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

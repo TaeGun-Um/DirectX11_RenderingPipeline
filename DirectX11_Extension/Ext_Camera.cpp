@@ -12,6 +12,32 @@
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_DirectXMaterial.h"
 #include "Ext_DirectXPixelShader.h"
+#include "Ext_DirectXBufferSetter.h"
+
+// 카메라 생성 시 호출
+void Ext_Camera::Start()
+{
+	ViewPortData.TopLeftX = 0;
+	ViewPortData.TopLeftY = 0;
+	ViewPortData.Width = Base_Windows::GetScreenSize().x;
+	ViewPortData.Height = Base_Windows::GetScreenSize().y;
+	ViewPortData.MinDepth = 0.0f;
+	ViewPortData.MaxDepth = 1.0f;
+
+	Width = ViewPortData.Width;
+	Height = ViewPortData.Height;
+
+	AllRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0
+	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1
+	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2
+	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3
+
+	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
+	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
+	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	//LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(2), "PositionTex");
+	//LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(3), "NormalTex");
+}
 
 // 여기는 요소 제거만 진행합니다.
 void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> _DeadActor)
@@ -105,20 +131,6 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 	// 여기서 동적, 정적으로 나눌 수도 있다.
 }
 
-// 카메라 생성 시 호출
-void Ext_Camera::Start()
-{
-	ViewPortData.TopLeftX = 0;
-	ViewPortData.TopLeftY = 0;
-	ViewPortData.Width = Base_Windows::GetScreenSize().x;
-	ViewPortData.Height = Base_Windows::GetScreenSize().y;
-	ViewPortData.MinDepth = 0.0f;
-	ViewPortData.MaxDepth = 1.0f;
-
-	Width = ViewPortData.Width;
-	Height = ViewPortData.Height;
-}
-
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
@@ -139,6 +151,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 			}
 		}
 	}
+
 	float4 CamPos = GetTransform()->GetWorldPosition();
 	std::sort(AllRenderUnits.begin(), AllRenderUnits.end(),
 		[&](const std::shared_ptr<Ext_MeshComponentUnit>& A, const std::shared_ptr<Ext_MeshComponentUnit>& B)
@@ -149,62 +162,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 			 > (BMesh->GetTransform()->GetWorldPosition() - CamPos).Size();
 		});
 
-	// 쉐도우 패스: Depth-only로 그림자 맵 생성
-	auto& Lights = GetOwnerScene().lock()->GetLights();
-	for (auto& [name, CurLight] : Lights)
-	{
-		auto SRT = CurLight->GetShadowRenderTarget();
-		if (!SRT) continue;
-
-		auto& ViewDatas = CurLight->GetLightViewDatas();
-		for (size_t i = 0; i < ViewDatas.size(); ++i)
-		{
-			// 1-1) 라이트 뷰/프로젝션 셋업
-			CurLight->LightViewSetting(i);
-
-			// 1-2) 쉐도우 렌더 타겟에 바인딩 & 클리어
-			SRT->RenderTargetClear();
-			SRT->RenderTargetSetting(0);
-
-			// 1-3) 모든 섀도우 캐스터(ShadowOn())만 Depth-only로 그리기
-			for (auto& [path, unitMap] : MeshComponentUnits)
-				for (auto& [order, unitList] : unitMap)
-					for (auto& unit : unitList)
-						if (unit->GetIsShadow())
-						{
-							unit->GetOwnerMeshComponent()
-								.lock()
-								->GetTransform()
-								->SetCameraMatrix(
-									ViewDatas[i].LightViewMatrix,
-									ViewDatas[i].LightProjectionMatrix
-								);
-
-							unit->RenderUnitShadowSetting();
-
-							auto PShadow = Ext_DirectXMaterial::Find("PShadow");
-							PShadow->VertexShaderSetting();
-							PShadow->RasterizerSetting();
-							PShadow->PixelShaderSetting();
-							PShadow->OutputMergerSetting();
-
-							unit->RenderUnitDraw();  // Depth만
-						}
-		}
-	}
-
-	// MainRenderTarget으로 복귀
-	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
-
-	// 3) 메인 패스: 일반 오브젝트 렌더링 전에 쉐도우 맵 바인딩
-	{
-		// (예시: 첫 번째 라이트의 쉐도우 맵만 바인딩)
-		auto firstLight = Lights.begin()->second;
-		auto srv = firstLight->GetShadowRenderTarget()->GetDepthTexture()->GetSRV();
-		Ext_DirectXDevice::GetContext()->PSSetShaderResources(2, 1, srv.GetAddressOf());
-	}
-
-	// 메인 렌더링 패스
+	// 메인 렌더링 패스, 백버퍼가 세팅되어 있어서 거기에 그림
 	std::unordered_set<std::shared_ptr<Ext_MeshComponent>> UpdatedComponents;
 	for (auto& Unit : AllRenderUnits)
 	{
@@ -214,11 +172,54 @@ void Ext_Camera::Rendering(float _Deltatime)
 		// View/Projection은 한 번만 업데이트
 		if (UpdatedComponents.insert(Owner).second)
 		{
-			Owner->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix());
+			Owner->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix()); // 행렬 업데이트
 		}
 
-		Unit->Rendering(_Deltatime);
+		Unit->Rendering(_Deltatime); // 렌더링 파이프라인 세팅 후 드로우콜
 	}
+
+	// 쉐도우 패스, ShadowTarget을 Setting한 뒤, 거기에 그리고 백버퍼에 옮기기
+	auto& Lights = GetOwnerScene().lock()->GetLights();
+	for (auto& [name, CurLight] : Lights)
+	{
+		std::shared_ptr<Ext_DirectXRenderTarget> CurShadowRenderTarget = CurLight->GetShadowRenderTarget();
+		if (!CurShadowRenderTarget) continue; // 세팅 안되어있으면 그릴 필요 없음
+
+		std::vector<LightViewData>& ViewDatas = CurLight->GetLightViewDatas();
+		for (size_t i = 0; i < ViewDatas.size(); ++i)
+		{
+			CurLight->LightViewSetting(i); // LightViewData에 담긴 값을 LightData로 옮겨주기
+			CurShadowRenderTarget->RenderTargetSetting(); // 바인딩, 백버퍼에서 셰도우 렌더 타겟으로 변경되는 곳
+
+			for (auto& Unit : AllRenderUnits) // 이 빛을 가지고 Shadow 켜진 값들에 대해 그림자 그리기
+			{
+				if (!Unit->GetIsShadow()) continue;
+
+				Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(ViewDatas[i].LightViewMatrix, ViewDatas[i].LightProjectionMatrix); // 카메라 라이트 기준으로 세팅하기
+				
+				Unit->RenderUnitShadowSetting(); // 그릴 준비, 세팅
+				auto PShadow = Ext_DirectXMaterial::Find("OrthogonalShadow");
+				PShadow->VertexShaderSetting();
+				PShadow->RasterizerSetting();
+				PShadow->PixelShaderSetting();
+				PShadow->OutputMergerSetting();
+				Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
+			}
+
+
+			Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
+			LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+			LightUnit.Rendering(_Deltatime);
+
+			//Ext_DirectXDevice::GetMainRenderTarget()->Merge(CurLight->GetShadowRenderTarget());
+		}
+	}
+
+	// 리셋 흠
+	Ext_DirectXRenderTarget::RenderTargetReset();
+
+	// MainRenderTarget으로 복귀
+	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
 }
 
 // 카메라 조종

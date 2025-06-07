@@ -7,6 +7,7 @@ class Ext_MeshComponentUnit : public std::enable_shared_from_this<Ext_MeshCompon
 	friend class Ext_Camera;
 	friend class Ext_MeshComponent;
 	friend class Ext_DynamicMeshComponent;
+	friend class Ext_DirectXRenderTarget;
 
 public:
 	// constrcuter destructer

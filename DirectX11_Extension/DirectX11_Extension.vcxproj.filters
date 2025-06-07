@@ -136,6 +136,9 @@
     <ClCompile Include="Ext_CollisionComponent.cpp">
       <Filter>01.Object\03.Component\02.Collision</Filter>
     </ClCompile>
+    <ClCompile Include="RendertargetGUI.cpp">
+      <Filter>01.Object\04.Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -281,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="Ext_CollisionComponent.h">
       <Filter>01.Object\03.Component\02.Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="RendertargetGUI.h">
+      <Filter>01.Object\04.Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

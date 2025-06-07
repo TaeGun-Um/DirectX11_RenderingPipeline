@@ -38,6 +38,7 @@ struct LightData
 	float4x4 LightProjectionMatrix;
 	float4x4 LightProjectionInverseMatrix;
 	float4x4 LightViewProjectionMatrix;
+	float4x4 CameraViewInverseMatrix;
 };
 
 constexpr unsigned int MAX_LIGHTS = 64;

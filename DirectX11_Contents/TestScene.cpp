@@ -12,6 +12,8 @@
 
 #include "InformationGUI.h"
 
+#include <DirectX11_Extension/Ext_DirectXDevice.h>
+#include <DirectX11_Extension/RendertargetGUI.h>
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
@@ -34,6 +36,10 @@ void TestScene::Start()
 	// GUI 생성
 	{
 		Ext_Imgui::CreateImgui<InformationGUI>("InformationGUI");
+		Ext_Imgui::CreateImgui<RendertargetGUI>("RendertargetGUI");
+		RendertargetGUI::Clear();
+		RendertargetGUI::AddDebugRenderTarget(0, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(1, "MainRenderTarget", Ext_DirectXDevice::GetMainRenderTarget());
 	}
 
 	// 캐릭터 메시 로드

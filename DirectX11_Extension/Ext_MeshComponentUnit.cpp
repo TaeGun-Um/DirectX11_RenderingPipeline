@@ -43,6 +43,8 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::DynamicNonG: MaterialString = "DynamicNonG"; break;
 	case MaterialType::Debug: MaterialString = "Debug"; break;
 	case MaterialType::PBR: MaterialString = "PBR"; break;
+	case MaterialType::Merge: MaterialString = "Merge"; break; // 이건 RenderTarget간 Merge를 위해 만드는 유형임
+	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // 이건 Deffered를 위한 Unit용
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 
@@ -74,8 +76,11 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	BufferSetter.Copy(PixelShaderBuffers);
 
 	// [3] 트랜스폼 상수버퍼 세팅하기
-	const TransformData& TFData = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
-	BufferSetter.SetConstantBufferLink("TransformData", TFData);
+	if (nullptr != GetOwnerMeshComponent().lock())
+	{
+		const TransformData& TFData = *(OwnerMeshComponent.lock()->GetTransform()->GetTransformData().get());
+		BufferSetter.SetConstantBufferLink("TransformData", TFData);
+	}
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
 	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
@@ -83,8 +88,12 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
 		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	}
-
-	GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
+	
+	// 단독으로 만들어지는 Unit도 있기 때문에, MeshComponent로부터 만들어진 유닛만 카메라에 넣기
+	if (nullptr != GetOwnerMeshComponent().lock())
+	{
+		GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
+	}
 }
 
 // 텍스쳐 변경하기
@@ -130,8 +139,6 @@ void Ext_MeshComponentUnit::RenderUnitDraw()
 
 void Ext_MeshComponentUnit::Rendering(float _Deltatime)
 {
-	std::string Name = GetOwnerMeshComponent().lock()->GetName();
-
 	RenderUnitSetting();
 	RenderUnitDraw();
 }
@@ -142,7 +149,7 @@ void Ext_MeshComponentUnit::ShadowOn()
 	
 	if (nullptr == ShadowInputLayout)
 	{
-		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("Shadow_VS");
+		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("OrthogonalShadow_VS");
 		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
 		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowPtr);
 	}

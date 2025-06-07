@@ -2,6 +2,7 @@
 
 #include "Ext_DirectXTexture.h"
 #include "Ext_ResourceManager.h"
+#include "Ext_MeshComponentUnit.h"
 
 // 렌더 타겟 관리 클래스
 class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarget>
@@ -9,6 +10,7 @@ class Ext_DirectXRenderTarget : public Ext_ResourceManager<Ext_DirectXRenderTarg
 	friend class Ext_DirectXDevice;
 	friend class Ext_Scene;
 	friend class Ext_Camera;
+	friend class RendertargetGUI;
 
 public:
 	// constrcuter destructer
@@ -54,6 +56,14 @@ public:
 		DepthSetting = false;
 	}
 
+	static void RenderTargetMergeUnitInitialize(); // MergeUnit 초기화용 
+
+	// 만들어진 렌더 타겟에 Texture, RTV, SRV 등 추가하기
+	void AddNewTexture(DXGI_FORMAT _Format, float4 _Scale, float4 _Color)
+	{
+		CreateRT(_Format, _Scale, _Color);
+	}
+
 protected:
 	
 private:
@@ -65,6 +75,9 @@ private:
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
 	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
 
+	static void RenderTargetReset();
+	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);
+
 	bool DepthSetting = true;
 
 	std::vector<float4> Colors; // 생성된 렌더타겟 색상 저장
@@ -74,6 +87,7 @@ private:
 	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // 렌더타겟뷰들 저장
 	std::vector<COMPTR<ID3D11ShaderResourceView>> SRVs = {}; // 셰이더리소스뷰들 저장
 
+	static Ext_MeshComponentUnit MergeUnit; // Merge용 Unit, 텍스쳐 세팅하고 드로우콜용으로 만든것
 };
 // [RenderTarget]
 // 렌더 타겟은 렌더링 결과를 기록하는 최종 목적지가 된다. 즉, 셰이더의 출력 결과가 그려지는 공간이다.

@@ -62,6 +62,28 @@ public:
 		return NewWindow;
 	}
 
+	template<typename ConvertType>
+	static std::shared_ptr<ConvertType> FindGUIWindowConvert(const std::string_view& _Name)
+	{
+		std::shared_ptr<ImguiWindow> Window = FindGUIWindow(_Name);
+
+		return std::dynamic_pointer_cast<ConvertType>(Window);
+	}
+
+	static std::shared_ptr<ImguiWindow> FindGUIWindow(const std::string_view& _Name)
+	{
+		std::string UpperString = Base_String::ToUpper(_Name);
+
+		std::map<std::string, std::shared_ptr<ImguiWindow>>::iterator FindIter = AllImgui.find(UpperString);
+
+		if (AllImgui.end() == FindIter)
+		{
+			return nullptr;
+		}
+
+		return FindIter->second;
+	}
+
 	void End()
 	{
 		ImGui::End();

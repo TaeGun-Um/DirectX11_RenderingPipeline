@@ -11,7 +11,7 @@ InformationGUI::~InformationGUI()
 
 void InformationGUI::OnGUI(std::shared_ptr<class Ext_Scene> _Scene, float _DeltaTime)
 {
-	// FPSView(_DeltaTime);
+	FPSView(_DeltaTime);
 
 	if (ImGui::Button("DebugSwitch"))
 	{

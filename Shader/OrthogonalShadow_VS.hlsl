@@ -21,17 +21,29 @@ cbuffer TransformData : register(b0)
 struct VSInput
 {
     float4 Position : POSITION;
+    // float4 BLENDWEIGHT : BLENDWEIGHT;
+    // int4 BLENDINDICES : BLENDINDICES;
 };
 
 struct VSOutput
 {
     float4 Position : SV_POSITION;
+    float4 Position5 : POSITION;
 };
 
-VSOutput Shadow_VS(VSInput _Input)
+VSOutput OrthogonalShadow_VS(VSInput _Input)
 {
-    VSOutput Output;
-    Output.Position = mul(_Input.Position, WorldViewProjectionMatrix);
-   
-    return Output;
+    VSOutput OutPut;
+    
+    //if (IsAnimation != 0)
+    //{
+    //    Skinning(InputPos, _Value.BLENDWEIGHT, _Value.BLENDINDICES, ArrAniMationMatrix);
+    //    InputPos.w = 1.0f;
+    //}
+    
+    OutPut.Position = mul(_Input.Position, WorldViewProjectionMatrix);
+    OutPut.Position5 = OutPut.Position;
+    OutPut.Position5.w = 1.0f;
+    
+    return OutPut;
 }

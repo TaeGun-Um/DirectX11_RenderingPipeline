@@ -12,6 +12,7 @@ void StaticMeshActor::Start()
 	MeshComp->CreateMeshComponentUnit("Book", MaterialType::PBR);
 	MeshComp->SetTexture("Book_BaseColor.jpg", TextureType::BaseColor);
 	MeshComp->SetTexture("Book_Normal.jpg", TextureType::Normal);
+	MeshComp->ShadowOn();
 
 	//GetTransform()->AddLocalRotation({ 0.f, 0.f, 90.f });
 	//GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });

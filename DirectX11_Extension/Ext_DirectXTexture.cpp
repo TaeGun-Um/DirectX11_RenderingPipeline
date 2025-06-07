@@ -170,7 +170,7 @@ void Ext_DirectXTexture::PSSetting(UINT _Slot)
 	Ext_DirectXDevice::GetContext()->PSSetShaderResources(_Slot, 1, &SRV);
 }
 
-// 텍스쳐를 사용한 경우, 여기서 추가로 VSReset 실시
+// 텍스쳐 리셋 실시하기(RenderTargetUnut을 위한 것)
 void Ext_DirectXTexture::VSReset(UINT _Slot)
 {
 	static ID3D11ShaderResourceView* Nullptr = nullptr;
@@ -178,7 +178,7 @@ void Ext_DirectXTexture::VSReset(UINT _Slot)
 	Ext_DirectXDevice::GetContext()->VSSetShaderResources(_Slot, 1, &Nullptr);
 }
 
-// 텍스쳐를 사용한 경우, 여기서 추가로 PSReset 실시
+// 텍스쳐 리셋 실시하기(RenderTargetUnut을 위한 것)
 void Ext_DirectXTexture::PSReset(UINT _Slot)
 {
 	static ID3D11ShaderResourceView* Nullptr = nullptr;

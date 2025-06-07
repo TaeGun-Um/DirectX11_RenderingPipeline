@@ -65,16 +65,21 @@ public:
 	void InsertTextureSetter(const TextureSetter& _Setter) { TextureSetters.insert(std::make_pair(_Setter.Name, _Setter)); }
 
 	// 텍스쳐값 변경하기
-	void SetTexture(std::string_view _TextureName, TextureType _TypeValue);
+	void SetTexture(std::string_view _TextureName, TextureType _TypeValue); // 정해진 슬롯에 대해 변경하기
+	void SetTexture(std::shared_ptr<class Ext_DirectXTexture> _Texture, std::string_view _SlotName); // 슬롯을 직접 지정해서 변경하기
 
 	// 샘플러값 변경하기
 	void SetSampler(SamplerType _TypeValue);
 
+	// 상수버퍼 슬롯에 데이터 주소 지정해주기
 	template<typename Type>
 	void SetConstantBufferLink(std::string_view _Name, const Type& _Data)
 	{
 		SetConstantBufferLink(_Name, reinterpret_cast<const void*>(&_Data), sizeof(Type));
 	}
+
+	// 리소스 초기화(RenderTarget Unit 때문에 만듬)
+	void AllTextureResourceReset();
 
 protected:
 	
