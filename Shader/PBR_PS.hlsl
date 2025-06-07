@@ -29,6 +29,8 @@ cbuffer LightDatas : register(b1)
 
 Texture2D BaseColorTex : register(t0);
 Texture2D NormalTex : register(t1);
+//Texture2D ShadowTex : register(t2);
+
 // Texture2D RoughnessTex : register(t2);
 // Texture2D SpecularTex : register(t3);
 // Texture2D AmbientTex : register(t3);

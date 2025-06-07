@@ -28,6 +28,7 @@ cbuffer LightDatas : register(b1)
 };
 
 Texture2D BaseColorTex : register(t0); // 텍스처 자원
+//Texture2D ShadowTex : register(t2);
 SamplerState Sampler : register(s0); // 샘플러
 
 struct PSInput

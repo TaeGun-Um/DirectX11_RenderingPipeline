@@ -45,6 +45,7 @@ void Character::Start()
 	BodyCollision->GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 	BodyCollisionMesh->GetTransform()->SetLocalPosition({ 0.f, 25.f, 0.f });
 	BodyCollision->GetTransform()->SetLocalPosition({ 0.f, 25.f, 0.f });
+	BodyCollisionMesh->UpdateOff();
 
 	BodyMesh->GetTransform()->SetLocalPosition({ 0.f, 102.5f, 0.f }); // юсюг╟╙
 

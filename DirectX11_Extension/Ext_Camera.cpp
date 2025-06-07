@@ -139,7 +139,6 @@ void Ext_Camera::Rendering(float _Deltatime)
 			}
 		}
 	}
-
 	float4 CamPos = GetTransform()->GetWorldPosition();
 	std::sort(AllRenderUnits.begin(), AllRenderUnits.end(),
 		[&](const std::shared_ptr<Ext_MeshComponentUnit>& A, const std::shared_ptr<Ext_MeshComponentUnit>& B)
@@ -150,7 +149,62 @@ void Ext_Camera::Rendering(float _Deltatime)
 			 > (BMesh->GetTransform()->GetWorldPosition() - CamPos).Size();
 		});
 
-	// 정렬 완료, 렌더링 실시
+	// 쉐도우 패스: Depth-only로 그림자 맵 생성
+	auto& Lights = GetOwnerScene().lock()->GetLights();
+	for (auto& [name, CurLight] : Lights)
+	{
+		auto SRT = CurLight->GetShadowRenderTarget();
+		if (!SRT) continue;
+
+		auto& ViewDatas = CurLight->GetLightViewDatas();
+		for (size_t i = 0; i < ViewDatas.size(); ++i)
+		{
+			// 1-1) 라이트 뷰/프로젝션 셋업
+			CurLight->LightViewSetting(i);
+
+			// 1-2) 쉐도우 렌더 타겟에 바인딩 & 클리어
+			SRT->RenderTargetClear();
+			SRT->RenderTargetSetting(0);
+
+			// 1-3) 모든 섀도우 캐스터(ShadowOn())만 Depth-only로 그리기
+			for (auto& [path, unitMap] : MeshComponentUnits)
+				for (auto& [order, unitList] : unitMap)
+					for (auto& unit : unitList)
+						if (unit->GetIsShadow())
+						{
+							unit->GetOwnerMeshComponent()
+								.lock()
+								->GetTransform()
+								->SetCameraMatrix(
+									ViewDatas[i].LightViewMatrix,
+									ViewDatas[i].LightProjectionMatrix
+								);
+
+							unit->RenderUnitShadowSetting();
+
+							auto PShadow = Ext_DirectXMaterial::Find("PShadow");
+							PShadow->VertexShaderSetting();
+							PShadow->RasterizerSetting();
+							PShadow->PixelShaderSetting();
+							PShadow->OutputMergerSetting();
+
+							unit->RenderUnitDraw();  // Depth만
+						}
+		}
+	}
+
+	// MainRenderTarget으로 복귀
+	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
+
+	// 3) 메인 패스: 일반 오브젝트 렌더링 전에 쉐도우 맵 바인딩
+	{
+		// (예시: 첫 번째 라이트의 쉐도우 맵만 바인딩)
+		auto firstLight = Lights.begin()->second;
+		auto srv = firstLight->GetShadowRenderTarget()->GetDepthTexture()->GetSRV();
+		Ext_DirectXDevice::GetContext()->PSSetShaderResources(2, 1, srv.GetAddressOf());
+	}
+
+	// 메인 렌더링 패스
 	std::unordered_set<std::shared_ptr<Ext_MeshComponent>> UpdatedComponents;
 	for (auto& Unit : AllRenderUnits)
 	{
@@ -164,58 +218,6 @@ void Ext_Camera::Rendering(float _Deltatime)
 		}
 
 		Unit->Rendering(_Deltatime);
-	}
-
-	// 빛
-	std::map<std::string, std::shared_ptr<class Ext_Light>> Lights = GetOwnerScene().lock()->GetLights();
-	GetOwnerScene().lock()->LightDataBuffer.LightCount = Lights.size();
-	for (auto& Light : Lights)
-	{
-		std::shared_ptr<Ext_Light> CurLight = Light.second;
-
-		// if (false == CurLight->IsShadow()) continue;
-		// if (false == CurLight->IsDynamicLight) continue;
-
-		std::shared_ptr<Ext_DirectXMaterial> Pipe = nullptr;
-		Pipe = Ext_DirectXMaterial::Find("PShadow");
-
-		std::vector<LightViewData>&  ViewDatas = CurLight->GetLightViewDatas();
-		size_t Size = ViewDatas.size();
-		for (size_t i = 0; i < Size; i++)
-		{
-			if (nullptr == CurLight->GetShadowRenderTarget()) continue;
-
-			CurLight->LightViewSetting(i);
-			CurLight->GetShadowRenderTarget()->RenderTargetSetting(i);
-
-			for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
-			{
-				for (auto& [IndexKey, UnitList] : UnitMap)
-				{
-					for (auto& Unit : UnitList)
-					{
-						if (!Unit->GetOwnerMeshComponent().lock()->IsUpdate()
-							|| !Unit->GetOwnerMeshComponent().lock()
-							|| !Unit->GetIsShadow())
-						{
-							continue;
-						}
-
-						std::string Name = Unit->GetOwnerMeshComponent().lock()->GetName();
-
-						std::vector<LightViewData>& CurViewDatas = CurLight->GetLightViewDatas();
-
-						Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(CurViewDatas[i].LightViewMatrix, CurViewDatas[i].LightProjectionMatrix);
-						Unit->RenderUnitShadowSetting();
-						Pipe->VertexShaderSetting();
-						Pipe->RasterizerSetting();
-						Pipe->PixelShaderSetting();
-						Pipe->OutputMergerSetting();
-						Unit->RenderUnitDraw();
-					}
-				}
-			}
-		}
 	}
 }
 

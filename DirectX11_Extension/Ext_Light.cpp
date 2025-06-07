@@ -169,6 +169,7 @@ void Ext_Light::CreateShadowTarget(LightType _Type)
 	default:
 	{
 		ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R16_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::ZERO);
+		ShadowRenderTarget->CreateDepthTexture();
 		int a = 0;
 	}
 	break;
