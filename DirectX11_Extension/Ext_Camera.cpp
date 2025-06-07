@@ -35,8 +35,8 @@ void Ext_Camera::Start()
 	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	//LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(2), "PositionTex");
-	//LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(3), "NormalTex");
+	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
+	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -134,6 +134,9 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
+	// AllRenderTarget->RenderTargetClear();
+	// AllRenderTarget->RenderTargetSetting();
+
 	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
 	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
@@ -206,20 +209,23 @@ void Ext_Camera::Rendering(float _Deltatime)
 				Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
 			}
 
-
 			Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
-			LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
-			LightUnit.Rendering(_Deltatime);
 
-			//Ext_DirectXDevice::GetMainRenderTarget()->Merge(CurLight->GetShadowRenderTarget());
+			const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
+			LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+			LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+			LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
+			LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
+			LightUnit.Rendering(_Deltatime);
 		}
 	}
 
 	// 리셋 흠
-	Ext_DirectXRenderTarget::RenderTargetReset();
+	//Ext_DirectXRenderTarget::RenderTargetReset();
 
 	// MainRenderTarget으로 복귀
 	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
+	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
 }
 
 // 카메라 조종

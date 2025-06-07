@@ -13,7 +13,7 @@ void SphereActor::Start()
 	//MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
 	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::Static);
 	MeshComp->SetTexture("Gray.png");
-	//MeshComp->ShadowOn();
+	MeshComp->ShadowOn();
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }
