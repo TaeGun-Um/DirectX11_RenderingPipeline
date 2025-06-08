@@ -27,6 +27,7 @@ enum class MaterialType
     PBR, // 여러 텍스쳐를 처리할 수 있는 머티리얼 세팅
     Merge, // RenderTerget Unit용 머티리얼 세팅
     DeferredLight, // Deffered(Camera Light 계산용)용 머티리얼 세팅
+    DeferredShadow, // Deffered(Camera Light 계산용)용 머티리얼 세팅
     Unknown
 };
 

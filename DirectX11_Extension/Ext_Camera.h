@@ -63,6 +63,7 @@ private:
 	float Far = 10000.0f;		// 원평면
 
 	// 렌더타겟들
+	Ext_MeshComponentUnit ShadowUnit;
 	Ext_MeshComponentUnit LightUnit;
 	std::shared_ptr<class Ext_DirectXRenderTarget> AllRenderTarget;
 

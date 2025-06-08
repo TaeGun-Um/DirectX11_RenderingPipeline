@@ -45,6 +45,7 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::PBR: MaterialString = "PBR"; break;
 	case MaterialType::Merge: MaterialString = "Merge"; break; // 이건 RenderTarget간 Merge를 위해 만드는 유형임
 	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // 이건 Deffered를 위한 Unit용
+	case MaterialType::DeferredShadow: MaterialString = "DeferredShadow"; break; // 그림자 테스트용
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 

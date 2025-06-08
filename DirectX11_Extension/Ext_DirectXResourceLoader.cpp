@@ -468,6 +468,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
+	// Deffered shadow 테스트용
+	{
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredShadow");
+		//NewRenderingPipeline->SetVertexShader("DeferredShadow_ㅍS");
+		//NewRenderingPipeline->SetPixelShader("DeferredShadow_PS");
+		//NewRenderingPipeline->SetBlendState("OneBlend");
+		//NewRenderingPipeline->SetDepthState("AlwayDepth"); // 이라는걸  모든 오브젝트가 순서 맞춰서 다 그려진 다음에 벌어지는 일이라.
+		//NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
 	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출
 	{
 		Ext_DirectXRenderTarget::RenderTargetMergeUnitInitialize();

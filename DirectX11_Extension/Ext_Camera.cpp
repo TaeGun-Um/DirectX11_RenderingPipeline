@@ -37,6 +37,10 @@ void Ext_Camera::Start()
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
 	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
+
+	// ShadowUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredShadow);
+	// ShadowUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	// ShadowUnit.SetSampler(SamplerType::PointClamp);
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -204,23 +208,9 @@ void Ext_Camera::Rendering(float _Deltatime)
 			PShadow->OutputMergerSetting();
 			Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
 		}
-
-		//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
-
-		const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
-		LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
-		LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
-		LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
-		LightUnit.Rendering(_Deltatime);
 	}
 
-	// 리셋 흠
-	//Ext_DirectXRenderTarget::RenderTargetReset();
-
-	// MainRenderTarget으로 복귀
-	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 실시
-	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
+	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
 }
 
 // 카메라 조종
