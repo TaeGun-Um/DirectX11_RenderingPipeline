@@ -188,36 +188,31 @@ void Ext_Camera::Rendering(float _Deltatime)
 		std::shared_ptr<Ext_DirectXRenderTarget> CurShadowRenderTarget = CurLight->GetShadowRenderTarget();
 		if (!CurShadowRenderTarget) continue; // 세팅 안되어있으면 그릴 필요 없음
 
-		std::vector<LightViewData>& ViewDatas = CurLight->GetLightViewDatas();
-		for (size_t i = 0; i < ViewDatas.size(); ++i)
+		std::shared_ptr<LightData> LTData = CurLight->GetLightData(); // 현재 라이트의 데이터(앞에서 업데이트 이미 됨)
+		CurShadowRenderTarget->RenderTargetSetting(); // 백버퍼에서 지금 렌더 타겟으로 바인딩 변경, 여기다 그리기
+
+		for (auto& Unit : AllRenderUnits) // 그림자 킬 렌더러들 그림자 그리기
 		{
-			CurLight->LightViewSetting(i); // LightViewData에 담긴 값을 LightData로 옮겨주기
-			CurShadowRenderTarget->RenderTargetSetting(); // 바인딩, 백버퍼에서 셰도우 렌더 타겟으로 변경되는 곳
+			if (!Unit->GetIsShadow()) continue;
 
-			for (auto& Unit : AllRenderUnits) // 이 빛을 가지고 Shadow 켜진 값들에 대해 그림자 그리기
-			{
-				if (!Unit->GetIsShadow()) continue;
-
-				Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(ViewDatas[i].LightViewMatrix, ViewDatas[i].LightProjectionMatrix); // 카메라 라이트 기준으로 세팅하기
-				
-				Unit->RenderUnitShadowSetting(); // 그릴 준비, 세팅
-				auto PShadow = Ext_DirectXMaterial::Find("OrthogonalShadow");
-				PShadow->VertexShaderSetting();
-				PShadow->RasterizerSetting();
-				PShadow->PixelShaderSetting();
-				PShadow->OutputMergerSetting();
-				Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
-			}
-
-			Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
-
-			const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
-			LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-			LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
-			LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
-			LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
-			LightUnit.Rendering(_Deltatime);
+			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 카메라 라이트 기준으로 세팅하기
+			Unit->RenderUnitShadowSetting(); // 그릴 준비, 세팅
+			auto PShadow = Ext_DirectXMaterial::Find("Shadow");
+			PShadow->VertexShaderSetting();
+			PShadow->RasterizerSetting();
+			PShadow->PixelShaderSetting();
+			PShadow->OutputMergerSetting();
+			Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
 		}
+
+		//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
+
+		const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
+		LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+		LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
+		LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
+		LightUnit.Rendering(_Deltatime);
 	}
 
 	// 리셋 흠

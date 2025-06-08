@@ -126,8 +126,8 @@ void Ext_Core::SceneInitialize(std::shared_ptr<Ext_Scene> _Level, std::string_vi
 {
 	CurrentScenes = _Level;
 	_Level->SetName(_Name);
-	_Level->SetDirectionalLight(_Level->CreateActor<Ext_Light>("DirectionalLight"));
 	_Level->SetMainCamera(_Level->CreateActor<Ext_Camera>("MainCamera"));
+	_Level->SetDirectionalLight(_Level->CreateActor<Ext_Light>("DirectionalLight"));
 	_Level->Start();
 }
 

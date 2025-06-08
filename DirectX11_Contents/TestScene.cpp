@@ -33,6 +33,14 @@ TestScene::~TestScene()
 
 void TestScene::Start()
 {
+	// 라이트 생성
+	{
+		std::shared_ptr<Ext_Light> DirectionalLight = GetDirectionalLight();
+		DirectionalLight->SetLightType(LightType::Directional);
+		DirectionalLight->GetTransform()->AddLocalRotation({ 45.0f, 0.f, 0.f });
+		DirectionalLight->GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
+	}
+
 	// GUI 생성
 	{
 		Ext_Imgui::CreateImgui<InformationGUI>("InformationGUI");

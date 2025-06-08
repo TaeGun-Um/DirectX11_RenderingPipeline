@@ -19,8 +19,6 @@ void ImageShotWindow::OnGUI(std::shared_ptr<Ext_Scene> _Scene, float _DeltaTime)
 
 void RendertargetGUI::OnGUI(std::shared_ptr<Ext_Scene> _Scene, float _DeltaTime)
 {
-	if (ImGui::Button("DebugSwitch"))
-
 	for (std::pair<int, NameRenderTarget> RenderTargetPair : DebugRenderTarget)
 	{
 		std::string Name = RenderTargetPair.second.Name;

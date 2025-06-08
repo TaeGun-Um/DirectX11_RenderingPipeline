@@ -22,14 +22,8 @@
     <Filter Include="06.Shadow">
       <UniqueIdentifier>{6b232042-f480-4cf2-8405-87e771c85103}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Shadow\00.PerspectiveShadow">
-      <UniqueIdentifier>{d177d04d-d189-4fc8-9a1b-8765065c507b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Shadow\01.OrthogonalShadow">
-      <UniqueIdentifier>{ca8fd335-0caf-4d1c-8e50-527ba2024332}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Shadow\02.ShadowTarget">
-      <UniqueIdentifier>{c29f8439-76c9-4760-857f-b8de932b87c1}</UniqueIdentifier>
+    <Filter Include="07.Deffered">
+      <UniqueIdentifier>{6ae012cb-93d7-446b-a1f4-1c1769b7747a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,23 +60,17 @@
     <FxCompile Include="Merge_PS.hlsl">
       <Filter>05.Merge</Filter>
     </FxCompile>
-    <FxCompile Include="PerspectiveShadow_VS.hlsl">
-      <Filter>06.Shadow\00.PerspectiveShadow</Filter>
-    </FxCompile>
-    <FxCompile Include="PerspectiveShadow_PS.hlsl">
-      <Filter>06.Shadow\00.PerspectiveShadow</Filter>
-    </FxCompile>
-    <FxCompile Include="OrthogonalShadow_PS.hlsl">
-      <Filter>06.Shadow\01.OrthogonalShadow</Filter>
-    </FxCompile>
-    <FxCompile Include="OrthogonalShadow_VS.hlsl">
-      <Filter>06.Shadow\01.OrthogonalShadow</Filter>
+    <FxCompile Include="DeferredLight_PS.hlsl">
+      <Filter>07.Deffered</Filter>
     </FxCompile>
     <FxCompile Include="DeferredLight_VS.hlsl">
-      <Filter>06.Shadow\02.ShadowTarget</Filter>
+      <Filter>07.Deffered</Filter>
     </FxCompile>
-    <FxCompile Include="DeferredLight_PS.hlsl">
-      <Filter>06.Shadow\02.ShadowTarget</Filter>
+    <FxCompile Include="Shadow_PS.hlsl">
+      <Filter>06.Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Shadow_VS.hlsl">
+      <Filter>06.Shadow</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

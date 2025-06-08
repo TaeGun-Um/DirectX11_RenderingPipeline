@@ -48,15 +48,6 @@ struct LightDatas
 	LightData Lights[MAX_LIGHTS];
 };
 
-struct LightViewData
-{
-	float4x4 LightViewMatrix;
-	float4x4 LightViewInverseMatrix;
-	float4x4 LightProjectionMatrix;
-	float4x4 LightProjectionInverseMatrix;
-	float4x4 LightViewProjectionMatrix;
-};
-
 class Ext_Light : public Ext_Actor
 {
 public:
@@ -76,7 +67,6 @@ public:
 	// Getter, Setter
 	LightType GetLightType() { return Type; } // 라이트 타입 가져오기
 	std::shared_ptr<LightData> GetLightData() { return LTData; } // 라이트 연산 정보 가져오기
-	std::vector<LightViewData>& GetLightViewDatas() { return LightViewDatas; } // 라이트 연산 행렬 정보 가져오기
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetShadowRenderTarget() { return ShadowRenderTarget; } // 그림자 렌더타겟 가져오기
 	float4 GetShadowTextureScale() { float4(LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY, 0.f, 0.f); } // 그림자 렌더타겟을 위한 사이즈 가져오기
 	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); } // 라이트 타입 세팅
@@ -88,11 +78,8 @@ protected:
 	void Start() override;
 	
 private:
-	void CreateShadowTarget(LightType _Type); // 그림자 랜더타겟 생성
-
 	LightType Type = LightType::Unknown; // 해당 라이트는 무슨 종류인지 설정
 	std::shared_ptr<LightData> LTData = nullptr; // 라이트 연산에 필요한 데이터들
-	std::vector<LightViewData> LightViewDatas; // 라이트 연산에 필요한 행렬 데이터들
 
 	std::shared_ptr<class Ext_DirectXRenderTarget> ShadowRenderTarget = nullptr; // 라이터 영향받은 그림자 그릴곳
 	float4 ShadowRange = { 0.0f, 0.0f, 0.0f, 0.0f }; // 그림자 길이

@@ -437,21 +437,11 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
 	}
 
-	// 원근 그림자
+	// 그림자
 	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PerspectiveShadow");
-		NewRenderingPipeline->SetVertexShader("PerspectiveShadow_VS");
-		NewRenderingPipeline->SetPixelShader("PerspectiveShadow_PS");
-		NewRenderingPipeline->SetBlendState("MinBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
-	}
-
-	// 직교 그림자
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("OrthogonalShadow");
-		NewRenderingPipeline->SetVertexShader("OrthogonalShadow_VS");
-		NewRenderingPipeline->SetPixelShader("OrthogonalShadow_PS");
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Shadow");
+		NewRenderingPipeline->SetVertexShader("Shadow_VS");
+		NewRenderingPipeline->SetPixelShader("Shadow_PS");
 		NewRenderingPipeline->SetBlendState("MinBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");

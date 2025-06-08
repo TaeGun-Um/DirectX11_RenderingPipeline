@@ -149,7 +149,7 @@ void Ext_MeshComponentUnit::ShadowOn()
 	
 	if (nullptr == ShadowInputLayout)
 	{
-		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("OrthogonalShadow_VS");
+		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("Shadow_VS");
 		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
 		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowPtr);
 	}
