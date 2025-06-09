@@ -37,15 +37,14 @@ std::string MaterialSettingToString(MaterialType _Setting)
 
 	switch (_Setting)
 	{
-	case MaterialType::Static: MaterialString = "Static"; break;
-	case MaterialType::StaticNonG: MaterialString = "StaticNonG"; break;
-	case MaterialType::Dynamic: MaterialString = "Dynamic"; break;
-	case MaterialType::DynamicNonG: MaterialString = "DynamicNonG"; break;
-	case MaterialType::Debug: MaterialString = "Debug"; break;
-	case MaterialType::PBR: MaterialString = "PBR"; break;
-	case MaterialType::Merge: MaterialString = "Merge"; break; // 이건 RenderTarget간 Merge를 위해 만드는 유형임
-	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // 이건 Deffered를 위한 Unit용
-	case MaterialType::DeferredShadow: MaterialString = "DeferredShadow"; break; // 그림자 테스트용
+	case MaterialType::Static: MaterialString = "Static"; break; // 스태틱 메시용
+	case MaterialType::Dynamic: MaterialString = "Dynamic"; break; // 다이나믹 메시용
+	case MaterialType::PBR: MaterialString = "PBR"; break; // 다양한 텍스쳐 추가
+	case MaterialType::Merge: MaterialString = "Merge"; break; // RenderTargetUnit용
+	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // DefferedUnit용
+	case MaterialType::Debug: MaterialString = "Debug"; break; // 디버깅용
+	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯
+	case MaterialType::NonGDynamic: MaterialString = "NonGDynamic"; break; // 아마 안쓸듯
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 
@@ -150,9 +149,9 @@ void Ext_MeshComponentUnit::ShadowOn()
 	
 	if (nullptr == ShadowInputLayout)
 	{
-		std::shared_ptr<Ext_DirectXVertexShader> ShadowPtr = Ext_DirectXVertexShader::Find("Shadow_VS");
+		std::shared_ptr<Ext_DirectXVertexShader> ShadowVS = Ext_DirectXVertexShader::Find("Shadow_VS");
 		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
-		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowPtr);
+		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowVS);
 	}
 }
 

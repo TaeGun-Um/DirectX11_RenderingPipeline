@@ -9,6 +9,7 @@ cbuffer CB_SkinnedMatrix : register(b1)
 struct VSInput
 {
     float4 Position : POSITION;
+    float4 Color : COLOR;
     float4 TexCoord : TEXCOORD;
     float4 Normal : NORMAL;
     uint4 BoneID : BONEID;
@@ -18,12 +19,12 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_POSITION;
-    float3 WorldPosition : POSITION;
-    float3 WorldNormal : NORMAL;
-    float2 TexCoord : TEXCOORD;
+    float4 Color : COLOR;
+    float4 TexCoord : TEXCOORD;
+    float4 Normal : NORMAL;
 };
 
-VSOutput Dynamic_VS(VSInput _Input)
+VSOutput NonGDynamic_VS(VSInput _Input)
 {
     VSOutput Output;
 
@@ -70,12 +71,9 @@ VSOutput Dynamic_VS(VSInput _Input)
     float4 ViewPosition = mul(WorldPosition, ViewMatrix);
     Output.Position = mul(ViewPosition, ProjectionMatrix);
          
-    // UV 좌표 설정
-    Output.TexCoord = _Input.TexCoord.xy;
-    
-    // 월드 공간 기준으로 조명 계산을 진행하기 위해 WorldMatrix만 처리한 Position, Normal을 생성하여 Pixel Shader에 넘겨줌
-    Output.WorldPosition = WorldPosition;
-    Output.WorldNormal = normalize(mul(SkinNormal, (float3x3)WorldMatrix));
+    Output.Color = _Input.Color;
+    Output.TexCoord = _Input.TexCoord;
+    Output.Normal = _Input.Normal;
     
     return Output;
 }

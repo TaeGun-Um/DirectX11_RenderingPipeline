@@ -34,7 +34,7 @@ void Ext_DirectXRenderTarget::CreateRT(std::shared_ptr<Ext_DirectXTexture> _Text
 	Textures.push_back(_Texture);
 	ViewPorts.push_back(ViewPortData);
 	RTVs.push_back(_Texture->GetRTV());
-	// SRVs.push_back(_Texture->GetSRV());
+	SRVs.push_back(_Texture->GetSRV());
 }
 
 // 텍스쳐를 생성해서 렌더타겟 생성

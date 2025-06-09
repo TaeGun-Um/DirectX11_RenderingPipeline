@@ -152,7 +152,7 @@ void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, cons
 	}
 }
 
-// 상수 버퍼 세팅(상수버퍼, 샘플러, 텍스쳐)
+// 슬롯에 바인딩된 버퍼들에 대해 VSSetShaderResources, PSSetShaderResources를 호출
 void Ext_DirectXBufferSetter::BufferSetting()
 {
 	// 상수 버퍼 세팅

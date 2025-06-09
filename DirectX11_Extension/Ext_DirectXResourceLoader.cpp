@@ -377,31 +377,11 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 // 렌더링 파이프라인 생성
 void Ext_DirectXResourceLoader::MakeMaterial()
 {
-	// 일반 스태틱 메시
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticNonG");
-		NewRenderingPipeline->SetVertexShader("Basic_VS");
-		NewRenderingPipeline->SetPixelShader("Basic_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
-	}
-
 	// 그래픽스 스태틱 메시
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Static");
-		NewRenderingPipeline->SetVertexShader("Grapics_VS");
+		NewRenderingPipeline->SetVertexShader("Static_VS");
 		NewRenderingPipeline->SetPixelShader("Grapics_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
-	}
-
-	// 일반 다이나믹 메시
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DynamicNonG");
-		NewRenderingPipeline->SetVertexShader("Dynamic_VS");
-		NewRenderingPipeline->SetPixelShader("Basic_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
@@ -425,16 +405,6 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
-	}
-
-	// 와이어프레임(디버깅용)
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Debug");
-		NewRenderingPipeline->SetVertexShader("Debug_VS");
-		NewRenderingPipeline->SetPixelShader("Debug_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
 	}
 
 	// 그림자
@@ -466,6 +436,36 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("OneBlend");
 		NewRenderingPipeline->SetDepthState("AlwayDepth"); // 이라는걸  모든 오브젝트가 순서 맞춰서 다 그려진 다음에 벌어지는 일이라.
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// 와이어프레임(디버깅용)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Debug");
+		NewRenderingPipeline->SetVertexShader("NonGStatic_VS");
+		NewRenderingPipeline->SetPixelShader("Debug_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("DebugRasterizer");
+	}
+
+	// 그래픽 처리X 스태틱 메시(이제 안씀)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("NonGStatic");
+		NewRenderingPipeline->SetVertexShader("NonGStatic_VS");
+		NewRenderingPipeline->SetPixelShader("NonG_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 그래픽 처리X 다이나믹 메시(이제 안씀)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("NonGDynamic");
+		NewRenderingPipeline->SetVertexShader("NonGDynamic_VS");
+		NewRenderingPipeline->SetPixelShader("NonG_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
 	// Deffered shadow 테스트용

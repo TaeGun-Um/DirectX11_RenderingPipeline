@@ -29,18 +29,13 @@ void Ext_Camera::Start()
 
 	AllRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0
 	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1
-	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2
-	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3
 
 	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
-	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(1), "NormalTex");
+	LightUnit.SetSampler(SamplerType::PointClamp);
 
-	// ShadowUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredShadow);
-	// ShadowUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	// ShadowUnit.SetSampler(SamplerType::PointClamp);
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -185,30 +180,36 @@ void Ext_Camera::Rendering(float _Deltatime)
 		Unit->Rendering(_Deltatime); // 렌더링 파이프라인 세팅 후 드로우콜
 	}
 
-	// 쉐도우 패스, ShadowTarget을 Setting한 뒤, 거기에 그리고 백버퍼에 옮기기
+	// 쉐도우 패스, 뎁스 만들기
 	auto& Lights = GetOwnerScene().lock()->GetLights();
 	for (auto& [name, CurLight] : Lights)
 	{
 		std::shared_ptr<Ext_DirectXRenderTarget> CurShadowRenderTarget = CurLight->GetShadowRenderTarget();
 		if (!CurShadowRenderTarget) continue; // 세팅 안되어있으면 그릴 필요 없음
 
-		std::shared_ptr<LightData> LTData = CurLight->GetLightData(); // 현재 라이트의 데이터(앞에서 업데이트 이미 됨)
+		std::shared_ptr<LightData> LTData = CurLight->GetLightData(); // 현재 라이트의 데이터(앞서 업데이트됨)
 		CurShadowRenderTarget->RenderTargetSetting(); // 백버퍼에서 지금 렌더 타겟으로 바인딩 변경, 여기다 그리기
 
-		for (auto& Unit : AllRenderUnits) // 그림자 킬 렌더러들 그림자 그리기
+		// 쉐도우 뎁스 텍스쳐 만들기
+		for (auto& Unit : AllRenderUnits)
 		{
 			if (!Unit->GetIsShadow()) continue;
 
-			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 카메라 라이트 기준으로 세팅하기
-			Unit->RenderUnitShadowSetting(); // 그릴 준비, 세팅
+			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
+			Unit->RenderUnitShadowSetting(); 
 			auto PShadow = Ext_DirectXMaterial::Find("Shadow");
 			PShadow->VertexShaderSetting();
 			PShadow->RasterizerSetting();
 			PShadow->PixelShaderSetting();
 			PShadow->OutputMergerSetting();
-			Unit->RenderUnitDraw(); // 드로우콜, 이제 셰도우 렌더 타겟에 그려졌음
+			Unit->RenderUnitDraw();
 		}
+
+		// 쉐도우 뎁스를 가지고 백버퍼에 그리기
+		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+		LightUnit.Rendering(_Deltatime);
 	}
+
 
 	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
 }

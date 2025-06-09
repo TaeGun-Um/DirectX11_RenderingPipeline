@@ -19,15 +19,14 @@ enum class RenderPath
 
 enum class MaterialType
 {
-    Static, // 그래픽스를 사용하는 스태틱 세팅
-    StaticNonG, // 그래픽스를 사용하지 않는 스태틱 세팅
-    Dynamic, // 그래픽스를 사용하는 다이나믹 세팅
-    DynamicNonG, // 그래픽스를 사용하지 않는 다이나믹 세팅
-    Debug, // 와이어 프레임으로 그리기용
-    PBR, // 여러 텍스쳐를 처리할 수 있는 머티리얼 세팅
-    Merge, // RenderTerget Unit용 머티리얼 세팅
-    DeferredLight, // Deffered(Camera Light 계산용)용 머티리얼 세팅
-    DeferredShadow, // Deffered(Camera Light 계산용)용 머티리얼 세팅
+    Static,              // 스태틱 메시 세팅
+    Dynamic,         // 다이나믹메시 세팅
+    PBR,                // 텍스쳐 여러개 처리용
+    Merge,             // RenderTergetUnit용
+    DeferredLight,  // DefferedUnit용
+    Debug,            // 와이어 프레임으로 그리기용
+    NonGStatic,     // 그래픽스 세팅X 스태틱, 이제 안씀
+    NonGDynamic, // 그래픽스 세팅X 다이나믹, 이제 안씀
     Unknown
 };
 

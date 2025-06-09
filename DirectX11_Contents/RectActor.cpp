@@ -8,7 +8,7 @@
 void RectActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Rect", MaterialType::StaticNonG);
+	MeshComp->CreateMeshComponentUnit("Rect", MaterialType::NonGStatic);
 	// MeshComp->CreateMeshComponentUnit("Rect", "Static");
 	MeshComp->SetTexture("Manual.png");
 	MeshComp->ShadowOn();

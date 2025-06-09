@@ -94,7 +94,7 @@ void Character::Update(float _DeltaTime)
 		PlayerFSM.Update(_DeltaTime);
 
 		// -------------------------------
-		// 1) F4 눌러서 마우스 포커스 토글
+		// F4 눌러서 마우스 포커스 토글
 		// -------------------------------
 		if (Base_Input::IsDown("Escape"))
 		{
@@ -122,7 +122,7 @@ void Character::Update(float _DeltaTime)
 		}
 
 		// ---------------------------------------------
-		// 2) “카메라 자유(조종) 모드”이면서 “마우스 캡처 중”일 때만 Δ 계산
+		// 카메라 자유 모드이면서 “마우스 캡처 중”일 때만 계산
 		// ---------------------------------------------
 		if (GetOwnerScene().lock()->GetMainCamera()->IsEscape())
 		{
@@ -130,22 +130,20 @@ void Character::Update(float _DeltaTime)
 			HWND hWnd = Base_Windows::GetHWnd();
 
 			// (B) 클라이언트 영역 크기 구하기
-			RECT rc;
-			GetClientRect(hWnd, &rc);
-			POINT clientCenter = {
-				(rc.right - rc.left) / 2,
-				(rc.bottom - rc.top) / 2
-			};
-			POINT screenCenter = clientCenter;
-			ClientToScreen(hWnd, &screenCenter);
+			RECT Rc;
+			GetClientRect(hWnd, &Rc);
+
+			POINT ClientCenter = { (Rc.right - Rc.left) / 2, (Rc.bottom - Rc.top) / 2 };
+			POINT ScreenCenter = ClientCenter;
+			ClientToScreen(hWnd, &ScreenCenter);
 
 			// (C) 현재 커서 위치 읽기
 			POINT curMouse;
 			GetCursorPos(&curMouse);
 
 			// (D) Δ 계산
-			int deltaX = curMouse.x - screenCenter.x;
-			int deltaY = curMouse.y - screenCenter.y;
+			int deltaX = curMouse.x - ScreenCenter.x;
+			int deltaY = curMouse.y - ScreenCenter.y;
 
 			// (E) Δ를 카메라 회전에 반영
 			CamYaw += deltaX * MouseSensitivity;
@@ -153,33 +151,24 @@ void Character::Update(float _DeltaTime)
 			CamPitch = std::clamp(CamPitch, 15.0f, 15.0f); // 예: 상하 회전 제한
 
 			// (F) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
-			SetCursorPos(screenCenter.x, screenCenter.y);
+			SetCursorPos(ScreenCenter.x, ScreenCenter.y);
 
 			// (G) 카메라 회전 적용 (X=Pitch, Y=Yaw)
-			GetOwnerScene().lock()->GetMainCamera()->GetTransform()
-				->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
 		}
 		// 만약 bMouseCaptured == false라면 Δ 계산 없이 커서 제어도 하지 않으므로, 
 		// 사용자는 자유롭게 커서를 움직일 수 있고, 카메라도 회전하지 않음
 
 		// ------------------------------------------------------------
-		// 3) 카메라 위치 갱신 : Character 월드 위치 기반으로 항상 따라다님
-		//    (bMouseCaptured 여부와 관계없이 항상 카메라 위치만 업데이트)
+		// 카메라 위치 갱신 : Character 월드 위치 기반으로 항상 따라다님(bMouseCaptured 여부와 관계없이 항상 카메라 위치만 업데이트)
 		// ------------------------------------------------------------
 		{
-			float4 charWorldPos = GetTransform()->GetWorldPosition();
-			float4 camLocalUp = GetOwnerScene().lock()->GetMainCamera()
-				->GetTransform()->GetLocalUpVector();
-			float4 camLocalFwd = GetOwnerScene().lock()->GetMainCamera()
-				->GetTransform()->GetLocalForwardVector();
+			float4 CharWorldPosition = GetTransform()->GetWorldPosition();
+			float4 CamLocalUp = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalUpVector();
+			float4 CamLocalForward = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalForwardVector();
+			float4 CamPososition = CharWorldPosition + CamLocalUp * CameraHeight - CamLocalForward * CameraDistance;
 
-			float4 desiredCamPos =
-				charWorldPos
-				+ camLocalUp * CameraHeight
-				- camLocalFwd * CameraDistance;
-
-			GetOwnerScene().lock()->GetMainCamera()
-				->GetTransform()->SetLocalPosition(desiredCamPos);
+			GetOwnerScene().lock()->GetMainCamera()	->GetTransform()->SetLocalPosition(CamPososition);
 		}
 	}
 
@@ -196,16 +185,6 @@ void Character::CreateInput()
 	//Base_Input::CreateKey("Up", VK_SPACE);
 	Base_Input::CreateKey("Attack", VK_LBUTTON);
 }
-
-// Idle,
-// Walking,
-// WalkingLeft,
-// WalkingRight,
-// WalkingBackward,
-// Jump,
-// JumpFront,
-// JumpBackward,
-// Attack
 
 void Character::CreateFSM()
 {

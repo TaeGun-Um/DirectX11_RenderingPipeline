@@ -15,5 +15,7 @@ VSOutput DeferredLight_VS(VSInput _Input)
     VSOutput OutPut;
     OutPut.Position = _Input.Position;
     OutPut.Texcoord = _Input.Texcoord;
+    
     return OutPut;
+    
 }
