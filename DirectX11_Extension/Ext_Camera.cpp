@@ -30,12 +30,22 @@ void Ext_Camera::Start()
 	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
 	CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget
 	CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
+	// CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 DiffuseTarget
+	// CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 SpcecularTarget
+	// CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 5 AmbientTarget
+	// CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 6 ShadowTarget
 	CameraRenderTarget->CreateDepthTexture();
+
+	LightRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 DiffuseTarget
+	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 SpcecularTarget
+	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 AmbientTarget
+	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 ShadowTarget
 
 	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	LightUnit.BufferSetter.SetTexture(CameraRenderTarget->GetTexture(0), "PositionTex");
+	LightUnit.BufferSetter.SetTexture(CameraRenderTarget->GetTexture(1), "PositionTex");
+	LightUnit.BufferSetter.SetTexture(CameraRenderTarget->GetTexture(2), "NormalTex");
 	LightUnit.SetSampler(SamplerType::PointClamp);
 
 }
@@ -135,8 +145,8 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	CameraRenderTarget->RenderTargetClear();
-	CameraRenderTarget->RenderTargetSetting();
+	// CameraRenderTarget->RenderTargetClear();
+	// CameraRenderTarget->RenderTargetSetting();
 
 	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
@@ -206,14 +216,20 @@ void Ext_Camera::Rendering(float _Deltatime)
 	//		PShadow->OutputMergerSetting();
 	//		Unit->RenderUnitDraw();
 	//	}
-
-	//	// 쉐도우 뎁스를 가지고 백버퍼에 그리기
-	//	LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
-	//	LightUnit.Rendering(_Deltatime);
 	//}
 
+	//LightRenderTarget->RenderTargetClear();
+	//LightRenderTarget->RenderTargetSetting();
 
-	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
+	//GetOwnerScene().lock()->GetLightDataBuffer().LightCount = 0; // 라이트 업데이트 전, 상수버퍼 갯수 초기화(순회하면서 넣어줘야하기 때문)
+	//for (auto& [name, CurLight] : Lights)
+	//{
+	//	LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+	//	LightUnit.Rendering(_Deltatime);
+	//	GetOwnerScene().lock()->GetLightDataBuffer().LightCount++;
+	//}
+
+	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
 }
 
 // 카메라 조종

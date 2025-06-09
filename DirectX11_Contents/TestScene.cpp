@@ -37,8 +37,8 @@ void TestScene::Start()
 	{
 		std::shared_ptr<Ext_Light> DirectionalLight = GetDirectionalLight();
 		DirectionalLight->SetLightType(LightType::Directional);
-		DirectionalLight->GetTransform()->AddLocalRotation({ 45.0f, 0.f, 0.f });
-		DirectionalLight->GetTransform()->AddLocalRotation({ 0.f, 45.f, 0.f });
+		DirectionalLight->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
+		DirectionalLight->GetTransform()->AddLocalRotation({ 0.f, 30.f, 0.f });
 	}
 
 	// GUI 생성
@@ -49,6 +49,7 @@ void TestScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(0, "MainRenderTarget", Ext_DirectXDevice::GetMainRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(1, "CameraRenderTarget", GetMainCamera()->GetCameraRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(2, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(3, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 	}
 
 	// 캐릭터 메시 로드

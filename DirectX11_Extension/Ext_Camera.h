@@ -39,7 +39,8 @@ public:
 	bool IsEscape() { return bIsEscape; }
 	void bIsEscapeSwitch() { bIsEscape = !bIsEscape; }
 
-	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; };
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightRenderTarget() { return LightRenderTarget; }
 
 protected:
 	void Start() override;
@@ -66,6 +67,7 @@ private:
 
 	// 디퍼드 렌더타겟용
 	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget;
+	std::shared_ptr<class Ext_DirectXRenderTarget> LightRenderTarget;
 	Ext_MeshComponentUnit LightUnit;
 
 	//////////////////////////////////// 테스트용

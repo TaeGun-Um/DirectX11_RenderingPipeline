@@ -7,14 +7,14 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_Position;
-    float4 Texcoord : TEXCOORD;
+    float2 Texcoord : TEXCOORD;
 };
 
 VSOutput DeferredLight_VS(VSInput _Input)
 {
     VSOutput OutPut;
     OutPut.Position = _Input.Position;
-    OutPut.Texcoord = _Input.Texcoord;
+    OutPut.Texcoord = _Input.Texcoord.xy;
     
     return OutPut;
     

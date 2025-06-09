@@ -53,7 +53,7 @@ public:
 
 	// Light Getter, Setter
 	std::shared_ptr<class Ext_Light> GetDirectionalLight() { return DirectionalLight; }; // 디렉셔널 라이트 가져오기
-	const LightDatas& GetLightDataBuffer() { return LightDataBuffer; }; // 디렉셔널 라이트 가져오기
+	LightDatas& GetLightDataBuffer() { return LightDataBuffer; }; // 디렉셔널 라이트 가져오기
 	void SetDirectionalLight(std::shared_ptr<class Ext_Light> _Light); // 디렉셔널 라이트 세팅(씬이 만들어지면 바로 호출 1회)
 
 	// MeshComponent를 MainCamera의 MeshComponents에 push
