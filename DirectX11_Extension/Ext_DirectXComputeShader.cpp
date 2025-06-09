@@ -16,10 +16,10 @@ void Ext_DirectXComputeShader::CreateComputeShader(std::string_view _Path, std::
 	unsigned int Flag = 0;
 
 #ifdef _DEBUG
-	Flag = D3D10_SHADER_DEBUG;
+	Flag |= D3D10_SHADER_DEBUG;
+	Flag |= D3DCOMPILE_SKIP_OPTIMIZATION;
 
 #endif
-
 	Flag |= D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 	// Flag & D3DCOMPILE_SKIP_VALIDATION
 	// 옵션이 켜졌는지 확인하는법

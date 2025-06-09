@@ -5,6 +5,7 @@
 #include "Ext_Camera.h"
 #include "Ext_MeshComponent.h"
 #include "Ext_DirectXRenderTarget.h"
+#include "Ext_DirectXDevice.h"
 #include "Ext_Light.h"
 #include "Ext_Imgui.h"
 
@@ -72,6 +73,15 @@ void Ext_Scene::Rendering(float _DeltaTime)
 		}
 
 		CurCamera->Rendering(_DeltaTime); // Camera의 MeshComponent들 Rendering
+	}
+
+	// 렌더타겟 Merge
+	for (auto& CamIter : Cameras)
+	{
+		std::shared_ptr<Ext_Camera> CurCamera = CamIter.second;
+		std::shared_ptr<Ext_DirectXRenderTarget> CurCamTarget = CurCamera->GetCameraRenderTarget();
+
+		Ext_DirectXDevice::GetMainRenderTarget()->Merge(CurCamTarget);
 	}
 
 	Ext_Imgui::Render(GetSharedFromThis<Ext_Scene>(), _DeltaTime);

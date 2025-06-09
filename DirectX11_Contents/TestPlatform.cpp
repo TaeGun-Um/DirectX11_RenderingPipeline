@@ -12,8 +12,8 @@ void TestPlatform::Start()
 	PlatformBodyMesh = CreateComponent<Ext_MeshComponent>("PlatformBodyMesh");
 	PlatformBodyMesh->CreateMeshComponentUnit("Box", MaterialType::Static);
 	PlatformBodyMesh->SetSampler(SamplerType::PointMirror);
-	PlatformBodyMesh->SetTexture("RedNull.png");
-	//PlatformBodyMesh->ShadowOn();
+	PlatformBodyMesh->SetTexture("Green.png");
+	PlatformBodyMesh->ShadowOn();
 
 	GetTransform()->SetLocalScale({ 2000.f, 50.f, 2000.f });
 	GetTransform()->SetLocalPosition({ 0.f, -25.f, 0.f });

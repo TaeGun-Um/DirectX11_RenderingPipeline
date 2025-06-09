@@ -10,7 +10,7 @@ struct VSOutput
     float2 Texcoord : TEXCOORD;
 };
 
-VSOutput DeferredLight_VS(VSInput _Input)
+VSOutput DeferredMerge_VS(VSInput _Input)
 {
     VSOutput OutPut;
     OutPut.Position = _Input.Position;

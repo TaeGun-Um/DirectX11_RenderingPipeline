@@ -40,8 +40,10 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::Static: MaterialString = "Static"; break; // 스태틱 메시용
 	case MaterialType::Dynamic: MaterialString = "Dynamic"; break; // 다이나믹 메시용
 	case MaterialType::PBR: MaterialString = "PBR"; break; // 다양한 텍스쳐 추가
-	case MaterialType::Merge: MaterialString = "Merge"; break; // RenderTargetUnit용
+	case MaterialType::RenderTargetMerge: MaterialString = "RenderTargetMerge"; break; // RenderTargetUnit용
 	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // DefferedUnit용
+	case MaterialType::DeferredPost: MaterialString = "DeferredPost"; break; // DefferedUnit용
+	case MaterialType::DeferredMerge: MaterialString = "DeferredMerge"; break; // DefferedUnit용
 	case MaterialType::Debug: MaterialString = "Debug"; break; // 디버깅용
 	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯
 	case MaterialType::NonGDynamic: MaterialString = "NonGDynamic"; break; // 아마 안쓸듯
@@ -83,11 +85,11 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	}
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
-	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
-	{
-		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
-		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	}
+	//if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
+	//{
+	//	const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
+	//	BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	//}
 	
 	// 단독으로 만들어지는 Unit도 있기 때문에, MeshComponent로부터 만들어진 유닛만 카메라에 넣기
 	if (nullptr != GetOwnerMeshComponent().lock())

@@ -7,7 +7,7 @@ Ext_MeshComponentUnit Ext_DirectXRenderTarget::MergeUnit;
 // MergeUnit 초기화용
 void Ext_DirectXRenderTarget::RenderTargetMergeUnitInitialize()
 {
-	MergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::Merge);
+	MergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::RenderTargetMerge);
 }
 
 // View를 기반으로 렌더타겟 생성

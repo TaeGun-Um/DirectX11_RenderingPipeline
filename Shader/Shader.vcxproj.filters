@@ -45,10 +45,10 @@
     <FxCompile Include="Shadow_VS.hlsl">
       <Filter>02.Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Merge_PS.hlsl">
+    <FxCompile Include="RenderTargetMerge_PS.hlsl">
       <Filter>05.Merge\00.RenderTargetMerge</Filter>
     </FxCompile>
-    <FxCompile Include="Merge_VS.hlsl">
+    <FxCompile Include="RenderTargetMerge_VS.hlsl">
       <Filter>05.Merge\00.RenderTargetMerge</Filter>
     </FxCompile>
     <FxCompile Include="ShadowMerge_VS.hlsl">
@@ -86,6 +86,18 @@
     </FxCompile>
     <FxCompile Include="PBR_VS.hlsl">
       <Filter>01.Mesh\01.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredMerge_VS.hlsl">
+      <Filter>03.Light</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredMerge_PS.hlsl">
+      <Filter>03.Light</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPost_PS.hlsl">
+      <Filter>03.Light</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPost_VS.hlsl">
+      <Filter>03.Light</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ struct VSOutput
     float4 Texcoord : TEXCOORD;
 };
 
-VSOutput Merge_VS(VSInput _Input)
+VSOutput RenderTargetMerge_VS(VSInput _Input)
 {
     VSOutput OutPut;
     OutPut.Position = _Input.Position;

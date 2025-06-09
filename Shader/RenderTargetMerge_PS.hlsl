@@ -7,7 +7,7 @@ struct PSInput
     float4 Texcoord : TEXCOORD;
 };
 
-float4 Merge_PS(PSInput _Input) : SV_TARGET
+float4 RenderTargetMerge_PS(PSInput _Input) : SV_TARGET
 {
     float4 Color = DiffuseTex.Sample(AlwaysSampler, _Input.Texcoord.xy);
     Color.a = saturate(Color.a);

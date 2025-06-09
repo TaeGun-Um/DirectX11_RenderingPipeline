@@ -15,7 +15,8 @@ void Ext_DirectXPixelShader::CreatePixelShader(std::string_view _Path, std::stri
 	unsigned int Flag = 0;
 
 #ifdef _DEBUG
-	Flag = D3D10_SHADER_DEBUG;
+	Flag |= D3D10_SHADER_DEBUG;
+	Flag |= D3DCOMPILE_SKIP_OPTIMIZATION;
 
 #endif
 	Flag |= D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
