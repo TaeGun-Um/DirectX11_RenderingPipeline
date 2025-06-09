@@ -27,13 +27,15 @@ void Ext_Camera::Start()
 	Width = ViewPortData.Width;
 	Height = ViewPortData.Height;
 
-	AllRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0
-	AllRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1
+	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
+	CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget
+	CameraRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
+	CameraRenderTarget->CreateDepthTexture();
 
 	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	LightUnit.BufferSetter.SetTexture(AllRenderTarget->GetTexture(0), "PositionTex");
+	LightUnit.BufferSetter.SetTexture(CameraRenderTarget->GetTexture(0), "PositionTex");
 	LightUnit.SetSampler(SamplerType::PointClamp);
 
 }
@@ -133,8 +135,8 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
-	// AllRenderTarget->RenderTargetClear();
-	// AllRenderTarget->RenderTargetSetting();
+	CameraRenderTarget->RenderTargetClear();
+	CameraRenderTarget->RenderTargetSetting();
 
 	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
@@ -181,37 +183,37 @@ void Ext_Camera::Rendering(float _Deltatime)
 	}
 
 	// 쉐도우 패스, 뎁스 만들기
-	auto& Lights = GetOwnerScene().lock()->GetLights();
-	for (auto& [name, CurLight] : Lights)
-	{
-		std::shared_ptr<Ext_DirectXRenderTarget> CurShadowRenderTarget = CurLight->GetShadowRenderTarget();
-		if (!CurShadowRenderTarget) continue; // 세팅 안되어있으면 그릴 필요 없음
+	//auto& Lights = GetOwnerScene().lock()->GetLights();
+	//for (auto& [name, CurLight] : Lights)
+	//{
+	//	std::shared_ptr<Ext_DirectXRenderTarget> CurShadowRenderTarget = CurLight->GetShadowRenderTarget();
+	//	if (!CurShadowRenderTarget) continue; // 세팅 안되어있으면 그릴 필요 없음
 
-		std::shared_ptr<LightData> LTData = CurLight->GetLightData(); // 현재 라이트의 데이터(앞서 업데이트됨)
-		CurShadowRenderTarget->RenderTargetSetting(); // 백버퍼에서 지금 렌더 타겟으로 바인딩 변경, 여기다 그리기
+	//	std::shared_ptr<LightData> LTData = CurLight->GetLightData(); // 현재 라이트의 데이터(앞서 업데이트됨)
+	//	CurShadowRenderTarget->RenderTargetSetting(); // 백버퍼에서 지금 렌더 타겟으로 바인딩 변경, 여기다 그리기
 
-		// 쉐도우 뎁스 텍스쳐 만들기
-		for (auto& Unit : AllRenderUnits)
-		{
-			if (!Unit->GetIsShadow()) continue;
+	//	// 쉐도우 뎁스 텍스쳐 만들기
+	//	for (auto& Unit : AllRenderUnits)
+	//	{
+	//		if (!Unit->GetIsShadow()) continue;
 
-			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
-			Unit->RenderUnitShadowSetting(); 
-			auto PShadow = Ext_DirectXMaterial::Find("Shadow");
-			PShadow->VertexShaderSetting();
-			PShadow->RasterizerSetting();
-			PShadow->PixelShaderSetting();
-			PShadow->OutputMergerSetting();
-			Unit->RenderUnitDraw();
-		}
+	//		Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
+	//		Unit->RenderUnitShadowSetting(); 
+	//		auto PShadow = Ext_DirectXMaterial::Find("Shadow");
+	//		PShadow->VertexShaderSetting();
+	//		PShadow->RasterizerSetting();
+	//		PShadow->PixelShaderSetting();
+	//		PShadow->OutputMergerSetting();
+	//		Unit->RenderUnitDraw();
+	//	}
 
-		// 쉐도우 뎁스를 가지고 백버퍼에 그리기
-		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
-		LightUnit.Rendering(_Deltatime);
-	}
+	//	// 쉐도우 뎁스를 가지고 백버퍼에 그리기
+	//	LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+	//	LightUnit.Rendering(_Deltatime);
+	//}
 
 
-	//Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
+	Ext_DirectXDevice::GetMainRenderTarget()->RenderTargetSetting();
 }
 
 // 카메라 조종

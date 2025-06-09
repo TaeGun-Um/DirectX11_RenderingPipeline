@@ -150,7 +150,8 @@ void Ext_DirectXRenderTarget::RenderTargetClear()
 // 렌더 타겟 바인딩 담당, Draw(), Clear(), Shader Binding 등이 올바른 렌더 타겟에 수행될 수 있도록 설정
 void Ext_DirectXRenderTarget::RenderTargetSetting()
 {
-	COMPTR<ID3D11RenderTargetView> RTV = Textures[0]->GetRTV(0); // 첫 번째 RTV(RenderTargetView) 를 가져옴(백 버퍼임)
+	ID3D11RenderTargetView** RTV = &RTVs[0];
+	//COMPTR<ID3D11RenderTargetView> RTV = RTVs[0];
 
 	if (nullptr == RTV)
 	{
@@ -164,7 +165,8 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 		DSV = nullptr;
 	}
 	
-	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
+	//Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
+	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV, DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
 	// 1. 바인딩할 렌더타겟뷰 갯수
 	// 2. RTV의 시작 주소
 	// 3. 깊이/스텐실 뷰 포인터(딱히 없으면nullptr 가능)

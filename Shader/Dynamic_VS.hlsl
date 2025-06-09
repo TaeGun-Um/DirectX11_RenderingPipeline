@@ -18,9 +18,11 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_POSITION;
-    float3 WorldPosition : POSITION;
-    float3 WorldNormal : NORMAL;
     float2 TexCoord : TEXCOORD;
+    float3 WorldPosition : POSITION0;
+    float3 WorldViewPosition : POSITION1;
+    float3 WorldNormal : NORMAL0;
+    float3 WorldViewNormal : NORMAL1;
 };
 
 VSOutput Dynamic_VS(VSInput _Input)
@@ -66,16 +68,20 @@ VSOutput Dynamic_VS(VSInput _Input)
     }
     
     // Position 설정
-    float4 WorldPosition = mul(SkinPosition, WorldMatrix);
-    float4 ViewPosition = mul(WorldPosition, ViewMatrix);
-    Output.Position = mul(ViewPosition, ProjectionMatrix);
+    float4 WorldPos = mul(SkinPosition, WorldMatrix);
+    float4 ViewPos = mul(WorldPos, ViewMatrix);
+    Output.Position = mul(ViewPos, ProjectionMatrix);
          
     // UV 좌표 설정
     Output.TexCoord = _Input.TexCoord.xy;
     
     // 월드 공간 기준으로 조명 계산을 진행하기 위해 WorldMatrix만 처리한 Position, Normal을 생성하여 Pixel Shader에 넘겨줌
-    Output.WorldPosition = WorldPosition;
-    Output.WorldNormal = normalize(mul(SkinNormal, (float3x3)WorldMatrix));
+    Output.WorldPosition = WorldPos.xyz;
+    Output.WorldViewPosition = ViewPos.xyz;
+    
+    float3 WorldNorm = mul(SkinNormal, (float3x3) WorldMatrix);
+    Output.WorldNormal = WorldNorm;
+    Output.WorldViewNormal = mul(WorldNorm, (float3x3) ViewMatrix);
     
     return Output;
 }

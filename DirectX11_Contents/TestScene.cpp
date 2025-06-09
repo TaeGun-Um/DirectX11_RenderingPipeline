@@ -47,7 +47,8 @@ void TestScene::Start()
 		Ext_Imgui::CreateImgui<RendertargetGUI>("RendertargetGUI");
 		RendertargetGUI::Clear();
 		RendertargetGUI::AddDebugRenderTarget(0, "MainRenderTarget", Ext_DirectXDevice::GetMainRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(1, "CameraRenderTarget", GetMainCamera()->GetCameraRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(2, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
 	}
 
 	// 캐릭터 메시 로드

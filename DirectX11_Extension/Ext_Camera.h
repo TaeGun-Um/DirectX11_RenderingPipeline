@@ -39,6 +39,8 @@ public:
 	bool IsEscape() { return bIsEscape; }
 	void bIsEscapeSwitch() { bIsEscape = !bIsEscape; }
 
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; };
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -62,9 +64,9 @@ private:
 	float Near = 0.1f;				// 근평면
 	float Far = 10000.0f;		// 원평면
 
-	// 렌더타겟들
+	// 디퍼드 렌더타겟용
+	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget;
 	Ext_MeshComponentUnit LightUnit;
-	std::shared_ptr<class Ext_DirectXRenderTarget> AllRenderTarget;
 
 	//////////////////////////////////// 테스트용
 	D3D11_VIEWPORT ViewPortData; 

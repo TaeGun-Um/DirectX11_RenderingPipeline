@@ -8,9 +8,12 @@
 void CubeActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Box", MaterialType::PBR);
-	MeshComp->SetTexture("StoneWall_BaseColor.jpg");
-	MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
+	//MeshComp->CreateMeshComponentUnit("Box", MaterialType::PBR);
+	//MeshComp->SetTexture("StoneWall_BaseColor.jpg");
+	//MeshComp->SetTexture("StoneWall_Normal.jpg", TextureType::Normal);
+	//MeshComp->ShadowOn();
+	MeshComp->CreateMeshComponentUnit("Box", MaterialType::Static);
+	MeshComp->SetTexture("Gray.png");
 	MeshComp->ShadowOn();
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });

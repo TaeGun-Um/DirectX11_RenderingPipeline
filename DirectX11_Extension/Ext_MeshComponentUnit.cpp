@@ -83,11 +83,11 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	}
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
-	if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
-	{
-		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
-		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	}
+	//if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
+	//{
+	//	const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
+	//	BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	//}
 	
 	// 단독으로 만들어지는 Unit도 있기 때문에, MeshComponent로부터 만들어진 유닛만 카메라에 넣기
 	if (nullptr != GetOwnerMeshComponent().lock())
@@ -119,6 +119,17 @@ void Ext_MeshComponentUnit::RenderUnitSetting()
 	if (nullptr == Material)
 	{
 		MsgAssert("파이프라인이 존재하지 않는 유니트 입니다");
+	}
+
+	if (nullptr != GetOwnerMeshComponent().lock())
+	{
+		std::shared_ptr<Ext_MeshComponent> ThisMesh = GetOwnerMeshComponent().lock();
+		std::string MeshName = ThisMesh->GetName();
+		std::multimap<std::string, ConstantBufferSetter> Mul = BufferSetter.ConstantBufferSetters;
+		std::multimap<std::string, SamplerSetter> Mul2 = BufferSetter.SamplerSetters;
+		std::multimap<std::string, TextureSetter> Mul3 = BufferSetter.TextureSetters;
+
+		int a = 0;
 	}
 
 	InputLayout->InputLayoutSetting(); // InputLayout으로 IASetInputLayout 호출
