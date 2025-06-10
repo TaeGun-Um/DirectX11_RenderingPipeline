@@ -37,7 +37,7 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
     float3 DiffuseLight = float3(0.0f, 0.0f, 0.0f);
     float3 SpecularLight = float3(0.0f, 0.0f, 0.0f);
     float3 AmbientLight = float3(0.0f, 0.0f, 0.0f);
-
+    
     // Directional Light 분기
     if (LTData.LightType == 0)
     {
@@ -48,6 +48,10 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         DiffuseLight = DiffuseLightCalculation(LightDirection, WorldNorm);
         SpecularLight = SpecularLightCalculation(LightDirection, WorldNorm, EyePosition, WorldPos, Shininess);
         AmbientLight = AmbientLightCalculation(LTData.LightColor.w);
+        
+        DiffuseLight *= LTData.LightColor.xyz;
+        SpecularLight *= LTData.LightColor.xyz;
+        AmbientLight *= LTData.LightColor.xyz;
     }
     else if (LTData.LightType == 1)  // Point Light 분기
     {
@@ -66,17 +70,29 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         float C1 = 0.0f;
         float C2 = LTData.AttenuationValue / (LTData.FarDistance * LTData.FarDistance);
         float Attenuation = 1.0f / (C0 + C1 * Distance + C2 * Distance * Distance);
+        
+        DiffuseLight *= Attenuation;
+        SpecularLight *= Attenuation;
+        AmbientLight *= Attenuation;
+        
+        DiffuseLight *= LTData.LightColor.xyz;
+        SpecularLight *= LTData.LightColor.xyz;
+        AmbientLight *= LTData.LightColor.xyz;
     }
 
     if (DiffuseLight.x > 0.0f)
     {
         float4 LightPos = mul(float4(WorldPos, 1.0f), LTData.LightViewProjectionMatrix);
+        LightPos.w = 1.0f;
         
         // worldviewprojection 이 곱해지면 그건 -1~1사이의 공간입니까? w에 곱해지기전의 z값을 보관해 놓은 값이 됩니다. // 모든 값은 -1~1사이의 값이 됩니다.
         float3 LightProjection = LightPos.xyz / LightPos.w;
         
         float2 ShadowUV = float2(LightProjection.x * 0.5f + 0.5f, LightProjection.y * -0.5f + 0.5f);
         float ShadowDepth = ShadowTex.Sample(Sampler, float2(ShadowUV.x, ShadowUV.y)).r;
+        
+        bool inside = (ShadowUV.x >= 0.0 && ShadowUV.x <= 1.0)
+           && (ShadowUV.y >= 0.0 && ShadowUV.y <= 1.0);
         
         // 가장 외각을 약간 깎아내서 
         if (

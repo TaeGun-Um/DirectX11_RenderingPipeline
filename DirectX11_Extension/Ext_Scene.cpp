@@ -133,6 +133,13 @@ void Ext_Scene::ActorInitialize(std::shared_ptr<Ext_Actor> _Actor, std::weak_ptr
 	_Actor->SetName(_Name);
 	_Actor->SetOwnerScene(_Level);
 	_Actor->SetOrder(_Order);
+
+	if (nullptr != std::dynamic_pointer_cast<Ext_Light>(_Actor))
+	{
+		std::shared_ptr<Ext_Light> NewLight = std::dynamic_pointer_cast<Ext_Light>(_Actor);
+		PushLight(NewLight, NewLight->GetName());
+	}
+
 	_Actor->Start();
 }
 

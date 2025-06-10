@@ -26,7 +26,6 @@ PSOutput DeferredMerge_PS(PSInput _Input) : SV_TARGET
     float4 DiffuseRatio = DiffuseTex.Sample(PointWrap, _Input.TEXCOORD);
     float4 SpacularRatio = SpecularTex.Sample(PointWrap, _Input.TEXCOORD);
     float4 AmbientRatio = AmbientTex.Sample(PointWrap, _Input.TEXCOORD);
-    
     float ShadowMask = ShadowTex.Sample(PointWrap, _Input.TEXCOORD).x;
     
     // 그림자 어두운 정도 (0.0 = 안 어두움, 1.0 = 완전 검정)
@@ -39,7 +38,6 @@ PSOutput DeferredMerge_PS(PSInput _Input) : SV_TARGET
     
     if (Albedo.a)
     {
-        // 0.1f
         OutPut.Color.xyz = Albedo.xyz * (DiffuseRatio.xyz + SpacularRatio.xyz + AmbientRatio.xyz) * ShadowFactor;
         OutPut.Color.a = saturate(Albedo.a + (DiffuseRatio.w + SpacularRatio.w + AmbientRatio.w));
         OutPut.Color.a = 1.0f;

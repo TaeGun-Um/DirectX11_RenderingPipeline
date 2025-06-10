@@ -57,22 +57,6 @@ void Character::Start()
 
 	GetTransform()->SetLocalPosition({ 0, 100, 0 });
 	// GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
-
-	//std::shared_ptr<Ext_Light> PointLight = GetOwnerScene().lock()->CreateActor<Ext_Light>("PointLight1");
-	//PointLight->SetLightType(LightType::Point);
-	////PointLight->GetTransform()->SetParent(GetTransform());
-	//PointLight->GetTransform()->SetParent(GetOwnerScene().lock()->GetMainCamera()->GetTransform());
-	//PointLight->GetOwnerScene().lock()->PushLight(PointLight, PointLight->GetName());
-	//
-	//// std::shared_ptr<Ext_MeshComponent> PointLightMesh = CreateComponent<Ext_MeshComponent>("PointLightMesh");
-	//// PointLightMesh->CreateMeshComponentUnit("Sphere", MaterialType::Debug);
-	//// PointLightMesh->GetTransform()->SetParent(PointLight->GetTransform());
-	//// PointLightMesh->GetTransform()->SetLocalScale({ 10.f, 10.f, 10.f });
-	//
-	////PointLight->GetTransform()->SetLocalPosition({ 0.f, 30.f, 0.f });
-	//PointLight->SetLightRange(5.f);
-	//PointLight->SetAttenuationValue(1.f);
-	//PointLight->SetLightColor({0.0f, 1.0f, 0.f, 0.8f});
 }
 
 void Character::Update(float _DeltaTime)

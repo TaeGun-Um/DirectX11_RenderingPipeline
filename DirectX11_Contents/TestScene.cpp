@@ -35,10 +35,22 @@ void TestScene::Start()
 {
 	// 라이트 생성
 	{
-		std::shared_ptr<Ext_Light> DirectionalLight = GetDirectionalLight();
-		DirectionalLight->SetLightType(LightType::Directional);
-		DirectionalLight->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
-		DirectionalLight->GetTransform()->AddLocalRotation({ 0.f, 30.f, 0.f });
+		std::shared_ptr<Ext_Light> Directional = CreateActor<Ext_Light>("Directional");
+		Directional->SetLightType(LightType::Directional);
+		SetDirectionalLight(Directional);
+		Directional->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
+		Directional->GetTransform()->AddLocalRotation({ 0.f, 30.f, 0.f });
+		Directional->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
+
+		std::shared_ptr<Ext_Light> PointLight = CreateActor<Ext_Light>("PointLight");
+		PointLight->SetLightType(LightType::Point);
+		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", PointLight->GetShadowRenderTarget());
+		
+		PointLight->GetTransform()->SetParent(GetMainCamera()->GetTransform());
+		PointLight->GetTransform()->SetLocalPosition({ 0.f, 30.f, 0.f });
+		PointLight->SetLightRange(10.f);
+		PointLight->SetAttenuationValue(1.f);
+		PointLight->SetLightColor({0.0f, 1.0f, 0.f, 0.25f});
 	}
 
 	// GUI 생성
@@ -47,7 +59,7 @@ void TestScene::Start()
 		Ext_Imgui::CreateImgui<RendertargetGUI>("RendertargetGUI");
 		RendertargetGUI::Clear();
 		RendertargetGUI::AddDebugRenderTarget(0, "MeshRenderTarget", GetMainCamera()->GetMeshRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		// RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());

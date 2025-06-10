@@ -69,6 +69,7 @@ public:
 	std::shared_ptr<LightData> GetLightData() { return LTData; } // 라이트 연산 정보 가져오기
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetShadowRenderTarget() { return ShadowRenderTarget; } // 그림자 렌더타겟 가져오기
 	float4 GetShadowTextureScale() { float4(LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY, 0.f, 0.f); } // 그림자 렌더타겟을 위한 사이즈 가져오기
+
 	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); } // 라이트 타입 세팅
 	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; } // 라이트 색깔 세팅
 	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; } // 라이트 감쇠 계수 설정(포인트 라이트용)
