@@ -64,7 +64,7 @@ void Ext_Camera::Start()
 	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(0), "DiffuseTex");
 	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(1), "SpecularTex");
 	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
-	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
+	//LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
 
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
 	LightMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredMerge);
