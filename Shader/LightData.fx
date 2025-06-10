@@ -37,13 +37,24 @@ float3 DiffuseLightCalculation(float3 _LightDirection, float3 _Normal)
     return DiffuseLight;
 }
 
-float3 SpecularLightCalculation(float3 _LightDirection, float3 _Normal, float3 _CameraWorldPosition, float3 _PixelPosition, float _Shininess)
+float SpecularLightCalculation(float3 _LightDirection, float3 _Normal, float3 _CameraWorldPosition, float3 _PixelPosition, float _Shininess)
 {
-    float3 ReflectionVector = normalize(2.0f * _Normal * dot(_LightDirection, _Normal) - _LightDirection); // นÝป็บคลอ
-    float3 EyePosition = _CameraWorldPosition;
-    float3 EyeDirection = normalize(EyePosition - _PixelPosition);
-    float RDotV = max(0.0f, dot(ReflectionVector, EyeDirection));
-    float3 SpecularLight = pow(RDotV, _Shininess);
+    // Phong
+    //float3 ReflectionVector = normalize(2.0f * _Normal * dot(_LightDirection, _Normal) - _LightDirection); // นÝป็บคลอ
+    //float3 EyePosition = _CameraWorldPosition;
+    //float3 EyeDirection = normalize(EyePosition - _PixelPosition);
+    //float RDotV = max(0.0f, dot(ReflectionVector, EyeDirection));
+    //float3 SpecularLight = pow(RDotV, _Shininess);
+    
+    //return SpecularLight;
+    
+    // Blinn-Phong
+    float3 L = normalize(_LightDirection);
+    float3 V = normalize(_CameraWorldPosition - _PixelPosition);
+    float3 H = normalize(L + V);
+
+    float NdotH = saturate(dot(normalize(_Normal), H));
+    float3 SpecularLight = pow(NdotH, _Shininess);
     
     return SpecularLight;
 }

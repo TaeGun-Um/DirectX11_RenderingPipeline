@@ -122,6 +122,19 @@ void Ext_DirectXBufferSetter::SetSampler(SamplerType _TypeValue)
 	}
 }
 
+void Ext_DirectXBufferSetter::SetSampler(std::string_view _FindName, std::string_view _SlotName)
+{
+	std::shared_ptr<Ext_DirectXSampler> NewSampler = Ext_DirectXSampler::Find(_FindName);
+	std::string UpperSlotName = Base_String::ToUpper(_SlotName);
+	auto Range = SamplerSetters.equal_range(UpperSlotName);
+
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		SamplerSetter& Setter = Iter->second;
+		Setter.Sampler = NewSampler;
+	}
+}
+
 // 상수 버퍼에 한하여 호출, cbuffer 슬롯 이름과 크기를 나중에 따로 지정해주기 위해 호출하는 함수
 void Ext_DirectXBufferSetter::SetConstantBufferLink(std::string_view _Name, const void* _Data, UINT _Size)
 {

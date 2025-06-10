@@ -17,14 +17,14 @@ struct PSOutPut
 Texture2D PositionTex : register(t0); // G-Buffer: 월드-스페이스 위치(x,y,z) + 1
 Texture2D NormalTex : register(t1); // G-Buffer: 월드-스페이스 법선(x,y,z) + 1
 Texture2D ShadowTex : register(t2);
-SamplerState PointWrap : register(s0);
+SamplerState Sampler : register(s0);
 
 PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
 {
     PSOutPut OutPut;
         
-    float3 WorldPos = PositionTex.Sample(PointWrap, _Input.Texcoord).xyz;
-    float3 WorldNorm = NormalTex.Sample(PointWrap, _Input.Texcoord).xyz;
+    float3 WorldPos = PositionTex.Sample(Sampler, _Input.Texcoord).xyz;
+    float3 WorldNorm = NormalTex.Sample(Sampler, _Input.Texcoord).xyz;
         
     LightData LTData = Lights[LightCount];
    
@@ -73,7 +73,6 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         //AccumLightColor += LTData.LightColor.xyz * (Diffuse + Specular + Ambient) * Attenuation;
     }
 
-    // DiffuseLight가 비춰지는 곳이라면
     if (DiffuseLight.x > 0.0f)
     {
         // 빛이존재하므로 그림자도 존재해야할지 판단(빛을 기준으로한 포지션으로 변경)
@@ -83,7 +82,7 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         float3 LightProjection = WVPPos.xyz / WVPPos.w;
         
         float2 ShadowUV = float2(LightProjection.x * 0.5f + 0.5f, LightProjection.y * -0.5f + 0.5f);
-        float ShadowDepth = ShadowTex.Sample(PointWrap, float2(ShadowUV.x, ShadowUV.y)).r;
+        float ShadowDepth = ShadowTex.Sample(Sampler, float2(ShadowUV.x, ShadowUV.y)).r;
         
         // 가장 외각을 약간 깎아내서 
         if (

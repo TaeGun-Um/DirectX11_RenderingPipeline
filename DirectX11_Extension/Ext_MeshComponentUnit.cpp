@@ -110,6 +110,12 @@ void Ext_MeshComponentUnit::SetSampler(SamplerType _TypeVlaue)
 	BufferSetter.SetSampler(_TypeVlaue);
 }
 
+// 샘플러 변경하기(직접 지정)
+void Ext_MeshComponentUnit::SetSampler(std::string_view _Name, std::string_view _SlotName)
+{
+	BufferSetter.SetSampler(_Name, _SlotName);
+}
+
 // Mesh, Material의 RenderingPipeline Setting
 void Ext_MeshComponentUnit::RenderUnitSetting()
 {

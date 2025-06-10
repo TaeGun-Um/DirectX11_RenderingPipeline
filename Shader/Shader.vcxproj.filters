@@ -4,9 +4,6 @@
     <Filter Include="05.Merge">
       <UniqueIdentifier>{b231006d-4dd1-42b3-ba5b-6a535c6ea0ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Merge\01.ShadowTextureMerge">
-      <UniqueIdentifier>{a6e7c465-9e9a-4f31-9240-67491de6b04c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Merge\00.RenderTargetMerge">
       <UniqueIdentifier>{e394d483-8e6b-4ea8-bdb6-1bd4c77219a0}</UniqueIdentifier>
     </Filter>
@@ -50,12 +47,6 @@
     </FxCompile>
     <FxCompile Include="RenderTargetMerge_VS.hlsl">
       <Filter>05.Merge\00.RenderTargetMerge</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowMerge_VS.hlsl">
-      <Filter>05.Merge\01.ShadowTextureMerge</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowMerge_PS.hlsl">
-      <Filter>05.Merge\01.ShadowTextureMerge</Filter>
     </FxCompile>
     <FxCompile Include="LightData.fx">
       <Filter>00.Header</Filter>

@@ -70,6 +70,7 @@ public:
 
 	// 샘플러값 변경하기
 	void SetSampler(SamplerType _TypeValue);
+	void SetSampler(std::string_view _FindName, std::string_view _SlotName);
 
 	// 상수버퍼 슬롯에 데이터 주소 지정해주기
 	template<typename Type>

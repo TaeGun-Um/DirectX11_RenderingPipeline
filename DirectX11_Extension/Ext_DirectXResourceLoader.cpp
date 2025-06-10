@@ -193,6 +193,23 @@ void Ext_DirectXResourceLoader::MakeSampler()
 
 		Ext_DirectXSampler::CreateSampler("PointWrapSampler", SamperInfo);
 	}
+
+	// 이퀄
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+		SamperInfo.MinLOD = -FLT_MAX;
+		SamperInfo.MaxLOD = FLT_MAX;
+
+		Ext_DirectXSampler::CreateSampler("ShadowCmpSampler", SamperInfo);
+	}
 }
 
 // DirectX 블렌드 생성
@@ -463,7 +480,8 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Shadow");
 		NewRenderingPipeline->SetVertexShader("Shadow_VS");
 		NewRenderingPipeline->SetPixelShader("Shadow_PS");
-		NewRenderingPipeline->SetBlendState("MinBlend");
+		// NewRenderingPipeline->SetBlendState("MinBlend");
+		NewRenderingPipeline->SetBlendState("OneBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
