@@ -49,9 +49,8 @@ void TestScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(0, "MeshRenderTarget", GetMainCamera()->GetMeshRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(3, "Light Post RenderTarget", GetMainCamera()->GetLightPostRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(4, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(5, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
 	}
 
 	// 캐릭터 메시 로드
@@ -131,9 +130,9 @@ void TestScene::Start()
 		StaticMeshActor2->GetTransform()->SetLocalPosition({ 200.f, 180.f, 100.f });
 		StaticMeshActor2->SetRotate();
 
-		std::shared_ptr<RectActor> Manual = CreateActor<RectActor>("RectActor");
-		Manual->GetTransform()->SetLocalPosition({ 0.f, 300.f, -500.f });
-		Manual->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
+		// std::shared_ptr<RectActor> Manual = CreateActor<RectActor>("RectActor");
+		// Manual->GetTransform()->SetLocalPosition({ 0.f, 300.f, -500.f });
+		// Manual->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
 
 		std::shared_ptr<StoneWallActor> StoneWall = CreateActor<StoneWallActor>("StoneWallActor");
 		StoneWall->GetTransform()->SetLocalPosition({ 350.f, 150.f, -100.f });

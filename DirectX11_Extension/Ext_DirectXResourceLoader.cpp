@@ -455,16 +455,6 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
-	// Deffered된 결과물 전처리용
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredPost");
-		NewRenderingPipeline->SetVertexShader("DeferredPost_VS");
-		NewRenderingPipeline->SetPixelShader("DeferredPost_PS");
-		NewRenderingPipeline->SetBlendState("OneBlend");
-		NewRenderingPipeline->SetDepthState("AlwayDepth");
-		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
-	}
-
 	// Deffered된 결과물 Merge용
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredMerge");

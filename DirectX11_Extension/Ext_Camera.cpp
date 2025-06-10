@@ -40,11 +40,7 @@ void Ext_Camera::Start()
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 SpecularTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 AmbientTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 ShadowTarget
-
-	// 디퍼드 라이트 전처리타겟(그림자로 빛 정도) - DiffuseTarget, SpecularTarget, AmbientTarget
-	LightPostRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 DiffuseTarget
-	LightPostRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 SpecularTarget
-	LightPostRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 AmbientTarget
+	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 ShadowDepthTarget
 
 	// 디퍼드 라이트 Merge 타겟 - DSA를 하나로 만듬
 	LightMergeRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // Light들 Merge하는 렌더타겟
@@ -59,19 +55,13 @@ void Ext_Camera::Start()
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "NormalTex");
 
-	// LightPostRenderTarget(디퍼트 라이트 전처리)를 위한 Unit
-	LightPostUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredPost);
-	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(0), "DiffuseTex");
-	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(1), "SpecularTex");
-	LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
-	//LightPostUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
-
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
 	LightMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredMerge);
 	LightMergeUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(0), "BaseColorTex");
-	LightMergeUnit.BufferSetter.SetTexture(LightPostRenderTarget->GetTexture(0), "DiffuseTex");
-	LightMergeUnit.BufferSetter.SetTexture(LightPostRenderTarget->GetTexture(1), "SpecularTex");
-	LightMergeUnit.BufferSetter.SetTexture(LightPostRenderTarget->GetTexture(2), "AmbientTex");
+	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(0), "DiffuseTex");
+	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(1), "SpecularTex");
+	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
+	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -252,11 +242,6 @@ void Ext_Camera::Rendering(float _Deltatime)
 		LightUnit.Rendering(_Deltatime);
 		GetOwnerScene().lock()->GetLightDataBuffer().LightCount++;
 	}
-
-	// 빛 전처리
-	LightPostRenderTarget->RenderTargetClear();
-	LightPostRenderTarget->RenderTargetSetting();
-	LightPostUnit.Rendering(_Deltatime);
 
 	// 빛 합치기
 	LightMergeRenderTarget->RenderTargetClear();

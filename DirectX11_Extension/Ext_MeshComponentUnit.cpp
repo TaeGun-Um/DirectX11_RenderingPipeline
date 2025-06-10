@@ -42,7 +42,6 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::PBR: MaterialString = "PBR"; break; // 다양한 텍스쳐 추가
 	case MaterialType::RenderTargetMerge: MaterialString = "RenderTargetMerge"; break; // RenderTargetUnit용
 	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // DefferedUnit용
-	case MaterialType::DeferredPost: MaterialString = "DeferredPost"; break; // DefferedUnit용
 	case MaterialType::DeferredMerge: MaterialString = "DeferredMerge"; break; // DefferedUnit용
 	case MaterialType::Debug: MaterialString = "Debug"; break; // 디버깅용
 	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯

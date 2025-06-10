@@ -27,7 +27,7 @@ struct VSOutput
 
 VSOutput Dynamic_VS(VSInput _Input)
 {
-    VSOutput Output;
+    VSOutput Output = (VSOutput) 0;
 
     // 1. 스키닝 매트릭스 계산
     float4x4 SkinMatrix = float4x4(

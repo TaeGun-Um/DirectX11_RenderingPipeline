@@ -12,7 +12,7 @@ struct VSOutput
 
 VSOutput DeferredMerge_VS(VSInput _Input)
 {
-    VSOutput OutPut;
+    VSOutput OutPut = (VSOutput) 0;
     OutPut.Position = _Input.Position;
     OutPut.Texcoord = _Input.Texcoord.xy;
     

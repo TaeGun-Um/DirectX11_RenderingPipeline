@@ -84,12 +84,6 @@
     <FxCompile Include="DeferredMerge_PS.hlsl">
       <Filter>03.Light</Filter>
     </FxCompile>
-    <FxCompile Include="DeferredPost_PS.hlsl">
-      <Filter>03.Light</Filter>
-    </FxCompile>
-    <FxCompile Include="DeferredPost_VS.hlsl">
-      <Filter>03.Light</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Transform.fx">

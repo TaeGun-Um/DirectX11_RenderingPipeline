@@ -26,7 +26,7 @@ struct PSOutPut
  // 임의의 값이 어떻게 들어올지 모르기 때문에 그냥 해주는것(안정성을 위한 처리라고 보면 됨)
 PSOutPut Grapics_PS(PSInput _Input) : SV_TARGET
 {
-    PSOutPut Output;
+    PSOutPut Output = (PSOutPut) 0;
     
     Output.MeshTarget = BaseColorTex.Sample(Sampler, _Input.TexCoord); // 텍스쳐컬러
     Output.WPositionTarget = float4(_Input.WorldPosition.xyz, 1.0f); // 월드스페이스 Position

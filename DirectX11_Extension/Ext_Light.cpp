@@ -18,7 +18,7 @@ Ext_Light::Ext_Light()
 void Ext_Light::Start()
 {
 	GetOwnerScene().lock()->PushLight(GetSharedFromThis<Ext_Light>(), GetName());
-	ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R32_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::RED);
+	ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R32_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4(0.0f, 0.0f, 0.0f, 1.0f));
 	ShadowRenderTarget->CreateDepthTexture();
 }
 
@@ -41,7 +41,7 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 	std::shared_ptr<class Ext_Transform> LT = GetTransform();
 	LTData->LightViewMatrix.LookToLH(LT->GetWorldPosition(), LT->GetLocalForwardVector(), LT->GetLocalUpVector());
 	LTData->LightViewInverseMatrix = LTData->LightViewMatrix.InverseReturn();
-	LTData->LightProjectionMatrix.OrthographicLH(ShadowRange.x, ShadowRange.y, LTData->NearDistance, LTData->FarDistance/* * 2.0f*/);
+	LTData->LightProjectionMatrix.OrthographicLH(ShadowRange.x, ShadowRange.y, LTData->NearDistance, LTData->FarDistance/* 2.0f*/);
 	LTData->LightProjectionInverseMatrix = LTData->LightProjectionMatrix.InverseReturn();
 	LTData->LightViewProjectionMatrix = LTData->LightViewMatrix * LTData->LightProjectionMatrix;
 }

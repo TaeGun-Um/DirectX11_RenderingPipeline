@@ -15,7 +15,7 @@ struct VSOutput
 
 VSOutput Shadow_VS(VSInput _Input)
 {
-    VSOutput OutPut;
+    VSOutput OutPut = (VSOutput) 0;
     float4 InputPos = _Input.Position;
     InputPos.w = 1.0f;
     

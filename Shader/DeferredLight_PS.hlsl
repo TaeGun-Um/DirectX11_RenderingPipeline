@@ -22,7 +22,7 @@ SamplerComparisonState ShadowCompare : register(s1);
 
 PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
 {
-    PSOutPut OutPut;
+    PSOutPut OutPut = (PSOutPut) 0;
         
     float3 WorldPos = PositionTex.Sample(Sampler, _Input.Texcoord).xyz;
     float3 WorldNorm = NormalTex.Sample(Sampler, _Input.Texcoord).xyz;
@@ -48,9 +48,6 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         DiffuseLight = DiffuseLightCalculation(LightDirection, WorldNorm);
         SpecularLight = SpecularLightCalculation(LightDirection, WorldNorm, EyePosition, WorldPos, Shininess);
         AmbientLight = AmbientLightCalculation(LTData.LightColor.w);
-
-        // 흰색 directional 라이트 컬러 곱하기
-        // AccumLightColor += LTData.LightColor.xyz * (Diffuse + Specular + Ambient);
     }
     else if (LTData.LightType == 1)  // Point Light 분기
     {
@@ -69,22 +66,10 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         float C1 = 0.0f;
         float C2 = LTData.AttenuationValue / (LTData.FarDistance * LTData.FarDistance);
         float Attenuation = 1.0f / (C0 + C1 * Distance + C2 * Distance * Distance);
-
-        // 초록빛 point 라이트 컬러 곱하기
-        //AccumLightColor += LTData.LightColor.xyz * (Diffuse + Specular + Ambient) * Attenuation;
     }
 
     if (DiffuseLight.x > 0.0f)
     {
-        //float4 lightPosH = mul(float4(worldPos, 1), lightViewProj);
-        //float lightDepth = lightPosH.z / lightPosH.w;
-        //float2 uv = lightPosH.xy / lightPosH.w * 0.5 + 0.5;
-        //uv.y = 1 - uv.y; // 화면 좌표 Y 반전
-
-        //// Clamp + border=0 세팅된 Comparison 샘플러로 PCF 없는 비교
-        //float shadowMask = ShadowTex.SampleCmpLevelZero(ShadowCompare, uv, lightDepth);
-        
-        // 빛이존재하므로 그림자도 존재해야할지 판단(빛을 기준으로한 포지션으로 변경)
         float4 LightPos = mul(float4(WorldPos, 1.0f), LTData.LightViewProjectionMatrix);
         
         // worldviewprojection 이 곱해지면 그건 -1~1사이의 공간입니까? w에 곱해지기전의 z값을 보관해 놓은 값이 됩니다. // 모든 값은 -1~1사이의 값이 됩니다.
@@ -104,6 +89,7 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
             OutPut.ShadowTarget.x = 1.0f;
             OutPut.ShadowTarget.a = 1.0f;
         }
+        // 그림자가 드리우는 부분 마스킹, x니까 빨간색으로 마스킹됨
     }
     
     OutPut.DiffuseTarget = float4(DiffuseLight, 1.0f);

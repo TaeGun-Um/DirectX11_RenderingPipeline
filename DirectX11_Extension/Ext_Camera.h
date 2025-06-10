@@ -41,7 +41,6 @@ public:
 
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetMeshRenderTarget() { return MeshRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightRenderTarget() { return LightRenderTarget; }
-	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightPostRenderTarget() { return LightPostRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightMergeRenderTarget() { return LightMergeRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; }
 
@@ -71,11 +70,9 @@ private:
 	// 디퍼드 렌더타겟용
 	std::shared_ptr<class Ext_DirectXRenderTarget> MeshRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightRenderTarget;
-	std::shared_ptr<class Ext_DirectXRenderTarget> LightPostRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightMergeRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget; // 합본
 	Ext_MeshComponentUnit LightUnit;
-	Ext_MeshComponentUnit LightPostUnit;
 	Ext_MeshComponentUnit LightMergeUnit;
 
 	//////////////////////////////////// 테스트용
