@@ -1,7 +1,7 @@
 struct PSInput
 {
     float4 Position : SV_POSITION;
-    float4 WVPPosition : POSITION5;
+    float4 WVPPosition : POSITION;
 };
 
 float4 Shadow_PS(PSInput _Input) : SV_TARGET

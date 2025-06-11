@@ -150,6 +150,15 @@ void Ext_DirectXRenderTarget::RenderTargetClear()
 // 렌더 타겟 바인딩 담당, Draw(), Clear(), Shader Binding 등이 올바른 렌더 타겟에 수행될 수 있도록 설정
 void Ext_DirectXRenderTarget::RenderTargetSetting()
 {
+	// PS 에 바인딩된 SRV 전부 언바인딩 -> 이거 안하고 다시 쓰니까 오류나서 추가함
+	UINT NumRTVs = static_cast<UINT>(RTVs.size());
+	std::vector<ID3D11ShaderResourceView*> NullSRVs(NumRTVs, nullptr);
+	Ext_DirectXDevice::GetContext()->PSSetShaderResources(0, NumRTVs, NullSRVs.data());
+	/*1. StartSlot*/
+	/*2. NumViews*/
+	/*3. ppShaderResourceViews*/
+	// 바로 직전에 해당 텍스처들을 PS에서 SRV로 바인딩한 상태로 OMSetRenderTargets를 호출하기 때문. 따라서, 해당 텍스처를 렌더 타겟(RTV)으로 다시 쓰기 전에 PS 슬롯에서 반드시 언바인딩(unbind)해줘야 함
+
 	ID3D11RenderTargetView** RTV = &RTVs[0];
 	//COMPTR<ID3D11RenderTargetView> RTV = RTVs[0];
 

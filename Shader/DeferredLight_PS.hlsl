@@ -15,9 +15,8 @@ struct PSOutPut
 };
 
 Texture2D PositionTex : register(t0); // G-Buffer: 월드-스페이스 위치(x,y,z) + 1
-Texture2D VPositionTex : register(t1); // G-Buffer: 뷰-스페이스 위치(x,y,z) + 1
-Texture2D NormalTex : register(t2); // G-Buffer: 월드-스페이스 법선(x,y,z) + 1
-Texture2D ShadowTex : register(t3);
+Texture2D NormalTex : register(t1); // G-Buffer: 월드-스페이스 법선(x,y,z) + 1
+Texture2D ShadowTex : register(t2);
 SamplerState Sampler : register(s0);
 SamplerComparisonState ShadowCompare : register(s1);
 
@@ -83,8 +82,6 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
 
     if (DiffuseLight.x > 0.0f)
     {
-        float4 WorldViewPos = VPositionTex.Sample(Sampler, _Input.Texcoord);
-        float4 WorldPos = mul(float4(WorldViewPos.xyz, 1.0f), LTData.CameraViewInverseMatrix);
         float4 LightPos = mul(float4(WorldPos.xyz, 1.0f), LTData.LightViewProjectionMatrix);
         
         // worldviewprojection 이 곱해지면 그건 -1~1사이의 공간입니까? w에 곱해지기전의 z값을 보관해 놓은 값이 됩니다. // 모든 값은 -1~1사이의 값이 됩니다.

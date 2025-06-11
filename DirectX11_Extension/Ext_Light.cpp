@@ -11,8 +11,8 @@ Ext_Light::Ext_Light()
 	LTData->bIsLightSet = true;
 	LTData->ShadowTargetSizeX = 4096;
 	LTData->ShadowTargetSizeY = 4096;
-	ShadowRange.x = 1024.0f;
-	ShadowRange.y = 1024.0f;
+	ShadowRange.x = 2048.0f;
+	ShadowRange.y = 2048.0f;
 }
 
 void Ext_Light::Start()
@@ -28,15 +28,8 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 	LTData->CameraViewInverseMatrix = _Camera->GetViewMatrix().InverseReturn();
 
 	LTData->LightWorldPosition = GetTransform()->GetWorldPosition();
-	//LTData->LightViewPosition = LTData->LightWorldPosition * _Camera->GetViewMatrix();
 	LTData->LightForwardVector = GetTransform()->GetLocalForwardVector();
-	//LTData->LightBackwordVector = -LTData->LightForwardVector;
-	//LTData->LightViewForwardVector = LTData->LightForwardVector * _Camera->GetViewMatrix();
-
 	LTData->CameraWorldPosition = _Camera->GetTransform()->GetWorldPosition();
-	//LTData->CameraViewPosition = _Camera->GetTransform()->GetWorldPosition() * _Camera->GetViewMatrix();
-	//LTData->CameraForwardVector = _Camera->GetTransform()->GetLocalForwardVector();
-	//LTData->CameraViewForwardVector = LTData->CameraForwardVector * _Camera->GetViewMatrix();
 
 	std::shared_ptr<class Ext_Transform> LT = GetTransform();
 	LTData->LightViewMatrix.LookToLH(LT->GetWorldPosition(), LT->GetLocalForwardVector(), LT->GetLocalUpVector());

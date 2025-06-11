@@ -40,7 +40,6 @@ void Ext_Camera::Start()
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 SpecularTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 AmbientTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 ShadowTarget
-	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 ShadowDepthTarget
 
 	// 디퍼드 라이트 Merge 타겟 - DSA를 하나로 만듬
 	LightMergeRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // Light들 Merge하는 렌더타겟
@@ -53,7 +52,6 @@ void Ext_Camera::Start()
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
-	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "VPositionTex");
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "NormalTex");
 	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
@@ -249,6 +247,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 		}
 	}
 
+	// 여기 문제있따
 	LightRenderTarget->RenderTargetClear();
 	LightRenderTarget->RenderTargetSetting();
 
