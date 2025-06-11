@@ -419,7 +419,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Static");
 		NewRenderingPipeline->SetVertexShader("Static_VS");
-		NewRenderingPipeline->SetPixelShader("Grapics_PS");
+		NewRenderingPipeline->SetPixelShader("Graphics_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
@@ -429,7 +429,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Dynamic");
 		NewRenderingPipeline->SetVertexShader("Dynamic_VS");
-		NewRenderingPipeline->SetPixelShader("Grapics_PS");
+		NewRenderingPipeline->SetPixelShader("Graphics_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");

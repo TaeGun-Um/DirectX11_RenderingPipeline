@@ -46,9 +46,13 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, Textu
 	case TextureType::BaseColor: SlotName = "BaseColorTex"; break; // BaseColor, Albedo, Albm 등
 	case TextureType::Normal: SlotName = "NormalTex"; break; // Normal. Nrmr 등
 	case TextureType::Roughness: SlotName = "RoughnessTex"; break; // ATOS는 R = Ambient Occlusion(AO), G = Roughness, B = Metallic
-	case TextureType::Specular: SlotName = "SpecularTex"; break;
 	case TextureType::AmbientOcclusion: SlotName = "AmbientTex"; break;
 	case TextureType::Emissive: SlotName = "EmissiveTex"; break;
+	case TextureType::Position: SlotName = "PositionTex"; break;
+	case TextureType::Shadow: SlotName = "ShadowTex"; break;
+	case TextureType::Diffuse: SlotName = "DiffuseTex"; break;
+	case TextureType::Specular: SlotName = "SpecularTex"; break; 
+	case TextureType::Ambient: SlotName = "AmbientTex"; break;
 	case TextureType::Unknown: MsgAssert("SetTexture는 형식을 지정해야합니다."); break;
 	}
 

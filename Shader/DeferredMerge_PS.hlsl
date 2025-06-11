@@ -49,10 +49,4 @@ PSOutput DeferredMerge_PS(PSInput _Input) : SV_TARGET
     }
     
     return OutPut;
-
-    //NewOutPut.DifLight = float4(1.0f, 0.0f, 0.0f, 1.0f);
-    //NewOutPut.SpcLight = float4(0.0f, 1.0f, 0.0f, 1.0f);
-    //NewOutPut.AmbLight = float4(0.0f, 0.0f, 1.0f, 1.0f);
-    
-    // return NewOutPut;
 }

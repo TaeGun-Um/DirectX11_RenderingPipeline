@@ -27,6 +27,13 @@ void Ext_Scene::Start()
 // Actors내 Actor들의 Update 호출
 void Ext_Scene::Update(float _DeltaTime)
 {
+	// Scene 업데이트
+}
+
+void Ext_Scene::ActorsUpdate(float _DeltaTime)
+{
+	this->Update(_DeltaTime); // Scene에서 업데이트 할거 있으면 먼저 하고
+
 	for (auto& [Key, ActorList] : Actors)
 	{
 		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)

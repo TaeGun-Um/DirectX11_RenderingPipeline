@@ -47,9 +47,13 @@ enum class TextureType
     BaseColor,
     Normal,
     Roughness,
-    Specular, // Metalic
     AmbientOcclusion,
     Emissive,
+    Position,
+    Shadow,
+    Diffuse,
+    Specular, // Metalic
+    Ambient,
     Unknown
 };
 

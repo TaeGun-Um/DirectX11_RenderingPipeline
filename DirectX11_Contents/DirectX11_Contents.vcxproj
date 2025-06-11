@@ -168,6 +168,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BoxActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Character.h" />
     <ClInclude Include="Contents_Core.h">
       <SubType>
@@ -205,7 +209,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TempScene.h">
+    <ClInclude Include="MathScene.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -213,12 +217,16 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TestScene.h">
+    <ClInclude Include="RenderScene.h">
       <SubType>
       </SubType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Contents_Core.cpp">
       <SubType>
@@ -260,7 +268,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TempScene.cpp">
+    <ClCompile Include="MathScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -268,7 +276,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TestScene.cpp">
+    <ClCompile Include="RenderScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -96,7 +96,7 @@ void Ext_Core::Update()
 	float DeltaTime = Base_Deltatime::GetGlobalTime().GetDeltaTime();
 
 	Base_Input::Update(DeltaTime);
-	CurrentScenes->Update(DeltaTime); // Actor 행렬 업데이트
+	CurrentScenes->ActorsUpdate(DeltaTime); // Actor 행렬 업데이트
 
 	Ext_DirectXDevice::RenderStart(); // 백버퍼 클리어 및 세팅
 	CurrentScenes->Rendering(DeltaTime); // Rendering 업데이트

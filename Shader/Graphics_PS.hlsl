@@ -24,7 +24,7 @@ struct PSOutPut
 
  // 각 벡터에 normalize를 해주는 이유는, 명시적으로 normalize된 벡터를 넣어줬다 하더라도 
  // 임의의 값이 어떻게 들어올지 모르기 때문에 그냥 해주는것(안정성을 위한 처리라고 보면 됨)
-PSOutPut Grapics_PS(PSInput _Input) : SV_TARGET
+PSOutPut Graphics_PS(PSInput _Input) : SV_TARGET
 {
     PSOutPut Output = (PSOutPut) 0;
     

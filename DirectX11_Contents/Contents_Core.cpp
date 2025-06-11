@@ -3,8 +3,8 @@
 
 #include <DirectX11_Extension/Ext_Core.h>
 
-#include "TempScene.h"
-#include "TestScene.h"
+#include "MathScene.h"
+#include "RenderScene.h"
 
 #include "RectActor.h"
 
@@ -13,8 +13,11 @@
 /// </summary>
 void Contents_Core::Start()
 {
-	Ext_Core::CreateScene<TestScene>("TestScene");
-	Ext_Core::ChangeScene("TestScene");
+	// Ext_Core::CreateScene<RenderScene>("RenderScene");
+	// Ext_Core::ChangeScene("RenderScene");
+
+	Ext_Core::CreateScene<MathScene>("MathScene");
+	Ext_Core::ChangeScene("MathScene");
 }
 
 void Contents_Core::End()

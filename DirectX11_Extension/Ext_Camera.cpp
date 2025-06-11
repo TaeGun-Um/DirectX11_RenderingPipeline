@@ -54,6 +54,7 @@ void Ext_Camera::Start()
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "NormalTex");
+	LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
 	LightMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredMerge);
@@ -238,7 +239,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 	GetOwnerScene().lock()->GetLightDataBuffer().LightCount = 0; // 라이트 업데이트 전, 상수버퍼 갯수 초기화(순회하면서 넣어줘야하기 때문)
 	for (auto& [name, CurLight] : Lights)
 	{
-		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+		//LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
 		LightUnit.Rendering(_Deltatime);
 		GetOwnerScene().lock()->GetLightDataBuffer().LightCount++;
 	}

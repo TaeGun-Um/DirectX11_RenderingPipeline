@@ -1,5 +1,5 @@
 ﻿#include "PrecompileHeader.h"
-#include "TestScene.h"
+#include "RenderScene.h"
 
 #include "CubeActor.h"
 #include "SphereActor.h"
@@ -23,15 +23,15 @@
 #include <DirectX11_Extension/Ext_DirectXTexture.h>
 #include <DirectX11_Extension/Ext_Imgui.h>
 
-TestScene::TestScene()
+RenderScene::RenderScene()
 {
 }
 
-TestScene::~TestScene()
+RenderScene::~RenderScene()
 {
 }
 
-void TestScene::Start()
+void RenderScene::Start()
 {
 	// 라이트 생성
 	{
@@ -47,7 +47,6 @@ void TestScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", PointLight->GetShadowRenderTarget());
 		
 		PointLight->GetTransform()->SetParent(GetMainCamera()->GetTransform());
-		PointLight->GetTransform()->SetLocalPosition({ 0.f, 30.f, 0.f });
 		PointLight->SetLightRange(10.f);
 		PointLight->SetAttenuationValue(1.f);
 		PointLight->SetLightColor({0.0f, 1.0f, 0.f, 0.25f});
@@ -154,7 +153,7 @@ void TestScene::Start()
 }
 
 
-void TestScene::Update(float _DeltaTime)
+void RenderScene::Update(float _DeltaTime)
 {
 	__super::Update(_DeltaTime);
 }
