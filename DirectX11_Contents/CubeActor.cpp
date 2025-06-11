@@ -14,7 +14,7 @@ void CubeActor::Start()
 	//MeshComp->ShadowOn();
 	MeshComp->CreateMeshComponentUnit("Box", MaterialType::Static);
 	MeshComp->SetTexture("Gray.png");
-	MeshComp->ShadowOn();
+	MeshComp->ShadowOn(ShadowType::Static);
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

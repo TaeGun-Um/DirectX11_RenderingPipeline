@@ -470,8 +470,17 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Shadow");
 		NewRenderingPipeline->SetVertexShader("Shadow_VS");
 		NewRenderingPipeline->SetPixelShader("Shadow_PS");
-		// NewRenderingPipeline->SetBlendState("MinBlend");
-		NewRenderingPipeline->SetBlendState("OneBlend");
+		NewRenderingPipeline->SetBlendState("MinBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// 다이나믹 그림자
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DynamicShadow");
+		NewRenderingPipeline->SetVertexShader("DynamicShadow_VS");
+		NewRenderingPipeline->SetPixelShader("Shadow_PS");
+		NewRenderingPipeline->SetBlendState("MinBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}

@@ -1,11 +1,12 @@
 ﻿#include "PrecompileHeader.h"
 #include "MathScene.h"
 
+#include <DirectX11_Base/Base_Input.h>
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
 #include <DirectX11_Extension/Ext_Transform.h>
 #include <DirectX11_Extension/Ext_Imgui.h>
-#include <DirectX11_Base/Base_Input.h>
+#include <DirectX11_Extension/Ext_MeshComponent.h>
 
 #include "InformationGUI.h"
 #include "BoxActor.h"
@@ -29,7 +30,10 @@ void MathScene::Start()
 
 	// Actor 생성
 	{
+		std::shared_ptr<InformationGUI> GUI = std::dynamic_pointer_cast<InformationGUI>(Ext_Imgui::FindGUIWindow("InformationGUI"));
 		std::shared_ptr<BoxActor> CubeActor1 = CreateActor<BoxActor>("BoxActor1");
+		GUI->SetTransform1(CubeActor1->GetTransform());
+		GUI->SetTransform2(CubeActor1->GetMesh()->GetTransform());
 	}
 }
 

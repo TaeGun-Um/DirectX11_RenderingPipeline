@@ -57,7 +57,12 @@ enum class TextureType
     Unknown
 };
 
-
+enum class ShadowType
+{
+    Static,
+    Dynamic,
+    Unknown
+};
 
 enum class ActorOrder
 {

@@ -13,11 +13,11 @@
 /// </summary>
 void Contents_Core::Start()
 {
-	// Ext_Core::CreateScene<RenderScene>("RenderScene");
-	// Ext_Core::ChangeScene("RenderScene");
+	Ext_Core::CreateScene<RenderScene>("RenderScene");
+	Ext_Core::ChangeScene("RenderScene");
 
-	Ext_Core::CreateScene<MathScene>("MathScene");
-	Ext_Core::ChangeScene("MathScene");
+	// Ext_Core::CreateScene<MathScene>("MathScene");
+	// Ext_Core::ChangeScene("MathScene");
 }
 
 void Contents_Core::End()

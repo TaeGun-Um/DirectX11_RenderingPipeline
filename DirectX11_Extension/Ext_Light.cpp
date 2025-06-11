@@ -9,8 +9,8 @@ Ext_Light::Ext_Light()
 {
 	LTData = std::make_shared<LightData>();
 	LTData->bIsLightSet = true;
-	LTData->ShadowTargetSizeX = 1024;
-	LTData->ShadowTargetSizeY = 1024;
+	LTData->ShadowTargetSizeX = 4096;
+	LTData->ShadowTargetSizeY = 4096;
 	ShadowRange.x = 1024.0f;
 	ShadowRange.y = 1024.0f;
 }
@@ -18,7 +18,7 @@ Ext_Light::Ext_Light()
 void Ext_Light::Start()
 {
 	GetOwnerScene().lock()->PushLight(GetSharedFromThis<Ext_Light>(), GetName());
-	ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R32_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4(0.0f, 0.0f, 0.0f, 1.0f));
+	ShadowRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT_R32_FLOAT, { LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY }, float4::RED);
 	ShadowRenderTarget->CreateDepthTexture();
 }
 

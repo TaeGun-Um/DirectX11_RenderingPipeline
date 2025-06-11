@@ -16,6 +16,11 @@ public:
 
 	void SetRotate() { bIsRotation = true; }
 
+	std::shared_ptr<class Ext_MeshComponent> GetMesh()
+	{
+		return MeshComp;
+	}
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;

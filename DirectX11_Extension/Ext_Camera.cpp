@@ -53,8 +53,9 @@ void Ext_Camera::Start()
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
+	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "VPositionTex");
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "NormalTex");
-	LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
+	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
 	LightMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredMerge);
@@ -224,11 +225,26 @@ void Ext_Camera::Rendering(float _Deltatime)
 
 			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
 			Unit->RenderUnitShadowSetting(); 
-			auto PShadow = Ext_DirectXMaterial::Find("Shadow");
-			PShadow->VertexShaderSetting();
-			PShadow->RasterizerSetting();
-			PShadow->PixelShaderSetting();
-			PShadow->OutputMergerSetting();
+
+			std::shared_ptr<Ext_DirectXMaterial> ShadowPipeLine;
+
+			if (ShadowType::Static == Unit->GetShadowType())
+			{
+				ShadowPipeLine = Ext_DirectXMaterial::Find("Shadow");
+			}
+			else if (ShadowType::Dynamic == Unit->GetShadowType())
+			{
+				ShadowPipeLine = Ext_DirectXMaterial::Find("DynamicShadow");
+			}
+			else
+			{
+				MsgAssert("여기 들어오면 안되는데 뭔가 잘못됨");
+			}
+
+			ShadowPipeLine->VertexShaderSetting();
+			ShadowPipeLine->RasterizerSetting();
+			ShadowPipeLine->PixelShaderSetting();
+			ShadowPipeLine->OutputMergerSetting();
 			Unit->RenderUnitDraw();
 		}
 	}
@@ -239,7 +255,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 	GetOwnerScene().lock()->GetLightDataBuffer().LightCount = 0; // 라이트 업데이트 전, 상수버퍼 갯수 초기화(순회하면서 넣어줘야하기 때문)
 	for (auto& [name, CurLight] : Lights)
 	{
-		//LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
+		LightUnit.BufferSetter.SetTexture(CurLight->GetShadowRenderTarget()->GetTexture(0), "ShadowTex");
 		LightUnit.Rendering(_Deltatime);
 		GetOwnerScene().lock()->GetLightDataBuffer().LightCount++;
 	}

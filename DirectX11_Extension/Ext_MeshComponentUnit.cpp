@@ -161,13 +161,27 @@ void Ext_MeshComponentUnit::Rendering(float _Deltatime)
 	RenderUnitDraw();
 }
 
-void Ext_MeshComponentUnit::ShadowOn()
+void Ext_MeshComponentUnit::StaticShadowOn()
 {
 	bIsShadow = true;
 	
 	if (nullptr == ShadowInputLayout)
 	{
+		ShadowT = ShadowType::Static;
 		std::shared_ptr<Ext_DirectXVertexShader> ShadowVS = Ext_DirectXVertexShader::Find("Shadow_VS");
+		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
+		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowVS);
+	}
+}
+
+void Ext_MeshComponentUnit::DynamicShadowOn()
+{
+	bIsShadow = true;
+
+	if (nullptr == ShadowInputLayout)
+	{
+		ShadowT = ShadowType::Dynamic;
+		std::shared_ptr<Ext_DirectXVertexShader> ShadowVS = Ext_DirectXVertexShader::Find("DynamicShadow_VS");
 		ShadowInputLayout = std::make_shared<Ext_DirectXInputLayout>();
 		ShadowInputLayout->CreateInputLayout(Mesh->GetVertexBuffer(), ShadowVS);
 	}
@@ -194,4 +208,6 @@ void Ext_MeshComponentUnit::RenderUnitShadowSetting()
 	Mesh->MeshSetting();
 	Material->MaterialSetting();
 	BufferSetter.BufferSetting();
+
+	BufferSetter.AllTextureResourceReset();
 }

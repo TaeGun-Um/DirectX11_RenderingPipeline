@@ -16,7 +16,7 @@ void StoneWallActor::Start()
 	//WallBodyMesh->ShadowOn();
 	WallBodyMesh->CreateMeshComponentUnit("Rect", MaterialType::Static);
 	WallBodyMesh->SetTexture("Gray.png");
-	WallBodyMesh->ShadowOn();
+	WallBodyMesh->ShadowOn(ShadowType::Static);
 
 	GetTransform()->SetLocalScale({ 300.f, 300.f, 1.f });
 }

@@ -11,7 +11,7 @@ void RectActor::Start()
 	MeshComp->CreateMeshComponentUnit("Rect", MaterialType::NonGStatic);
 	// MeshComp->CreateMeshComponentUnit("Rect", "Static");
 	MeshComp->SetTexture("Manual.png");
-	MeshComp->ShadowOn();
+	MeshComp->ShadowOn(ShadowType::Static);
 
 	GetTransform()->SetLocalScale({ 200.f, 200.f, 200.f });
 }

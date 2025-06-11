@@ -63,9 +63,14 @@ void Ext_MeshComponent::SetSampler(SamplerType _TypeValue)
 	Unit->SetSampler(_TypeValue);
 }
 
-void Ext_MeshComponent::ShadowOn()
+void Ext_MeshComponent::ShadowOn(ShadowType _Type)
 {
-	Unit->ShadowOn();
+	switch (_Type)
+	{
+	case ShadowType::Static: Unit->StaticShadowOn(); break;
+	case ShadowType::Dynamic: Unit->DynamicShadowOn(); break;
+	case ShadowType::Unknown: MsgAssert("그람자가 뭔가 잘못됨"); break;
+	}
 }
 
 void Ext_MeshComponent::ShadowOff()

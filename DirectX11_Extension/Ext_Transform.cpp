@@ -5,10 +5,11 @@
 /////////////////////////////////////// TransformData ///////////////////////////////////////
 
 // 로컬 매트릭스 만들기
-void TransformData::CalculateLocalMatrix()
+void TransformData::CalculateLocalMatrix(const float4x4& _ParentMatrix)
 {
 	LocalQuaternion = LocalRotation.DegreeToQuaternion();
 	LocalMatrix.Compose(LocalScale, LocalQuaternion, LocalPosition);
+	LocalMatrix.Decompose(LocalScale, LocalQuaternion, LocalPosition);
 }
 
 // 로컬 매트릭스로 월드 매트릭스 만들기
@@ -16,7 +17,7 @@ void TransformData::CalculateLocalMatrix()
 // 부모가 있다면 부모의 월드 행렬을 받아서 자신의 월드 행렬 계산 -> 부모 영향을 받는 월드 행렬 구성
 void TransformData::CalculateWorldMatrix(const float4x4& _ParentMatrix)
 {
-	CalculateLocalMatrix();
+	CalculateLocalMatrix(_ParentMatrix);
 	WorldMatrix = LocalMatrix * _ParentMatrix;
 	WorldMatrix.Decompose(WorldScale, WorldQuaternion, WorldPosition);
 	WorldRotation = WorldQuaternion.QuaternionToDegree();

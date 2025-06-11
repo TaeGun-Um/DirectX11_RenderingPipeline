@@ -23,7 +23,7 @@ struct TransformData
 	float4x4 WorldViewMatrix;
 	float4x4 WorldViewProjectionMatrix;
 	
-	void CalculateLocalMatrix();
+	void CalculateLocalMatrix(const float4x4& _ParentMatrix);
 	void CalculateWorldMatrix(const float4x4& _ParentMatrix);
 	void SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection);
 

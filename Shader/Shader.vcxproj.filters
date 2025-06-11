@@ -93,6 +93,9 @@
     <FxCompile Include="RenderTargetMerge_VS.hlsl">
       <Filter>02.Deferred\03.RenderTargetMerge</Filter>
     </FxCompile>
+    <FxCompile Include="DynamicShadow_VS.hlsl">
+      <Filter>02.Deferred\02.Shadow</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Transform.fx">

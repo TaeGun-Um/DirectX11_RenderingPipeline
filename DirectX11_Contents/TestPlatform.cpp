@@ -13,7 +13,7 @@ void TestPlatform::Start()
 	PlatformBodyMesh->CreateMeshComponentUnit("Box", MaterialType::Static);
 	//PlatformBodyMesh->SetSampler(SamplerType::PointMirror);
 	PlatformBodyMesh->SetTexture("RedNull.png");
-	PlatformBodyMesh->ShadowOn();
+	PlatformBodyMesh->ShadowOn(ShadowType::Static);
 
 	GetTransform()->SetLocalScale({ 2000.f, 50.f, 2000.f });
 	GetTransform()->SetLocalPosition({ 0.f, -25.f, 0.f });

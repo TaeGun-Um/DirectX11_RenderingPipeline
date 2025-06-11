@@ -38,8 +38,11 @@ public:
 	std::weak_ptr<class Ext_MeshComponent> GetOwnerMeshComponent() { return OwnerMeshComponent; }
 	Ext_DirectXBufferSetter& GetBufferSetter() { return BufferSetter; }
 
+	ShadowType GetShadowType() { return ShadowT; }
+
 	// 그림자용
-	void ShadowOn(); // 그림자 세팅하기, 없으면 만들어줌
+	void StaticShadowOn(); // 그림자 세팅하기, 없으면 만들어줌, 스태틱은 이거
+	void DynamicShadowOn(); // 그림자 세팅하기, 없으면 만들어줌, 다이나믹은 이거
 	void ShadowOff(); // 그림자 끄기
 	bool GetIsShadow() { return bIsShadow; }
 
@@ -61,4 +64,5 @@ private:
 
 	std::shared_ptr<class Ext_DirectXInputLayout> ShadowInputLayout = nullptr; // (셰도우용)Vertex Buffer와 Vertex Shader로 생성된 인풋 레이아웃 정보 저장용
 	bool bIsShadow = false; // 셰도우용 OnOff
+	ShadowType ShadowT = ShadowType::Unknown; // ShadowOn 하면 정해짐
 };
