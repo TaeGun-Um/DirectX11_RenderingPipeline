@@ -62,7 +62,6 @@ public:
 	Ext_Light& operator=(Ext_Light&& _Other) noexcept = delete;
 
 	void LightUpdate(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime); // 라이트 업데이트 진행(연산정보 업데이트)
-	void LightViewSetting(size_t _Index); // 라이트 데이터에 모두 전달
 
 	// Getter, Setter
 	LightType GetLightType() { return Type; } // 라이트 타입 가져오기
@@ -74,6 +73,8 @@ public:
 	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; } // 라이트 색깔 세팅
 	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; } // 라이트 감쇠 계수 설정(포인트 라이트용)
 	void SetLightRange(float _Range) { LTData->FarDistance = _Range; }  // 라이트 범위 설정, Near는 1.0 고정이고 Far가 설정됨
+
+	void ViewPortUpdate(std::shared_ptr<class Ext_Camera> _Camera);
 
 protected:
 	void Start() override;

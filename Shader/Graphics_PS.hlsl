@@ -7,19 +7,15 @@ struct PSInput
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD;
-    float3 WorldPosition : POSITION0;
-    float3 WorldViewPosition : POSITION1;
-    float3 WorldNormal : NORMAL0;
-    float3 WorldViewNormal : NORMAL1;
+    float3 WorldPosition : POSITION;
+    float3 WorldNormal : NORMAL;
 };
 
 struct PSOutPut
 {
     float4 MeshTarget : SV_TARGET0;
-    float4 WPositionTarget : SV_TARGET1; // World
-    float4 WVPositionTarget : SV_TARGET2; // WorldView
-    float4 WNormalTarget : SV_TARGET3; // World
-    float4 WVNormalTarget : SV_TARGET4; // WorldView
+    float4 PositionTarget : SV_TARGET1; // World Position Target
+    float4 NormalTarget : SV_TARGET2; // World Normal Target
 };
 
  // 각 벡터에 normalize를 해주는 이유는, 명시적으로 normalize된 벡터를 넣어줬다 하더라도 
@@ -29,10 +25,8 @@ PSOutPut Graphics_PS(PSInput _Input) : SV_TARGET
     PSOutPut Output = (PSOutPut) 0;
     
     Output.MeshTarget = BaseColorTex.Sample(Sampler, _Input.TexCoord); // 텍스쳐컬러
-    Output.WPositionTarget = float4(_Input.WorldPosition.xyz, 1.0f); // 월드스페이스 Position
-    Output.WVPositionTarget = float4(_Input.WorldViewPosition.xyz, 1.0f); // 뷰스페이스 Position
-    Output.WNormalTarget = float4(_Input.WorldNormal, 1.0f); // 월드스페이스 Normal
-    Output.WVNormalTarget = float4(_Input.WorldViewNormal, 1.0f); // 뷰스페이스 Normal
+    Output.PositionTarget = float4(_Input.WorldPosition.xyz, 1.0f); // 월드스페이스 Position
+    Output.NormalTarget = float4(_Input.WorldNormal, 1.0f); // 월드스페이스 Normal
 
     return Output;
 }

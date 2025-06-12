@@ -43,14 +43,21 @@ void RenderScene::Start()
 		Directional->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
 		Directional->SetLightRange(5000.0f);
 
-		std::shared_ptr<Ext_Light> PointLight = CreateActor<Ext_Light>("PointLight");
-		PointLight->SetLightType(LightType::Point);
-		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", PointLight->GetShadowRenderTarget());
-		
-		PointLight->GetTransform()->SetParent(GetMainCamera()->GetTransform());
-		PointLight->SetLightRange(10.f);
-		PointLight->SetAttenuationValue(1.f);
-		PointLight->SetLightColor({0.0f, 1.0f, 0.f, 0.25f});
+		//std::shared_ptr<Ext_Light> Directional2 = CreateActor<Ext_Light>("Directional2");
+		//Directional2->SetLightType(LightType::Directional);
+		//Directional2->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
+		//Directional2->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
+		//Directional2->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
+		//Directional2->SetLightRange(5000.0f);
+
+		// std::shared_ptr<Ext_Light> PointLight = CreateActor<Ext_Light>("PointLight");
+		// PointLight->SetLightType(LightType::Point);
+		// RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", PointLight->GetShadowRenderTarget());
+		// 
+		// PointLight->GetTransform()->SetParent(GetMainCamera()->GetTransform());
+		// PointLight->SetLightRange(10.f);
+		// PointLight->SetAttenuationValue(1.f);
+		// PointLight->SetLightColor({0.0f, 1.0f, 0.f, 0.25f});
 	}
 
 	// GUI 생성
@@ -59,7 +66,7 @@ void RenderScene::Start()
 		Ext_Imgui::CreateImgui<RendertargetGUI>("RendertargetGUI");
 		RendertargetGUI::Clear();
 		RendertargetGUI::AddDebugRenderTarget(0, "MeshRenderTarget", GetMainCamera()->GetMeshRenderTarget());
-		// RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());

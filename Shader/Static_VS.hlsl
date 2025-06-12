@@ -11,10 +11,8 @@ struct VSOutput
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD;
-    float3 WorldPosition : POSITION0;
-    float3 WorldViewPosition : POSITION1;
-    float3 WorldNormal : NORMAL0;
-    float3 WorldViewNormal : NORMAL1;
+    float3 WorldPosition : POSITION;
+    float3 WorldNormal : NORMAL;
 };
 
 VSOutput Static_VS(VSInput _Input)
@@ -31,11 +29,9 @@ VSOutput Static_VS(VSInput _Input)
     
     // 월드 공간 기준으로 조명 계산을 진행하기 위해 WorldMatrix만 처리한 Position, Normal을 생성하여 Pixel Shader에 넘겨줌
     OutPut.WorldPosition = mul(float4(_Input.Position.xyz, 1.0f), WorldMatrix).xyz;
-    OutPut.WorldViewPosition = ViewPos.xyz;
     
     float3 WorldNorm = mul(_Input.Normal.xyz, (float3x3) WorldMatrix);
     OutPut.WorldNormal = WorldNorm;
-    OutPut.WorldViewNormal = mul(WorldNorm, (float3x3) ViewMatrix);
     
     return OutPut;
 }

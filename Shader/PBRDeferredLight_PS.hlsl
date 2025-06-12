@@ -20,7 +20,7 @@ Texture2D ShadowTex : register(t2);
 SamplerState Sampler : register(s0);
 SamplerComparisonState ShadowCompare : register(s1);
 
-PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
+PSOutPut PBRDeferredLight_PS(PSInput _Input) : SV_TARGET
 {
     PSOutPut OutPut = (PSOutPut) 0;
         

@@ -12,7 +12,7 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_POSITION;
-    float4 TexCoord : TEXCOORD;
+    float2 TexCoord : TEXCOORD;
     float3 WorldPosition : POSITION;
     float3 WorldNormal : NORMAL;
     float3 WorldTangent : TANGENT;
@@ -21,7 +21,7 @@ struct VSOutput
 
 VSOutput PBR_VS(VSInput _Input)
 {
-    VSOutput Output;
+    VSOutput Output = (VSOutput) 0;
     
     // Position 설정
     float4 WorldPos = mul(_Input.Position, WorldMatrix);
@@ -34,7 +34,7 @@ VSOutput PBR_VS(VSInput _Input)
     Output.WorldBinormal = mul(float4(_Input.Binormal.xyz, 0.0f), WorldMatrix).rgb;
     
     // UV 좌표 설정
-    Output.TexCoord = _Input.TexCoord;
+    Output.TexCoord = _Input.TexCoord.xy;
     
     // 월드 공간 기준 Position 구하기
     Output.WorldPosition = mul(float4(_Input.Position.xyz, 1.0f), WorldMatrix).rgb;

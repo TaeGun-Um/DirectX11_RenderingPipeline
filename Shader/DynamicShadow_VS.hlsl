@@ -18,7 +18,8 @@ struct VSInput
 struct VSOutput
 {
     float4 Position : SV_POSITION;
-    float4 WVPPosition : POSITION;
+    float4 WVPosition : POSITION0;
+    float4 WVPPosition : POSITION1;
 };
 
 VSOutput DynamicShadow_VS(VSInput _Input)
@@ -66,6 +67,8 @@ VSOutput DynamicShadow_VS(VSInput _Input)
     // Position ¼³Á¤
     float4 WorldPos = mul(SkinPosition, WorldMatrix);
     float4 ViewPos = mul(WorldPos, ViewMatrix);
+    OutPut.WVPosition = ViewPos;
+    OutPut.WVPosition.w = 1.0f;
     
     OutPut.Position = mul(SkinPosition, WorldViewProjectionMatrix);
     OutPut.WVPPosition = OutPut.Position;
@@ -73,3 +76,9 @@ VSOutput DynamicShadow_VS(VSInput _Input)
     
     return OutPut;
 }
+
+//OutPut.Position = SkinPosition;
+//OutPut.WVPosition = mul(SkinPosition, WorldViewMatrix);
+//OutPut.WVPosition.w = 1.0f;
+//OutPut.WVPPosition = mul(SkinPosition, WorldViewProjectionMatrix);
+//OutPut.WVPPosition.w = 1.0f;

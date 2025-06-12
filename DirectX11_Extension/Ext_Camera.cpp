@@ -30,9 +30,9 @@ void Ext_Camera::Start()
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget (World)
-	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 PositionTarget (WorldView)
-	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 NormalTarget (World)
-	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 NormalTarget (WorldView)
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 
 	MeshRenderTarget->CreateDepthTexture();
 
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
@@ -52,7 +52,7 @@ void Ext_Camera::Start()
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
-	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "NormalTex");
+	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "NormalTex");
 	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
@@ -62,6 +62,7 @@ void Ext_Camera::Start()
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(1), "SpecularTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
+	LightMergeUnit.SetSampler(SamplerType::PointClamp);
 }
 
 // 여기는 요소 제거만 진행합니다.

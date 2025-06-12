@@ -19,14 +19,17 @@
     <Filter Include="02.Deferred\01.Light">
       <UniqueIdentifier>{d70f5631-cb19-48f9-a3ea-b7c4a451a2db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Deferred\00.Mesh\01.PBR">
-      <UniqueIdentifier>{e91e9f81-e5b2-490c-a392-ee46cedac390}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Deferred\02.Shadow">
       <UniqueIdentifier>{c0e11911-4196-4a4f-831b-9ebcfcba6ba8}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Deferred\03.RenderTargetMerge">
       <UniqueIdentifier>{6d69887b-7661-40a5-9fc4-f0c2db14b22c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Deferred\00.Mesh\00.PBR">
+      <UniqueIdentifier>{e91e9f81-e5b2-490c-a392-ee46cedac390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Deferred\01.Light\00.PBR">
+      <UniqueIdentifier>{677386d3-0097-4923-9657-b6e41a4a5336}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,12 +56,6 @@
     </FxCompile>
     <FxCompile Include="Dynamic_VS.hlsl">
       <Filter>02.Deferred\00.Mesh</Filter>
-    </FxCompile>
-    <FxCompile Include="PBR_PS.hlsl">
-      <Filter>02.Deferred\00.Mesh\01.PBR</Filter>
-    </FxCompile>
-    <FxCompile Include="PBR_VS.hlsl">
-      <Filter>02.Deferred\00.Mesh\01.PBR</Filter>
     </FxCompile>
     <FxCompile Include="FStatic_VS.hlsl">
       <Filter>01.Forward</Filter>
@@ -95,6 +92,21 @@
     </FxCompile>
     <FxCompile Include="DynamicShadow_VS.hlsl">
       <Filter>02.Deferred\02.Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="DynamicPBR_VS.hlsl">
+      <Filter>02.Deferred\00.Mesh\00.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="PBR_VS.hlsl">
+      <Filter>02.Deferred\00.Mesh\00.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="PBR_PS.hlsl">
+      <Filter>02.Deferred\00.Mesh\00.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRDeferredLight_VS.hlsl">
+      <Filter>02.Deferred\01.Light\00.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRDeferredLight_PS.hlsl">
+      <Filter>02.Deferred\01.Light\00.PBR</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
