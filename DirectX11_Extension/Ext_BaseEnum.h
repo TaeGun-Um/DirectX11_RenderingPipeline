@@ -21,8 +21,10 @@ enum class MaterialType
 {
     Static,                       // 스태틱 메시 세팅
     Dynamic,                  // 다이나믹메시 세팅
-    PBR,                         // 텍스쳐 여러개 처리용
+    PBRStatic,                         // 텍스쳐 여러개 처리용
+    PBRDynamic,                         // 텍스쳐 여러개 처리용
     DeferredLight,           // DefferedUnit용
+    PBRDeferredLight,           // DefferedUnit용
     DeferredMerge,         // DefferedMergeUnit용
     RenderTargetMerge,  // RenderTergetUnit용
     Debug,                     // 와이어 프레임으로 그리기용
@@ -45,9 +47,9 @@ enum class SamplerType
 enum class TextureType
 {
     BaseColor,
+    TSNormal,
     Normal,
     Roughness,
-    AmbientOcclusion,
     Emissive,
     Position,
     Shadow,

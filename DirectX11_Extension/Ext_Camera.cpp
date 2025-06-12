@@ -31,8 +31,8 @@ void Ext_Camera::Start()
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget (World)
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
-	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 
-	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 
+	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 TangentTarget (PBR만)
+	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 BinormalTarget (PBR만)
 	MeshRenderTarget->CreateDepthTexture();
 
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
@@ -47,12 +47,23 @@ void Ext_Camera::Start()
 	// 카메라 최종 렌더타겟
 	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 해당 카메라의 최종 결과물 타겟
 
+	// 일반
 	// LightRenderTarget(디퍼드 라이트 계산)을 위한 Unit
 	LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredLight);
 	const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
 	LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "NormalTex");
+	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
+
+	// PBR
+	//LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::PBRDeferredLight);
+	//const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
+	//LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
+	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "NormalTex");
+	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "TangentTex");
+	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(4), "BinormalTex");
 	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit

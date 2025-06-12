@@ -39,9 +39,11 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	{
 	case MaterialType::Static: MaterialString = "Static"; break; // 스태틱 메시용
 	case MaterialType::Dynamic: MaterialString = "Dynamic"; break; // 다이나믹 메시용
-	case MaterialType::PBR: MaterialString = "PBR"; break; // 다양한 텍스쳐 추가
+	case MaterialType::PBRStatic: MaterialString = "PBRStatic"; break; // 다양한 텍스쳐 추가
+	case MaterialType::PBRDynamic: MaterialString = "PBRDynamic"; break; // 다양한 텍스쳐 추가
 	case MaterialType::RenderTargetMerge: MaterialString = "RenderTargetMerge"; break; // RenderTargetUnit용
 	case MaterialType::DeferredLight: MaterialString = "DeferredLight"; break; // DefferedUnit용
+	case MaterialType::PBRDeferredLight: MaterialString = "PBRDeferredLight"; break; // PBRDefferedUnit용
 	case MaterialType::DeferredMerge: MaterialString = "DeferredMerge"; break; // DefferedUnit용
 	case MaterialType::Debug: MaterialString = "Debug"; break; // 디버깅용
 	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯

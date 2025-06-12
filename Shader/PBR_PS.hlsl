@@ -27,24 +27,6 @@ struct PSOutPut
 // 임의의 값이 어떻게 들어올지 모르기 때문에 그냥 해주는것(안정성을 위한 처리라고 보면 됨)
 PSOutPut PBR_PS(PSInput _Input) : SV_TARGET
 {
-    //// 텍스처 색상
-    //float4 Albedo = BaseColorTex.Sample(Sampler, _Input.TexCoord.xy);
-    
-    //// 월드공간 기준 픽셀(표면) 위치와 법선 단위 벡터
-    //float3 PixelPosition = _Input.WorldPosition;
-    
-    //// 노말 맵 샘플링 (Tangent-space 노말 → [-1, 1] 범위)
-    //float3 SampledNormalTS = NormalTex.Sample(Sampler, _Input.TexCoord.xy).xyz * 2.0f - 1.0f;
-    //SampledNormalTS = normalize(SampledNormalTS);
-    
-    //// TBN 매트릭스 구성 (열(column) 단위로 저장)
-    //float3x3 TBNMatrix;
-    //TBNMatrix[0] = normalize(_Input.WorldTangent); // T
-    //TBNMatrix[1] = normalize(_Input.WorldBinormal); // B
-    //TBNMatrix[2] = normalize(_Input.WorldNormal); // N
-    
-    //float3 MappedWorldNormal = normalize(mul(SampledNormalTS, TBNMatrix));
-    
     PSOutPut Output = (PSOutPut) 0;
     
     Output.MeshTarget = BaseColorTex.Sample(Sampler, _Input.TexCoord); // 텍스쳐컬러

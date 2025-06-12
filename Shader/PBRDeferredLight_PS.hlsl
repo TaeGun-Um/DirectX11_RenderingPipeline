@@ -15,17 +15,35 @@ struct PSOutPut
 };
 
 Texture2D PositionTex : register(t0); // G-Buffer: 월드-스페이스 위치(x,y,z) + 1
-Texture2D NormalTex : register(t1); // G-Buffer: 월드-스페이스 법선(x,y,z) + 1
-Texture2D ShadowTex : register(t2);
+Texture2D TSNormalTex : register(t1); // 탄젠트 스페이스 노말 텍스쳐
+Texture2D NormalTex : register(t2); // G-Buffer: 월드-스페이스 법선(x,y,z) + 1
+Texture2D TangentTex : register(t3); // G-Buffer: 월드-스페이스 Tangent(x,y,z) + 1
+Texture2D BinormalTex : register(t4); // G-Buffer: 월드-스페이스 Binormal(x,y,z) + 1
+Texture2D ShadowTex : register(t5);
 SamplerState Sampler : register(s0);
 SamplerComparisonState ShadowCompare : register(s1);
 
 PSOutPut PBRDeferredLight_PS(PSInput _Input) : SV_TARGET
 {
     PSOutPut OutPut = (PSOutPut) 0;
-        
+    
     float3 WorldPos = PositionTex.Sample(Sampler, _Input.Texcoord).xyz;
-    float3 WorldNorm = NormalTex.Sample(Sampler, _Input.Texcoord).xyz;
+    
+    // 노말 맵 샘플링 (Tangent-space 노말 → [-1, 1] 범위)
+    float3 SampledNormal = TSNormalTex.Sample(Sampler, _Input.Texcoord.xy).xyz * 2.0f - 1.0f;
+    SampledNormal = normalize(SampledNormal);
+    
+    float3 WorldTangent = TangentTex.Sample(Sampler, _Input.Texcoord).xyz;
+    float3 WorldBinormal = BinormalTex.Sample(Sampler, _Input.Texcoord).xyz;
+    float3 WorldNormal = NormalTex.Sample(Sampler, _Input.Texcoord).xyz;
+    
+    // TBN 매트릭스 구성 (열(column) 단위로 저장)
+    float3x3 TBNMatrix;
+    TBNMatrix[0] = normalize(WorldTangent); // T
+    TBNMatrix[1] = normalize(WorldBinormal); // B
+    TBNMatrix[2] = normalize(WorldNormal); // N
+    
+    float3 MappedWorldNormal = normalize(mul(SampledNormal, TBNMatrix));
         
     LightData LTData = Lights[LightCount];
    
@@ -45,8 +63,8 @@ PSOutPut PBRDeferredLight_PS(PSInput _Input) : SV_TARGET
         float3 LightDirection = -LTData.LightForwardVector.xyz;
 
         // Diffuse / Specular / Ambient
-        DiffuseLight = DiffuseLightCalculation(LightDirection, WorldNorm);
-        SpecularLight = SpecularLightCalculation(LightDirection, WorldNorm, EyePosition, WorldPos, Shininess);
+        DiffuseLight = DiffuseLightCalculation(LightDirection, MappedWorldNormal);
+        SpecularLight = SpecularLightCalculation(LightDirection, MappedWorldNormal, EyePosition, WorldPos, Shininess);
         AmbientLight = AmbientLightCalculation(LTData.LightColor.w);
         
         DiffuseLight *= LTData.LightColor.xyz;
@@ -61,8 +79,8 @@ PSOutPut PBRDeferredLight_PS(PSInput _Input) : SV_TARGET
         float3 Vector = normalize(PixelToLight);
 
         // Diffuse / Specular / Ambient
-        DiffuseLight = DiffuseLightCalculation(Vector, WorldNorm);
-        SpecularLight = SpecularLightCalculation(Vector, WorldNorm, EyePosition, WorldPos, Shininess);
+        DiffuseLight = DiffuseLightCalculation(Vector, MappedWorldNormal);
+        SpecularLight = SpecularLightCalculation(Vector, MappedWorldNormal, EyePosition, WorldPos, Shininess);
         AmbientLight = AmbientLightCalculation(LTData.LightColor.w);
 
         // 거리 기반 감쇠

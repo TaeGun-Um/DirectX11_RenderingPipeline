@@ -437,12 +437,22 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 
 	// 그래픽스 스태틱 메시 + 텍스쳐들 추가 버젼
 	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBR");
-		NewRenderingPipeline->SetVertexShader("PBR_VS");
-		NewRenderingPipeline->SetPixelShader("PBR_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
-		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBRStatic");
+		//NewRenderingPipeline->SetVertexShader("PBR_VS");
+		//NewRenderingPipeline->SetPixelShader("PBR_PS");
+		//NewRenderingPipeline->SetBlendState("BaseBlend");
+		//NewRenderingPipeline->SetDepthState("EngineDepth");
+		//NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 그래픽스 다이나믹 메시 + 텍스쳐들 추가 버젼
+	{
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBRDynamic");
+		//NewRenderingPipeline->SetVertexShader("DynamicPBR_VS");
+		//NewRenderingPipeline->SetPixelShader("PBR_PS");
+		//NewRenderingPipeline->SetBlendState("BaseBlend");
+		//NewRenderingPipeline->SetDepthState("EngineDepth");
+		//NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
 	// Deffered
@@ -453,6 +463,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("OneBlend");
 		NewRenderingPipeline->SetDepthState("AlwayDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// PBR Deffered
+	{
+		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("PBRDeferredLight");
+		//NewRenderingPipeline->SetVertexShader("PBRDeferredLight_VS");
+		//NewRenderingPipeline->SetPixelShader("PBRDeferredLight_PS");
+		//NewRenderingPipeline->SetBlendState("OneBlend");
+		//NewRenderingPipeline->SetDepthState("AlwayDepth");
+		//NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
 	// Deffered된 결과물 Merge용
