@@ -208,7 +208,6 @@ void Ext_MeshComponentUnit::RenderUnitShadowSetting()
 
 	ShadowInputLayout->InputLayoutSetting(); // InputLayout으로 IASetInputLayout 호출
 	Mesh->MeshSetting();
-	Material->MaterialSetting();
 	BufferSetter.BufferSetting();
 
 	BufferSetter.AllTextureResourceReset();

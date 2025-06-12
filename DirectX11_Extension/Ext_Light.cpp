@@ -37,7 +37,7 @@ void Ext_Light::LightUpdate(std::shared_ptr<Ext_Camera> _Camera, float _DeltaTim
 
     if (LTData->LightType == static_cast<int>(LightType::Directional))
     {
-        ViewPortUpdate(_Camera);
+        //ViewPortUpdate(_Camera);
     }
 
 	LTData->LightProjectionMatrix.OrthographicLH(ShadowRange.x, ShadowRange.y, LTData->NearDistance, LTData->FarDistance * 2.0f); // 빛의 직교 프로젝션 행렬 생성

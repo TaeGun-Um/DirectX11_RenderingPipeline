@@ -38,17 +38,18 @@ void RenderScene::Start()
 		std::shared_ptr<Ext_Light> Directional = CreateActor<Ext_Light>("Directional");
 		Directional->SetLightType(LightType::Directional);
 		SetDirectionalLight(Directional);
+		Directional->GetTransform()->AddLocalPosition({ 0.f, 0.f, -1000.f });
 		Directional->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
 		Directional->GetTransform()->AddLocalRotation({ 0.f, 30.f, 0.f });
 		Directional->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
 		Directional->SetLightRange(5000.0f);
+		
 
-		//std::shared_ptr<Ext_Light> Directional2 = CreateActor<Ext_Light>("Directional2");
-		//Directional2->SetLightType(LightType::Directional);
-		//Directional2->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
-		//Directional2->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
-		//Directional2->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
-		//Directional2->SetLightRange(5000.0f);
+		// std::shared_ptr<Ext_Light> Directional2 = CreateActor<Ext_Light>("Directional2");
+		// Directional2->GetTransform()->AddLocalRotation({ 0.f, 180.f, 0.f });
+		// Directional2->GetTransform()->AddLocalRotation({ 30.0f, 0.f, 0.f });
+		// Directional2->SetLightColor({ 1.0f, 1.0f, 1.0f, 0.25f });
+		// Directional2->SetLightRange(5000.0f);
 
 		// std::shared_ptr<Ext_Light> PointLight = CreateActor<Ext_Light>("PointLight");
 		// PointLight->SetLightType(LightType::Point);

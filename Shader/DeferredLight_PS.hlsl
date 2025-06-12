@@ -91,13 +91,7 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
         float2 ShadowUV = float2(LightProjection.x * 0.5f + 0.5f, LightProjection.y * -0.5f + 0.5f);
         float fShadowDepth = ShadowTex.Sample(Sampler, float2(ShadowUV.x, ShadowUV.y)).r;
         
-        // 가장 외각을 약간 깎아내서 
-        if (
-            fShadowDepth >= 0.0f
-            && 0.001f < ShadowUV.x && 0.999f > ShadowUV.x
-            && 0.001f < ShadowUV.y && 0.999f > ShadowUV.y
-            && LightProjection.z >= (fShadowDepth + 0.001f)
-            )
+        if (fShadowDepth >= 0.0f && LightProjection.z >= (fShadowDepth + 0.001f))
         {
             OutPut.ShadowTarget.x = 1.0f;
             OutPut.ShadowTarget.a = 1.0f;
