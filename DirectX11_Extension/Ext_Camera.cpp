@@ -100,17 +100,14 @@ void Ext_Camera::RemoveMeshByActor(std::shared_ptr<Ext_Actor> _DeadActor)
 	}
 
 	// [2] MeshComponentUnits에서도 제거
-	for (auto& [Path, MapByOrder] : MeshComponentUnits)
+	for (auto& [Order, UnitList] : MeshComponentUnits)
 	{
-		for (auto& [Order, UnitList] : MapByOrder)
-		{
-			// 각 MeshComponentUnit의 소유 MeshComponent를 얻고 그 MeshComponent가 가리키는 Actor가 DeadActor이면 뒤로 밀어서 제거
-			UnitList.remove_if([&](std::shared_ptr<Ext_MeshComponentUnit>& Unit)
-				{
-					auto MeshComp = Unit->GetOwnerMeshComponent().lock();
-					return MeshComp && MeshComp->GetOwnerActor().lock() == _DeadActor;
-				});
-		}
+		// 각 MeshComponentUnit의 소유 MeshComponent를 얻고 그 MeshComponent가 가리키는 Actor가 DeadActor이면 뒤로 밀어서 제거
+		UnitList.remove_if([&](std::shared_ptr<Ext_MeshComponentUnit>& Unit)
+			{
+				auto MeshComp = Unit->GetOwnerMeshComponent().lock();
+				return MeshComp && MeshComp->GetOwnerActor().lock() == _DeadActor;
+			});
 	}
 }
 
@@ -165,14 +162,10 @@ void Ext_Camera::PushMeshComponent(std::shared_ptr<Ext_MeshComponent> _MeshCompo
 }
 
 // 생성된 MeshComponentUnit을 카메라의 MeshComponentUnits에 넣기
-void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _Unit, RenderPath _Path /*= RenderPath::None*/)
+void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _Unit)
 {
 	int Order = _Unit->GetOwnerMeshComponent().lock()->GetOrder();
-	RenderPath Path; /*= _Unit->GetMaterial()->GetPixelShader()->GetRenderPath();*/
-	Path = RenderPath::Forward;
-
-	MeshComponentUnits[_Path][Order].push_back(_Unit);
-
+	MeshComponentUnits[Order].push_back(_Unit);
 	// 여기서 동적, 정적으로 나눌 수도 있다.
 }
 
@@ -184,19 +177,16 @@ void Ext_Camera::Rendering(float _Deltatime)
 
 	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
-	for (auto& [RenderPathKey, UnitMap] : MeshComponentUnits)
+	for (auto& [IndexKey, UnitList] : MeshComponentUnits)
 	{
-		for (auto& [IndexKey, UnitList] : UnitMap)
+		for (auto& Unit : UnitList)
 		{
-			for (auto& Unit : UnitList)
+			auto Owner = Unit->GetOwnerMeshComponent().lock();
+			if (!Owner || Owner->IsDeath() || !Owner->IsUpdate())
 			{
-				auto Owner = Unit->GetOwnerMeshComponent().lock();
-				if (!Owner || Owner->IsDeath() || !Owner->IsUpdate())
-				{
-					continue;
-				}
-				AllRenderUnits.push_back(Unit);
+				continue;
 			}
+			AllRenderUnits.push_back(Unit);
 		}
 	}
 

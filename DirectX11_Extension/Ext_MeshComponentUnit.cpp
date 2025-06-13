@@ -99,7 +99,7 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	// 단독으로 만들어지는 Unit도 있기 때문에, MeshComponent로부터 만들어진 유닛만 카메라에 넣기
 	if (nullptr != GetOwnerMeshComponent().lock())
 	{
-		GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>(), RenderPath::Unknown);
+		GetOwnerMeshComponent().lock()->GetOwnerCamera().lock()->PushMeshComponentUnit(GetSharedFromThis<Ext_MeshComponentUnit>());
 	}
 }
 

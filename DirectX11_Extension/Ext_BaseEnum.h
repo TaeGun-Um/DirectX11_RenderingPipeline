@@ -9,14 +9,6 @@ enum class ShaderType
     Unknown
 };
 
-enum class RenderPath
-{
-    Forward,
-    Deferred,
-    Alpha,
-    Unknown
-};
-
 enum class MaterialType
 {
     Static,                       // 스태틱 메시 세팅

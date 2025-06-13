@@ -9,8 +9,8 @@ void CylinderActor::Start()
 {
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
 	//MeshComp->CreateMeshComponentUnit("Cylinder", "StaticNonG");
-	MeshComp->CreateMeshComponentUnit("Cylinder", MaterialType::StaticStencil);
-	//MeshComp->CreateMeshComponentUnit("Cylinder", MaterialType::Static);
+	//MeshComp->CreateMeshComponentUnit("Cylinder", MaterialType::StaticStencil);
+	MeshComp->CreateMeshComponentUnit("Cylinder", MaterialType::Static);
 	MeshComp->SetTexture("Gray.png");
 	MeshComp->ShadowOn(ShadowType::Static);
 

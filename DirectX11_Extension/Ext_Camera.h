@@ -27,7 +27,7 @@ public:
 	Ext_Camera& operator=(Ext_Camera&& _Other) noexcept = delete;
 
 	void PushMeshComponent(std::shared_ptr<class Ext_MeshComponent> _MeshComponent); // 메시 컴포넌트를 MeshComponents에 저장
-	void PushMeshComponentUnit(std::shared_ptr<class Ext_MeshComponentUnit> _Unit, RenderPath _Path = RenderPath::Unknown); // 메시 컴포넌트 유닛을 MeshComponentUnits에 저장
+	void PushMeshComponentUnit(std::shared_ptr<class Ext_MeshComponentUnit> _Unit); // 메시 컴포넌트 유닛을 MeshComponentUnits에 저장
 
 	const float4x4& GetViewMatrix() { return ViewMatrix; } // 뷰행렬 가져오기
 	const float4x4& GetProjectionMatrix() { return ProjectionMatrix; } // 프로젝션 행렬 가져오기
@@ -56,7 +56,7 @@ private:
 	void ViewPortSetting(); //////////////////////////////////// 테스트용
 
 	std::map<int, std::vector<std::shared_ptr<class Ext_MeshComponent>>> MeshComponents; // 생성된 메시 컴포넌트들
-	std::map<RenderPath, std::map<int, std::list<std::shared_ptr<class Ext_MeshComponentUnit>>>> MeshComponentUnits; // 생성된 메시 컴포넌트 유닛들
+	std::map<int, std::list<std::shared_ptr<class Ext_MeshComponentUnit>>> MeshComponentUnits; // 생성된 메시 컴포넌트 유닛들
 	ProjectionType CameraType = ProjectionType::Perspective;
 	float4x4 ViewMatrix;			// 카메라 기준 뷰행렬
 	float4x4 ProjectionMatrix;	// 카메라 기준 프로젝션 행렬
