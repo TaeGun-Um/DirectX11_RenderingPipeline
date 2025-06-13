@@ -2,6 +2,8 @@
 #include "Ext_DirectXTexture.h"
 #include "Ext_DirectXDevice.h"
 
+#include <WICTextureLoader.h>
+
 // 백버퍼 렌더타겟뷰 생성을 위해 호출됨
 void Ext_DirectXTexture::CreateRenderTargetView(COMPTR<ID3D11Texture2D>& _Texture)
 {
@@ -184,4 +186,82 @@ void Ext_DirectXTexture::PSReset(UINT _Slot)
 	static ID3D11ShaderResourceView* Nullptr = nullptr;
 
 	Ext_DirectXDevice::GetContext()->PSSetShaderResources(_Slot, 1, &Nullptr);
+}
+
+// 큐브맵 만들기
+void Ext_DirectXTexture::CubeMapLoad(std::vector<std::string>& _Paths)
+{
+	UINT Width, Height; // 첫 번째 이미지 크기로 채워둘 것
+
+	// (WICTextureLoader 활용)
+	std::vector<COMPTR<ID3D11ShaderResourceView>> SRVs(6);
+	for (int i = 0; i < SRVs.size(); i++)
+	{
+		std::wstring UniCodePath = Base_String::AnsiToUniCode(_Paths[i]);
+		HRESULT hr = DirectX::CreateWICTextureFromFile(Ext_DirectXDevice::GetDevice().Get(), Ext_DirectXDevice::GetContext().Get(), UniCodePath.c_str(), nullptr, SRVs[i].GetAddressOf());
+
+		if (i == 0)
+		{
+			// width/height 초기화
+			D3D11_TEXTURE2D_DESC TexInfo;
+
+			COMPTR<ID3D11Resource> Resource;
+			SRVs[i]->GetResource(Resource.GetAddressOf());
+			COMPTR<ID3D11Texture2D> Tex;
+			Resource.As(Tex.GetAddressOf());
+			Tex->GetDesc(&TexInfo);
+			Width = TexInfo.Width;
+			Height = TexInfo.Height;
+		}
+	}
+
+	// 6개의 WIC 텍스처를 복사해서 하나의 큐브맵 텍스처로 만든다
+	Texture2DInfo = {};
+
+	Texture2DInfo.Width = Width;
+	Texture2DInfo.Height = Height;
+	Texture2DInfo.MipLevels = 1;
+	Texture2DInfo.ArraySize = 6;
+	Texture2DInfo.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	Texture2DInfo.SampleDesc.Count = 1;
+	Texture2DInfo.Usage = D3D11_USAGE_DEFAULT;
+	Texture2DInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	Texture2DInfo.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+	HRESULT hr = Ext_DirectXDevice::GetDevice()->CreateTexture2D(&Texture2DInfo, nullptr, Texture2D.GetAddressOf());
+	if (FAILED(hr))
+	{
+		MsgAssert("큐브맵 Texture2D 생성 실패");
+	}
+
+	// 각 face 데이터를 CopySubresourceRegion으로 복사
+	for (UINT Face = 0; Face < 6; ++Face)
+	{
+		// 1) SRV → Resource
+		COMPTR<ID3D11Resource> Resource;
+		SRVs[Face]->GetResource(Resource.GetAddressOf());
+
+		// 2) Resource → ID3D11Texture2D
+		COMPTR<ID3D11Texture2D> SRCTex;
+		hr = Resource.As(&SRCTex);
+		if (FAILED(hr))
+		{
+			MsgTextBox("ID3D11Texture2D에서 ID3D11Resource로 인터페이스 변환 실패");
+		}
+
+		// 3) 복사
+		Ext_DirectXDevice::GetContext()->CopySubresourceRegion(Texture2D.Get(), D3D11CalcSubresource(0, Face, 1), 0, 0, 0, SRCTex.Get(), 0, nullptr);
+	}
+
+	// 4) CubeTex 용 SRV 생성
+	CubeSRVDesc.Format = Texture2DInfo.Format;
+	CubeSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	CubeSRVDesc.TextureCube.MipLevels = 1;
+	CubeSRVDesc.TextureCube.MostDetailedMip = 0;
+
+	hr = Ext_DirectXDevice::GetDevice()->CreateShaderResourceView(Texture2D.Get(), &CubeSRVDesc, SRV.GetAddressOf());
+	if (FAILED(hr))
+	{
+		MsgAssert("큐브맵 셰이더 리소스 뷰 생성 실패");
+	}
 }

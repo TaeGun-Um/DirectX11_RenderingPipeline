@@ -61,6 +61,16 @@ public:
 	void VSReset(UINT _Slot);
 	void PSReset(UINT _Slot);
 
+	// 큐브맵 텍스쳐 만들기, 이름 지정해주고 저장 및 로드
+	static std::shared_ptr<Ext_DirectXTexture> LoadCubeMap(std::string_view _TextureName, std::vector<std::string>& _Paths)
+	{
+		std::string UpperName = Base_String::ToUpper(_TextureName.data());
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(UpperName);
+		NewTexture->CubeMapLoad(_Paths);
+
+		return NewTexture;
+	}
+
 protected:
 	
 private:
@@ -82,6 +92,10 @@ private:
 	// Texture 로드용
 	DirectX::ScratchImage Image;
 	DirectX::TexMetadata TexData;
+
+	// 큐브맵 만들기
+	void CubeMapLoad(std::vector<std::string>& _Paths); // 큐브맵 로드
+	D3D11_SHADER_RESOURCE_VIEW_DESC CubeSRVDesc = {};
 
 };
 // [ID3D11Texture2D]

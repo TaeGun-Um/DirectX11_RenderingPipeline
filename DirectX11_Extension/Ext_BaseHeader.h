@@ -25,6 +25,20 @@ public:
     void Reset() { Ptr.Reset(); } // 현재 보유중인 COM 객체 해제(Release())를 호출하고 nullptr로 설정
     T* Detach() { return Ptr.Detach(); } // 소유권 이전
 
+    // Microsoft::WRL::ComPtr<U>* 받아서 As, 인터페이스 변환
+    template<typename U>
+    HRESULT As(Microsoft::WRL::ComPtr<U>* out) const
+    {
+        return Ptr.As(out);
+    }
+
+    // U** 받아서 바로 QueryInterface 실시하기
+    template<typename U>
+    HRESULT As(U** out) const
+    {
+        return Ptr.CopyTo(out);
+    }
+
 public:
     Microsoft::WRL::ComPtr<T> Ptr = nullptr;
 };
