@@ -14,6 +14,10 @@
 #include "Ext_DirectXPixelShader.h"
 #include "Ext_DirectXBufferSetter.h"
 
+#include "Ext_Blur.h"
+#include "Ext_Distortion.h"
+#include "Ext_OldFilm.h"
+
 // 카메라 생성 시 호출
 void Ext_Camera::Start()
 {
@@ -27,13 +31,20 @@ void Ext_Camera::Start()
 	Width = ViewPortData.Width;
 	Height = ViewPortData.Height;
 
+	// 카메라 최종 렌더타겟
+	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 해당 카메라의 최종 결과물 타겟
+	CameraRenderTarget->CreateDepthTexture();
+	CameraRenderTarget->CreateEffect<Ext_Blur>();
+	//CameraRenderTarget->CreateEffect<Ext_Distortion>();
+	CameraRenderTarget->CreateEffect<Ext_OldFilm>();
+
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget (World)
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
 	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 TangentTarget (PBR만)
 	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 BinormalTarget (PBR만)
-	MeshRenderTarget->CreateDepthTexture();
+	MeshRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
 
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
 	LightRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 DiffuseTarget
@@ -41,11 +52,8 @@ void Ext_Camera::Start()
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 AmbientTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 ShadowTarget
 
-	// 디퍼드 라이트 Merge 타겟 - DSA를 하나로 만듬
+	// 디퍼드 라이트 Merge 타겟 - Diffuse, Specular, Ambient를 하나로 만듬
 	LightMergeRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // Light들 Merge하는 렌더타겟
-
-	// 카메라 최종 렌더타겟
-	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 해당 카메라의 최종 결과물 타겟
 
 	// 일반
 	// LightRenderTarget(디퍼드 라이트 계산)을 위한 Unit
@@ -276,9 +284,11 @@ void Ext_Camera::Rendering(float _Deltatime)
 	LightMergeRenderTarget->RenderTargetSetting();
 	LightMergeUnit.Rendering(_Deltatime);
 
+	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
 	CameraRenderTarget->RenderTargetClear();
-	CameraRenderTarget->Merge(MeshRenderTarget, 0);
-	CameraRenderTarget->Merge(LightMergeRenderTarget);
+	CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
+	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
+	CameraRenderTarget->PostProcessing(_Deltatime);
 }
 
 // 카메라 조종

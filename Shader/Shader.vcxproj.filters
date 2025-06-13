@@ -31,6 +31,18 @@
     <Filter Include="02.Deferred\01.Light\00.PBR">
       <UniqueIdentifier>{677386d3-0097-4923-9657-b6e41a4a5336}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.PostProcess">
+      <UniqueIdentifier>{ae73116b-0b5a-4cf4-a3ba-4218e608561f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.PostProcess\00.Blur">
+      <UniqueIdentifier>{28199ea0-69b9-4f06-a8cd-a6c6b2fa0739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.PostProcess\01.Distortion">
+      <UniqueIdentifier>{36f4131a-9474-44ec-b14e-6c467ddfc47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.PostProcess\OldFlim">
+      <UniqueIdentifier>{4d6deef4-5575-4a3d-9b32-3e5b760de5a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="LightData.fx">
@@ -107,6 +119,24 @@
     </FxCompile>
     <FxCompile Include="PBRDeferredLight_PS.hlsl">
       <Filter>02.Deferred\01.Light\00.PBR</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur_VS.hlsl">
+      <Filter>03.PostProcess\00.Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur_PS.hlsl">
+      <Filter>03.PostProcess\00.Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="Distortion_VS.hlsl">
+      <Filter>03.PostProcess\01.Distortion</Filter>
+    </FxCompile>
+    <FxCompile Include="Distortion_PS.hlsl">
+      <Filter>03.PostProcess\01.Distortion</Filter>
+    </FxCompile>
+    <FxCompile Include="OldFilm_PS.hlsl">
+      <Filter>03.PostProcess\OldFlim</Filter>
+    </FxCompile>
+    <FxCompile Include="OldFilm_VS.hlsl">
+      <Filter>03.PostProcess\OldFlim</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

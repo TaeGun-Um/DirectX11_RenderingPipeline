@@ -46,6 +46,11 @@ public:
 	std::shared_ptr<Ext_DirectXTexture> GetDepthTexture() { return DepthTexture; }
 	D3D11_VIEWPORT* GetViewPort(int _Index) { return &ViewPorts[_Index]; }
 
+	void SetDepthTexture(std::shared_ptr<Ext_DirectXTexture> _DepthTexture)
+	{
+		DepthTexture = _DepthTexture;
+	}
+
 	void DepthSettingOn()
 	{
 		DepthSetting = true;
@@ -64,19 +69,33 @@ public:
 		CreateRT(_Format, _Scale, _Color);
 	}
 
+	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
+	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
+	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
+	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);
+
+	// 포스트 프로세스 만들기
+	template<typename PostType>
+	std::shared_ptr<PostType> CreateEffect()
+	{
+		std::shared_ptr<PostType> NewPostProcess = std::make_shared<PostType>();
+		PostProcessInitialize(NewPostProcess);
+		PostProcesses.push_back(NewPostProcess);
+
+		return NewPostProcess;
+	}
+
+	void PostProcessing(float _DeltaTime);
+
 protected:
 	
 private:
 	void CreateRT(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
 	void CreateRT(DXGI_FORMAT _Format, float4 _Scale, float4 _Color); // 텍스쳐를 생성해서 렌더타겟 생성
-	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
-	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
-	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
 	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
-
+	void PostProcessInitialize(std::shared_ptr<class Ext_PostProcess> _PostProcess);
 	static void RenderTargetReset();
-	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);
 
 	bool DepthSetting = true;
 
@@ -87,6 +106,7 @@ private:
 	std::vector<COMPTR<ID3D11RenderTargetView>> RTVs = {}; // 렌더타겟뷰들 저장
 	std::vector<COMPTR<ID3D11ShaderResourceView>> SRVs = {}; // 셰이더리소스뷰들 저장
 
+	std::vector<std::shared_ptr<class Ext_PostProcess>> PostProcesses = {};
 	static Ext_MeshComponentUnit MergeUnit; // Merge용 Unit, 텍스쳐 세팅하고 드로우콜용으로 만든것
 };
 // [RenderTarget]

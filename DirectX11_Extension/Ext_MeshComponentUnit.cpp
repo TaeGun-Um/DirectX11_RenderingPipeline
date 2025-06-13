@@ -54,13 +54,17 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	return MaterialString;
 }
 
-// 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅
 void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, MaterialType _SettingValue)
 {
 	std::string MaterialName = MaterialSettingToString(_SettingValue);
+	MeshComponentUnitInitialize(_MeshName, MaterialName);
+}
 
+// 메시 컴포넌트 유닛 생성 시 호출, Mesh, Material, ConstantBuffer 세팅
+void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName)
+{
 	Mesh = Ext_DirectXMesh::Find(_MeshName); // 메시 설정
-	Material = Ext_DirectXMaterial::Find(MaterialName); // 머티리얼 설정
+	Material = Ext_DirectXMaterial::Find(_MaterialName); // 머티리얼 설정
 
 	if (nullptr == Mesh || nullptr == Material)
 	{

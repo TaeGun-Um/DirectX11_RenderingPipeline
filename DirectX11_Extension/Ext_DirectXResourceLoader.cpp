@@ -215,6 +215,7 @@ void Ext_DirectXResourceLoader::MakeSampler()
 // DirectX 블렌드 생성
 void Ext_DirectXResourceLoader::MakeBlend()
 {
+	// Alpha 블렌드(가장 기본 블렌드)
 	{
 		D3D11_BLEND_DESC BlendInfo = { 0, };
 
@@ -317,27 +318,6 @@ void Ext_DirectXResourceLoader::MakeBlend()
 		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 		Ext_DirectXBlend::CreateBlend("OneBlend", BlendInfo);
-	}
-
-	// Alpha 블렌드
-	{
-		D3D11_BLEND_DESC BlendInfo = { 0, };
-
-		BlendInfo.AlphaToCoverageEnable = false;
-		BlendInfo.IndependentBlendEnable = false;
-		BlendInfo.RenderTarget[0].BlendEnable = true;
-
-		BlendInfo.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		BlendInfo.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		BlendInfo.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-
-		BlendInfo.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		BlendInfo.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-		BlendInfo.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-
-		BlendInfo.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		Ext_DirectXBlend::CreateBlend("AlphaBlend", BlendInfo);
 	}
 }
 
@@ -480,7 +460,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredMerge");
 		NewRenderingPipeline->SetVertexShader("DeferredMerge_VS");
 		NewRenderingPipeline->SetPixelShader("DeferredMerge_PS");
-		NewRenderingPipeline->SetBlendState("AlphaBlend");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("AlwayDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
@@ -546,14 +526,37 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
-	// Deffered shadow 테스트용
+	// PostProcess - Blur
 	{
-		//std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DeferredShadow");
-		//NewRenderingPipeline->SetVertexShader("DeferredShadow_ㅍS");
-		//NewRenderingPipeline->SetPixelShader("DeferredShadow_PS");
-		//NewRenderingPipeline->SetBlendState("OneBlend");
-		//NewRenderingPipeline->SetDepthState("AlwayDepth"); // 이라는걸  모든 오브젝트가 순서 맞춰서 다 그려진 다음에 벌어지는 일이라.
-		//NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Blur");
+
+		NewRenderingPipeline->SetVertexShader("Blur_VS");
+		NewRenderingPipeline->SetPixelShader("Blur_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// PostProcess - Distortion
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Distortion");
+
+		NewRenderingPipeline->SetVertexShader("Distortion_VS");
+		NewRenderingPipeline->SetPixelShader("Distortion_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// PostProcess - OldFilm
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("OldFilm");
+
+		NewRenderingPipeline->SetVertexShader("OldFilm_VS");
+		NewRenderingPipeline->SetPixelShader("OldFilm_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
 	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출

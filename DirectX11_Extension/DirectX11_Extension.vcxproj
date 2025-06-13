@@ -180,6 +180,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_Blur.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_CollisionComponent.cpp">
       <SubType>
       </SubType>
@@ -274,11 +278,19 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_Distortion.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_FSM.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Ext_DynamicMeshComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_HBSC.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -296,6 +308,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Ext_Object.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_OldFilm.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_PostProcess.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -337,6 +357,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_Animator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_Blur.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -436,11 +460,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_Distortion.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_FSM.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_DynamicMeshComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_HBSC.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -458,6 +490,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_Object.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_OldFilm.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_PostProcess.h">
       <SubType>
       </SubType>
     </ClInclude>

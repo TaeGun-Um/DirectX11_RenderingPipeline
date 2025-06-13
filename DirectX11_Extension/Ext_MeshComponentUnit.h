@@ -27,6 +27,7 @@ public:
 		return std::dynamic_pointer_cast<Type>(shared_from_this());
 	}
 
+	void MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName); // 메시 컴포넌트 유닛 생성 시 호출
 	void MeshComponentUnitInitialize(std::string_view _MeshName, MaterialType _SettingValue); // 메시 컴포넌트 유닛 생성 시 호출
 	void SetTexture(std::string_view _TextureName, TextureType _SlottVlaue); // 텍스쳐 지정하기
 	void SetSampler(SamplerType _SlottVlaue); // 샘플러 변경하기
@@ -46,11 +47,11 @@ public:
 	void ShadowOff(); // 그림자 끄기
 	bool GetIsShadow() { return bIsShadow; }
 
+	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
 protected:
 	
 private:
 	void SetOwnerMeshComponent(std::weak_ptr<class Ext_MeshComponent> _OwnerMeshComponent) { OwnerMeshComponent = _OwnerMeshComponent; }
-	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
 	void RenderUnitSetting(); // Mesh, Material Setting
 	void RenderUnitDraw(); // 정점 정보들과 셰이더를 통해 메시 Draw 실시(DrawIndexed Call)
 	void RenderUnitShadowSetting(); // 셰도우를 위한 Mesh, Material Setting

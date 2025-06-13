@@ -1,0 +1,28 @@
+#include "PrecompileHeader.h"
+#include "Ext_Blur.h"
+
+#include <DirectX11_Base/Base_Windows.h>
+#include "Ext_MeshComponentUnit.h"
+
+void Ext_Blur::Start()
+{
+	PostUnit = std::make_shared<Ext_MeshComponentUnit>();
+	PostUnit->MeshComponentUnitInitialize("FullRect", "Blur");
+	PostTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL);
+}
+
+void Ext_Blur::PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, float _DeltaTime)
+{
+	PostTarget->RenderTargetClear();
+	PostTarget->RenderTargetSetting();
+
+	FData.ScreenSize = Base_Windows::GetScreenSize();
+
+	PostUnit->GetBufferSetter().SetConstantBufferLink("FrameData", FData);
+	PostUnit->GetBufferSetter().SetTexture(_MainRenderTarget->GetTexture(0), "DiffuseTex");
+	PostUnit->Rendering(_DeltaTime);
+	PostUnit->GetBufferSetter().AllTextureResourceReset();
+
+	_MainRenderTarget->RenderTargetClear();
+	_MainRenderTarget->Merge(PostTarget);
+}

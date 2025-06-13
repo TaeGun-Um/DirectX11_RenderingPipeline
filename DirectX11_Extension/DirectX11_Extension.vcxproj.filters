@@ -139,6 +139,21 @@
     <ClCompile Include="RendertargetGUI.cpp">
       <Filter>01.Object\04.Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_OldFilm.cpp">
+      <Filter>04.Graphics\02.PostProcess\00.OldFlim</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_PostProcess.cpp">
+      <Filter>04.Graphics\02.PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_Blur.cpp">
+      <Filter>04.Graphics\02.PostProcess\01.Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_HBSC.cpp">
+      <Filter>04.Graphics\02.PostProcess\02.HBSC</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext_Distortion.cpp">
+      <Filter>04.Graphics\02.PostProcess\03.Distortion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -288,6 +303,21 @@
     <ClInclude Include="RendertargetGUI.h">
       <Filter>01.Object\04.Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_OldFilm.h">
+      <Filter>04.Graphics\02.PostProcess\00.OldFlim</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_PostProcess.h">
+      <Filter>04.Graphics\02.PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_Blur.h">
+      <Filter>04.Graphics\02.PostProcess\01.Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_HBSC.h">
+      <Filter>04.Graphics\02.PostProcess\02.HBSC</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_Distortion.h">
+      <Filter>04.Graphics\02.PostProcess\03.Distortion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.Process">
@@ -421,6 +451,21 @@
     </Filter>
     <Filter Include="00.Process\02.Pattern">
       <UniqueIdentifier>{a0b0f254-c42c-4d90-a5d8-dd35591b20a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Graphics\02.PostProcess">
+      <UniqueIdentifier>{0f2738f2-b6ec-4197-a403-9858e3e36a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Graphics\02.PostProcess\00.OldFlim">
+      <UniqueIdentifier>{5c5d0d37-f6d8-4a89-b915-c7c4bce390bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Graphics\02.PostProcess\01.Blur">
+      <UniqueIdentifier>{2bd8f301-4b72-4db8-8902-ce9370d747bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Graphics\02.PostProcess\02.HBSC">
+      <UniqueIdentifier>{448104b3-4735-48f0-b78c-2d4e07d5cded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Graphics\02.PostProcess\03.Distortion">
+      <UniqueIdentifier>{f78ccbe1-da30-4861-b442-6c0319eddc4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
