@@ -15,6 +15,18 @@ void Ext_DirectXDepth::Setting()
 	/*2. 2번째 인자 0은 스텐실 안쓴다는 뜻*/
 }
 
+// DSS를 GPU에 바인딩, 아웃풋머저에 적용
+void Ext_DirectXDepth::SettingStencil()
+{
+	if (nullptr == DSS)
+	{
+		MsgAssert("깊이버퍼 스테이트가 만들어지지 않았습니다.");
+	}
+
+	Ext_DirectXDevice::GetContext()->OMSetDepthStencilState(DSS.Get(), 1);
+	/*1. 생성한 DSS 전달*/
+}
+
 // DepthStencilState 생성
 void Ext_DirectXDepth::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& _Value)
 {

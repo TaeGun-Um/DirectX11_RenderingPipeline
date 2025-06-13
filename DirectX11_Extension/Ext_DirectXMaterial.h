@@ -31,6 +31,7 @@ public:
 	void SetBlendState(std::string_view _Name);
 	void SetDepthState(std::string_view _Name);
 	void SetRasterizer(std::string_view _Name);
+	void SetStencilTest() { bIsStencilTest = true; } // 스텐실을 사용할 수 있는 DSS를 만들었을 때 호출해준다(아니면 쓰면 안됨)
 
 	// Getter, Setter
 	std::shared_ptr<class Ext_DirectXVertexShader> GetVertexShader() { return VertexShader; }
@@ -56,5 +57,7 @@ private:
 	std::shared_ptr<class Ext_DirectXDepth> DepthState; // 뎁스스텐실스테이트 저장
 	std::shared_ptr<class Ext_DirectXBlend> BlendState; // 블렌드 스테이트 저장
 	
+	bool bIsStencilTest = false;
+
 	D3D11_FILL_MODE FILL_MODE = D3D11_FILL_MODE::D3D11_FILL_SOLID;
 };

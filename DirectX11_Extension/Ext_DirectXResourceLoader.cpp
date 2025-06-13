@@ -324,6 +324,7 @@ void Ext_DirectXResourceLoader::MakeBlend()
 // DirectX11 DepthStencilState 생성
 void Ext_DirectXResourceLoader::MakeDepth()
 {
+	// 깊이 테스트만 기본으로 진행
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
@@ -339,6 +340,7 @@ void Ext_DirectXResourceLoader::MakeDepth()
 		Ext_DirectXDepth::CreateDepthStencilState("EngineDepth", DepthStencilInfo);
 	}
 
+	// 깊이 테스트 안하기
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
@@ -348,6 +350,46 @@ void Ext_DirectXResourceLoader::MakeDepth()
 		DepthStencilInfo.StencilEnable = false;
 
 		Ext_DirectXDepth::CreateDepthStencilState("AlwayDepth", DepthStencilInfo);
+	}
+
+	// 스텐실 사용
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+
+		DepthStencilInfo.DepthEnable = true;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+
+		DepthStencilInfo.StencilEnable = TRUE;
+		DepthStencilInfo.StencilWriteMask = 0xFF;
+
+		// 앞면/뒷면 다 스텐실 값 1 써 주기
+		DepthStencilInfo.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		DepthStencilInfo.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		DepthStencilInfo.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		DepthStencilInfo.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		DepthStencilInfo.BackFace = DepthStencilInfo.FrontFace;
+
+		Ext_DirectXDepth::CreateDepthStencilState("StencilDepth", DepthStencilInfo);
+	}
+
+	// 스텐실 저격
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+
+		DepthStencilInfo.DepthEnable = false;      // 깊이는 이미 다 찍혔으니 끔
+		DepthStencilInfo.StencilEnable = TRUE;
+		DepthStencilInfo.StencilReadMask = 0xFF;
+		DepthStencilInfo.StencilWriteMask = 0x00;     // 포스트엔 쓰지 않음
+
+		// ref 와 동일한 곳만 통과
+		DepthStencilInfo.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+		DepthStencilInfo.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		DepthStencilInfo.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		DepthStencilInfo.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		DepthStencilInfo.BackFace = DepthStencilInfo.FrontFace;
+
+		Ext_DirectXDepth::CreateDepthStencilState("StencilTest", DepthStencilInfo);
 	}
 }
 
@@ -557,6 +599,30 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("AlwayDepth");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+	}
+
+	// 스텐실(테스트용)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticStencil");
+
+		NewRenderingPipeline->SetVertexShader("Static_VS");
+		NewRenderingPipeline->SetPixelShader("Graphics_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("StencilDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+		NewRenderingPipeline->SetStencilTest();
+	}
+
+	// 스텐실 디스토션
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("DistortionStencil");
+
+		NewRenderingPipeline->SetVertexShader("Distortion_VS");
+		NewRenderingPipeline->SetPixelShader("Distortion_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("StencilTest");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
+		NewRenderingPipeline->SetStencilTest();
 	}
 
 	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출

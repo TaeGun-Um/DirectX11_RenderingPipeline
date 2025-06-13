@@ -150,5 +150,12 @@ void Ext_DirectXMaterial::OutputMergerSetting()
 		return;
 	}
 
-	DepthState->Setting();
+	if (!bIsStencilTest)
+	{
+		DepthState->Setting();
+	}
+	else
+	{
+		DepthState->SettingStencil();
+	}
 }

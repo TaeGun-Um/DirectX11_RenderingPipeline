@@ -27,6 +27,7 @@ enum class MaterialType
     PBRDeferredLight,           // DefferedUnit용
     DeferredMerge,         // DefferedMergeUnit용
     RenderTargetMerge,  // RenderTergetUnit용
+    StaticStencil, // 스텐실 테스트용
     Debug,                     // 와이어 프레임으로 그리기용
     NonGStatic,              // 그래픽스 세팅X 스태틱, 이제 안씀
     NonGDynamic,          // 그래픽스 세팅X 다이나믹, 이제 안씀

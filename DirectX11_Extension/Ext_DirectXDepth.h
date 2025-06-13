@@ -26,11 +26,14 @@ public:
 		return NewDepth;
 	}
 
+	COMPTR<ID3D11DepthStencilState>& GetDSS() { return DSS; }
+
 protected:
 	
 private:
 	void CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& _Value);
 	void Setting(); // DSS를 GPU에 바인딩
+	void SettingStencil();
 
 	D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = {}; // 뎁스스텐실스테이트 설명서
 	COMPTR<ID3D11DepthStencilState> DSS = nullptr;		// 생성된 DSS 저장하는 포인터
