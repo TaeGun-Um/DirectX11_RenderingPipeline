@@ -72,6 +72,33 @@ void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, Textu
 	}
 }
 
+// 텍스쳐 값 변경, 정해진 값에서 선택하여 변경
+void Ext_DirectXBufferSetter::SetTexture(std::string_view _NewTextureName, std::string_view _SlotName)
+{
+	std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_DirectXTexture::Find(_NewTextureName);
+	if (nullptr == NewTexture)
+	{
+		std::string Name = _NewTextureName.data();
+		MsgAssert("이런 이름의 텍스쳐는 로드한 적이 없습니다." + Name);
+		return;
+	}
+
+	std::string UpperSlotName = Base_String::ToUpper(_SlotName);
+	auto Range = TextureSetters.equal_range(UpperSlotName);
+
+	if (Range.first == Range.second)
+	{
+		MsgAssert("이런 이름의 텍스쳐 슬롯은 없습니다. " + UpperSlotName);
+		return;
+	}
+
+	for (auto Iter = Range.first; Iter != Range.second; ++Iter)
+	{
+		TextureSetter& Setter = Iter->second;
+		Setter.Texture = NewTexture;
+	}
+}
+
 // 텍스쳐 값 변경, 슬롯을 직접 지정하여 변경
 void Ext_DirectXBufferSetter::SetTexture(std::shared_ptr<Ext_DirectXTexture> _Texture, std::string_view _SlotName)
 {

@@ -71,6 +71,11 @@ public:
 		return NewTexture;
 	}
 
+	static void LoadCubeMap(std::string_view _TextureName)
+	{
+		
+	}
+
 protected:
 	
 private:

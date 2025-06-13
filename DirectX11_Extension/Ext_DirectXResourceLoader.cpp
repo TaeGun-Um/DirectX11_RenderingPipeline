@@ -353,8 +353,8 @@ void Ext_DirectXResourceLoader::MakeDepth()
 		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
 		DepthStencilInfo.DepthEnable = true;
-		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
-		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_ALWAYS;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_ALWAYS;
 		DepthStencilInfo.StencilEnable = false;
 
 		Ext_DirectXDepth::CreateDepthStencilState("AlwayDepth", DepthStencilInfo);
@@ -365,8 +365,8 @@ void Ext_DirectXResourceLoader::MakeDepth()
 		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
 
 		DepthStencilInfo.DepthEnable = true;
-		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
-		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
 		DepthStencilInfo.StencilEnable = TRUE;
 		DepthStencilInfo.StencilWriteMask = 0xFF;
@@ -398,6 +398,18 @@ void Ext_DirectXResourceLoader::MakeDepth()
 		DepthStencilInfo.BackFace = DepthStencilInfo.FrontFace;
 
 		Ext_DirectXDepth::CreateDepthStencilState("StencilTest", DepthStencilInfo);
+	}
+
+	// 스카이박스
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+
+		DepthStencilInfo.DepthEnable = true;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+		DepthStencilInfo.StencilEnable = false;
+
+		Ext_DirectXDepth::CreateDepthStencilState("SkyDepth", DepthStencilInfo);
 	}
 }
 
@@ -437,6 +449,16 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 
 		std::shared_ptr<Ext_DirectXRasterizer> NewRast = Ext_DirectXRasterizer::CreateRasterizer("DebugRasterizer", Desc);
 		NewRast->SetFILL_MODE(D3D11_FILL_WIREFRAME);
+	}
+
+	{
+		D3D11_RASTERIZER_DESC Desc = {};
+
+		Desc.CullMode = D3D11_CULL_FRONT;
+		Desc.FrontCounterClockwise = FALSE;
+		Desc.FillMode = D3D11_FILL_SOLID;
+
+		std::shared_ptr<Ext_DirectXRasterizer> NewRast = Ext_DirectXRasterizer::CreateRasterizer("SkyRasterizer", Desc);
 	}
 }
 
@@ -609,17 +631,6 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
-	// 큐브맵(스카이박스)
-	{
-		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("CubemapMerge");
-
-		NewRenderingPipeline->SetVertexShader("CubemapMerge_VS");
-		NewRenderingPipeline->SetPixelShader("CubemapMerge_PS");
-		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("AlwayDepth");
-		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
-	}
-
 	// 스텐실(테스트용)
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticStencil");
@@ -642,6 +653,17 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetDepthState("StencilTest");
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 		NewRenderingPipeline->SetStencilTest();
+	}
+
+	// 큐브맵(스카이박스)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("SkyBox");
+
+		NewRenderingPipeline->SetVertexShader("SkyBox_VS");
+		NewRenderingPipeline->SetPixelShader("SkyBox_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("SkyDepth");
+		NewRenderingPipeline->SetRasterizer("SkyRasterizer");
 	}
 
 	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출

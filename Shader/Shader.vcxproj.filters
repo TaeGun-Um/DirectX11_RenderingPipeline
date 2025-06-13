@@ -150,6 +150,12 @@
     <FxCompile Include="CubemapMerge_PS.hlsl">
       <Filter>04.CubeMap\SkyBox</Filter>
     </FxCompile>
+    <FxCompile Include="SkyBox_VS.hlsl">
+      <Filter>04.CubeMap\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBox_PS.hlsl">
+      <Filter>04.CubeMap\SkyBox</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Transform.fx">

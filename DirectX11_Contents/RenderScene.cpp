@@ -9,6 +9,7 @@
 #include "RectActor.h"
 #include "TestPlatform.h"
 #include "StoneWallActor.h"
+#include "SkyBoxActor.h"
 
 #include "InformationGUI.h"
 
@@ -157,6 +158,10 @@ void RenderScene::Start()
 		std::shared_ptr<StoneWallActor> StoneWall = CreateActor<StoneWallActor>("StoneWallActor");
 		StoneWall->GetTransform()->SetLocalPosition({ 350.f, 150.f, -100.f });
 		StoneWall->GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });
+
+
+		// 스카이박스
+		//std::shared_ptr<SkyBoxActor> SkyBox = CreateActor<SkyBoxActor>("SkyBox");
 	}
 	
 }

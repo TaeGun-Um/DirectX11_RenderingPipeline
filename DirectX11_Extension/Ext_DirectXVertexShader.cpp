@@ -15,10 +15,9 @@ void Ext_DirectXVertexShader::CreateVertexShader(std::string_view _Path, std::st
 	unsigned int Flag = 0;
 
 #ifdef _DEBUG
-	Flag |= D3D10_SHADER_DEBUG;
-	Flag |= D3DCOMPILE_SKIP_OPTIMIZATION;
-
+	Flag = D3D10_SHADER_DEBUG;
 #endif
+	
 	Flag |= D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 	COMPTR<ID3DBlob> Error;

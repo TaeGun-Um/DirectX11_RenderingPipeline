@@ -9,5 +9,8 @@ struct PSInput
 
 float4 CubemapMerge_PS(PSInput _Input) : SV_TARGET
 {
-    return CubeMapTex.Sample(Sampler, _Input.Texcoord);
+    float4 Color = CubeMapTex.Sample(Sampler, _Input.Texcoord);
+    Color.a = saturate(Color.a);
+    
+    return Color;
 }

@@ -66,6 +66,7 @@ public:
 
 	// 텍스쳐값 변경하기
 	void SetTexture(std::string_view _TextureName, TextureType _TypeValue); // 정해진 슬롯에 대해 변경하기
+	void SetTexture(std::string_view _NewTextureName, std::string_view _SlotName);
 	void SetTexture(std::shared_ptr<class Ext_DirectXTexture> _Texture, std::string_view _SlotName); // 슬롯을 직접 지정해서 변경하기
 
 	// 샘플러값 변경하기

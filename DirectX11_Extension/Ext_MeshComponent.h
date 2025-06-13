@@ -18,8 +18,10 @@ public:
 	Ext_MeshComponent& operator=(Ext_MeshComponent&& _Other) noexcept = delete;
 
 	virtual std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _Mesh, MaterialType _SettingValue); // 메시 컴포넌트에 필요한 유닛 생성 및 저장
+	virtual std::shared_ptr<class Ext_MeshComponentUnit> CreateMeshComponentUnit(std::string_view _MeshName, std::string_view _MaterialName);
 	
 	void SetTexture(std::string_view _TextureName, TextureType _TypeValue = TextureType::BaseColor); // 텍스쳐 변경하기
+	void SetTexture(std::string_view _TextureName, std::string_view _SlotName);
 	void SetSampler(SamplerType _TypeValue); // 샘플러 변경하기
 
 	// Getter, Setter

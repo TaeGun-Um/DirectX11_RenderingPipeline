@@ -135,15 +135,15 @@ void Ext_DirectXShader::ShaderResourceSetting()
 
 			if (D3D_SRV_DIMENSION_TEXTURECUBE == ResDesc.Dimension)
 			{
-				//std::shared_ptr<GameEngineTexture> Res = GameEngineTexture::Find("BaseCubemap");
+				std::shared_ptr<Ext_DirectXTexture> TextureResource = Ext_DirectXTexture::Find("SkyBox");
 
-				//GameEngineTextureSetter Setter;
-				//Setter.ParentShader = this;
-				//Setter.Name = UpperName;
-				//Setter.BindPoint = ResDesc.BindPoint;
-				//Setter.Res = Res;
+				TextureSetter Setter;
+				Setter.OwnerShader = GetSharedFromThis<Ext_DirectXShader>();
+				Setter.Name = UpperName;
+				Setter.BindPoint = ResDesc.BindPoint; // GPU에 바인딩할 슬롯 정보 register(t0)
+				Setter.Texture = TextureResource;
 
-				//ResHelper.CreateTextureSetter(Setter);
+				BufferSetter.InsertTextureSetter(Setter);
 			}
 			else
 			{

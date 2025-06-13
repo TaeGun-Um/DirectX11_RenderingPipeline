@@ -30,6 +30,7 @@ public:
 	void MeshComponentUnitInitialize(std::string_view _MeshName, std::string_view _MaterialName); // 메시 컴포넌트 유닛 생성 시 호출
 	void MeshComponentUnitInitialize(std::string_view _MeshName, MaterialType _SettingValue); // 메시 컴포넌트 유닛 생성 시 호출
 	void SetTexture(std::string_view _TextureName, TextureType _SlottVlaue); // 텍스쳐 지정하기
+	void SetTexture(std::string_view _TextureName, std::string_view _SlotName);
 	void SetSampler(SamplerType _SlottVlaue); // 샘플러 변경하기
 	void SetSampler(std::string_view _Name, std::string_view _SlotName); // 샘플러 직접 변경
 

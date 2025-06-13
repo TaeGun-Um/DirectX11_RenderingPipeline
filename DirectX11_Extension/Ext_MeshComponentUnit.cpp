@@ -109,6 +109,12 @@ void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, TextureTyp
 	BufferSetter.SetTexture(_TextureName, _TypeVlaue);
 }
 
+// 텍스쳐 변경하기
+void Ext_MeshComponentUnit::SetTexture(std::string_view _TextureName, std::string_view _SlotName)
+{
+	BufferSetter.SetTexture(_TextureName, _SlotName);
+}
+
 // 샘플러 변경하기
 void Ext_MeshComponentUnit::SetSampler(SamplerType _TypeVlaue)
 {
@@ -132,17 +138,6 @@ void Ext_MeshComponentUnit::RenderUnitSetting()
 	if (nullptr == Material)
 	{
 		MsgAssert("파이프라인이 존재하지 않는 유니트 입니다");
-	}
-
-	if (nullptr != GetOwnerMeshComponent().lock())
-	{
-		std::shared_ptr<Ext_MeshComponent> ThisMesh = GetOwnerMeshComponent().lock();
-		std::string MeshName = ThisMesh->GetName();
-		std::multimap<std::string, ConstantBufferSetter> Mul = BufferSetter.ConstantBufferSetters;
-		std::multimap<std::string, SamplerSetter> Mul2 = BufferSetter.SamplerSetters;
-		std::multimap<std::string, TextureSetter> Mul3 = BufferSetter.TextureSetters;
-
-		int a = 0;
 	}
 
 	InputLayout->InputLayoutSetting(); // InputLayout으로 IASetInputLayout 호출
