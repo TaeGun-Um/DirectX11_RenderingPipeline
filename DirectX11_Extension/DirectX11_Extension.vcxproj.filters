@@ -154,6 +154,9 @@
     <ClCompile Include="Ext_Distortion.cpp">
       <Filter>04.Graphics\02.PostProcess\03.Distortion</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_TextureTest.cpp">
+      <Filter>04.Graphics\02.PostProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -317,6 +320,9 @@
     </ClInclude>
     <ClInclude Include="Ext_Distortion.h">
       <Filter>04.Graphics\02.PostProcess\03.Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext_TextureTest.h">
+      <Filter>04.Graphics\02.PostProcess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

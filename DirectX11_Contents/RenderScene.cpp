@@ -24,6 +24,8 @@
 #include <DirectX11_Extension/Ext_DirectXTexture.h>
 #include <DirectX11_Extension/Ext_Imgui.h>
 
+#include <DirectX11_Extension/Ext_TextureTest.h>
+
 RenderScene::RenderScene()
 {
 }
@@ -72,6 +74,10 @@ void RenderScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(5, "Post RenderTarget", GetMainCamera()->GetCameraRenderTarget()->GetPostProcesses()[0]->GetPostTarget());
+
+		// std::vector<std::shared_ptr<class Ext_PostProcess>>
+		// Ext_TextureTest
 	}
 
 	// 캐릭터 메시 로드

@@ -189,6 +189,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MathScene.h" />
     <ClInclude Include="PrecompileHeader.h">
       <SubType>
       </SubType>
@@ -210,10 +211,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="StoneWallActor.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="MathScene.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -248,6 +245,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="MathScene.cpp" />
     <ClCompile Include="PrecompileHeader.cpp">
       <SubType>
       </SubType>
@@ -273,10 +271,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="StoneWallActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="MathScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>

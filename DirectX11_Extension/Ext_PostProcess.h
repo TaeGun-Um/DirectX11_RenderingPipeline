@@ -16,6 +16,7 @@ public:
 	Ext_PostProcess& operator=(const Ext_PostProcess& _Other) = delete;
 	Ext_PostProcess& operator=(Ext_PostProcess&& _Other) noexcept = delete;
 
+	std::shared_ptr<Ext_DirectXRenderTarget> GetPostTarget() { return PostTarget; }
 
 protected:
 	struct FrameData

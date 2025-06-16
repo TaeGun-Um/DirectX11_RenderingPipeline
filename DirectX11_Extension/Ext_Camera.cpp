@@ -17,6 +17,7 @@
 #include "Ext_Blur.h"
 #include "Ext_Distortion.h"
 #include "Ext_OldFilm.h"
+#include "Ext_TextureTest.h"
 
 // 카메라 생성 시 호출
 void Ext_Camera::Start()
@@ -34,9 +35,10 @@ void Ext_Camera::Start()
 	// 카메라 최종 렌더타겟
 	CameraRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 해당 카메라의 최종 결과물 타겟
 	CameraRenderTarget->CreateDepthTexture();
-	CameraRenderTarget->CreateEffect<Ext_Blur>();
-	//CameraRenderTarget->CreateEffect<Ext_Distortion>();
-	CameraRenderTarget->CreateEffect<Ext_OldFilm>();
+	// CameraRenderTarget->CreateEffect<Ext_Blur>();
+	// CameraRenderTarget->CreateEffect<Ext_Distortion>();
+	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
+	CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget

@@ -86,6 +86,7 @@ public:
 	}
 
 	void PostProcessing(float _DeltaTime);
+	std::vector<std::shared_ptr<class Ext_PostProcess>>& GetPostProcesses() { return PostProcesses; }
 
 protected:
 	

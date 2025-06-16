@@ -323,6 +323,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_TextureTest.cpp" />
     <ClCompile Include="Ext_Transform.cpp">
       <SubType>
       </SubType>
@@ -505,6 +506,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_TextureTest.h" />
     <ClInclude Include="Ext_Transform.h">
       <SubType>
       </SubType>

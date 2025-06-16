@@ -84,9 +84,6 @@
     <ClCompile Include="RenderScene.cpp">
       <Filter>01.Scene\00.RenderScene</Filter>
     </ClCompile>
-    <ClCompile Include="MathScene.cpp">
-      <Filter>01.Scene\01.MathScene</Filter>
-    </ClCompile>
     <ClCompile Include="InformationGUI.cpp">
       <Filter>00.Process\02.GUI</Filter>
     </ClCompile>
@@ -98,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="SkyBoxActor.cpp">
       <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="MathScene.cpp">
+      <Filter>01.Scene\01.MathScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +131,6 @@
     <ClInclude Include="RenderScene.h">
       <Filter>01.Scene\00.RenderScene</Filter>
     </ClInclude>
-    <ClInclude Include="MathScene.h">
-      <Filter>01.Scene\01.MathScene</Filter>
-    </ClInclude>
     <ClInclude Include="InformationGUI.h">
       <Filter>00.Process\02.GUI</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="SkyBoxActor.h">
       <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="MathScene.h">
+      <Filter>01.Scene\01.MathScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
