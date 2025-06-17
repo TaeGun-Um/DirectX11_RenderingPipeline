@@ -46,9 +46,6 @@
     <Filter Include="04.CubeMap">
       <UniqueIdentifier>{20441038-0536-4f91-8291-77811f0484ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.CubeMap\SkyBox">
-      <UniqueIdentifier>{1c1a6f43-411d-4d07-b398-72f5216dce16}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="LightData.fx">
@@ -144,17 +141,11 @@
     <FxCompile Include="OldFilm_VS.hlsl">
       <Filter>03.PostProcess\OldFlim</Filter>
     </FxCompile>
-    <FxCompile Include="CubemapMerge_VS.hlsl">
-      <Filter>04.CubeMap\SkyBox</Filter>
-    </FxCompile>
-    <FxCompile Include="CubemapMerge_PS.hlsl">
-      <Filter>04.CubeMap\SkyBox</Filter>
+    <FxCompile Include="SkyBox_PS.hlsl">
+      <Filter>04.CubeMap</Filter>
     </FxCompile>
     <FxCompile Include="SkyBox_VS.hlsl">
-      <Filter>04.CubeMap\SkyBox</Filter>
-    </FxCompile>
-    <FxCompile Include="SkyBox_PS.hlsl">
-      <Filter>04.CubeMap\SkyBox</Filter>
+      <Filter>04.CubeMap</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

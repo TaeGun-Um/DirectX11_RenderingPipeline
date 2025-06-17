@@ -482,7 +482,7 @@ void Ext_DirectXResourceLoader::MakeRasterizer()
 	{
 		D3D11_RASTERIZER_DESC Desc = {};
 
-		Desc.CullMode = D3D11_CULL_FRONT;
+		Desc.CullMode = D3D11_CULL_NONE;
 		Desc.FrontCounterClockwise = FALSE;
 		Desc.FillMode = D3D11_FILL_SOLID;
 

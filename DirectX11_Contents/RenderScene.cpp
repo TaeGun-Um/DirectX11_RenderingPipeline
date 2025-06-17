@@ -76,7 +76,7 @@ void RenderScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
-		// RendertargetGUI::AddDebugRenderTarget(5, "Post RenderTarget", GetMainCamera()->GetCameraRenderTarget()->GetPostProcesses()[0]->GetPostTarget());
+		RendertargetGUI::AddDebugRenderTarget(5, "SkyBox RenderTarget", GetMainCamera()->GetSkyBoxRenderTarget());
 
 		// std::vector<std::shared_ptr<class Ext_PostProcess>>
 		// Ext_TextureTest
@@ -168,13 +168,18 @@ void RenderScene::Start()
 		StoneWall->GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });
 		StoneWall->SetReflection();
 
-		// 스카이박스
-		//std::shared_ptr<SkyBoxActor> SkyBox = CreateActor<SkyBoxActor>("SkyBox");
-
 		// 리플렉션
 		std::shared_ptr<ReflectionActor> ReflectionActor1 = CreateActor<ReflectionActor>("ReflectionActor1");
 		ReflectionActor1->GetTransform()->SetLocalPosition({ 0.f, 100.f, -100.f});
 		ReflectionActor1->SetReflection();
+
+		// 스카이박스
+		// std::shared_ptr<SkyBoxActor> SkyBox = CreateActor<SkyBoxActor>("SkyBox");
+	}
+
+	// 스카이박스 설정
+	{
+		GetMainCamera()->SetSkyBox();
 	}
 }
 

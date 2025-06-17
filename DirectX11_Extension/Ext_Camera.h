@@ -43,8 +43,13 @@ public:
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightRenderTarget() { return LightRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightMergeRenderTarget() { return LightMergeRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetSkyBoxRenderTarget() { return SkyBoxRenderTarget; }
 
 	void CaptureCubemap(const float4& _Pos, const float4& _Rot, const float4& _CaptureScale); // 큐브맵 찍기
+
+	void SetSkyBox() { bIsSkybox = true; }
+	bool IsSetSkyBox() { return bIsSkybox; };
+	void SkyBoxRendering(); // 스카이박스용
 
 protected:
 	void Start() override;
@@ -74,6 +79,7 @@ private:
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightMergeRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget; // 합본
+	std::shared_ptr<class Ext_DirectXRenderTarget> SkyBoxRenderTarget; // 스카이박스용
 	Ext_MeshComponentUnit LightUnit;
 	Ext_MeshComponentUnit LightMergeUnit;
 
@@ -90,4 +96,7 @@ private:
 	float4 SavedPos = float4::ZERO;
 	float4 SavedRot = float4::ZERO;
 
+	bool bIsSkybox = false;
+	std::shared_ptr<class Ext_Transform> SkyBoxTransform; // 스카이박스용 트랜스폼
+	Ext_MeshComponentUnit SkyBoxUnit;
 };

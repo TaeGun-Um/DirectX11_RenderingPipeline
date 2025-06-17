@@ -16,7 +16,7 @@ public:
 
 protected:
 	void Start() override;
-	void PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, float _DeltaTime) override;
+	void PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime) override;
 	
 private:
 	

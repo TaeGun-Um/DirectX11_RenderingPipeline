@@ -21,6 +21,8 @@ VSOutput SkyBox_VS(VSInput _Input)
     
     float4 VPosition = mul(_Input.Position, ViewMat);
     Output.Position = mul(VPosition, ProjectionMatrix);
+    // Output.Position.w = 1.0f;
+    Output.Position.z = Output.Position.w;
     Output.TexCoord = _Input.Position.xyz;
     
     return Output;

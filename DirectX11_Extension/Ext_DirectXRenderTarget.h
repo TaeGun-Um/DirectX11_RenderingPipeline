@@ -73,6 +73,7 @@ public:
 	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
 	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);
+	void Merge(Ext_DirectXRenderTarget* _OtherRenderTarget, size_t _Index = 0);
 
 	// 포스트 프로세스 만들기
 	template<typename PostType>
@@ -85,7 +86,7 @@ public:
 		return NewPostProcess;
 	}
 
-	void PostProcessing(float _DeltaTime);
+	void PostProcessing(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime);
 	std::vector<std::shared_ptr<class Ext_PostProcess>>& GetPostProcesses() { return PostProcesses; }
 
 protected:
@@ -94,7 +95,8 @@ private:
 	void CreateRT(std::shared_ptr<Ext_DirectXTexture> _Texture, float4 _Color); // View를 기반으로 렌더타겟 생성
 	void CreateRT(DXGI_FORMAT _Format, float4 _Scale, float4 _Color); // 텍스쳐를 생성해서 렌더타겟 생성
 	void RenderTargetViewsClear(); // ClearRenderTargetView() 호출
-	void DepthStencilViewClear(); // ClearDepthStencilView() 호출
+	void DepthStencilViewClear();
+	// ClearDepthStencilView() 호출
 	void PostProcessInitialize(std::shared_ptr<class Ext_PostProcess> _PostProcess);
 	static void RenderTargetReset();
 

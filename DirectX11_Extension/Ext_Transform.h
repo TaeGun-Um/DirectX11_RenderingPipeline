@@ -169,10 +169,10 @@ public:
 		return OwnerComponent;
 	}
 
+	void SetCameraMatrix(const float4 _CameraWorldPosition, const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_CameraWorldPosition, _View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
 protected:
 	
 private:
-	void SetCameraMatrix(const float4 _CameraWorldPosition, const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_CameraWorldPosition, _View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
 	void TransformUpdate(); // 행렬 업데이트
 	void Release();
 

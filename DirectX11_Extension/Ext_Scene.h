@@ -77,6 +77,10 @@ public:
 		return &(Iter->second);
 	}
 
+	// 스카이박스
+	std::shared_ptr<class Ext_Actor> GetSkyBox() { return SkyBox; }; // 메인 카메라 가져오기
+	void SetSkyBox(std::shared_ptr<class Ext_Actor> _SkyBox) { SkyBox = _SkyBox; }; // 메인 카메라 세팅(호출 안하는게 좋음)
+
 protected:
 	virtual void SceneChangeInitialize(); // Scene 변경 시 호출
 	virtual void SceneChangeEnd(); // Scene 변경 시 호출
@@ -97,4 +101,5 @@ private:
 	std::shared_ptr<class Ext_Light> DirectionalLight;                                 // 현재 Scene의 Directional Light
 	LightDatas LightDataBuffer; // 현재 Scene Light의 Data들
 
+	std::shared_ptr<class Ext_Actor> SkyBox; // Scene의 SkyBox
 };

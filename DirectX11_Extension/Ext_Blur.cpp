@@ -11,7 +11,7 @@ void Ext_Blur::Start()
 	PostTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL);
 }
 
-void Ext_Blur::PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, float _DeltaTime)
+void Ext_Blur::PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime)
 {
 	PostTarget->RenderTargetClear();
 	PostTarget->RenderTargetSetting();

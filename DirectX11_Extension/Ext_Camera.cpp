@@ -38,7 +38,7 @@ void Ext_Camera::Start()
 	// CameraRenderTarget->CreateEffect<Ext_Blur>();
 	// CameraRenderTarget->CreateEffect<Ext_Distortion>();
 	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
-	CameraRenderTarget->CreateEffect<Ext_TextureTest>();
+	// CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
@@ -84,6 +84,13 @@ void Ext_Camera::Start()
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
 	LightMergeUnit.SetSampler(SamplerType::PointClamp);
+
+	// 스카이박스용
+	SkyBoxRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL);
+	SkyBoxTransform = std::make_shared<Ext_Transform>();
+	SkyBoxUnit.MeshComponentUnitInitialize("FullBox", "SkyBox");
+	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("SkyBox");
+	SkyBoxUnit.GetBufferSetter().SetTexture(Tex, "CubeMapTex");
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -174,6 +181,11 @@ void Ext_Camera::PushMeshComponentUnit(std::shared_ptr<Ext_MeshComponentUnit> _U
 // 카메라의 MeshComponents들에 대한 업데이트 및 렌더링 파이프라인 리소스 정렬
 void Ext_Camera::Rendering(float _Deltatime)
 {
+	if (true == bIsSkybox)
+	{
+		SkyBoxRendering();
+	}
+
 	MeshRenderTarget->RenderTargetClear();
 	MeshRenderTarget->RenderTargetSetting();
 
@@ -278,9 +290,10 @@ void Ext_Camera::Rendering(float _Deltatime)
 
 	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
 	CameraRenderTarget->RenderTargetClear();
+	CameraRenderTarget->Merge(SkyBoxRenderTarget);
 	CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
 	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
-	CameraRenderTarget->PostProcessing(_Deltatime);
+	CameraRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
 }
 
 // 카메라 조종
@@ -462,4 +475,17 @@ void Ext_Camera::CaptureCubemap(const float4& _Pos, const float4& _Rot, const fl
 	Height = CurHeight;
 
 	GetTransform()->SetTransformData(TFData);
+}
+
+void Ext_Camera::SkyBoxRendering()
+{
+	SkyBoxRenderTarget->RenderTargetClear();
+	SkyBoxRenderTarget->RenderTargetSetting();
+
+	float4 CamPos = GetTransform()->GetWorldPosition();
+	SkyBoxTransform->SetLocalPosition(CamPos);
+	SkyBoxTransform->SetCameraMatrix(GetTransform()->GetWorldPosition(), ViewMatrix, ProjectionMatrix);
+	SkyBoxUnit.GetBufferSetter().SetConstantBufferLink("TransformData", *SkyBoxTransform->GetTransformData());
+	SkyBoxUnit.Rendering(0.0f);
+	SkyBoxUnit.GetBufferSetter().AllTextureResourceReset();
 }

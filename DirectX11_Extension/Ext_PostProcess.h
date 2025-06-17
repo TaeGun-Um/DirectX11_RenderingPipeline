@@ -26,7 +26,7 @@ protected:
 	};
 
 	virtual void Start() = 0;
-	virtual void PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, float _Deltatime) = 0;
+	virtual void PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime) = 0;
 
 	std::shared_ptr<Ext_MeshComponentUnit> PostUnit;
 	std::shared_ptr<Ext_DirectXRenderTarget> PostTarget;
