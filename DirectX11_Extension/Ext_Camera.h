@@ -44,6 +44,8 @@ public:
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightMergeRenderTarget() { return LightMergeRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; }
 
+	void CaptureCubemap(const float4& _Pos, const float4& _Rot, const float4& _CaptureScale); // 큐브맵 찍기
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;

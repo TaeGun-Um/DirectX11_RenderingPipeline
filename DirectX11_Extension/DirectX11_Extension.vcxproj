@@ -319,7 +319,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_ReflectionComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_Scene.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ext_ScreenShoot.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -502,7 +510,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ext_ReflectionComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Ext_Scene.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_ScreenShoot.h">
       <SubType>
       </SubType>
     </ClInclude>

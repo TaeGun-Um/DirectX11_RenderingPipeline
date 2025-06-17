@@ -74,7 +74,7 @@ void RenderScene::Start()
 		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
 		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(5, "Post RenderTarget", GetMainCamera()->GetCameraRenderTarget()->GetPostProcesses()[0]->GetPostTarget());
+		// RendertargetGUI::AddDebugRenderTarget(5, "Post RenderTarget", GetMainCamera()->GetCameraRenderTarget()->GetPostProcesses()[0]->GetPostTarget());
 
 		// std::vector<std::shared_ptr<class Ext_PostProcess>>
 		// Ext_TextureTest

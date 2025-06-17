@@ -116,6 +116,10 @@ public:
 	float4 GetWorldScale() const { return TFData->WorldScale; }
 	float4x4 GetWorldMatrix() const { return TFData->WorldMatrix; }
 	std::shared_ptr<TransformData> GetTransformData() { return TFData; }
+	void SetTransformData(std::shared_ptr<TransformData> _Data)
+	{
+		TFData = _Data;
+	}
 
 	float4 GetLocalForwardVector() { return TFData->WorldMatrix.ArrVector[2].NormalizeReturn(); }
 	float4 GetLocalUpVector() { return TFData->WorldMatrix.ArrVector[1].NormalizeReturn(); }

@@ -38,7 +38,7 @@ void Ext_Camera::Start()
 	// CameraRenderTarget->CreateEffect<Ext_Blur>();
 	// CameraRenderTarget->CreateEffect<Ext_Distortion>();
 	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
-	CameraRenderTarget->CreateEffect<Ext_TextureTest>();
+	// CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
@@ -389,4 +389,77 @@ void Ext_Camera::Update(float _Deltatime)
 
 		GetTransform()->AddLocalPosition(MoveDelta);
 	}
+}
+
+void Ext_Camera::CaptureCubemap(const float4& _Pos, const float4& _Rot, const float4& _CaptureScale /*= float4(128, 128)*/)
+{
+	std::shared_ptr<TransformData> TFData = GetTransform()->GetTransformData();
+
+	GetTransform()->SetLocalPosition(_Pos);
+	GetTransform()->SetLocalRotation(_Rot);
+
+	float CurWidth = Width;
+	float CurHeight = Height;
+
+	Width = _CaptureScale.x;
+	Height = _CaptureScale.y;
+
+	CameraRenderTarget->RenderTargetClear();
+	//CamPosTarget->Clear();
+	MeshRenderTarget->RenderTargetClear();
+
+	if (nullptr != LightMergeRenderTarget)
+	{
+		LightMergeRenderTarget->RenderTargetClear();
+	}
+
+	// CamAlphaTarget->Clear();
+
+	for (auto& LightIter : GetOwnerScene().lock()->Lights)
+	{
+		std::shared_ptr<Ext_Light> CurLight = LightIter.second;
+
+		//if (false == CurLight->IsShadow())
+		//{
+		//	continue;
+		//}
+
+		std::shared_ptr<Ext_DirectXRenderTarget> ShadowTarget = CurLight->GetShadowRenderTarget();
+		//std::shared_ptr<Ext_DirectXRenderTarget> BakeTarget = CurLight->GetBakeTarget(Light->GetBakeTargetIndex());
+
+		if (nullptr != ShadowTarget)
+		{
+			ShadowTarget->RenderTargetClear();
+
+			if (CurLight->GetLightData()->LightType == static_cast<int>(LightType::Point))
+			{
+				//ShadowTarget->MergeCubemap(BakeTarget);
+			}
+			else
+			{
+				// ShadowTarget->Merge(BakeTarget);
+			}
+		}
+	}
+
+	CameraTransformUpdate();
+	ViewPortSetting();
+
+	// Light
+	GetOwnerScene().lock()->GetLightDataBuffer().LightCount = 0;
+	for (auto& LightIter : GetOwnerScene().lock()->Lights)
+	{
+		std::shared_ptr<Ext_Light> CurLight = LightIter.second;
+
+		CurLight->LightUpdate(GetSharedFromThis<Ext_Camera>(), 0.0f);
+		GetOwnerScene().lock()->LightDataBuffer.Lights[GetOwnerScene().lock()->LightDataBuffer.LightCount] = *CurLight->GetLightData().get(); // 상수버퍼에 값 넣어주기
+		++GetOwnerScene().lock()->LightDataBuffer.LightCount;
+	}
+
+	Rendering(0.0f);
+
+	Width = CurWidth;
+	Height = CurHeight;
+
+	GetTransform()->SetTransformData(TFData);
 }

@@ -47,10 +47,10 @@ void Ext_DirectXResourceLoader::LoadTexture()
 
 	// 큐브맵을 위한 텍스쳐 로드
 	{
-		Base_Directory Dir;
-		Dir.MakePath("../Resource/FX/CubeMap");
-		std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
-		Ext_DirectXTexture::LoadCubeMap("SkyBox", Paths);
+		//Base_Directory Dir;
+		//Dir.MakePath("../Resource/FX/ReflectionTexture/CubeMap");
+		//std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
+		//Ext_DirectXTexture::LoadCubeMap("SkyBox", Paths);
 	}
 }
 
