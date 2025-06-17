@@ -26,6 +26,8 @@
 
 #include <DirectX11_Extension/Ext_TextureTest.h>
 
+#include "ReflectionActor.h"
+
 RenderScene::RenderScene()
 {
 }
@@ -164,12 +166,16 @@ void RenderScene::Start()
 		std::shared_ptr<StoneWallActor> StoneWall = CreateActor<StoneWallActor>("StoneWallActor");
 		StoneWall->GetTransform()->SetLocalPosition({ 350.f, 150.f, -100.f });
 		StoneWall->GetTransform()->AddLocalRotation({ 0.f, 90.f, 0.f });
-
+		StoneWall->SetReflection();
 
 		// 스카이박스
 		//std::shared_ptr<SkyBoxActor> SkyBox = CreateActor<SkyBoxActor>("SkyBox");
+
+		// 리플렉션
+		std::shared_ptr<ReflectionActor> ReflectionActor1 = CreateActor<ReflectionActor>("ReflectionActor1");
+		ReflectionActor1->GetTransform()->SetLocalPosition({ 0.f, 100.f, -100.f});
+		ReflectionActor1->SetReflection();
 	}
-	
 }
 
 

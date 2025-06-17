@@ -14,6 +14,8 @@ public:
 	StoneWallActor& operator=(const StoneWallActor& _Other) = delete;
 	StoneWallActor& operator=(StoneWallActor&& _Other) noexcept = delete;
 
+	void SetReflection();
+
 protected:
 	void Start() override;
 	void Update(float _DletaTime) override;
@@ -21,5 +23,5 @@ protected:
 private:
 	std::shared_ptr<class Ext_CollisionComponent> WallBody;
 	std::shared_ptr<class Ext_MeshComponent> WallBodyMesh;
-	
+	std::shared_ptr<class Ext_ReflectionComponent> Reflection;
 };

@@ -10,13 +10,13 @@
 #include "Ext_Scene.h"
 #include "Ext_Camera.h"
 
-std::shared_ptr<Ext_DirectXRenderTarget> Ext_ReflectionComponent::CaptureTarget = nullptr;
-
-void Ext_ReflectionComponent::ReflectionInitialize(std::string_view _CaptureTextureName, const float4& _Scale/* = float4(128, 128)*/)
+void Ext_ReflectionComponent::ReflectionInitialize(std::shared_ptr<class Ext_Actor> _Owner, std::string_view _CaptureTextureName, const float4& _Scale/* = float4(128, 128)*/)
 {
 	Base_Directory Dir;
 	Dir.MakePath("../Resource/FX/ReflectionTexture");
 	std::string Path = Dir.GetPath();
+
+	std::shared_ptr<Ext_DirectXRenderTarget> CaptureTarget = nullptr;
 
 	if (nullptr == Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Forword.png")))
 	{
@@ -31,52 +31,59 @@ void Ext_ReflectionComponent::ReflectionInitialize(std::string_view _CaptureText
 			CaptureTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_UNORM, _Scale, float4::ZERONULL);
 		}
 
-		float4 CenterPos = GetTransform()->GetWorldPosition();
+		float4 CenterPos = _Owner->GetTransform()->GetWorldPosition();
 		float4 CenterRot = float4::ZERO;
 
+		auto Scene = _Owner->GetOwnerScene().lock();
+		if (Scene == nullptr)
+		{
+			MsgAssert("Scene이 유효하지 않습니다.");
+			return;
+		}
+
 		// Forward
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot, float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot, float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Forword.png"));
 
 		// Back
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 180, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 180, 0), float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Back.png"));
 
 		// Right
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 90, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 90, 0), float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Right.png"));
 
 		// Left
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, -90, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, -90, 0), float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Left.png"));
 
 		// Top
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(-90, 0, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(-90, 0, 0), float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Top.png"));
 
 		// Bottom
-		GetOwnerScene().lock()->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(90, 0, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(90, 0, 0), float4(900, 900));
 		CaptureTarget->RenderTargetClear();
-		CaptureTarget->Merge(GetOwnerScene().lock()->GetMainCamera()->GetCameraRenderTarget());
+		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Bottom.png"));
 		CaptureTarget->RenderTargetClear();
 
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Forword.PNG");
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Back.PNG");
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Right.PNG");
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Left.PNG");
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Top.PNG");
-		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Bottom.PNG");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Forword.png");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Back.png");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Right.png");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Left.png");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Top.png");
+		Ext_DirectXTexture::LoadTexture(Path + "\\" + _CaptureTextureName.data() + "_Bottom.png");
 	}
 
 	CubeTexture = Ext_DirectXTexture::Find(_CaptureTextureName);
@@ -86,13 +93,13 @@ void Ext_ReflectionComponent::ReflectionInitialize(std::string_view _CaptureText
 		std::vector<std::shared_ptr<Ext_DirectXTexture>> CubeTextures;
 		CubeTextures.reserve(6);
 
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_FORWARD.PNG")));
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_BACK.PNG")));
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_RIGHT.PNG")));
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_LEFT.PNG")));
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_TOP.PNG")));
-		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_BOT.PNG")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Right.png")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Left.png")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Top.png")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Bottom.png")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Forword.png")));
+		CubeTextures.push_back(Ext_DirectXTexture::Find(_CaptureTextureName.data() + std::string("_Back.png")));
 
-		//ReflectionCubeTexture = Ext_DirectXTexture::Create(_CaptureTextureName, CubeTextures);
+		CubeTexture = Ext_DirectXTexture::LoadCubeMap(_CaptureTextureName, CubeTextures);
 	}
 }

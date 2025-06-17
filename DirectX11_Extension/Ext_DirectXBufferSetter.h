@@ -83,6 +83,9 @@ public:
 	// 리소스 초기화(RenderTarget Unit 때문에 만듬)
 	void AllTextureResourceReset();
 
+	bool IsTexture(std::string_view _Name); // 텍스쳐가 있는지 확인
+	
+
 protected:
 	
 private:

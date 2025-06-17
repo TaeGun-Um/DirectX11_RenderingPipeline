@@ -22,10 +22,12 @@ struct TransformData
 	float4x4 ProjectionMatrix;
 	float4x4 WorldViewMatrix;
 	float4x4 WorldViewProjectionMatrix;
+
+	float4 CameraWorldPosition;
 	
 	void CalculateLocalMatrix(const float4x4& _ParentMatrix);
 	void CalculateWorldMatrix(const float4x4& _ParentMatrix);
-	void SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection);
+	void SetViewProjectionMatrix(const float4 _CameraWorldPosition, const float4x4& _View, const float4x4& _Projection);
 
 };
 
@@ -170,7 +172,7 @@ public:
 protected:
 	
 private:
-	void SetCameraMatrix(const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
+	void SetCameraMatrix(const float4 _CameraWorldPosition, const float4x4& _View, const float4x4& _Projection) { TFData->SetViewProjectionMatrix(_CameraWorldPosition, _View, _Projection); } // 행렬 월드, 뷰, 프로젝션 적용
 	void TransformUpdate(); // 행렬 업데이트
 	void Release();
 

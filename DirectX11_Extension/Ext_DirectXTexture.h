@@ -62,18 +62,12 @@ public:
 	void PSReset(UINT _Slot);
 
 	// 큐브맵 텍스쳐 만들기, 이름 지정해주고 저장 및 로드
-	static std::shared_ptr<Ext_DirectXTexture> LoadCubeMap(std::string_view _TextureName, std::vector<std::string>& _Paths)
+	static std::shared_ptr<Ext_DirectXTexture> LoadCubeMap(std::string_view _Name, std::vector<std::shared_ptr<Ext_DirectXTexture>>& _Textures)
 	{
-		std::string UpperName = Base_String::ToUpper(_TextureName.data());
-		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(UpperName);
-		NewTexture->CubeMapLoad(_Paths);
+		std::shared_ptr<Ext_DirectXTexture> NewTexture = Ext_ResourceManager::CreateNameResource(_Name);
+		NewTexture->CubeMapLoad(_Textures);
 
 		return NewTexture;
-	}
-
-	static void LoadCubeMap(std::string_view _TextureName)
-	{
-		
 	}
 
 protected:
@@ -85,6 +79,7 @@ private:
 	void CreateShaderResourcesView(); // 쉐이더리소스뷰 생성
 
 	void TextureLoad(std::string_view _Path, std::string_view _ExtensionName); // 텍스쳐 로드
+	void CubeMapLoad(std::vector<std::shared_ptr<Ext_DirectXTexture>>& _Textures); // 큐브맵 텍스쳐 로드
 
 	D3D11_TEXTURE2D_DESC Texture2DInfo;
 	COMPTR<ID3D11Texture2D> Texture2D;

@@ -16,6 +16,8 @@ cbuffer TransformData : register(b0)
     float4x4 ProjectionMatrix;
     float4x4 WorldViewMatrix;
     float4x4 WorldViewProjectionMatrix;
+    
+    float4 CameraWorldPosition;
 }
 
 void Skinning()

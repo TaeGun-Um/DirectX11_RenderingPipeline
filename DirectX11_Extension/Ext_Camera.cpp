@@ -38,7 +38,7 @@ void Ext_Camera::Start()
 	// CameraRenderTarget->CreateEffect<Ext_Blur>();
 	// CameraRenderTarget->CreateEffect<Ext_Distortion>();
 	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
-	// CameraRenderTarget->CreateEffect<Ext_TextureTest>();
+	CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
@@ -212,7 +212,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 		// View/Projection은 한 번만 업데이트
 		if (UpdatedComponents.insert(Owner).second)
 		{
-			Owner->Rendering(_Deltatime, GetViewMatrix(), GetProjectionMatrix()); // 행렬 업데이트
+			Owner->Rendering(_Deltatime, GetTransform()->GetLocalPosition(), GetViewMatrix(), GetProjectionMatrix()); // 행렬 업데이트
 		}
 
 		Unit->Rendering(_Deltatime); // 렌더링 파이프라인 세팅 후 드로우콜
@@ -233,7 +233,7 @@ void Ext_Camera::Rendering(float _Deltatime)
 		{
 			if (!Unit->GetIsShadow()) continue;
 
-			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
+			Unit->GetOwnerMeshComponent().lock()->GetTransform()->SetCameraMatrix(GetTransform()->GetLocalPosition(), LTData->LightViewMatrix, LTData->LightProjectionMatrix); // 라이트 기준으로 행렬 세팅
 			Unit->RenderUnitShadowSetting(); 
 
 			std::shared_ptr<Ext_DirectXMaterial> ShadowPipeLine;

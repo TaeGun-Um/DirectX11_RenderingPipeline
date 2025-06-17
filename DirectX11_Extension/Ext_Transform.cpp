@@ -24,8 +24,10 @@ void TransformData::CalculateWorldMatrix(const float4x4& _ParentMatrix)
 }
 
 // 뷰, 프로젝션 생성
-void TransformData::SetViewProjectionMatrix(const float4x4& _View, const float4x4& _Projection)
+void TransformData::SetViewProjectionMatrix(const float4 _CameraWorldPosition, const float4x4& _View, const float4x4& _Projection)
 {
+	CameraWorldPosition = _CameraWorldPosition;
+
 	ViewMatrix = _View;
 	ProjectionMatrix = _Projection;
 	WorldViewMatrix = WorldMatrix * ViewMatrix;

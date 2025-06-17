@@ -47,10 +47,21 @@ void Ext_DirectXResourceLoader::LoadTexture()
 
 	// 큐브맵을 위한 텍스쳐 로드
 	{
-		//Base_Directory Dir;
-		//Dir.MakePath("../Resource/FX/ReflectionTexture/CubeMap");
-		//std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
-		//Ext_DirectXTexture::LoadCubeMap("SkyBox", Paths);
+		Base_Directory Dir;
+		Dir.MakePath("../Resource/FX/ReflectionTexture/CubeMap");
+		std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
+		
+		std::vector<std::shared_ptr<Ext_DirectXTexture>> Texs;
+
+		for (const std::string& FilePath : Paths)
+		{
+			Dir.SetPath(FilePath.c_str());
+			std::string ExtensionName = Dir.GetExtension();
+			std::string FileName = Dir.GetFileName();
+			Texs.push_back(Ext_DirectXTexture::LoadTexture(FilePath.c_str()));
+		}
+
+		Ext_DirectXTexture::LoadCubeMap("SkyBox", Texs);
 	}
 }
 
@@ -217,6 +228,23 @@ void Ext_DirectXResourceLoader::MakeSampler()
 		SamperInfo.MaxLOD = FLT_MAX;
 
 		Ext_DirectXSampler::CreateSampler("ShadowCmpSampler", SamperInfo);
+	}
+
+	// 리플렉션
+	{
+		D3D11_SAMPLER_DESC SamperInfo = {};
+
+		SamperInfo.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		SamperInfo.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+		SamperInfo.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		SamperInfo.MipLODBias = 0.0f;
+		SamperInfo.MaxAnisotropy = 1;
+		SamperInfo.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamperInfo.MinLOD = 0.0f;
+		SamperInfo.MaxLOD = 0.0f;
+
+		Ext_DirectXSampler::CreateSampler("CubeMapSampler", SamperInfo);
 	}
 }
 

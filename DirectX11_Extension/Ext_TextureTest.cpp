@@ -14,7 +14,7 @@ void Ext_TextureTest::Start()
 
 void Ext_TextureTest::PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, float _DeltaTime)
 {
-	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("Ch03_1001_Diffuse.png");
+	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("SkyBox");
 
 	PostUnit->GetBufferSetter().SetTexture(Tex, "DiffuseTex");
 	PostTarget->RenderTargetClear();

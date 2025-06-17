@@ -1,14 +1,17 @@
 #include "LightData.fx"
 
 Texture2D BaseColorTex : register(t0); // 텍스처 자원
+TextureCube ReflectionTexture : register(t1);
 SamplerState Sampler : register(s0); // 샘플러
+SamplerState CubeMapSampler : register(s1); // 샘플러
 
 struct PSInput
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD;
-    float3 WorldPosition : POSITION;
+    float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float4 CameraWorldPosition : POSITION1;
 };
 
 struct PSOutPut
@@ -23,10 +26,21 @@ struct PSOutPut
 PSOutPut Graphics_PS(PSInput _Input) : SV_TARGET
 {
     PSOutPut Output = (PSOutPut) 0;
+
+    float3 CameraPos = _Input.CameraWorldPosition;
+    float3 ViewDir = normalize(CameraPos - _Input.WorldPosition);
+    float3 Normal = normalize(_Input.WorldNormal);
     
-    Output.MeshTarget = BaseColorTex.Sample(Sampler, _Input.TexCoord); // 텍스쳐컬러
-    Output.PositionTarget = float4(_Input.WorldPosition.xyz, 1.0f); // 월드스페이스 Position
-    Output.NormalTarget = float4(_Input.WorldNormal, 1.0f); // 월드스페이스 Normal
+    float3 ReflectDir = normalize(2.0f * Normal * dot(ViewDir, Normal) - ViewDir);
+    float4 ReflectionColor = ReflectionTexture.Sample(CubeMapSampler, ReflectDir);
+    
+    float metallic = 1.0f;
+
+    Output.MeshTarget = BaseColorTex.Sample(Sampler, _Input.TexCoord);
+    Output.MeshTarget += float4(lerp(float3(0, 0, 0), ReflectionColor.rgb * 0.5f, metallic), 0.0f);
+
+    Output.PositionTarget = float4(_Input.WorldPosition, 1.0f);
+    Output.NormalTarget = float4(_Input.WorldNormal, 1.0f);
 
     return Output;
 }

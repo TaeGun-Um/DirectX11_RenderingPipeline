@@ -5,6 +5,7 @@
 #include "Ext_MeshComponentUnit.h"
 #include "Ext_Transform.h"
 #include "Ext_Camera.h"
+#include "Ext_DirectXTexture.h"
 
 void Ext_MeshComponent::Release()
 {
@@ -25,9 +26,9 @@ void Ext_MeshComponent::Start()
 }
 
 // 각 메시들의 Rendering() 함수를 매틱 실행
-void Ext_MeshComponent::Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
+void Ext_MeshComponent::Rendering(float _Deltatime, const float4 _CameraWorldPosition, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
 {
-	GetTransform()->SetCameraMatrix(_ViewMatrix, _ProjectionMatrix); // 뷰, 프로젝션 세팅
+	GetTransform()->SetCameraMatrix(_CameraWorldPosition, _ViewMatrix, _ProjectionMatrix); // 뷰, 프로젝션 세팅
 }
 
 // 생성하면 카메라에도 저장하기 위해 실행
@@ -83,6 +84,22 @@ void Ext_MeshComponent::SetTexture(std::string_view _TextureName, std::string_vi
 void Ext_MeshComponent::SetSampler(SamplerType _TypeValue)
 {
 	Unit->SetSampler(_TypeValue);
+}
+
+void Ext_MeshComponent::SetSampler(std::string_view _SamplerName, std::string_view _SlotName)
+{
+	Unit->SetSampler(_SamplerName, _SlotName);
+}
+
+// 큐브맵 텍스쳐
+void Ext_MeshComponent::SetTexture(std::shared_ptr<Ext_DirectXTexture> _Texture, std::string_view _SettingName)
+{
+	if (nullptr == Unit)
+	{
+		MsgAssert("유닛이 없어 텍스쳐 세팅이 불가능합니다.");
+	}
+
+	Unit->BufferSetter.SetTexture(_Texture, _SettingName);
 }
 
 void Ext_MeshComponent::ShadowOn(ShadowType _Type)

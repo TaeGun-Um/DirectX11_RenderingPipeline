@@ -348,3 +348,15 @@ void TextureSetter::TextureReset()
 		break;
 	}
 }
+
+bool Ext_DirectXBufferSetter::IsTexture(std::string_view _Name)
+{
+	std::string Key = Base_String::ToUpper(_Name);
+
+	if (TextureSetters.end() != TextureSetters.find(Key))
+	{
+		return true;
+	}
+
+	return false;
+}

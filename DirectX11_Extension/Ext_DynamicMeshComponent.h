@@ -22,7 +22,7 @@ public:
 
 protected:
     void Start() override;
-    void Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
+    void Rendering(float _DeltaTime, const float4 _CameraWorldPosition, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix) override;
 
 private:
     float AccumulatedTime = 0.0f; // 애니메이션 재생 시간을 누적할 변수

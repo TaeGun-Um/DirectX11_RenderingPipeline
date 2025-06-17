@@ -45,10 +45,10 @@ bool Ext_DynamicMeshComponent::IsAnimationEnd()
     return Animator->IsAnimationEnd();
 }
 
-void Ext_DynamicMeshComponent::Rendering(float _DeltaTime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
+void Ext_DynamicMeshComponent::Rendering(float _DeltaTime, const float4 _CameraWorldPosition, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix)
 {
     // 기본 렌더링 (Transform / Material 셋업 후)
-    __super::Rendering(_DeltaTime, _ViewMatrix, _ProjectionMatrix);
+    __super::Rendering(_DeltaTime, _CameraWorldPosition, _ViewMatrix, _ProjectionMatrix);
 
     Animator->UpdateAnimation(_DeltaTime);
 }

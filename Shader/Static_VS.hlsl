@@ -11,8 +11,9 @@ struct VSOutput
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD;
-    float3 WorldPosition : POSITION;
+    float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float4 CameraWorldPosition : POSITION1;
 };
 
 VSOutput Static_VS(VSInput _Input)
@@ -32,6 +33,8 @@ VSOutput Static_VS(VSInput _Input)
     
     float3 WorldNorm = mul(_Input.Normal.xyz, (float3x3) WorldMatrix);
     OutPut.WorldNormal = WorldNorm;
+    
+    OutPut.CameraWorldPosition = CameraWorldPosition;
     
     return OutPut;
 }

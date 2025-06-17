@@ -14,12 +14,12 @@ public:
 	Ext_ReflectionComponent& operator=(const Ext_ReflectionComponent& _Other) = delete;
 	Ext_ReflectionComponent& operator=(Ext_ReflectionComponent&& _Other) noexcept = delete;
 
-	void ReflectionInitialize(std::string_view _CaptureTextureName, const float4& _Scale = float4(128, 128));
+	void ReflectionInitialize(std::shared_ptr<class Ext_Actor> _Owner, std::string_view _CaptureTextureName, const float4& _Scale = float4(128, 128));
+	std::shared_ptr<class Ext_DirectXTexture> GetReflectionCubeTexture() { return CubeTexture; }
 
 protected:
 	
 private:
-	static std::shared_ptr<class Ext_DirectXRenderTarget> CaptureTarget;
 	std::shared_ptr<class Ext_DirectXTexture> CubeTexture = nullptr;
 	
 };

@@ -22,7 +22,9 @@ public:
 	
 	void SetTexture(std::string_view _TextureName, TextureType _TypeValue = TextureType::BaseColor); // 텍스쳐 변경하기
 	void SetTexture(std::string_view _TextureName, std::string_view _SlotName);
+	void SetTexture(std::shared_ptr<class Ext_DirectXTexture> _Texture, std::string_view _SettingName); // 텍스쳐 이름으로 지정해서 변경
 	void SetSampler(SamplerType _TypeValue); // 샘플러 변경하기
+	void SetSampler(std::string_view _SamplerName, std::string_view _SlotName);
 
 	// Getter, Setter
 	std::weak_ptr<class Ext_Camera> GetOwnerCamera() { return OwnerCamera; }
@@ -33,12 +35,14 @@ public:
 protected:
 	virtual void Start() override;
 	void Release() override;
-	virtual void Rendering(float _Deltatime, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix); // 메시 렌더링 업데이트
+	virtual void Rendering(float _Deltatime, const float4 _CameraWorldPosition, const float4x4& _ViewMatrix, const float4x4& _ProjectionMatrix); // 메시 렌더링 업데이트
 
 	void PushMeshToCamera(std::string_view _CameraName); // 메시 컴포넌트는 생성하면 카메라에 넣기 진행(지금은 메인 카메라로 들어감)
 	
 	std::weak_ptr<class Ext_Camera> OwnerCamera; // 자신을 소유한 카메라
 	std::shared_ptr<class Ext_MeshComponentUnit> Unit; // Mesh와 Pipeline 정보 모음
+
+	std::vector<std::vector<std::shared_ptr<class Ext_MeshComponentUnit>>> CubeUnits;
 
 private:
 	
