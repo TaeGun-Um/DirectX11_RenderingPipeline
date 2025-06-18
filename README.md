@@ -11,10 +11,11 @@
 - OS : Windows 10 이상
 - 개발환경 : Visual Studio 2022(v143) 이상
 - 언어 표준 : ISO C++20 표준
-- DirectX SDK : Wondows SDK에 포함된 DirectX 11 헤더 및 라이브러리 활용
+- DirectX SDK : Windows SDK에 포함된 DirectX 11 헤더 및 라이브러리 활용
 - 외부 라이브러리
   - assimp : Mesh 로드용
-  - DirectTex : Texture 로드용
+  - DirectXTex : Texture 로드용
+  - DirectXTK : CubeMap 로드 및 생성용
   - imgui : UI 라이브러리
 
 [빌드]
@@ -29,6 +30,6 @@
 - W/A/S/D : 이동
 - 마우스 드래그 : 카메라 회전 
 - F1 : 프리카메라 모드 On/Off
+- F4 : 프리카메라 모드에서 마우스 포커싱 탈출
 - Space bar : 점프/카메라 Up
 - Ctrl : 카메라 Down
-- [임시] 마우스 포커스를 윈도우창에 둔 후 Alt+F4 : 프로젝트 종료
