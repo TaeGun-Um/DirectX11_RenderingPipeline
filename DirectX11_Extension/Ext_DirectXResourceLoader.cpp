@@ -45,10 +45,10 @@ void Ext_DirectXResourceLoader::LoadTexture()
 		}
 	}
 
-	// 큐브맵을 위한 텍스쳐 로드
+	// 스카이박스를 위한 텍스쳐 로드
 	{
 		Base_Directory Dir;
-		Dir.MakePath("../Resource/FX/ReflectionTexture/CubeMap");
+		Dir.MakePath("../Resource/FX/ReflectionTexture/SkyBox");
 		std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
 		
 		std::vector<std::shared_ptr<Ext_DirectXTexture>> Texs;
@@ -62,6 +62,25 @@ void Ext_DirectXResourceLoader::LoadTexture()
 		}
 
 		Ext_DirectXTexture::LoadCubeMap("SkyBox", Texs);
+	}
+
+	// 널큐브맵을 위한 텍스쳐 로드
+	{
+		Base_Directory Dir;
+		Dir.MakePath("../Resource/FX/ReflectionTexture/NullCubeMap");
+		std::vector<std::string> Paths = Dir.GetAllFile({ "png" });
+
+		std::vector<std::shared_ptr<Ext_DirectXTexture>> Texs;
+
+		for (const std::string& FilePath : Paths)
+		{
+			Dir.SetPath(FilePath.c_str());
+			std::string ExtensionName = Dir.GetExtension();
+			std::string FileName = Dir.GetFileName();
+			Texs.push_back(Ext_DirectXTexture::LoadTexture(FilePath.c_str()));
+		}
+
+		Ext_DirectXTexture::LoadCubeMap("NullCubeMap", Texs);
 	}
 }
 
@@ -500,6 +519,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Static");
 		NewRenderingPipeline->SetVertexShader("Static_VS");
 		NewRenderingPipeline->SetPixelShader("Graphics_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
+	// 그래픽스 스태틱 메시(큐브맵)
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticCUBE");
+		NewRenderingPipeline->SetVertexShader("Static_VS");
+		NewRenderingPipeline->SetPixelShader("GraphicsCUBE_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("EngineDepth");
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");

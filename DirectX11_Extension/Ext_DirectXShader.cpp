@@ -135,7 +135,7 @@ void Ext_DirectXShader::ShaderResourceSetting()
 
 			if (D3D_SRV_DIMENSION_TEXTURECUBE == ResDesc.Dimension)
 			{
-				std::shared_ptr<Ext_DirectXTexture> TextureResource = Ext_DirectXTexture::Find("Null.png");
+				std::shared_ptr<Ext_DirectXTexture> TextureResource = Ext_DirectXTexture::Find("NullCubeMap");
 
 				TextureSetter Setter;
 				Setter.OwnerShader = GetSharedFromThis<Ext_DirectXShader>();

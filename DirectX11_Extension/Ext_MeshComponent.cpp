@@ -21,7 +21,6 @@ void Ext_MeshComponent::Release()
 
 void Ext_MeshComponent::Start()
 {
-	//GetTransform()->SetOwnerComponent(_Component);
 	PushMeshToCamera("MainCamera");
 }
 

@@ -147,6 +147,9 @@
     <FxCompile Include="SkyBox_VS.hlsl">
       <Filter>04.CubeMap</Filter>
     </FxCompile>
+    <FxCompile Include="GraphicsCUBE_PS.hlsl">
+      <Filter>02.Deferred\00.Mesh</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Transform.fx">

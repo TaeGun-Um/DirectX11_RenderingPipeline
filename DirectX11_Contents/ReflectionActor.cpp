@@ -30,7 +30,7 @@ void ReflectionActor::Start()
 	//}
 
 	MeshComp = CreateComponent<Ext_MeshComponent>("BasicMesh");
-	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::Static);
+	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::StaticCUBE);
 
 	MeshComp->SetTexture("Gray.png");
 	MeshComp->ShadowOn(ShadowType::Static);
@@ -51,11 +51,9 @@ void ReflectionActor::Update(float _DeltaTime)
 
 void ReflectionActor::SetReflection()
 {
-	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("SkyBox");
-
 	Reflection = std::make_shared<Ext_ReflectionComponent>();
 	static int n = 0;
 	MeshComp->SetSampler("CubeMapSampler", "CubeMapSampler");
 	Reflection->ReflectionInitialize(GetSharedFromThis<Ext_Actor>(), "TestReflection" + std::to_string(n++), float4(512, 512));
-	MeshComp->SetTexture(Tex, "ReflectionTexture");
+	MeshComp->SetTexture(Reflection->GetReflectionCubeTexture(), "ReflectionTexture");
 }

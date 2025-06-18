@@ -48,6 +48,7 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::Debug: MaterialString = "Debug"; break; // 디버깅용
 	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯
 	case MaterialType::NonGDynamic: MaterialString = "NonGDynamic"; break; // 아마 안쓸듯
+	case MaterialType::StaticCUBE: MaterialString = "StaticCUBE"; break;
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 

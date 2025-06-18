@@ -85,7 +85,6 @@ public:
 
 	bool IsTexture(std::string_view _Name); // 텍스쳐가 있는지 확인
 	
-
 protected:
 	
 private:

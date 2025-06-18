@@ -42,37 +42,37 @@ void Ext_ReflectionComponent::ReflectionInitialize(std::shared_ptr<class Ext_Act
 		}
 
 		// Forward
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot, float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot, float4(700, 700));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Forword.png"));
 
 		// Back
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 180, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 180, 0), float4(512, 512));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Back.png"));
 
 		// Right
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 90, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, 90, 0), float4(512, 512));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Right.png"));
 
 		// Left
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, -90, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(0, -90, 0), float4(512, 512));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Left.png"));
 
 		// Top
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(-90, 0, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(-90, 0, 0), float4(512, 512));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Top.png"));
 
 		// Bottom
-		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(90, 0, 0), float4(900, 900));
+		Scene->GetMainCamera()->CaptureCubemap(CenterPos, CenterRot + float4(90, 0, 0), float4(512, 512));
 		CaptureTarget->RenderTargetClear();
 		CaptureTarget->Merge(Scene->GetMainCamera()->GetCameraRenderTarget());
 		Ext_ScreenShoot::RenderTargetShoot_DxTex(CaptureTarget, Path, _CaptureTextureName.data() + std::string("_Bottom.png"));

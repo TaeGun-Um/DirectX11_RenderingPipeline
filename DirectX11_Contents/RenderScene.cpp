@@ -128,7 +128,7 @@ void RenderScene::Start()
 
 	// 액터 생성
 	{
-		CreateActor<Character>("Character");
+		
 		CreateActor<TestPlatform>("TestPlatform");
 
 		std::shared_ptr<CubeActor> CubeActor1 = CreateActor<CubeActor>("CubeActor1");
@@ -173,8 +173,7 @@ void RenderScene::Start()
 		ReflectionActor1->GetTransform()->SetLocalPosition({ 0.f, 100.f, -100.f});
 		ReflectionActor1->SetReflection();
 
-		// 스카이박스
-		// std::shared_ptr<SkyBoxActor> SkyBox = CreateActor<SkyBoxActor>("SkyBox");
+		CreateActor<Character>("Character");
 	}
 
 	// 스카이박스 설정

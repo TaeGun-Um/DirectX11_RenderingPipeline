@@ -42,7 +42,7 @@ void StoneWallActor::Start()
 	//}
 
 	WallBodyMesh = CreateComponent<Ext_MeshComponent>("WallBodyMesh");
-	WallBodyMesh->CreateMeshComponentUnit("Rect", MaterialType::Static);
+	WallBodyMesh->CreateMeshComponentUnit("Rect", MaterialType::StaticCUBE);
 	WallBodyMesh->SetTexture("Gray.png");
 }
 

@@ -19,8 +19,9 @@ struct VSOutput
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD;
-    float3 WorldPosition : POSITION;
+    float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float4 CameraWorldPosition : POSITION1;
 };
 
 VSOutput Dynamic_VS(VSInput _Input)
@@ -78,6 +79,8 @@ VSOutput Dynamic_VS(VSInput _Input)
     
     float3 WorldNorm = mul(SkinNormal, (float3x3) WorldMatrix);
     Output.WorldNormal = WorldNorm;
+    
+    Output.CameraWorldPosition = CameraWorldPosition;
     
     return Output;
 }

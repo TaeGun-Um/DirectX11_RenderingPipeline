@@ -418,41 +418,11 @@ void Ext_Camera::CaptureCubemap(const float4& _Pos, const float4& _Rot, const fl
 	Height = _CaptureScale.y;
 
 	CameraRenderTarget->RenderTargetClear();
-	//CamPosTarget->Clear();
 	MeshRenderTarget->RenderTargetClear();
 
 	if (nullptr != LightMergeRenderTarget)
 	{
 		LightMergeRenderTarget->RenderTargetClear();
-	}
-
-	// CamAlphaTarget->Clear();
-
-	for (auto& LightIter : GetOwnerScene().lock()->Lights)
-	{
-		std::shared_ptr<Ext_Light> CurLight = LightIter.second;
-
-		//if (false == CurLight->IsShadow())
-		//{
-		//	continue;
-		//}
-
-		std::shared_ptr<Ext_DirectXRenderTarget> ShadowTarget = CurLight->GetShadowRenderTarget();
-		//std::shared_ptr<Ext_DirectXRenderTarget> BakeTarget = CurLight->GetBakeTarget(Light->GetBakeTargetIndex());
-
-		if (nullptr != ShadowTarget)
-		{
-			ShadowTarget->RenderTargetClear();
-
-			if (CurLight->GetLightData()->LightType == static_cast<int>(LightType::Point))
-			{
-				//ShadowTarget->MergeCubemap(BakeTarget);
-			}
-			else
-			{
-				// ShadowTarget->Merge(BakeTarget);
-			}
-		}
 	}
 
 	CameraTransformUpdate();
