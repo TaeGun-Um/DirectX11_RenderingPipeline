@@ -49,7 +49,6 @@ void Ext_OldFilm::PostProcessing(Ext_DirectXRenderTarget* _MainRenderTarget, std
 	PostUnit->Rendering(_DeltaTime);
 	PostUnit->GetBufferSetter().AllTextureResourceReset();
 
-	//_MainRenderTarget->RenderTargetClear();
 	_MainRenderTarget->RenderTargetSetting();
 	_MainRenderTarget->Merge(PostTarget);
 }

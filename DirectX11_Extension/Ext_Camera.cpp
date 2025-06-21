@@ -52,6 +52,10 @@ void Ext_Camera::Start()
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 5 MaskTarget
 	MeshRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
 
+	// 알파 패스 렌더타겟
+	AlphaRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 AlphaRenderTarget
+	AlphaRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
+
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
 	LightRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 DiffuseTarget
 	LightRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 SpecularTarget
@@ -95,6 +99,10 @@ void Ext_Camera::Start()
 	SkyBoxUnit.MeshComponentUnitInitialize("FullBox", "SkyBox");
 	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("SkyBox");
 	SkyBoxUnit.GetBufferSetter().SetTexture(Tex, "CubeMapTex");
+
+	// 알파용
+	//AlphaUnit.MeshComponentUnitInitialize("FullRect", MaterialType::MeshMerge);
+	
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -190,8 +198,9 @@ void Ext_Camera::Rendering(float _Deltatime)
 		SkyBoxRendering();
 	}
 
+	AlphaRenderTarget->RenderTargetClear();
 	MeshRenderTarget->RenderTargetClear();
-	MeshRenderTarget->RenderTargetSetting();
+	// MeshRenderTarget->RenderTargetSetting();
 
 	// 전체 유닛 Z정렬 후 렌더링
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
@@ -224,6 +233,15 @@ void Ext_Camera::Rendering(float _Deltatime)
 	{
 		auto Owner = Unit->GetOwnerMeshComponent().lock();
 		if (!Owner) continue;
+
+		if (Unit->GetIsAlpha())
+		{
+			AlphaRenderTarget->RenderTargetSetting();
+		}
+		else
+		{
+			MeshRenderTarget->RenderTargetSetting();
+		}
 
 		// View/Projection은 한 번만 업데이트
 		if (UpdatedComponents.insert(Owner).second)
@@ -292,19 +310,16 @@ void Ext_Camera::Rendering(float _Deltatime)
 	LightMergeRenderTarget->RenderTargetSetting();
 	LightMergeUnit.Rendering(_Deltatime);
 
-	// MaskRenderTarget->RenderTargetClear();
-	// MaskRenderTarget->Merge(MeshRenderTarget, 5);
-	// MaskRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
-
 	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
 	CameraRenderTarget->RenderTargetClear();
 	CameraRenderTarget->Merge(SkyBoxRenderTarget);
 	CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
 	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
 	
-	//CameraRenderTarget->Merge(MaskRenderTarget);
+	// CameraRenderTarget->Merge(AlphaRenderTarget); // AlphaPass값 합치기
 
 	CameraRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
+
 }
 
 // 카메라 조종

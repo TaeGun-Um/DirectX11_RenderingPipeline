@@ -72,11 +72,11 @@ void RenderScene::Start()
 		Ext_Imgui::CreateImgui<RendertargetGUI>("RendertargetGUI");
 		RendertargetGUI::Clear();
 		RendertargetGUI::AddDebugRenderTarget(0, "MeshRenderTarget", GetMainCamera()->GetMeshRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(1, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(2, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(3, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(4, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
-		RendertargetGUI::AddDebugRenderTarget(5, "SkyBox RenderTarget", GetMainCamera()->GetSkyBoxRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(1, "AlphaRenderTarget", GetMainCamera()->GetAlphaRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(2, "Shadow RenderTarget", GetDirectionalLight()->GetShadowRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(3, "Light RenderTarget", GetMainCamera()->GetLightRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(4, "Light Merge RenderTarget", GetMainCamera()->GetLightMergeRenderTarget());
+		RendertargetGUI::AddDebugRenderTarget(5, "Last RenderTarget", GetMainCamera()->GetCameraRenderTarget());
 
 		// std::vector<std::shared_ptr<class Ext_PostProcess>>
 		// Ext_TextureTest

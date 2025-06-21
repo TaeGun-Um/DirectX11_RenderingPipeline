@@ -33,6 +33,7 @@ public:
 	void ShadowOff();
 
 	void SetMask();
+	void SetAlpha();
 
 protected:
 	virtual void Start() override;

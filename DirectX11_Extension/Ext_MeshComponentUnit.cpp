@@ -49,6 +49,8 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::NonGStatic: MaterialString = "NonGStatic"; break; // 아마 안쓸듯
 	case MaterialType::NonGDynamic: MaterialString = "NonGDynamic"; break; // 아마 안쓸듯
 	case MaterialType::StaticCUBE: MaterialString = "StaticCUBE"; break;
+	case MaterialType::StaticAlpha: MaterialString = "StaticAlpha"; break;
+	case MaterialType::MeshMerge: MaterialString = "MeshMerge"; break;
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 
@@ -91,14 +93,14 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	}
 
 	// [4] 빛 상수버퍼 세팅하기(스태틱, 다이나믹은 빛 연산 실시를 위해 추가 세팅)
-	//if (_SettingValue == MaterialType::Static || _SettingValue == MaterialType::Dynamic || _SettingValue == MaterialType::PBR)
-	//{
-	//	const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
-	//	BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	//}
+	if ("StaticAlpha" == _MaterialName)
+	{
+		const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
+		BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
+	}
 
 	// [5] 렌더 데이터 세팅하기
-	if (nullptr != GetOwnerMeshComponent().lock() && "Debug" != _MaterialName)
+	if (nullptr != GetOwnerMeshComponent().lock() && "Debug" != _MaterialName && "StaticAlpha" != _MaterialName)
 	{
 		BufferSetter.SetConstantBufferLink("RenderingData", RederData);
 	}
@@ -222,4 +224,9 @@ void Ext_MeshComponentUnit::RenderUnitShadowSetting()
 void Ext_MeshComponentUnit::SetMask()
 {
 	RederData.bIsMask = 1;
+}
+
+void Ext_MeshComponentUnit::SetAlpha()
+{
+	bIsAlpha = true;
 }

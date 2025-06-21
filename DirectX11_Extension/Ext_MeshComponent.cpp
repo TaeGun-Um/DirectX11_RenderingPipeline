@@ -120,3 +120,8 @@ void Ext_MeshComponent::SetMask()
 {
 	Unit->SetMask();
 }
+
+void Ext_MeshComponent::SetAlpha()
+{
+	Unit->SetAlpha();
+}

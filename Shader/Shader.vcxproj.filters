@@ -153,6 +153,12 @@
     <FxCompile Include="RenderingData.fx">
       <Filter>00.Header</Filter>
     </FxCompile>
+    <FxCompile Include="MeshMerge_VS.hlsl">
+      <Filter>02.Deferred\03.RenderTargetMerge</Filter>
+    </FxCompile>
+    <FxCompile Include="MeshMerge_PS.hlsl">
+      <Filter>02.Deferred\03.RenderTargetMerge</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Transform.fx">

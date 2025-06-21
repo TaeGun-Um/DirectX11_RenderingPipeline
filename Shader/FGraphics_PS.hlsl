@@ -11,10 +11,18 @@ struct PSInput
     float3 WorldNormal : NORMAL;
 };
 
+struct PSOutput
+{
+    float4 MeshTarget : SV_TARGET0;
+    float4 PositionTarget : SV_TARGET1; // World Position
+};
+
 // 각 벡터에 normalize를 해주는 이유는, 명시적으로 normalize된 벡터를 넣어줬다 하더라도 
 // 임의의 값이 어떻게 들어올지 모르기 때문에 그냥 해주는것(안정성을 위한 처리라고 보면 됨)
-float4 FGraphics_PS(PSInput _Input) : SV_TARGET
+PSOutput FGraphics_PS(PSInput _Input) : SV_TARGET
 {
+    PSOutput Output = (PSOutput) 0;
+    
     // 텍스처 색상
     float4 Albedo = BaseColorTex.Sample(Sampler, _Input.TexCoord);
     
@@ -95,5 +103,11 @@ float4 FGraphics_PS(PSInput _Input) : SV_TARGET
     }
     
     Albedo.rgb *= AccumLightColor;
-    return Albedo;
+    
+    Albedo.a = 0.5f;
+    
+    Output.MeshTarget = Albedo;
+    Output.PositionTarget = float4(_Input.WorldPosition, 1.0f);
+    
+    return Output;
 }

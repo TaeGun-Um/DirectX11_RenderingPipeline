@@ -24,6 +24,8 @@ enum class MaterialType
     NonGStatic,              // 그래픽스 세팅X 스태틱, 이제 안씀
     NonGDynamic,          // 그래픽스 세팅X 다이나믹, 이제 안씀
     StaticCUBE,
+    StaticAlpha,
+    MeshMerge,
     Unknown
 };
 

@@ -44,6 +44,9 @@ public:
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetLightMergeRenderTarget() { return LightMergeRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetCameraRenderTarget() { return CameraRenderTarget; }
 	std::shared_ptr<class Ext_DirectXRenderTarget> GetSkyBoxRenderTarget() { return SkyBoxRenderTarget; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetAlphaRenderTarget() { return AlphaRenderTarget; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetMaskRenderTarget() { return MaskRenderTarget; }
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetMeshMergeRenderTarget() { return MeshMergeRenderTarget; }
 
 	void CaptureCubemap(const float4& _Pos, const float4& _Rot, const float4& _CaptureScale); // 큐브맵 찍기
 
@@ -80,11 +83,13 @@ private:
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightMergeRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget; // 합본
 	std::shared_ptr<class Ext_DirectXRenderTarget> SkyBoxRenderTarget; // 스카이박스용
-
-	std::shared_ptr<class Ext_DirectXRenderTarget> MaskRenderTarget; // 스카이박스용
+	std::shared_ptr<class Ext_DirectXRenderTarget> AlphaRenderTarget; // 알파만 따로 그리기용
+	std::shared_ptr<class Ext_DirectXRenderTarget> MaskRenderTarget; // 마스킹용
+	std::shared_ptr<class Ext_DirectXRenderTarget> MeshMergeRenderTarget; // MeshMerge용
 
 	Ext_MeshComponentUnit LightUnit;
 	Ext_MeshComponentUnit LightMergeUnit;
+	Ext_MeshComponentUnit MeshMergeUnit;
 
 	//////////////////////////////////// 테스트용
 	D3D11_VIEWPORT ViewPortData; 

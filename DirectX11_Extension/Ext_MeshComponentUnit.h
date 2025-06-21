@@ -66,8 +66,9 @@ public:
 
 	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
 
-
 	void SetMask();
+	void SetAlpha();
+	bool GetIsAlpha() { return bIsAlpha; }
 
 protected:
 	
@@ -89,4 +90,5 @@ private:
 	ShadowType ShadowT = ShadowType::Unknown; // ShadowOn 하면 정해짐
 
 	RenderingData RederData;
+	bool bIsAlpha = false;
 };

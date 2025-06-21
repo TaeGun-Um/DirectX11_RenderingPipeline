@@ -534,6 +534,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
+	// 그래픽스 Alpha 메시
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticAlpha");
+		NewRenderingPipeline->SetVertexShader("FStatic_VS");
+		NewRenderingPipeline->SetPixelShader("FGraphics_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
+	}
+
 	// 그래픽스 다이나믹 메시
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("Dynamic");
@@ -721,6 +731,16 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetBlendState("BaseBlend");
 		NewRenderingPipeline->SetDepthState("SkyDepth");
 		NewRenderingPipeline->SetRasterizer("SkyRasterizer");
+	}
+
+	// Mesh간 Merge용
+	{
+		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("MeshMerge");
+		NewRenderingPipeline->SetVertexShader("MeshMerge_VS");
+		NewRenderingPipeline->SetPixelShader("MeshMerge_PS");
+		NewRenderingPipeline->SetBlendState("BaseBlend");
+		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
 	// RenderTarget Merge를 위해 MergeUnit에 값 넣어주기 위해 호출
