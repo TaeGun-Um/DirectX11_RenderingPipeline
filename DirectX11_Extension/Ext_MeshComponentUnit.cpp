@@ -50,7 +50,7 @@ std::string MaterialSettingToString(MaterialType _Setting)
 	case MaterialType::NonGDynamic: MaterialString = "NonGDynamic"; break; // 아마 안쓸듯
 	case MaterialType::StaticCUBE: MaterialString = "StaticCUBE"; break;
 	case MaterialType::StaticAlpha: MaterialString = "StaticAlpha"; break;
-	case MaterialType::MeshMerge: MaterialString = "MeshMerge"; break;
+	case MaterialType::AlphaMerge: MaterialString = "AlphaMerge"; break;
 	case MaterialType::Unknown: MsgAssert("뭔가 잘못됨"); break;
 	}
 

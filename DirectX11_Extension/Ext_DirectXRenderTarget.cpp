@@ -4,11 +4,13 @@
 #include "Ext_PostProcess.h"
 
 Ext_MeshComponentUnit Ext_DirectXRenderTarget::MergeUnit;
+Ext_MeshComponentUnit Ext_DirectXRenderTarget::AlphaMergeUnit;
 
 // MergeUnit 초기화용
 void Ext_DirectXRenderTarget::RenderTargetMergeUnitInitialize()
 {
 	MergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::RenderTargetMerge);
+	AlphaMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::AlphaMerge);
 }
 
 // View를 기반으로 렌더타겟 생성
@@ -222,6 +224,16 @@ void Ext_DirectXRenderTarget::Merge(Ext_DirectXRenderTarget* _OtherRenderTarget,
 	MergeUnit.BufferSetter.SetTexture(_OtherRenderTarget->Textures[_Index], "DiffuseTex"); // 텍스쳐슬롯의 텍스쳐 값을 변경
 	MergeUnit.Rendering(0.0f); // MergeUnit의 렌더링 파이프라인 진행 후 드로우콜
 	MergeUnit.BufferSetter.AllTextureResourceReset(); // MergeUnit은 전역 변수라서 이거로 비워줌(다른곳에서 쓰게)
+}
+
+// Alpha 합치기
+void Ext_DirectXRenderTarget::AlphaMerge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index /*= 0*/)
+{
+	RenderTargetSetting(); // Merge를 호출한 RenderTarget에 그림
+
+	AlphaMergeUnit.BufferSetter.SetTexture(_OtherRenderTarget->Textures[_Index], "DiffuseTex"); // 텍스쳐슬롯의 텍스쳐 값을 변경
+	AlphaMergeUnit.Rendering(0.0f); // MergeUnit의 렌더링 파이프라인 진행 후 드로우콜
+	AlphaMergeUnit.BufferSetter.AllTextureResourceReset(); // MergeUnit은 전역 변수라서 이거로 비워줌(다른곳에서 쓰게)
 }
 
 void Ext_DirectXRenderTarget::PostProcessInitialize(std::shared_ptr<Ext_PostProcess> _PostProcess)

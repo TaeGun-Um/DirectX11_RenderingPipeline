@@ -40,8 +40,12 @@ void Ext_Camera::Start()
 	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
 	// CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
+	// 마스킹 렌더타겟
 	// MaskRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 Mask
-	// MaskRenderTarget->CreateEffect<Ext_Distortion>();
+
+	// 알파 패스 렌더타겟
+	AlphaRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 AlphaRenderTarget
+	AlphaRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget (World)
 
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
@@ -51,10 +55,6 @@ void Ext_Camera::Start()
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 BinormalTarget (PBR만)
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 5 MaskTarget
 	MeshRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
-
-	// 알파 패스 렌더타겟
-	AlphaRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 AlphaRenderTarget
-	AlphaRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
 
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
 	LightRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 DiffuseTarget
@@ -74,23 +74,17 @@ void Ext_Camera::Start()
 	LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "NormalTex");
 	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
 
-	// PBR
-	//LightUnit.MeshComponentUnitInitialize("FullRect", MaterialType::PBRDeferredLight);
-	//const LightDatas& LTDatas = GetOwnerScene().lock()->GetLightDataBuffer();
-	//LightUnit.BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
-	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "PositionTex");
-	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(2), "NormalTex");
-	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(3), "TangentTex");
-	//LightUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(4), "BinormalTex");
-	//LightUnit.BufferSetter.SetTexture("Null.png", TextureType::Shadow);
-
 	// LightMergeRenderTarget(디퍼드 라이트 Merge)를 위한 Unit
 	LightMergeUnit.MeshComponentUnitInitialize("FullRect", MaterialType::DeferredMerge);
+	// LightMergeUnit.BufferSetter.SetConstantBufferLink("CameraPosition", GetTransform()->GetTransformData()->WorldPosition);
 	LightMergeUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(0), "BaseColorTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(0), "DiffuseTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(1), "SpecularTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(2), "AmbientTex");
 	LightMergeUnit.BufferSetter.SetTexture(LightRenderTarget->GetTexture(3), "ShadowTex");
+	// LightMergeUnit.BufferSetter.SetTexture(AlphaRenderTarget->GetTexture(0), "AlphaTex");
+	//LightMergeUnit.BufferSetter.SetTexture(MeshRenderTarget->GetTexture(1), "BaseColorPosTex");
+	//LightMergeUnit.BufferSetter.SetTexture(AlphaRenderTarget->GetTexture(1), "AlphaPosTex");
 	LightMergeUnit.SetSampler(SamplerType::PointClamp);
 
 	// 스카이박스용
@@ -100,9 +94,6 @@ void Ext_Camera::Start()
 	std::shared_ptr<Ext_DirectXTexture> Tex = Ext_DirectXTexture::Find("SkyBox");
 	SkyBoxUnit.GetBufferSetter().SetTexture(Tex, "CubeMapTex");
 
-	// 알파용
-	//AlphaUnit.MeshComponentUnitInitialize("FullRect", MaterialType::MeshMerge);
-	
 }
 
 // 여기는 요소 제거만 진행합니다.
@@ -305,7 +296,9 @@ void Ext_Camera::Rendering(float _Deltatime)
 		GetOwnerScene().lock()->GetLightDataBuffer().LightCount++;
 	}
 
-	// 빛 합치기
+	// CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
+	
+	// 결과 합치기
 	LightMergeRenderTarget->RenderTargetClear();
 	LightMergeRenderTarget->RenderTargetSetting();
 	LightMergeUnit.Rendering(_Deltatime);
@@ -313,13 +306,9 @@ void Ext_Camera::Rendering(float _Deltatime)
 	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
 	CameraRenderTarget->RenderTargetClear();
 	CameraRenderTarget->Merge(SkyBoxRenderTarget);
-	CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
 	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
-	
-	// CameraRenderTarget->Merge(AlphaRenderTarget); // AlphaPass값 합치기
 
 	CameraRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
-
 }
 
 // 카메라 조종

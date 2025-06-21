@@ -73,6 +73,7 @@ public:
 	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
 	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);
+	void AlphaMerge(std::shared_ptr<Ext_DirectXRenderTarget>, size_t _Index = 0);
 	void Merge(Ext_DirectXRenderTarget* _OtherRenderTarget, size_t _Index = 0);
 
 	// 포스트 프로세스 만들기
@@ -111,6 +112,7 @@ private:
 
 	std::vector<std::shared_ptr<class Ext_PostProcess>> PostProcesses = {};
 	static Ext_MeshComponentUnit MergeUnit; // Merge용 Unit, 텍스쳐 세팅하고 드로우콜용으로 만든것
+	static Ext_MeshComponentUnit AlphaMergeUnit; // Merge용 Unit, 텍스쳐 세팅하고 드로우콜용으로 만든것
 };
 // [RenderTarget]
 // 렌더 타겟은 렌더링 결과를 기록하는 최종 목적지가 된다. 즉, 셰이더의 출력 결과가 그려지는 공간이다.
