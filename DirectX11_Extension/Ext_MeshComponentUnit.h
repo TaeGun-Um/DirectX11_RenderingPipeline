@@ -1,6 +1,22 @@
 ﻿#pragma once
 #include "Ext_DirectXBufferSetter.h"
 
+struct alignas(16) RenderingData
+{
+	int bIsLight = 0;
+	int bIsShadow = 0;
+	int bIsAnimation = 0;
+	int bIsNormal = 0;
+
+	int bIsMetal = 0;
+	int bIsRoughNess = 0;
+	int bIsAmbient = 0;
+	int bIsMask = 0;
+
+	float DeltaTime = 0;
+	float AccTime = 0;
+};
+
 // 렌더링 컴포넌트에 필요한 정보(메시, Pipeline, 상수버퍼 정보 등)들을 가지고 있는 클래스
 class Ext_MeshComponentUnit : public std::enable_shared_from_this<Ext_MeshComponentUnit>
 {
@@ -49,6 +65,10 @@ public:
 	bool GetIsShadow() { return bIsShadow; }
 
 	void Rendering(float _Deltatime); // RenderUnitSetting, RenderUnitDraw 호출
+
+
+	void SetMask();
+
 protected:
 	
 private:
@@ -67,4 +87,6 @@ private:
 	std::shared_ptr<class Ext_DirectXInputLayout> ShadowInputLayout = nullptr; // (셰도우용)Vertex Buffer와 Vertex Shader로 생성된 인풋 레이아웃 정보 저장용
 	bool bIsShadow = false; // 셰도우용 OnOff
 	ShadowType ShadowT = ShadowType::Unknown; // ShadowOn 하면 정해짐
+
+	RenderingData RederData;
 };

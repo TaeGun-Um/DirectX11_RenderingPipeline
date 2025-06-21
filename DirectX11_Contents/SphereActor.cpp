@@ -14,6 +14,7 @@ void SphereActor::Start()
 	MeshComp->CreateMeshComponentUnit("Sphere", MaterialType::Static);
 	MeshComp->SetTexture("Gray.png");
 	MeshComp->ShadowOn(ShadowType::Static);
+	MeshComp->SetMask();
 
 	GetTransform()->SetLocalScale({ 50.f, 50.f, 50.f });
 }

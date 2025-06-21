@@ -80,6 +80,9 @@ private:
 	std::shared_ptr<class Ext_DirectXRenderTarget> LightMergeRenderTarget;
 	std::shared_ptr<class Ext_DirectXRenderTarget> CameraRenderTarget; // 합본
 	std::shared_ptr<class Ext_DirectXRenderTarget> SkyBoxRenderTarget; // 스카이박스용
+
+	std::shared_ptr<class Ext_DirectXRenderTarget> MaskRenderTarget; // 스카이박스용
+
 	Ext_MeshComponentUnit LightUnit;
 	Ext_MeshComponentUnit LightMergeUnit;
 

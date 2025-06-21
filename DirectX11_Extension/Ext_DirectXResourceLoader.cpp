@@ -745,6 +745,12 @@ void Ext_DirectXResourceLoader::CreateTriangle()
 	Ext_DirectXMesh::CreateMesh("Triangle");
 }
 
+/*1. const D3D11_INPUT_ELEMENT_DESC* : 정점 입력 요소 배열의 시작 주소, 각 요소가 어떤 데이터인지 정의*/
+/*2. UINT : 위 배열의 요소 수(입력 요소가 몇개인가)*/
+/*3. const void* : 정점 셰이더의 바이트 코드 시작 주소, 여기에는 입력 시그니처가 포함되어 있어야 함*/
+/*4. SIZE_T : 위 바이트코드의 길이*/
+/*5. ID3D11InputLayout** : 호출의 결과로 생성될 InputLayout 객체의 포인터 주소 저장->IASetInputLayout에서 활용*/
+
 void Ext_DirectXResourceLoader::CreateRect()
 {
 	// 일반 Rect

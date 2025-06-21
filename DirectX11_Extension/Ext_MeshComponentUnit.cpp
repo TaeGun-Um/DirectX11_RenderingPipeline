@@ -96,6 +96,12 @@ void Ext_MeshComponentUnit::MeshComponentUnitInitialize(std::string_view _MeshNa
 	//	const LightDatas& LTDatas = OwnerMeshComponent.lock()->GetOwnerScene().lock()->GetLightDataBuffer();
 	//	BufferSetter.SetConstantBufferLink("LightDatas", LTDatas);
 	//}
+
+	// [5] 렌더 데이터 세팅하기
+	if (nullptr != GetOwnerMeshComponent().lock() && "Debug" != _MaterialName)
+	{
+		BufferSetter.SetConstantBufferLink("RenderingData", RederData);
+	}
 	
 	// 단독으로 만들어지는 Unit도 있기 때문에, MeshComponent로부터 만들어진 유닛만 카메라에 넣기
 	if (nullptr != GetOwnerMeshComponent().lock())
@@ -211,4 +217,9 @@ void Ext_MeshComponentUnit::RenderUnitShadowSetting()
 	BufferSetter.BufferSetting();
 
 	BufferSetter.AllTextureResourceReset();
+}
+
+void Ext_MeshComponentUnit::SetMask()
+{
+	RederData.bIsMask = 1;
 }

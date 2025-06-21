@@ -19,8 +19,3 @@ cbuffer TransformData : register(b0)
     
     float4 CameraWorldPosition;
 }
-
-void Skinning()
-{
-    
-}

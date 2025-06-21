@@ -35,5 +35,7 @@ PSOutPut PBR_PS(PSInput _Input) : SV_TARGET
     Output.TangentTarget = float4(_Input.WorldTangent, 1.0f); // 월드스페이스 Normal
     Output.BinormalTarget = float4(_Input.WorldBinormal, 1.0f); // 월드스페이스 Normal
 
+    
+    
     return Output;
 }

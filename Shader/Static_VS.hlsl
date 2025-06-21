@@ -1,10 +1,13 @@
 #include "Transform.fx"
+#include "RenderingData.fx"
 
 struct VSInput
 {
     float4 Position : POSITION;
     float4 TexCoord : TEXCOORD;
     float4 Normal : NORMAL;
+    float4 Tangent : TANGENT; // 로컬 접선
+    float4 Binormal : BINORMAL; // 로컬 이접선
 };
 
 struct VSOutput
@@ -13,6 +16,8 @@ struct VSOutput
     float2 TexCoord : TEXCOORD;
     float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float3 WorldTangent : TANGENT;
+    float3 WorldBinormal : BINORMAL;
     float4 CameraWorldPosition : POSITION1;
 };
 
@@ -35,6 +40,12 @@ VSOutput Static_VS(VSInput _Input)
     OutPut.WorldNormal = WorldNorm;
     
     OutPut.CameraWorldPosition = CameraWorldPosition;
+    
+    if (bIsNormal == 1)
+    {
+        OutPut.WorldTangent = mul(float4(_Input.Tangent.xyz, 0.0f), WorldMatrix).rgb;
+        OutPut.WorldBinormal = mul(float4(_Input.Binormal.xyz, 0.0f), WorldMatrix).rgb;
+    }
     
     return OutPut;
 }

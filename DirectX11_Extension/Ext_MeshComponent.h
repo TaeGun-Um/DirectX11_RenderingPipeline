@@ -32,6 +32,8 @@ public:
 	void ShadowOn(ShadowType _Type);
 	void ShadowOff();
 
+	void SetMask();
+
 protected:
 	virtual void Start() override;
 	void Release() override;

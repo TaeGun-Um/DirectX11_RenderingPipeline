@@ -116,3 +116,7 @@ void Ext_MeshComponent::ShadowOff()
 	Unit->ShadowOff();
 }
 
+void Ext_MeshComponent::SetMask()
+{
+	Unit->SetMask();
+}

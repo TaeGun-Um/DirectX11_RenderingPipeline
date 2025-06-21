@@ -40,12 +40,16 @@ void Ext_Camera::Start()
 	// CameraRenderTarget->CreateEffect<Ext_OldFilm>();
 	// CameraRenderTarget->CreateEffect<Ext_TextureTest>();
 
+	// MaskRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 Mask
+	// MaskRenderTarget->CreateEffect<Ext_Distortion>();
+
 	// 메인패스 렌더타겟 - MeshTarget, PositionTarget, NormalTarget
 	MeshRenderTarget = Ext_DirectXRenderTarget::CreateRenderTarget(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 0 MeshTarget
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 1 PositionTarget (World)
 	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 2 NormalTarget
-	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 TangentTarget (PBR만)
-	// MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 BinormalTarget (PBR만)
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 3 TangentTarget (PBR만)
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 4 BinormalTarget (PBR만)
+	MeshRenderTarget->AddNewTexture(DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, Base_Windows::GetScreenSize(), float4::ZERONULL); // 5 MaskTarget
 	MeshRenderTarget->SetDepthTexture(CameraRenderTarget->GetDepthTexture());
 
 	// 디퍼드 라이트 계산 렌더 타겟(쉐도우 뎁스까지 계산) - DiffuseTarget, SpecularTarget, AmbientTarget, ShadowTarget
@@ -288,11 +292,18 @@ void Ext_Camera::Rendering(float _Deltatime)
 	LightMergeRenderTarget->RenderTargetSetting();
 	LightMergeUnit.Rendering(_Deltatime);
 
+	// MaskRenderTarget->RenderTargetClear();
+	// MaskRenderTarget->Merge(MeshRenderTarget, 5);
+	// MaskRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
+
 	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
 	CameraRenderTarget->RenderTargetClear();
 	CameraRenderTarget->Merge(SkyBoxRenderTarget);
 	CameraRenderTarget->Merge(MeshRenderTarget, 0); // Geometry 합치기
 	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
+	
+	//CameraRenderTarget->Merge(MaskRenderTarget);
+
 	CameraRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
 }
 

@@ -11,6 +11,8 @@ struct PSInput
     float2 TexCoord : TEXCOORD;
     float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float3 WorldTangent : TANGENT;
+    float3 WorldBinormal : BINORMAL;
     float4 CameraWorldPosition : POSITION1;
 };
 

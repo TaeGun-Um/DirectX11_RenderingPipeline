@@ -1,4 +1,5 @@
 #include "Transform.fx"
+#include "RenderingData.fx"
 
 #define MAX_BONES 100
 cbuffer CB_SkinnedMatrix : register(b1)
@@ -11,6 +12,8 @@ struct VSInput
     float4 Position : POSITION;
     float4 TexCoord : TEXCOORD;
     float4 Normal : NORMAL;
+    float4 Tangent : TANGENT; // 로컬 접선
+    float4 Binormal : BINORMAL; // 로컬 이접선
     uint4 BoneID : BONEID;
     float4 Weight : WEIGHT;
 };
@@ -21,12 +24,14 @@ struct VSOutput
     float2 TexCoord : TEXCOORD;
     float3 WorldPosition : POSITION0;
     float3 WorldNormal : NORMAL;
+    float3 WorldTangent : TANGENT;
+    float3 WorldBinormal : BINORMAL;
     float4 CameraWorldPosition : POSITION1;
 };
 
 VSOutput Dynamic_VS(VSInput _Input)
 {
-    VSOutput Output = (VSOutput) 0;
+    VSOutput OutPut = (VSOutput) 0;
 
     // 1. 스키닝 매트릭스 계산
     float4x4 SkinMatrix = float4x4(
@@ -69,18 +74,24 @@ VSOutput Dynamic_VS(VSInput _Input)
     // Position 설정
     float4 WorldPos = mul(SkinPosition, WorldMatrix);
     float4 ViewPos = mul(WorldPos, ViewMatrix);
-    Output.Position = mul(ViewPos, ProjectionMatrix);
+    OutPut.Position = mul(ViewPos, ProjectionMatrix);
          
     // UV 좌표 설정
-    Output.TexCoord = _Input.TexCoord.xy;
+    OutPut.TexCoord = _Input.TexCoord.xy;
     
     // 월드 공간 기준으로 조명 계산을 진행하기 위해 WorldMatrix만 처리한 Position, Normal을 생성하여 Pixel Shader에 넘겨줌
-    Output.WorldPosition = WorldPos.xyz;
+    OutPut.WorldPosition = WorldPos.xyz;
     
     float3 WorldNorm = mul(SkinNormal, (float3x3) WorldMatrix);
-    Output.WorldNormal = WorldNorm;
+    OutPut.WorldNormal = WorldNorm;
     
-    Output.CameraWorldPosition = CameraWorldPosition;
+    if (bIsNormal == 1)
+    {
+        OutPut.WorldTangent = mul(float4(_Input.Tangent.xyz, 0.0f), WorldMatrix).rgb;
+        OutPut.WorldBinormal = mul(float4(_Input.Binormal.xyz, 0.0f), WorldMatrix).rgb;
+    }
     
-    return Output;
+    OutPut.CameraWorldPosition = CameraWorldPosition;
+    
+    return OutPut;
 }

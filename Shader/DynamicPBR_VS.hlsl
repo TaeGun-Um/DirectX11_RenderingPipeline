@@ -1,4 +1,5 @@
 #include "Transform.fx"
+//#include "RenderingData.fx"
 
 #define MAX_BONES 100
 cbuffer CB_SkinnedMatrix : register(b1)
