@@ -30,6 +30,12 @@
 | 13 | [스카이박스](13-SkyBox.md) | CubeMap·월드 배경 |
 | 14 | [리플렉션 프로브](14-Reflection-Probe.md) | 정적 환경 반사 |
 
+### 엔진 인프라 개선 (2026-04 이후 추가)
+| # | 제목 | 주제 |
+|---|---|---|
+| 15 | [오브젝트 수명 주기](15-Release-Lifecycle.md) | Destroy/Release · Fast-path 가드 · Dead list |
+| 16 | [셰이더 Hot Reload](16-Shader-Hot-Reload.md) | F6 로 런타임 재컴파일 |
+
 ## 읽는 순서 제안
 
 처음 본다면 **01 → 02 → 03 → 04** 순서로 프레임워크 기본 구조부터 이해. 그다음 렌더링 기법들(05부터)은 관심 있는 순서대로.

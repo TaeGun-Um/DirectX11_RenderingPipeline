@@ -9,12 +9,43 @@
 #include "Ext_DirectXIndexBuffer.h"
 #include "Ext_DirectXMesh.h"
 #include "Ext_DirectXShader.h"
+#include "Ext_DirectXVertexShader.h"
+#include "Ext_DirectXPixelShader.h"
 #include "Ext_DirectXMaterial.h"
 #include "Ext_DirectXSampler.h"
 #include "Ext_DirectXBlend.h"
 #include "Ext_DirectXRasterizer.h"
 #include "Ext_DirectXDepth.h"
 #include "Ext_DirectXRenderTarget.h"
+
+// Hot Reload — 모든 VS/PS 를 파일에서 다시 읽어 재컴파일
+// - 각 Shader 의 Reload() 는 실패해도 예외 던지지 않고 기존 상태를 유지
+// - 전체 성공/실패 수를 OutputDebug 로 보고해 개발 중 눈에 띄게 함
+void Ext_DirectXResourceLoader::ReloadAllShaders()
+{
+	OutputDebugStringA("[HotReload] ===== 시작 =====\n");
+
+	int TotalVS = 0, SuccessVS = 0;
+	for (auto& [Name, VS] : Ext_DirectXVertexShader::GetAllNameResources())
+	{
+		if (!VS) continue;
+		++TotalVS;
+		if (VS->Reload()) ++SuccessVS;
+	}
+
+	int TotalPS = 0, SuccessPS = 0;
+	for (auto& [Name, PS] : Ext_DirectXPixelShader::GetAllNameResources())
+	{
+		if (!PS) continue;
+		++TotalPS;
+		if (PS->Reload()) ++SuccessPS;
+	}
+
+	std::string Msg = "[HotReload] ===== 완료 — VS " +
+		std::to_string(SuccessVS) + "/" + std::to_string(TotalVS) +
+		", PS " + std::to_string(SuccessPS) + "/" + std::to_string(TotalPS) + " =====\n";
+	OutputDebugStringA(Msg.c_str());
+}
 
 // DirectX에 필요한 리소스를 로드
 void Ext_DirectXResourceLoader::Initialize()

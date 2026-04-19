@@ -11,6 +11,7 @@ void Ext_DirectXPixelShader::CreatePixelShader(std::string_view _Path, std::stri
 {
 	CreateVersion("ps", _VersionHigh, _VersionLow);
 	EntryPoint = _EntryPoint;
+	FilePath   = _Path; // Hot Reload 시 재사용
 
 	unsigned int Flag = 0;
 
@@ -48,6 +49,61 @@ void Ext_DirectXPixelShader::CreatePixelShader(std::string_view _Path, std::stri
 
 	// 상수버퍼 세팅, 리소스 세팅
 	ShaderResourceSetting();
+}
+
+// Hot Reload — 저장된 FilePath 에서 HLSL 을 다시 읽어 재컴파일
+// 세부 동작은 Ext_DirectXVertexShader::Reload 주석 참조
+bool Ext_DirectXPixelShader::Reload()
+{
+	if (FilePath.empty())
+	{
+		OutputDebugStringA(("[HotReload] Skip PS: no FilePath - " + EntryPoint + "\n").c_str());
+		return false;
+	}
+
+	unsigned int Flag = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+#ifdef _DEBUG
+	Flag |= D3D10_SHADER_DEBUG;
+#endif
+
+	COMPTR<ID3DBlob> NewBlob;
+	COMPTR<ID3DBlob> Error;
+	std::wstring UniCodePath = Base_String::AnsiToUniCode(FilePath);
+
+	HRESULT Hr = D3DCompileFromFile(UniCodePath.c_str(), nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, EntryPoint.c_str(), Version.c_str(),
+		Flag, 0, NewBlob.GetAddressOf(), Error.GetAddressOf());
+
+	if (FAILED(Hr))
+	{
+		std::string Msg = "[HotReload] PS compile failed: " + EntryPoint + "\n";
+		if (Error)
+		{
+			Msg += reinterpret_cast<const char*>(Error->GetBufferPointer());
+			Msg += "\n";
+		}
+		OutputDebugStringA(Msg.c_str());
+		return false;
+	}
+
+	COMPTR<ID3D11PixelShader> NewPS;
+	if (FAILED(Ext_DirectXDevice::GetDevice()->CreatePixelShader(
+		NewBlob->GetBufferPointer(), NewBlob->GetBufferSize(),
+		nullptr, NewPS.GetAddressOf())))
+	{
+		OutputDebugStringA(("[HotReload] PS object create failed: " + EntryPoint + "\n").c_str());
+		return false;
+	}
+
+	BinaryCode  = NewBlob;
+	PixelShader = NewPS;
+
+	// BufferSetter 초기화 후 리플렉션 재수집 (Clear() 는 내부 multimap 만 비움)
+	GetBufferSetter().Clear();
+	ShaderResourceSetting();
+
+	OutputDebugStringA(("[HotReload] PS reloaded: " + EntryPoint + "\n").c_str());
+	return true;
 }
 
 // PSSetShader 호출로 픽셀 셰이더 세팅

@@ -84,7 +84,12 @@ public:
 	void AllTextureResourceReset();
 
 	bool IsTexture(std::string_view _Name); // 텍스쳐가 있는지 확인
-	
+
+	// 내부 multimap 3개(Constant/Sampler/Texture) 를 모두 비움
+	// - Shader Hot Reload 시 리플렉션을 다시 수집하기 전, 기존 항목을 지우는 용도
+	// - 삭제된 copy/move operator 때문에 `= {}` 가 안 되므로 이 전용 메서드를 사용
+	void Clear();
+
 protected:
 	
 private:

@@ -68,19 +68,37 @@ public:
 	std::shared_ptr<class Ext_Transform> GetTransform() { return Transform; }
 	std::map<std::string, std::shared_ptr<class Ext_Component>> GetComponents() { return Components; }
 
-	void MarkDeadComponent() {	bHasDeadComponent = true; } // 지우기 위한 플래그 설정
+	// 죽은 컴포넌트를 전용 리스트에 등록하고 플래그 설정
+	// - 기존에는 bHasDeadComponent 플래그만 세우고 Actor::Update 에서 Components 전체를 순회했지만,
+	//   이제는 "누가 죽었는지"를 명시적으로 리스트에 쌓아 다음 Update 때 해당 항목만 O(dead) 로 정리
+	// - 중복 호출 방지를 위해 이미 Death 상태인지 체크
+	void MarkComponentDead(std::shared_ptr<class Ext_Component> _Component);
+
+	// Destroy 는 플래그만 세우고 실제 제거는 다음 Scene::Release 에서 처리
+	// - 자식 컴포넌트 재귀 옵션 (기본은 false). Character 처럼 자식 계층이 큰 경우 true 로 호출
+	// - Scene 에도 Dead 등록 요청 → Scene::Release 가 PendingDeadActors 만 빠르게 순회하도록
+	void Destroy(bool _bIncludeChildren = false) override;
 
 protected:
 	virtual void Start() override {}
 	virtual void Update(float _DeltaTime);
 	virtual void Release() override;
-	void RemoveDeadComponents(); // 특정 컴포넌트만 제거
-	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order); 
-	
+
+	// PendingDeadComponents 에 쌓인 항목들만 선별적으로 Release + 맵에서 erase
+	// - 과거에는 Components 맵 전체 순회 후 IsDeath() 체크로 찾았음
+	// - 지금은 "죽은 것 목록" 에 직접 접근하므로 죽은 개수에 비례한 비용만 듬
+	void RemoveDeadComponents();
+
+	void ComponentInitialize(std::shared_ptr<class Ext_Component> _Component, std::weak_ptr<Ext_Actor> _Actor, std::string_view _Name, int _Order);
+
 	std::map<std::string, std::shared_ptr<class Ext_Component>> Components; // 자신이 가진 컴포넌트들 정보
 	std::shared_ptr<class Ext_Transform> Transform = nullptr; // 자신이 가진 트랜스폼 정보
 
-	bool bHasDeadComponent = false; // 죽은 컴포넌트 존재 여부
+	// Destroy 된 컴포넌트들을 다음 정리 시점까지 잠시 보관
+	// (원본 Components 맵에서 즉시 지우면 현재 순회 중인 Update 루프가 iterator 무효화로 죽을 수 있음 → 지연 삭제 패턴)
+	std::vector<std::shared_ptr<class Ext_Component>> PendingDeadComponents;
+
+	bool bHasDeadComponent = false; // 죽은 컴포넌트 존재 여부 — fast path 가드
 
 private:
 

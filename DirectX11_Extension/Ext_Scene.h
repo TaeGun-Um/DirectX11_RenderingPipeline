@@ -81,6 +81,11 @@ public:
 	std::shared_ptr<class Ext_Actor> GetSkyBox() { return SkyBox; }; // 메인 카메라 가져오기
 	void SetSkyBox(std::shared_ptr<class Ext_Actor> _SkyBox) { SkyBox = _SkyBox; }; // 메인 카메라 세팅(호출 안하는게 좋음)
 
+	// Actor::Destroy 가 호출되면 이 메서드로 와서 "죽은 액터 대기열" 에 등록됨
+	// - Release 단계에서 Actors 전체 맵 순회 없이, 이 리스트만 훑어서 빠르게 정리 가능
+	// - 중복 등록은 Actor 쪽 bIsDeath 가드로 사전 차단되므로 여기서는 단순 push
+	void MarkDeadActor(std::shared_ptr<class Ext_Actor> _Actor);
+
 protected:
 	virtual void SceneChangeInitialize(); // Scene 변경 시 호출
 	virtual void SceneChangeEnd(); // Scene 변경 시 호출
@@ -102,4 +107,12 @@ private:
 	LightDatas LightDataBuffer; // 현재 Scene Light의 Data들
 
 	std::shared_ptr<class Ext_Actor> SkyBox; // Scene의 SkyBox
+
+	// Destroy 된 Actor 대기열 — Scene::Release 가 이 목록만 순회해 실제 정리
+	// 원본 Actors 맵(Order 그룹화) 은 그대로 두고, 대기열엔 shared_ptr 복사본만 얹는다
+	std::vector<std::shared_ptr<class Ext_Actor>> PendingDeadActors;
+
+	// 죽은 Actor 존재 여부 — Release 의 fast path 가드
+	// false 면 Release() 가 즉시 return 하여 Actors 전체 순회 스킵
+	bool bHasDeadActor = false;
 };

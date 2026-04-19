@@ -56,12 +56,19 @@ public:
 		return NewRes;
 	}
 
+	// 이름 기반 리소스 전체 열람 — Hot Reload, 디버그 덤프 등에 활용
+	// 내부 맵을 수정할 수 없도록 const 참조 리턴
+	static const std::map<std::string, std::shared_ptr<ResourcesType>>& GetAllNameResources()
+	{
+		return NameResources;
+	}
+
 protected:
-	
+
 private:
 	static std::vector<std::shared_ptr<ResourcesType>> Resources; // 저장할 리소스
 	static std::map<std::string, std::shared_ptr<ResourcesType>> NameResources; // 이름으로 저장할 리소스
-	
+
 };
 
 template<typename ResourcesType>

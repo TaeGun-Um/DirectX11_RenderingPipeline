@@ -11,25 +11,25 @@ enum class LightType
 
 struct LightData
 {
-	//float4 CameraWorldPosition; // ½ÃÁ¡ ¿ùµå °ø°£ À§Ä¡
-	//float4 CameraViewPosition; // ½ÃÁ¡ ºä °ø°£ À§Ä¡
-	//float4 CameraForwardVector; // ¿ùµå ½ÃÁ¡ º¤ÅÍ
-	//float4 CameraViewForwardVector; // ºä ½ÃÁ¡ º¤ÅÍ
+	//float4 CameraWorldPosition; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+	//float4 CameraViewPosition; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+	//float4 CameraForwardVector; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//float4 CameraViewForwardVector; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	//float LightNear = 1.0f;
 	//float LightFar = 1.0f;
 	//int LightType = 0;
-	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.25f };// RGB(»ö), w(°­µµ)
-	float4 LightWorldPosition; // ¶óÀÌÆ® ¿ùµå °ø°£ À§Ä¡
-	float4 LightForwardVector; // ¿ùµå ÀÔ»ç º¤ÅÍ
-	float4 CameraWorldPosition; // ½ÃÁ¡ ¿ùµå °ø°£ À§Ä¡
+	float4 LightColor = { 1.0f, 1.0f, 1.0f, 0.25f };// RGB(ï¿½ï¿½), w(ï¿½ï¿½ï¿½ï¿½)
+	float4 LightWorldPosition; // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+	float4 LightForwardVector; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô»ï¿½ ï¿½ï¿½ï¿½ï¿½
+	float4 CameraWorldPosition; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 
 	float ShadowTargetSizeX;
 	float ShadowTargetSizeY;
 
 	float NearDistance = 1.0f;
 	float FarDistance = 100.0f;
-	float AttenuationValue = 1.0f; // °Å¸®°¨¼è°ª¿¡ »ç¿ë
+	float AttenuationValue = 1.0f; // ï¿½Å¸ï¿½ï¿½ï¿½ï¿½è°ªï¿½ï¿½ ï¿½ï¿½ï¿½
 	int LightType = 0;
 	bool bIsLightSet = false;
 
@@ -48,6 +48,34 @@ struct LightDatas
 	LightData Lights[MAX_LIGHTS];
 };
 
+// -------------------------------------------------------------------------
+//  HLSL â†” C++ íŒ¨í‚¹ ê²€ì¦ (ì»´íŒŒì¼ íƒ€ì„)
+// -------------------------------------------------------------------------
+//  HLSL ë ˆì´ì•„ì›ƒ (Shader/LightData.fx):
+//    LightData {
+//      float4   LightColor/WorldPos/Forward/CameraWorldPos     = 4 Ã— 16 = 64
+//      float    Shadow{X/Y}, Near, Far, Atten                  = 5 Ã— 4  = 20
+//      int      LightType                                      = 4
+//      bool     bIsLightSet                                    = 4   (HLSL bool ì€ 4 bytes)
+//      // padding to 16 â†’ next matrix boundary                 = 4
+//      float4x4 View/ViewInv/Proj/ProjInv/ViewProj/CamViewInv  = 6 Ã— 64 = 384
+//    } = 480
+//
+//    LightDatas {
+//      int LightCount                                          = 4
+//      // padding to 16                                        = 12
+//      LightData Lights[64]                                    = 64 Ã— 480 = 30720
+//    } = 30736
+//
+//  C++ ì¸¡ì—ì„œëŠ” `bool` ì´ 1 byte ì§€ë§Œ XMMATRIX ì˜ 16-byte ì •ë ¬ ìš”êµ¬ë¡œ ì¸í•´
+//  êµ¬ì¡°ì²´ ë ˆì´ì•„ì›ƒì´ ë™ì¼í•˜ê²Œ ë§ì¶°ì§„ë‹¤ (ì»´íŒŒì¼ëŸ¬ê°€ ìë™ padding ì‚½ì…).
+static_assert(sizeof(LightData) == 480,
+    "LightData size mismatch â€” HLSL LightData ë ˆì´ì•„ì›ƒê³¼ ì¼ì¹˜í•˜ì§€ ì•ŠìŒ (ì˜ˆìƒ 480)");
+static_assert(sizeof(LightData) % 16 == 0,
+    "LightData must be 16-byte aligned (D3D11 cbuffer ê·œê²©)");
+static_assert(sizeof(LightDatas) == 4 + 12 + 480 * MAX_LIGHTS,
+    "LightDatas size mismatch â€” HLSL cbuffer(b2) ë ˆì´ì•„ì›ƒê³¼ ì¼ì¹˜í•˜ì§€ ì•ŠìŒ");
+
 class Ext_Light : public Ext_Actor
 {
 public:
@@ -61,18 +89,18 @@ public:
 	Ext_Light& operator=(const Ext_Light& _Other) = delete;
 	Ext_Light& operator=(Ext_Light&& _Other) noexcept = delete;
 
-	void LightUpdate(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime); // ¶óÀÌÆ® ¾÷µ¥ÀÌÆ® ÁøÇà(¿¬»êÁ¤º¸ ¾÷µ¥ÀÌÆ®)
+	void LightUpdate(std::shared_ptr<class Ext_Camera> _Camera, float _DeltaTime); // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®)
 
 	// Getter, Setter
-	LightType GetLightType() { return Type; } // ¶óÀÌÆ® Å¸ÀÔ °¡Á®¿À±â
-	std::shared_ptr<LightData> GetLightData() { return LTData; } // ¶óÀÌÆ® ¿¬»ê Á¤º¸ °¡Á®¿À±â
-	std::shared_ptr<class Ext_DirectXRenderTarget> GetShadowRenderTarget() { return ShadowRenderTarget; } // ±×¸²ÀÚ ·»´õÅ¸°Ù °¡Á®¿À±â
-	float4 GetShadowTextureScale() { float4(LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY, 0.f, 0.f); } // ±×¸²ÀÚ ·»´õÅ¸°ÙÀ» À§ÇÑ »çÀÌÁî °¡Á®¿À±â
+	LightType GetLightType() { return Type; } // ï¿½ï¿½ï¿½ï¿½Æ® Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	std::shared_ptr<LightData> GetLightData() { return LTData; } // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	std::shared_ptr<class Ext_DirectXRenderTarget> GetShadowRenderTarget() { return ShadowRenderTarget; } // ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	float4 GetShadowTextureScale() { float4(LTData->ShadowTargetSizeX, LTData->ShadowTargetSizeY, 0.f, 0.f); } // ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); } // ¶óÀÌÆ® Å¸ÀÔ ¼¼ÆÃ
-	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; } // ¶óÀÌÆ® »ö±ò ¼¼ÆÃ
-	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; } // ¶óÀÌÆ® °¨¼è °è¼ö ¼³Á¤(Æ÷ÀÎÆ® ¶óÀÌÆ®¿ë)
-	void SetLightRange(float _Range) { LTData->FarDistance = _Range; }  // ¶óÀÌÆ® ¹üÀ§ ¼³Á¤, Near´Â 1.0 °íÁ¤ÀÌ°í Far°¡ ¼³Á¤µÊ
+	void SetLightType(LightType _Type) { LTData->LightType = static_cast<int>(_Type); } // ï¿½ï¿½ï¿½ï¿½Æ® Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	void SetLightColor(float4 _Color) { LTData->LightColor = _Color; } // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	void SetAttenuationValue(float _Value) { LTData->AttenuationValue = _Value; } // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½)
+	void SetLightRange(float _Range) { LTData->FarDistance = _Range; }  // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, Nearï¿½ï¿½ 1.0 ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ Farï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	void ViewPortUpdate(std::shared_ptr<class Ext_Camera> _Camera);
 
@@ -80,10 +108,10 @@ protected:
 	void Start() override;
 	
 private:
-	LightType Type = LightType::Unknown; // ÇØ´ç ¶óÀÌÆ®´Â ¹«½¼ Á¾·ùÀÎÁö ¼³Á¤
-	std::shared_ptr<LightData> LTData = nullptr; // ¶óÀÌÆ® ¿¬»ê¿¡ ÇÊ¿äÇÑ µ¥ÀÌÅÍµé
+	LightType Type = LightType::Unknown; // ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	std::shared_ptr<LightData> LTData = nullptr; // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ê¿¡ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½
 
-	std::shared_ptr<class Ext_DirectXRenderTarget> ShadowRenderTarget = nullptr; // ¶óÀÌÅÍ ¿µÇâ¹ŞÀº ±×¸²ÀÚ ±×¸±°÷
-	float4 ShadowRange = { 0.0f, 0.0f, 0.0f, 0.0f }; // ±×¸²ÀÚ ±æÀÌ
+	std::shared_ptr<class Ext_DirectXRenderTarget> ShadowRenderTarget = nullptr; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½
+	float4 ShadowRange = { 0.0f, 0.0f, 0.0f, 0.0f }; // ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 };

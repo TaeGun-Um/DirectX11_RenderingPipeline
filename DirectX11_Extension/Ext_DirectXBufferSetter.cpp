@@ -5,6 +5,16 @@
 #include "Ext_DirectXSampler.h"
 #include "Ext_DirectXTexture.h"
 
+// 세 multimap(Constant/Sampler/Texture) 을 모두 비움 — Hot Reload 용
+// - ConstantBufferSetters 안의 ConstantBuffer shared_ptr 은 ResourceManager 가 별도로 보관하므로 여기서 erase 해도 안 사라짐
+// - Weak ptr / shared_ptr 이 대부분이라 안전한 clear
+void Ext_DirectXBufferSetter::Clear()
+{
+	ConstantBufferSetters.clear();
+	SamplerSetters.clear();
+	TextureSetters.clear();
+}
+
 // 버퍼 세팅 복사/붙여넣기 실시
 void Ext_DirectXBufferSetter::Copy(const Ext_DirectXBufferSetter& _OtherBufferSetter)
 {

@@ -27,6 +27,7 @@
 #include <DirectX11_Extension/Ext_TextureTest.h>
 
 #include "ReflectionActor.h"
+#include "ReleaseTestActor.h"
 
 RenderScene::RenderScene()
 {
@@ -174,6 +175,16 @@ void RenderScene::Start()
 		ReflectionActor1->SetReflection();
 
 		CreateActor<Character>("Character");
+
+		// Release 구조 시각화 테스트 — 플레이어 옆에 1초 주기로 10개 생성/소멸 반복
+		// - 매 사이클마다 Cube/Sphere 10개가 원형으로 나타났다가 다음 사이클에 Destroy
+		// - Scene::Release 의 PendingDeadActors 경로가 제대로 도는지 눈으로 확인 가능
+		// - 불필요하면 이 한 줄만 주석 처리하면 꺼짐
+		std::shared_ptr<ReleaseTestActor> RTA = CreateActor<ReleaseTestActor>("ReleaseTestActor");
+		RTA->GetTransform()->SetLocalPosition({ -250.0f, 80.0f, 0.0f }); // 캐릭터 왼쪽 여유 공간
+		RTA->SetSpawnRadius(120.0f);
+		RTA->SetCyclePeriod(1.0f);
+		RTA->SetSpawnCount(10);
 	}
 
 	// 스카이박스 설정

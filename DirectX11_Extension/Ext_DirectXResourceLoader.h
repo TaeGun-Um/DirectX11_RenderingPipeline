@@ -12,6 +12,12 @@ public:
 	Ext_DirectXResourceLoader& operator=(const Ext_DirectXResourceLoader& _Other) = delete;
 	Ext_DirectXResourceLoader& operator=(Ext_DirectXResourceLoader&& _Other) noexcept = delete;
 
+	// Hot Reload — 현재 로드된 모든 VS/PS 를 파일에서 다시 읽어 재컴파일
+	// - 실패한 셰이더는 이전 바이트코드 유지 → 한두 개가 틀려도 런타임이 살아있음
+	// - Material 의 내부 cbuffer 복사본은 갱신되지 않으므로, cbuffer 레이아웃까지 바꾼 경우엔 재시작 필요
+	// - 사용처: Ext_Core::Update 에서 "ShaderReload" 키(F6) 입력 시 호출
+	static void ReloadAllShaders();
+
 protected:
 	
 private:

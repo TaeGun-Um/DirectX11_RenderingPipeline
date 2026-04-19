@@ -17,6 +17,22 @@ struct alignas(16) RenderingData
 	float AccTime = 0;
 };
 
+// -------------------------------------------------------------------------
+//  HLSL ↔ C++ 패킹 검증 (컴파일 타임)
+// -------------------------------------------------------------------------
+//  HLSL 레이아웃 (Shader/RenderingData.fx):
+//    int  bIs{Light, Shadow, Animation, Normal}   = 4 × 4 = 16 (row 1)
+//    int  bIs{Metal, RoughNess, Ambient, Mask}    = 4 × 4 = 16 (row 2)
+//    float DeltaTime, AccTime                     = 2 × 4 = 8
+//    padding to 16                                = 8
+//    ──────────────────────────────────────────── = 48
+//
+//  C++ 측은 alignas(16) 덕에 자동으로 48 bytes 로 정렬됨.
+static_assert(sizeof(RenderingData) == 48,
+    "RenderingData size mismatch — HLSL cbuffer(b3) 레이아웃과 일치하지 않음 (예상 48)");
+static_assert(sizeof(RenderingData) % 16 == 0,
+    "RenderingData must be 16-byte aligned (D3D11 cbuffer 규격)");
+
 // 렌더링 컴포넌트에 필요한 정보(메시, Pipeline, 상수버퍼 정보 등)들을 가지고 있는 클래스
 class Ext_MeshComponentUnit : public std::enable_shared_from_this<Ext_MeshComponentUnit>
 {

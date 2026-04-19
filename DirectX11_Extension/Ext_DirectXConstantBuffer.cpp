@@ -44,8 +44,13 @@ void Ext_DirectXConstantBuffer::ChangeData(const void* _Data, UINT _Size)
 
 	if (ConstantBufferInfo.ByteWidth != _Size)
 	{
-		std::string CurName = Name;
-		MsgAssert(CurName + "크기가 다른 데이터가 들어왔습니다.");
+		// HLSL cbuffer 선언과 C++ 구조체 sizeof 가 불일치할 때 여기로 진입.
+		// 흔한 원인: cbuffer 필드 추가/순서 변경 시 C++ 구조체 갱신 누락, alignas 누락, bool 패킹 혼동 등.
+		// 메시지에 expected/got 사이즈를 같이 출력해 디버깅 시간을 줄인다.
+		MsgAssert(Name + " cbuffer 크기 불일치 — expected=" +
+			std::to_string(ConstantBufferInfo.ByteWidth) +
+			", got=" + std::to_string(_Size) +
+			" (HLSL cbuffer 선언 / 관련 C++ 구조체 sizeof 비교 필요)");
 		return;
 	}
 

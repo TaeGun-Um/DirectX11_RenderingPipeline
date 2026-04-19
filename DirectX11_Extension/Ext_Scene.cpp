@@ -34,11 +34,25 @@ void Ext_Scene::ActorsUpdate(float _DeltaTime)
 {
 	this->Update(_DeltaTime); // Scene에서 업데이트 할거 있으면 먼저 하고
 
+	// ──────────────────────────────────────────────────────────────
+	//  iterator 무효화 방지 — 순회 중 CreateActor 호출 허용
+	// ──────────────────────────────────────────────────────────────
+	//  ActorList 를 직접 range-for 로 돌리면, Update 도중 누군가
+	//  Scene->CreateActor<T>() 를 호출할 때 내부에서 ActorList 에
+	//  push_back 하는 순간 벡터가 재할당되어 현재 참조가 dangling 이 됨.
+	//  (증상: 다음 iteration 에서 CurActor->Method() 가 0xDDDD... 로 crash)
+	//
+	//  해결: 이번 프레임에 돌릴 대상 리스트를 **스냅샷 복사** 해 두고,
+	//        새로 생긴 액터는 자연스럽게 다음 프레임부터 Update.
+	//  비용: shared_ptr 복사 = atomic refcount 증가, 액터 수준에선 무시 가능.
+	//  관련: ReleaseTestActor 가 1초마다 CreateActor 를 호출해 이 패턴을 확실히 건드린다.
 	for (auto& [Key, ActorList] : Actors)
 	{
-		for (const std::shared_ptr<Ext_Actor>& CurActor : ActorList)
+		std::vector<std::shared_ptr<Ext_Actor>> Snapshot = ActorList;
+
+		for (const std::shared_ptr<Ext_Actor>& CurActor : Snapshot)
 		{
-			if (!CurActor->IsUpdate() || CurActor->IsDeath())
+			if (!CurActor || !CurActor->IsUpdate() || CurActor->IsDeath())
 			{
 				continue;
 			}
@@ -94,44 +108,67 @@ void Ext_Scene::Rendering(float _DeltaTime)
 	Ext_Imgui::Render(GetSharedFromThis<Ext_Scene>(), _DeltaTime);
 }
 
-// Actors내 Actor들의 Release 호출
+// Actor::Destroy 에서 호출하는 등록 함수 — 대기열에 얹고 플래그만 set
+// - 기존 Destroy 는 Actor 자체에 플래그만 세웠고, Scene 은 매 프레임 Actors 전체를 훑어봐야 했음
+// - 이제 Scene 이 "누가 죽었는지" 직접 알게 되므로, Release 에서 전체 순회 없이 대기열만 처리
+void Ext_Scene::MarkDeadActor(std::shared_ptr<Ext_Actor> _Actor)
+{
+	if (!_Actor) return;
+
+	PendingDeadActors.push_back(_Actor);
+	bHasDeadActor = true;
+}
+
+// Scene 단위 죽은 Actor 정리
+// 플로우:
+//   (1) fast path 가드 — 죽은 게 없으면 즉시 return
+//   (2) PendingDeadActors 순회:
+//       a. 각 Component 의 OnDetachFromScene() 호출 → 카메라·Scene 레벨 등록 해제
+//       b. Actor::Release() 호출 → 내부 Component 자원 정리
+//   (3) 원본 Actors 맵에서 IsDeath() 인 항목 제거
+//       - 맵은 Order 그룹화라 erase 위치를 빨리 알기 어려워, 어쩔 수 없이 전체 리스트 remove_if
+//       - 단 이 경로는 bHasDeadActor true 인 프레임에만 진입
+//   (4) 대기열·플래그 초기화
+//
+// 개선 효과:
+//   - 죽은 게 없는 프레임(대부분) → O(1) 으로 종료
+//   - 죽은 게 있는 프레임 → OnDetach 는 죽은 것만 처리 (RTTI dynamic_cast 제거)
 void Ext_Scene::Release()
 {
-	for (auto& [Key, ActorList] : Actors)
+	if (!bHasDeadActor) return; // fast path
+
+	// [1] 각 죽은 Actor 정리
+	for (auto& DeadActor : PendingDeadActors)
 	{
-		// remove_if은 요소들을 뒤로 밀어버립니다. 이후 erase에서 remove_if가 반환한 새 끝부터 원래 끝까지 실제로 삭제 진행
-		ActorList.erase(std::remove_if(ActorList.begin(), ActorList.end(), [](const std::shared_ptr<Ext_Actor>& CurActor)
+		if (!DeadActor) continue;
+
+		// [1-a] 컴포넌트별 씬 레벨 등록 해제 (MeshComp → Camera 제거 등)
+		for (const auto& [Name, Comp] : DeadActor->GetComponents())
+		{
+			if (Comp)
 			{
-				if (!CurActor->IsDeath())
-				{
-					return false; // 죽지 않은 Actor는 유지
-				}
-
-				// [1] 카메라에서 MeshComponent 제거 처리
-				for (const auto& [Name, Component] : CurActor->GetComponents())
-				{
-					// MeshComponent인지 확인
-					auto MeshComp = std::dynamic_pointer_cast<Ext_MeshComponent>(Component); // 가져온 것 중 MeshComponent인 것은 카메라에서 지워줌
-					if (MeshComp)
-					{
-						// 소유 카메라 얻기
-						std::shared_ptr<Ext_Camera> Camera = MeshComp->GetOwnerCamera().lock();
-						if (Camera)
-						{
-							// 카메라에 포함된 메시 컴포넌트, 메시 컴포넌트 유닛 제거
-							Camera->RemoveMeshByActor(CurActor);
-						}
-					}
-				}
-
-				// [2] Actor 자체 Destroy 처리
-				CurActor->Release();
-				return true;
+				Comp->OnDetachFromScene();
 			}
-		),
-			ActorList.end()
-		);
+		}
+
+		// [1-b] Actor 자체 Release — 내부 컴포넌트 자원 정리 + Transform 해제
+		DeadActor->Release();
 	}
+
+	// [2] 원본 Actors 맵에서 실제 제거
+	//     - Order 별로 나뉘어 있어 각 리스트에서 remove_if + erase
+	//     - 이 단계는 피할 수 없지만, bHasDeadActor 가드 덕분에 평소엔 진입 자체가 없음
+	for (auto& [Order, ActorList] : Actors)
+	{
+		ActorList.erase(
+			std::remove_if(ActorList.begin(), ActorList.end(),
+				[](const std::shared_ptr<Ext_Actor>& A) { return !A || A->IsDeath(); }),
+			ActorList.end());
+	}
+
+	// [3] 대기열·플래그 초기화
+	PendingDeadActors.clear();
+	bHasDeadActor = false;
 }
 
 // Actor 생성 시 자동 호출(이름 설정, 오너 신 설정, 오더 설정)

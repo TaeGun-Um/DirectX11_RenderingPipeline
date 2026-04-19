@@ -25,11 +25,14 @@ public:
 		return NewShader;
 	}
 
+	// Hot Reload — FilePath 로 HLSL 을 다시 읽어 재컴파일. 실패 시 기존 셰이더 유지.
+	bool Reload() override;
+
 protected:
 
 private:
 	void CreatePixelShader(std::string_view _Path, std::string_view _EntryPoint, UINT _VersionHigh = 5, UINT _VersionLow = 0);
 	void PixelShaderSetting(); // PixelShaderSetting() 호출
-	
+
 	COMPTR<ID3D11PixelShader> PixelShader = nullptr; // 생성한 픽셀 셰이더 정보 저장용
 };

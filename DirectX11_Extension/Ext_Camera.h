@@ -54,12 +54,16 @@ public:
 	bool IsSetSkyBox() { return bIsSkybox; };
 	void SkyBoxRendering(); // 스카이박스용
 
+	// 죽은 액터가 보유한 MeshComponent/Unit 을 카메라 목록에서 제거
+	// - 과거에는 Scene::Release 에서 호출했으나, 이제 MeshComponent::OnDetachFromScene 에서 호출하는 구조로 이동
+	// - 즉 Component 본인이 "내가 누구의 카메라에 등록됐는지" 를 알고 스스로 빼는 방식
+	void RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor);
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
-	
+
 private:
-	void RemoveMeshByActor(std::shared_ptr<Ext_Actor> DeadActor);
 	void CameraTransformUpdate(); // 카메라의 뷰, 프로젝션, 뷰포트 행렬 연산 실시
 	void Rendering(float _Deltatime); // 카메라의 MeshComponents, MeshComponentUnits에 대한 렌더링 파이프라인 결과 적용
 	

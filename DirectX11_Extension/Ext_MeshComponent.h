@@ -35,6 +35,10 @@ public:
 	void SetMask();
 	void SetAlpha();
 
+	// Scene Release 시 Camera 의 MeshComponent 목록에서 자신을 제거
+	// Ext_Camera::RemoveMeshByActor 가 호출되며, 카메라에 등록되어 있던 Unit 들까지 정리
+	void OnDetachFromScene() override;
+
 protected:
 	virtual void Start() override;
 	void Release() override;

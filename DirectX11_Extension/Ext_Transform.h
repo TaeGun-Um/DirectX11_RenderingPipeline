@@ -31,6 +31,25 @@ struct TransformData
 
 };
 
+// -------------------------------------------------------------------------
+//  HLSL ↔ C++ 패킹 검증 (컴파일 타임)
+// -------------------------------------------------------------------------
+//  HLSL cbuffer TransformData (b0) 레이아웃과 바이트 단위로 일치해야 함.
+//  HLSL 측 (Shader/Transform.fx):
+//    float4  Local{Position/Rotation/Scale/Quaternion} = 4 × 16 = 64
+//    float4x4 LocalMatrix                              = 64
+//    float4  World{Position/Rotation/Quaternion/Scale} = 4 × 16 = 64
+//    float4x4 WorldMatrix                              = 64
+//    float4x4 ViewMatrix / ProjectionMatrix / WV / WVP = 4 × 64 = 256
+//    float4  CameraWorldPosition                       = 16
+//    ──────────────────────────────────────────────── = 528
+//
+//  불일치 시 ShaderResourceSetting 런타임 assert 전에 컴파일 타임 차단.
+static_assert(sizeof(TransformData) == 528,
+    "TransformData size mismatch — HLSL cbuffer(b0) 레이아웃과 일치하지 않음 (예상 528)");
+static_assert(sizeof(TransformData) % 16 == 0,
+    "TransformData must be 16-byte aligned (D3D11 cbuffer 규격)");
+
 // 기하학 구조를 위한 클래스, World는 Scene 전체 데카르트좌표계 기준, Local은 자신이 속한 부모 기준의 위치/회전/스케일
 class Ext_Transform : public std::enable_shared_from_this<Ext_Transform>
 {

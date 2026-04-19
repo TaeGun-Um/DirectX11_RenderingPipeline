@@ -29,13 +29,22 @@ public:
 
 	COMPTR<ID3DBlob>& GetBinaryCode() { return BinaryCode; } // 임시
 
+	// Hot Reload — 런타임에 파일을 다시 읽어 재컴파일
+	// - 성공 시 true, 실패 시 false (기존 셰이더 유지)
+	// - 각 파생 타입(Vertex/Pixel)이 override 해야 동작
+	// - 주의: Reload 는 Shader 자체의 BinaryCode / D3D 셰이더 객체는 갱신하지만,
+	//   Material 의 BufferSetter 복사본(Unit.BufferSetter) 은 그대로임.
+	//   → cbuffer 레이아웃을 바꾸는 변경은 재시작 권장. PS 로직 변경 정도면 안전.
+	virtual bool Reload() { return false; }
+
 protected:
 	void CreateVersion(std::string_view _ShaderType, UINT _VersionHigt /*= 5*/, UINT _VersionLow /*= 0*/);
 	void ShaderResourceSetting(); // 상수 버퍼 세팅
 
 	COMPTR<ID3DBlob> BinaryCode = nullptr; // ID3DBlob 정보 저장
-	std::string Version = ""; // 셰이더 버전 저장
+	std::string Version = "";    // 셰이더 버전 저장 (예: vs_5_0)
 	std::string EntryPoint = ""; // 셰이더 EntryPoint 이름 저장(리소스 매니저에도 동일한 이름으로 저장)
+	std::string FilePath = "";   // 원본 HLSL 파일 경로 — Hot Reload 시 재사용
 	ShaderType Type = ShaderType::Unknown; // 셰이더 타입 저장
 
 private:

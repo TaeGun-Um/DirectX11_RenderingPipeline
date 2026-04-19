@@ -125,3 +125,18 @@ void Ext_MeshComponent::SetAlpha()
 {
 	Unit->SetAlpha();
 }
+
+// Scene Release 직전에 Actor 가 이 훅을 불러준다.
+// Camera 의 MeshComponents / MeshComponentUnits 목록에서 "이 액터가 가진" MeshComp/Unit 을 빼내 더 이상 렌더 대상이 되지 않게 한다.
+// 과거에는 Scene::Release 가 dynamic_pointer_cast 로 MeshComp 여부를 매번 확인했는데,
+// 이제는 Component 본인이 스스로 정리 책임을 가짐 → RTTI 캐스트 비용 제거 + 응집도 개선
+void Ext_MeshComponent::OnDetachFromScene()
+{
+	std::shared_ptr<Ext_Camera> Cam = OwnerCamera.lock();
+	std::shared_ptr<Ext_Actor> Owner = GetOwnerActor().lock();
+
+	if (Cam && Owner)
+	{
+		Cam->RemoveMeshByActor(Owner); // Camera 내부 MeshComponents / MeshComponentUnits 에서 제거
+	}
+}
