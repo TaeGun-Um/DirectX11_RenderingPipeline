@@ -1,7 +1,7 @@
-#pragma once
-#include <DirectX11_Extension/Ext_Actor.h>
+﻿#pragma once
+#include "RotatingMeshActor.h"
 
-class SphereActor : public Ext_Actor
+class SphereActor : public RotatingMeshActor
 {
 public:
 	// constrcuter destructer
@@ -14,15 +14,9 @@ public:
 	SphereActor& operator=(const SphereActor& _Other) = delete;
 	SphereActor& operator=(SphereActor&& _Other) noexcept = delete;
 
-	void SetRotate() { bIsRotation = true; }
-
 protected:
 	void Start() override;
-	void Update(float _DeltaTime) override;
 
 private:
-	float AccTime = 0;
-	bool bIsRotation = false;
-	std::shared_ptr<class Ext_MeshComponent> MeshComp;
-	
+
 };

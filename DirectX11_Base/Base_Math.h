@@ -81,7 +81,7 @@ public:
 
 	bool operator ==(const float4& _Value) const
 	{
-		return _Value.x == x && _Value.y == y && _Value.z == z;
+		return _Value.x == x && _Value.y == y && _Value.z == z && _Value.w == w;
 	}
 
 	float4 operator *(const float _Value) const
@@ -526,11 +526,11 @@ public:
 		
 		Arr2D[0][0] = _Width * 0.5f;
 		Arr2D[1][1] = -_Height * 0.5f;
-		Arr2D[2][2] = _ZMax != 0.0f ? 1.0f : _ZMin / _ZMax;
+		Arr2D[2][2] = _ZMax - _ZMin;
 
 		Arr2D[3][0] = Arr2D[0][0] + _Left;
 		Arr2D[3][1] = _Height * 0.5f + _Right;
-		Arr2D[3][2] = _ZMax != 0.0f ? 0.0f : _ZMin / _ZMax;
+		Arr2D[3][2] = _ZMin;
 		Arr2D[3][3] = 1.0f;
 	}
 

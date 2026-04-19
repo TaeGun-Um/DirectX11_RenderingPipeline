@@ -23,7 +23,6 @@ void Ext_Core::Run(HINSTANCE _hInstance, std::function<void()> _Start, std::func
 {
 	//Base_Windows::CreateConsole(); // 콘솔창 띄우고싶으면 주석 해제
 	Base_Debug::LeakCheck();
-	int* TrustLeak = new int;
 
 	Base_Windows::WindowCreate(_hInstance, _ScreenSize, _IsFullScreen); // 윈도우 창 생성 후 루프문 시작
 	Base_Windows::WindowLoop(std::bind(Ext_Core::Start, _Start), Ext_Core::Update, std::bind(Ext_Core::End, _End)); // bind로 전달해서 ContentsCore의 Start(), End() 함수가 Ext_Core의 Start(), End() 호출 시 실행될 수 있도록 함

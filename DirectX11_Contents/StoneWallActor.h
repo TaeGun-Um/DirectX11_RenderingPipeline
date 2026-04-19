@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DirectX11_Extension/Ext_Actor.h>
 
 class StoneWallActor : public Ext_Actor
@@ -18,7 +18,7 @@ public:
 
 protected:
 	void Start() override;
-	void Update(float _DletaTime) override;
+	void Update(float _DeltaTime) override;
 
 private:
 	std::shared_ptr<class Ext_CollisionComponent> WallBody;

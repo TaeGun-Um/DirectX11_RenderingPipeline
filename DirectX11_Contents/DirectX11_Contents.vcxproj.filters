@@ -102,6 +102,9 @@
     <ClCompile Include="ReflectionActor.cpp">
       <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor</Filter>
     </ClCompile>
+    <ClCompile Include="RotatingMeshActor.cpp">
+      <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Contents_Core.h">
@@ -150,6 +153,9 @@
       <Filter>01.Scene\01.MathScene</Filter>
     </ClInclude>
     <ClInclude Include="ReflectionActor.h">
+      <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatingMeshActor.h">
       <Filter>01.Scene\00.RenderScene\00.Actor\00.TestActor</Filter>
     </ClInclude>
   </ItemGroup>

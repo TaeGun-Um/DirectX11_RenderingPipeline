@@ -42,7 +42,6 @@ PSOutput DeferredMerge_PS(PSInput _Input) : SV_TARGET
     if (Albedo.a)
     {
         OutPut.Color.xyz = Albedo.xyz * (DiffuseRatio.xyz + SpacularRatio.xyz + AmbientRatio.xyz);
-        OutPut.Color.a = saturate(Albedo.a + (DiffuseRatio.w + SpacularRatio.w + AmbientRatio.w));
         OutPut.Color.a = 1.0f;
     }
     else

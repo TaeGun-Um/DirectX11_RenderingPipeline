@@ -23,7 +23,7 @@ public:
 	static Base_Deltatime& GetGlobalTime() { return GlobalTime; }
 	float& GetFrameTime() { return GlobalTime.FrameTime; }
 	float& GetFrameLimit() { return GlobalTime.FrameLimit; }
-	float GetDeltaTime() const { return min(GlobalTime.floatDeltaTime, 0.1f); } // 프레임 드랍 시, clamp를 위한 리턴 방식
+	float GetDeltaTime() const { return std::min<float>(GlobalTime.floatDeltaTime, 0.1f); } // 프레임 드랍 시, clamp를 위한 리턴 방식
 	float GetFrameRate() { return GlobalTime.FrameRate; }
 	void SetDeltaTime(float _DeltaTime) { GlobalTime.floatDeltaTime = _DeltaTime; }
 	void AddFrameTime(float _FrameTime) { GlobalTime.FrameTime += _FrameTime; }

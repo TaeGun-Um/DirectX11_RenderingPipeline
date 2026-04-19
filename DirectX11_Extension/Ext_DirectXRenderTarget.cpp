@@ -155,24 +155,20 @@ void Ext_DirectXRenderTarget::RenderTargetSetting()
 {
 	// 최대 SRV 슬롯 개수만큼 nullptr 배열 준비, 머지나 RTV 바인딩 전에 언바인딩 실시
 	constexpr UINT MaxSRVSlots = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT;
-	static ID3D11ShaderResourceView* NullSRVs[MaxSRVSlots] = { nullptr };
+	static ID3D11ShaderResourceView* const NullSRVs[MaxSRVSlots] = { nullptr };
 	Ext_DirectXDevice::GetContext()->PSSetShaderResources(0, MaxSRVSlots, NullSRVs);
 
-	ID3D11RenderTargetView** RTV = &RTVs[0];
-
-	if (nullptr == RTV)
+	if (RTVs.empty())
 	{
 		MsgAssert("랜더타겟 뷰가 존재하지 않아서 클리어가 불가능합니다.");
+		return;
 	}
 
-	COMPTR<ID3D11DepthStencilView> DSV = DepthTexture != nullptr ? DepthTexture->GetDSV() : nullptr;
+	// COMPTR<T>는 Microsoft::WRL::ComPtr<T> 래핑이라 내부 raw 포인터 레이아웃과 동일하므로 &RTVs[0] 캐스트가 유효
+	ID3D11RenderTargetView** RTV = reinterpret_cast<ID3D11RenderTargetView**>(&RTVs[0]);
 
-	if (false == DepthSetting)
-	{
-		DSV = nullptr;
-	}
-	
-	//Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV.GetAddressOf(), DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
+	COMPTR<ID3D11DepthStencilView> DSV = (DepthSetting && DepthTexture != nullptr) ? DepthTexture->GetDSV() : nullptr;
+
 	Ext_DirectXDevice::GetContext()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTV, DSV.Get()); // Output-Merger 스테이지에 렌더 타겟 + 뎁스 설정
 	// 1. 바인딩할 렌더타겟뷰 갯수
 	// 2. RTV의 시작 주소

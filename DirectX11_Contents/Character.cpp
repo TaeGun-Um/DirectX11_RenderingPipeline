@@ -132,7 +132,7 @@ void Character::Update(float _DeltaTime)
 			// (E) Δ를 카메라 회전에 반영
 			CamYaw += deltaX * MouseSensitivity;
 			CamPitch -= deltaY * MouseSensitivity;
-			CamPitch = std::clamp(CamPitch, 15.0f, 15.0f); // 예: 상하 회전 제한
+			CamPitch = std::clamp(CamPitch, -85.0f, 85.0f); // 예: 상하 회전 제한
 
 			// (F) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
 			SetCursorPos(ScreenCenter.x, ScreenCenter.y);
@@ -161,12 +161,7 @@ void Character::Update(float _DeltaTime)
 
 void Character::CreateInput()
 {
-	//Base_Input::CreateKey("OnOff", 'Q');
-	//Base_Input::CreateKey("Forword", 'W');
-	//Base_Input::CreateKey("Back", 'S');
-	//Base_Input::CreateKey("Right", 'D');
-	//Base_Input::CreateKey("Left", 'A');
-	//Base_Input::CreateKey("Up", VK_SPACE);
+	// Movement/camera keys are registered globally in Ext_Core::Start
 	Base_Input::CreateKey("Attack", VK_LBUTTON);
 }
 

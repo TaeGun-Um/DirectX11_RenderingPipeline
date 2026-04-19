@@ -45,9 +45,6 @@ void Base_Input::Key::Update(float _DeltaTime)
 
 void Base_Input::Update(float _DeltaTime)
 {
-	std::map<std::string, Key>::iterator StartKeyIter = Keys.begin();
-	std::map<std::string, Key>::iterator EndKeyIter = Keys.end();
-
 	for (auto& Iter : Keys)
 	{
 		Iter.second.Update(_DeltaTime);

@@ -1,4 +1,4 @@
-#include "PrecompileHeader.h"
+﻿#include "PrecompileHeader.h"
 #include "InformationGUI.h"
 
 #include <DirectX11_Extension/Ext_Transform.h>
@@ -21,7 +21,7 @@ void InformationGUI::OnGUI(std::shared_ptr<class Ext_Scene> _Scene, float _Delta
 
 	}
 
-	if (nullptr != Function1) Function1;
+	if (Function1) Function1();
 
 	if (nullptr != Transform1)
 	{

@@ -3,7 +3,6 @@
 #include "Ext_DirectXDevice.h"
 
 std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> Ext_DirectXConstantBuffer::ConstantBuffers;
-std::string Ext_DirectXConstantBuffer::Name = "";
 
 // CreateBuffer()를 통해 상수 버퍼를 생성
 void Ext_DirectXConstantBuffer::CreateConstantBuffer(const D3D11_SHADER_BUFFER_DESC& _BufferDesc)

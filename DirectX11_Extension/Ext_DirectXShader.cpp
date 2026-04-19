@@ -221,4 +221,10 @@ void Ext_DirectXShader::ShaderResourceSetting()
 		}
 
 	}
+
+	if (nullptr != CompileInfo)
+	{
+		CompileInfo->Release();
+		CompileInfo = nullptr;
+	}
 }

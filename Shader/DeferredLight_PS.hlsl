@@ -27,12 +27,11 @@ PSOutPut DeferredLight_PS(PSInput _Input) : SV_TARGET
     float3 WorldPos = PositionTex.Sample(Sampler, _Input.Texcoord).xyz;
     float3 WorldNorm = NormalTex.Sample(Sampler, _Input.Texcoord).xyz;
         
-    LightData LTData = Lights[LightCount];
+    LightData LTData = Lights[0];
    
     // 공통 파라미터
     float Shininess = 32.0f;
     float3 EyePosition = LTData.CameraWorldPosition.xyz;
-    float3 EyeDirection; // 계산 시점에 맞춰 설정
     
     float3 DiffuseLight = float3(0.0f, 0.0f, 0.0f);
     float3 SpecularLight = float3(0.0f, 0.0f, 0.0f);

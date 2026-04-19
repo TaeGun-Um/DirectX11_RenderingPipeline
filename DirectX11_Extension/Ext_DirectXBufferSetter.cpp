@@ -232,7 +232,13 @@ void ConstantBufferSetter::ConstantBufferSetting()
 {
 	ConstantBuffer->ChangeData(CPUData, CPUDataSize);
 
-	ShaderType Type = OwnerShader.lock()->GetType();
+	std::shared_ptr<Ext_DirectXShader> Shader = OwnerShader.lock();
+	if (nullptr == Shader)
+	{
+		MsgAssert("상수버퍼의 OwnerShader가 이미 소멸되었습니다.");
+		return;
+	}
+	ShaderType Type = Shader->GetType();
 
 	switch (Type)
 	{
@@ -259,7 +265,13 @@ void ConstantBufferSetter::ConstantBufferSetting()
 // 샘플러 세팅, 바인딩 슬롯 찾아서 VSSetSamplers(), PSSetSamplers() 실시
 void SamplerSetter::SamplerSetting()
 {
-	ShaderType Type = OwnerShader.lock()->GetType();
+	std::shared_ptr<Ext_DirectXShader> Shader = OwnerShader.lock();
+	if (nullptr == Shader)
+	{
+		MsgAssert("샘플러의 OwnerShader가 이미 소멸되었습니다.");
+		return;
+	}
+	ShaderType Type = Shader->GetType();
 
 	switch (Type)
 	{
@@ -286,7 +298,13 @@ void SamplerSetter::SamplerSetting()
 // 텍스쳐 세팅, 바인딩 슬롯 찾아서 VSSetShaderResources(), VSSetShaderResources() 실시
 void TextureSetter::TextureSetting()
 {
-	ShaderType Type = OwnerShader.lock()->GetType();
+	std::shared_ptr<Ext_DirectXShader> Shader = OwnerShader.lock();
+	if (nullptr == Shader)
+	{
+		MsgAssert("텍스쳐의 OwnerShader가 이미 소멸되었습니다.");
+		return;
+	}
+	ShaderType Type = Shader->GetType();
 
 	switch (Type)
 	{

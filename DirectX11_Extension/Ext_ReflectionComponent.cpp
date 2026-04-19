@@ -3,12 +3,34 @@
 
 #include <DirectX11_Base/Base_Directory.h>
 
+#include "Ext_Actor.h"
+#include "Ext_MeshComponent.h"
 #include "Ext_ScreenShoot.h"
 #include "Ext_DirectXTexture.h"
 #include "Ext_DirectXRenderTarget.h"
 #include "Ext_Transform.h"
 #include "Ext_Scene.h"
 #include "Ext_Camera.h"
+
+int Ext_ReflectionComponent::AttachCounter = 0;
+
+std::shared_ptr<Ext_ReflectionComponent> Ext_ReflectionComponent::AttachTo(std::shared_ptr<Ext_Actor> _Owner, std::shared_ptr<Ext_MeshComponent> _Mesh, const float4& _CaptureSize /*= float4(512, 512)*/)
+{
+	if (nullptr == _Owner || nullptr == _Mesh)
+	{
+		MsgAssert("ReflectionComponent::AttachTo: nullptr owner or mesh");
+		return nullptr;
+	}
+
+	std::shared_ptr<Ext_ReflectionComponent> Reflection = std::make_shared<Ext_ReflectionComponent>();
+	std::string Name = "TestReflection" + std::to_string(AttachCounter++);
+
+	_Mesh->SetSampler("CubeMapSampler", "CubeMapSampler");
+	Reflection->ReflectionInitialize(_Owner, Name, _CaptureSize);
+	_Mesh->SetTexture(Reflection->GetReflectionCubeTexture(), "ReflectionTexture");
+
+	return Reflection;
+}
 
 void Ext_ReflectionComponent::ReflectionInitialize(std::shared_ptr<class Ext_Actor> _Owner, std::string_view _CaptureTextureName, const float4& _Scale/* = float4(128, 128)*/)
 {

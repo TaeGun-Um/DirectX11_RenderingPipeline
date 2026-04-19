@@ -1,7 +1,7 @@
-#pragma once
-#include <DirectX11_Extension/Ext_Actor.h>
+﻿#pragma once
+#include "RotatingMeshActor.h"
 
-class ReflectionActor : public Ext_Actor
+class ReflectionActor : public RotatingMeshActor
 {
 public:
 	// constrcuter destructer
@@ -14,17 +14,12 @@ public:
 	ReflectionActor& operator=(const ReflectionActor& _Other) = delete;
 	ReflectionActor& operator=(ReflectionActor&& _Other) noexcept = delete;
 
-	void SetRotate() { bIsRotation = true; }
 	void SetReflection();
 
 protected:
 	void Start() override;
-	void Update(float _DeltaTime) override;
 
 private:
-	float AccTime = 0;
-	bool bIsRotation = false;
-	std::shared_ptr<class Ext_MeshComponent> MeshComp;
 	std::shared_ptr<class Ext_ReflectionComponent> Reflection;
 
 };

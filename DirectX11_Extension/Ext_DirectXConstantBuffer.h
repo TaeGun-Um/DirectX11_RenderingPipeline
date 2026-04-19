@@ -29,7 +29,8 @@ public:
 
 		std::shared_ptr<Ext_DirectXConstantBuffer> NewIndexBuffer = Ext_ResourceManager::CreateResource();
 		NewIndexBuffer->CreateConstantBuffer(_Desc);
-		Name = NewName;
+		NewIndexBuffer->Name = NewName;
+		ConstantBuffers[_Byte][NewName] = NewIndexBuffer;
 
 		return NewIndexBuffer;
 	}
@@ -48,7 +49,7 @@ private:
 	void CSSetting(UINT _Slot); // CSSetConstantBuffers() 호출
 
 	static std::map<int, std::map<std::string, std::shared_ptr<Ext_DirectXConstantBuffer>>> ConstantBuffers;
-	static std::string Name;
+	std::string Name;
 	D3D11_BUFFER_DESC ConstantBufferInfo = { 0, };  // 상수 버퍼 DESC 저장용
 	COMPTR<ID3D11Buffer> ConstantBuffer = nullptr;   // 상수 버퍼 인터페이스 저장용
 
