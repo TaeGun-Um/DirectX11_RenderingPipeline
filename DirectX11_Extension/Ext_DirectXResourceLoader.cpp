@@ -458,6 +458,29 @@ void Ext_DirectXResourceLoader::MakeDepth()
 
 		Ext_DirectXDepth::CreateDepthStencilState("SkyDepth", DepthStencilInfo);
 	}
+
+	// 반투명(Forward) 패스: depth 테스트는 하되, 기록은 하지 않음
+	// 여러 알파 오브젝트가 서로 간섭 없이 back-to-front 블렌딩되도록
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+
+		DepthStencilInfo.DepthEnable = true;
+		DepthStencilInfo.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // 쓰기 OFF
+		DepthStencilInfo.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+		DepthStencilInfo.StencilEnable = false;
+
+		Ext_DirectXDepth::CreateDepthStencilState("AlphaDepth", DepthStencilInfo);
+	}
+
+	// Merge 패스 전용: depth 테스트/쓰기 모두 OFF
+	// 풀스크린 쿼드가 opaque depth를 덮어쓰지 않도록 함
+	{
+		D3D11_DEPTH_STENCIL_DESC DepthStencilInfo = { 0, };
+		DepthStencilInfo.DepthEnable = false;
+		DepthStencilInfo.StencilEnable = false;
+
+		Ext_DirectXDepth::CreateDepthStencilState("MergeDepth", DepthStencilInfo);
+	}
 }
 
 // DirectX11 Rasterizer 생성
@@ -534,13 +557,13 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
-	// 그래픽스 Alpha 메시
+	// 그래픽스 Alpha 메시 (반투명 Forward 패스)
 	{
 		std::shared_ptr<Ext_DirectXMaterial> NewRenderingPipeline = Ext_DirectXMaterial::CreateMaterial("StaticAlpha");
 		NewRenderingPipeline->SetVertexShader("FStatic_VS");
 		NewRenderingPipeline->SetPixelShader("FGraphics_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("EngineDepth");
+		NewRenderingPipeline->SetDepthState("AlphaDepth"); // depth test OK, write OFF
 		NewRenderingPipeline->SetRasterizer("BasicRasterizer");
 	}
 
@@ -600,7 +623,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetVertexShader("DeferredMerge_VS");
 		NewRenderingPipeline->SetPixelShader("DeferredMerge_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetDepthState("MergeDepth"); // depth 건드리지 않음
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
@@ -631,7 +654,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetVertexShader("RenderTargetMerge_VS");
 		NewRenderingPipeline->SetPixelShader("RenderTargetMerge_PS");
 		NewRenderingPipeline->SetBlendState("MergeBlend");
-		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetDepthState("MergeDepth"); // depth 건드리지 않음
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 
@@ -641,7 +664,7 @@ void Ext_DirectXResourceLoader::MakeMaterial()
 		NewRenderingPipeline->SetVertexShader("RenderTargetMerge_VS");
 		NewRenderingPipeline->SetPixelShader("RenderTargetMerge_PS");
 		NewRenderingPipeline->SetBlendState("BaseBlend");
-		NewRenderingPipeline->SetDepthState("AlwayDepth");
+		NewRenderingPipeline->SetDepthState("MergeDepth"); // depth 건드리지 않음
 		NewRenderingPipeline->SetRasterizer("NonCullingRasterizer");
 	}
 

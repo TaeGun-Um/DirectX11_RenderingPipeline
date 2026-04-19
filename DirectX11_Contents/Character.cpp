@@ -13,6 +13,7 @@
 #include <DirectX11_Extension/Ext_Transform.h>
 #include <DirectX11_Extension/Ext_Scene.h>
 #include <DirectX11_Extension/Ext_Camera.h>
+#include <DirectX11_Extension/Ext_SpringArm.h>
 
 void Character::Start()
 {
@@ -51,12 +52,17 @@ void Character::Start()
 
 	GetTransform()->SetLocalPosition({0.f, 10.f, 0.f});
 
-	//GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetParent(GetTransform());
-	GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalPosition({ 0.f, CameraHeight, -CameraDistance });
-	GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+	// SpringArm attached to character; drives camera pos/rot
+	CameraArm = CreateComponent<Ext_SpringArm>("CameraArm");
+	CameraArm->SetTargetArmLength(CameraDistance);
+	CameraArm->SetTargetOffset({ 0.f, CameraHeight, 0.f, 0.f });
+	CameraArm->SetEnableLag(true);
+	CameraArm->SetCameraLagSpeed(15.0f);
+	CameraArm->SetRotationLagSpeed(20.0f);
+	CameraArm->SetPitchClamp(-70.0f, 70.0f);
+	CameraArm->SetRotation(17.0f, 0.0f);
 
 	GetTransform()->SetLocalPosition({ 0, 100, 0 });
-	// GetTransform()->SetLocalScale({ 0.05f, 0.05f, 0.05f });
 }
 
 void Character::Update(float _DeltaTime)
@@ -64,7 +70,8 @@ void Character::Update(float _DeltaTime)
 	AccTime += _DeltaTime;
 
 	// 메인 카메라가 자유 모드가 아닐 때만(즉, 추적 모드일 때만) 이 코드를 실행
-	if (!GetOwnerScene().lock()->GetMainCamera()->IsCameraAcc())
+	auto MainCam = GetOwnerScene().lock()->GetMainCamera();
+	if (!MainCam->IsCameraAcc())
 	{
 		if (!BodyCollision->Collision(CollisionGroup::Platform))
 		{
@@ -77,86 +84,34 @@ void Character::Update(float _DeltaTime)
 
 		PlayerFSM.Update(_DeltaTime);
 
-		// -------------------------------
-		// F4 눌러서 마우스 포커스 토글
-		// -------------------------------
+		// F4: toggle mouse capture
 		if (Base_Input::IsDown("Escape"))
 		{
-			GetOwnerScene().lock()->GetMainCamera()->bIsEscapeSwitch();
-			if (GetOwnerScene().lock()->GetMainCamera()->IsEscape())
-			{
-				// 화면 중앙 → 스크린 좌표로 변환 → 커서 숨김
-				HWND hWnd = Base_Windows::GetHWnd();
-				RECT rc;
-				GetClientRect(hWnd, &rc);
-				POINT clientCenter = {
-					(rc.right - rc.left) / 2,
-					(rc.bottom - rc.top) / 2
-				};
-				POINT screenCenter = clientCenter;
-				ClientToScreen(hWnd, &screenCenter);
-
-				SetCursorPos(screenCenter.x, screenCenter.y);
-				ShowCursor(FALSE);
-			}
-			else
-			{
-				ShowCursor(TRUE);
-			}
+			MainCam->bIsEscapeSwitch();
+			Base_Input::SetCursorLocked(MainCam->IsEscape());
 		}
 
-		// ---------------------------------------------
-		// 카메라 자유 모드이면서 “마우스 캡처 중”일 때만 계산
-		// ---------------------------------------------
-		if (GetOwnerScene().lock()->GetMainCamera()->IsEscape())
+		// When captured, feed mouse delta to SpringArm rotation
+		if (MainCam->IsEscape())
 		{
-			// (A) 윈도우 핸들 가져오기
-			HWND hWnd = Base_Windows::GetHWnd();
-
-			// (B) 클라이언트 영역 크기 구하기
-			RECT Rc;
-			GetClientRect(hWnd, &Rc);
-
-			POINT ClientCenter = { (Rc.right - Rc.left) / 2, (Rc.bottom - Rc.top) / 2 };
-			POINT ScreenCenter = ClientCenter;
-			ClientToScreen(hWnd, &ScreenCenter);
-
-			// (C) 현재 커서 위치 읽기
-			POINT curMouse;
-			GetCursorPos(&curMouse);
-
-			// (D) Δ 계산
-			int deltaX = curMouse.x - ScreenCenter.x;
-			int deltaY = curMouse.y - ScreenCenter.y;
-
-			// (E) Δ를 카메라 회전에 반영
-			CamYaw += deltaX * MouseSensitivity;
-			CamPitch -= deltaY * MouseSensitivity;
-			CamPitch = std::clamp(CamPitch, -85.0f, 85.0f); // 예: 상하 회전 제한
-
-			// (F) 커서를 다시 윈도우 중앙(스크린 좌표)으로 고정
-			SetCursorPos(ScreenCenter.x, ScreenCenter.y);
-
-			// (G) 카메라 회전 적용 (X=Pitch, Y=Yaw)
-			GetOwnerScene().lock()->GetMainCamera()->GetTransform()->SetLocalRotation({ CamPitch, CamYaw, 0.f });
+			if (!Base_Input::IsCursorLocked()) Base_Input::SetCursorLocked(true);
+			float DeltaX = static_cast<float>(Base_Input::GetMouseDeltaX());
+			float DeltaY = static_cast<float>(Base_Input::GetMouseDeltaY());
+			CameraArm->AddRotationInput(DeltaY * MouseSensitivity, DeltaX * MouseSensitivity);
 		}
-		// 만약 bMouseCaptured == false라면 Δ 계산 없이 커서 제어도 하지 않으므로, 
-		// 사용자는 자유롭게 커서를 움직일 수 있고, 카메라도 회전하지 않음
-
-		// ------------------------------------------------------------
-		// 카메라 위치 갱신 : Character 월드 위치 기반으로 항상 따라다님(bMouseCaptured 여부와 관계없이 항상 카메라 위치만 업데이트)
-		// ------------------------------------------------------------
+		else if (Base_Input::IsCursorLocked())
 		{
-			float4 CharWorldPosition = GetTransform()->GetWorldPosition();
-			float4 CamLocalUp = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalUpVector();
-			float4 CamLocalForward = GetOwnerScene().lock()->GetMainCamera()->GetTransform()->GetLocalForwardVector();
-			float4 CamPososition = CharWorldPosition + CamLocalUp * CameraHeight - CamLocalForward * CameraDistance;
-
-			GetOwnerScene().lock()->GetMainCamera()	->GetTransform()->SetLocalPosition(CamPososition);
+			Base_Input::SetCursorLocked(false);
 		}
+
+		// Apply SpringArm socket pose to main camera
+		const float4& ArmPos = CameraArm->GetSocketWorldPosition();
+		const float4& ArmRot = CameraArm->GetSocketWorldRotation();
+		MainCam->GetTransform()->SetLocalPosition(ArmPos);
+		MainCam->GetTransform()->SetLocalRotation(ArmRot);
 	}
 
-	__super::Update(_DeltaTime);
+		__super::Update(_DeltaTime);
 }
 
 void Character::CreateInput()

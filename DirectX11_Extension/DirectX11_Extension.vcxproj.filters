@@ -163,6 +163,7 @@
     <ClCompile Include="Ext_ScreenShoot.cpp">
       <Filter>04.Graphics\03.Reflection</Filter>
     </ClCompile>
+    <ClCompile Include="Ext_SpringArm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ext_DirectXDevice.h">
@@ -336,6 +337,7 @@
     <ClInclude Include="Ext_ScreenShoot.h">
       <Filter>04.Graphics\03.Reflection</Filter>
     </ClInclude>
+    <ClInclude Include="Ext_SpringArm.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.Process">

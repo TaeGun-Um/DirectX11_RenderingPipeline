@@ -95,11 +95,13 @@ private:
 	D3D11_VIEWPORT ViewPortData; 
 	void bIsCameraSwitch() { bIsCameraAcc = !bIsCameraAcc; }
 	bool bIsEscape = true;
-	bool bIsCameraAcc = false;           // Q를 눌러 자유 모드인지 아닌지
-	bool bPrevCameraAcc = false;          // 이전 프레임의 bIsCameraAcc 값
+	bool bIsCameraAcc = false;           // 현재 프레임 flycam 활성 여부
+	bool bPrevCameraAcc = false;          // 이전 프레임 flycam 활성 여부
+	bool bStickyFlycam = false;           // F1 sticky 토글 상태
 	float AccTime = 0.f;
 	float Yaw = 0.f;
 	float Pitch = 0.f;
+	float FlyBaseSpeed = 200.0f;           // flycam 기본 이동 속도 (스크롤 휠로 조절)
 
 	float4 SavedPos = float4::ZERO;
 	float4 SavedRot = float4::ZERO;

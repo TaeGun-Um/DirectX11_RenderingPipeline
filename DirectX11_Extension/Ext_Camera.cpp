@@ -189,11 +189,10 @@ void Ext_Camera::Rendering(float _Deltatime)
 		SkyBoxRendering();
 	}
 
-	AlphaRenderTarget->RenderTargetClear();
-	MeshRenderTarget->RenderTargetClear();
-	// MeshRenderTarget->RenderTargetSetting();
+	AlphaRenderTarget->RenderTargetClear(); // 디버그 GUI용으로 유지(본 렌더링엔 사용 X)
+	MeshRenderTarget->RenderTargetClear(); // 공유 depth(=CameraRT depth) 도 함께 클리어됨
 
-	// 전체 유닛 Z정렬 후 렌더링
+	// 전체 유닛 Z정렬 (far→near). 알파 패스에서 back-to-front 블렌딩을 위해 필요
 	std::vector<std::shared_ptr<Ext_MeshComponentUnit>> AllRenderUnits;
 	for (auto& [IndexKey, UnitList] : MeshComponentUnits)
 	{
@@ -218,29 +217,22 @@ void Ext_Camera::Rendering(float _Deltatime)
 			 > (BMesh->GetTransform()->GetWorldPosition() - CamPos).Size();
 		});
 
-	// 메인 렌더링 패스, 백버퍼가 세팅되어 있어서 거기에 그림
+	// 메인 디퍼드 패스 (opaque 전용, 알파는 별도 Forward 패스에서 처리)
 	std::unordered_set<std::shared_ptr<Ext_MeshComponent>> UpdatedComponents;
 	for (auto& Unit : AllRenderUnits)
 	{
 		auto Owner = Unit->GetOwnerMeshComponent().lock();
 		if (!Owner) continue;
+		if (Unit->GetIsAlpha()) continue; // 알파 유닛은 합성 이후 Forward 패스에서 그림
 
-		if (Unit->GetIsAlpha())
-		{
-			AlphaRenderTarget->RenderTargetSetting();
-		}
-		else
-		{
-			MeshRenderTarget->RenderTargetSetting();
-		}
+		MeshRenderTarget->RenderTargetSetting();
 
-		// View/Projection은 한 번만 업데이트
 		if (UpdatedComponents.insert(Owner).second)
 		{
-			Owner->Rendering(_Deltatime, GetTransform()->GetLocalPosition(), GetViewMatrix(), GetProjectionMatrix()); // 행렬 업데이트
+			Owner->Rendering(_Deltatime, GetTransform()->GetLocalPosition(), GetViewMatrix(), GetProjectionMatrix());
 		}
 
-		Unit->Rendering(_Deltatime); // 렌더링 파이프라인 세팅 후 드로우콜
+		Unit->Rendering(_Deltatime);
 	}
 
 	// 쉐도우 패스, 뎁스 만들기
@@ -303,120 +295,111 @@ void Ext_Camera::Rendering(float _Deltatime)
 	LightMergeRenderTarget->RenderTargetSetting();
 	LightMergeUnit.Rendering(_Deltatime);
 
-	// 이 카메라의 최종 렌더 타겟에 결과물들 Merge
-	CameraRenderTarget->RenderTargetClear();
+	// === 최종 합성 ===
+	// CameraRT의 depth는 opaque 패스에서 공유로 채워진 상태.
+	// 컬러만 클리어하고 depth는 유지 → 이후 Forward 알파 패스에서 depth 테스트 가능.
+	CameraRenderTarget->RenderTargetColorClear();
 	CameraRenderTarget->Merge(SkyBoxRenderTarget);
-	CameraRenderTarget->Merge(LightMergeRenderTarget); // Light 합치기
+	CameraRenderTarget->Merge(LightMergeRenderTarget);
+
+	// === Forward 알파 패스 ===
+	// 라이팅/스카이 합성 완료된 CameraRT에 직접 그림.
+	// StaticAlpha 머티리얼은 AlphaDepth(쓰기 OFF) + BaseBlend(SRC_ALPHA).
+	// AllRenderUnits는 far→near 정렬되어 있어 back-to-front 블렌딩 정상.
+	CameraRenderTarget->RenderTargetSetting();
+	for (auto& Unit : AllRenderUnits)
+	{
+		auto Owner = Unit->GetOwnerMeshComponent().lock();
+		if (!Owner || !Unit->GetIsAlpha()) continue;
+
+		if (UpdatedComponents.insert(Owner).second)
+		{
+			Owner->Rendering(_Deltatime, GetTransform()->GetLocalPosition(), GetViewMatrix(), GetProjectionMatrix());
+		}
+
+		Unit->Rendering(_Deltatime);
+	}
 
 	CameraRenderTarget->PostProcessing(GetSharedFromThis<Ext_Camera>(), _Deltatime);
 }
 
-// 카메라 조종
+// 카메라 조종 (언리얼 에디터 스타일 flycam)
+// - 우클릭(FlyCam) 홀드 동안 flycam 활성 + 커서 잠금
+// - F1(OnOff) 로 sticky 토글 유지 (레거시 호환)
+// - 이동: WASD / Space / Ctrl / Shift 스프린트
+// - 마우스 휠: 기본 이동 속도 조절 (상한/하한 clamp)
 void Ext_Camera::Update(float _Deltatime)
 {
 	if (GetSharedFromThis<Ext_Camera>() != GetOwnerScene().lock()->GetMainCamera()) return;
 
 	AccTime += _Deltatime;
 
-	// (A) 카메라 모드(추적/자유) 전환 체크
+	// F1 sticky 토글 (레거시)
 	if (Base_Input::IsDown("OnOff") && AccTime >= 0.2f)
 	{
 		AccTime = 0.f;
-		bIsCameraSwitch();
+		bStickyFlycam = !bStickyFlycam;
 	}
 
-	// 마우스 포커스 토글 (F4 키를 눌렀을 때)
-	// “ToggleMouse”라는 입력을 F4 키에 매핑했다고 가정
-	if (Base_Input::IsDown("Escape"))
+	// RMB 홀드 또는 sticky → flycam 활성
+	const bool bFlyHeld = Base_Input::IsPress("FlyCam");
+	bIsCameraAcc = bStickyFlycam || bFlyHeld;
+
+	// 상태 전이 처리
+	if (bIsCameraAcc && !bPrevCameraAcc)
 	{
-		// 마우스 캡처 상태를 반전시키고, 
-		// 캡처 중일 때는 커서를 숨기고 중앙 고정, 
-		// 캡처 해제 시에는 커서를 보이도록
-		bIsEscape = !bIsEscape;
-		if (bIsEscape)
+		// flycam 진입: 커서 잠금
+		Base_Input::SetCursorLocked(true);
+	}
+	else if (!bIsCameraAcc && bPrevCameraAcc)
+	{
+		// flycam 해제: Character가 이어받지 않는 경우(bIsEscape=false)에만 커서 해제
+		if (!bIsEscape)
 		{
-			// 캡처 상태: 화면 중앙으로 커서를 가져오고, 커서 숨기기
-			POINT center = {
-				static_cast<long>(Base_Windows::GetScreenSize().x / 2),
-				static_cast<long>(Base_Windows::GetScreenSize().y / 2)
-			};
-			SetCursorPos(center.x, center.y);
-			ShowCursor(FALSE);
-		}
-		else
-		{
-			// 캡처 해제: 커서 보이기 (이후 사용자가 자유롭게 움직일 수 있음)
-			ShowCursor(TRUE);
+			Base_Input::SetCursorLocked(false);
 		}
 	}
-
-	if (!bIsCameraAcc)
-		return;
-
-	if (!bPrevCameraAcc && bIsCameraAcc)
-	{
-		// (A) 캐릭터 추적 모드 → 자유 모드 진입
-		GetTransform()->SetLocalPosition(SavedPos);
-		GetTransform()->SetLocalRotation(SavedRot);
-
-		// 자유 모드로 바뀔 때, 마우스 캡처를 자동으로 활성화(원한다면)
-		// bIsEscape = true;
-		// ShowCursor(FALSE);
-	}
-	else if (bPrevCameraAcc && !bIsCameraAcc)
-	{
-		// (B) 자유 모드 → 캐릭터 추적 모드로 복귀
-		SavedPos = GetTransform()->GetWorldPosition();
-		SavedRot = GetTransform()->GetLocalRotation();
-		// 이때 마우스 캡처 해제 (원한다면)
-		// bIsEscape = false;
-		// ShowCursor(TRUE);
-	}
-
 	bPrevCameraAcc = bIsCameraAcc;
 
-	// ★ “자유 모드이면서” “마우스 캡처 모드일 때만” 마우스Δ 계산 및 카메라 이동/회전 실행
-	if (bIsCameraAcc && bIsEscape)
+	if (!bIsCameraAcc) return;
+
+	// ---- 마우스 룩 ----
+	const float Sensitivity = 0.1f;
+	const float DeltaX = static_cast<float>(Base_Input::GetMouseDeltaX());
+	const float DeltaY = static_cast<float>(Base_Input::GetMouseDeltaY());
+
+	Yaw   += DeltaX * Sensitivity;
+	Pitch += DeltaY * Sensitivity;
+	Pitch = std::clamp(Pitch, -89.9f, 89.9f);
+	GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
+
+	// ---- 스크롤 휠: 이동 속도 조절 ----
+	int WheelDelta = Base_Input::GetMouseWheel();
+	if (0 != WheelDelta)
 	{
-		// 커서 기준점(화면 중앙) 미리 계산해 둠
-		static POINT PrevMouse = {
-			static_cast<long>(Base_Windows::GetScreenSize().x / 2),
-			static_cast<long>(Base_Windows::GetScreenSize().y / 2)
-		};
-
-		POINT CurMouse;
-		GetCursorPos(&CurMouse);
-
-		int DeltaX = CurMouse.x - PrevMouse.x;
-		int DeltaY = CurMouse.y - PrevMouse.y;
-
-		float Sensitivity = 0.1f;
-		Yaw += DeltaX * Sensitivity;
-		Pitch += DeltaY * Sensitivity;
-		Pitch = std::clamp(Pitch, -89.9f, 89.9f);
-
-		GetTransform()->SetLocalRotation({ Pitch, Yaw, 0.f });
-
-		// 마우스 Δ 처리가 끝났으면 다시 중앙으로 고정
-		SetCursorPos(PrevMouse.x, PrevMouse.y);
-
-		// 카메라 이동
-		float4 Forward = GetTransform()->GetLocalForwardVector();
-		float4 Right = GetTransform()->GetLocalRightVector();
-		float4 Up = GetTransform()->GetLocalUpVector();
-
-		float MoveSpeed = 200.f * _Deltatime;
-		float4 MoveDelta = { 0.f, 0.f, 0.f };
-
-		if (Base_Input::IsPress("Forword"))  MoveDelta += Forward * MoveSpeed;
-		if (Base_Input::IsPress("Back"))     MoveDelta -= Forward * MoveSpeed;
-		if (Base_Input::IsPress("Right"))    MoveDelta += Right * MoveSpeed;
-		if (Base_Input::IsPress("Left"))     MoveDelta -= Right * MoveSpeed;
-		if (Base_Input::IsPress("Up"))       MoveDelta += Up * MoveSpeed;
-		if (Base_Input::IsPress("Down"))     MoveDelta -= Up * MoveSpeed;
-
-		GetTransform()->AddLocalPosition(MoveDelta);
+		const float ScaleStep = 1.15f;
+		if (WheelDelta > 0) FlyBaseSpeed *= ScaleStep;
+		else                 FlyBaseSpeed /= ScaleStep;
+		FlyBaseSpeed = std::clamp(FlyBaseSpeed, 20.0f, 5000.0f);
 	}
+
+	// ---- 이동 ----
+	const float4 Forward = GetTransform()->GetLocalForwardVector();
+	const float4 Right   = GetTransform()->GetLocalRightVector();
+	const float4 WorldUp = float4::UP; // flycam 수직은 월드 업 기준
+
+	float MoveSpeed = FlyBaseSpeed * _Deltatime;
+	if (Base_Input::IsPress("Sprint")) MoveSpeed *= 3.0f;
+
+	float4 Move = { 0.f, 0.f, 0.f, 0.f };
+	if (Base_Input::IsPress("Forword")) Move += Forward * MoveSpeed;
+	if (Base_Input::IsPress("Back"))    Move -= Forward * MoveSpeed;
+	if (Base_Input::IsPress("Right"))   Move += Right   * MoveSpeed;
+	if (Base_Input::IsPress("Left"))    Move -= Right   * MoveSpeed;
+	if (Base_Input::IsPress("Up"))      Move += WorldUp * MoveSpeed;
+	if (Base_Input::IsPress("DOWN"))    Move -= WorldUp * MoveSpeed;
+
+	GetTransform()->AddLocalPosition(Move);
 }
 
 void Ext_Camera::CaptureCubemap(const float4& _Pos, const float4& _Rot, const float4& _CaptureScale /*= float4(128, 128)*/)

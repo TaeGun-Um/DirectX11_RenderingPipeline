@@ -1,9 +1,18 @@
-#include "PrecompileHeader.h"
+ï»¿#include "PrecompileHeader.h"
 #include "Base_Input.h"
 #include "Base_String.h"
 #include "Base_Debug.h"
+#include "Base_Windows.h"
 
-std::map<std::string, Base_Input::Key> Base_Input::Keys;
+std::map<std::string, Base_Input::Key>  Base_Input::Keys;
+std::map<std::string, Base_Input::Axis> Base_Input::Axes;
+
+int  Base_Input::MouseX       = 0;
+int  Base_Input::MouseY       = 0;
+int  Base_Input::MouseDeltaX  = 0;
+int  Base_Input::MouseDeltaY  = 0;
+int  Base_Input::MouseWheel   = 0;
+bool Base_Input::bCursorLocked = false;
 
 void Base_Input::Key::Reset()
 {
@@ -21,20 +30,20 @@ void Base_Input::Key::Update(float _DeltaTime)
 	if (true == KeyCheck())
 	{
 		PressTime += _DeltaTime;
-		if (bIsFree) // ¾È´©¸£°í ÀÖ¾ú´Âµ¥, ¹æ±İ ´©¸§(1Æ½ ´­·¶´Ù)
+		if (bIsFree) // ì•ˆëˆŒëŸ¬ì ¸ ìˆì—ˆëŠ”ë°, ë°©ê¸ˆ ëˆ„ë¦„(1í‹± ëˆŒë €ë‹¤)
 		{
 			bIsDown = true;
 			bIsPress = true;
 			bIsFree = false;
 		}
-		else if (bIsDown) // ´©¸£°í ÀÖ¾ú´Âµ¥, ¶Ç ´©¸§(¿¬¼Ó ÀÔ·ÂÁßÀÌ³×..)
+		else if (bIsDown) // ëˆ„ë¥´ê³  ìˆì—ˆëŠ”ë°, ë˜ ëˆ„ë¦„(ì—°ì† ì…ë ¥ì¤‘ì´ë„¤..)
 		{
 			bIsDown = false;
 			bIsPress = true;
 			bIsFree = false;
 		}
 	}
-	else // ¾Æ¹«°Íµµ ¾ÈÇÏ°íÀÖÀ½
+	else // ì•„ë¬´ê²ƒë„ ì•ˆí•˜ê³ ìˆìŒ
 	{
 		PressTime = 0.f;
 		bIsFree = true;
@@ -43,62 +52,147 @@ void Base_Input::Key::Update(float _DeltaTime)
 	}
 }
 
-void Base_Input::Update(float _DeltaTime)
-{
-	for (auto& Iter : Keys)
-	{
-		Iter.second.Update(_DeltaTime);
-	}
-}
-
-bool Base_Input::IsDown(std::string_view _Name)
-{
-	std::string UpperName = Base_String::ToUpper(_Name);
-
-	if (Keys.end() == Keys.find(UpperName))
-	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â Å°¸¦ »ç¿ëÇÏ·Á°í Çß½À´Ï´Ù." + UpperName);
-	}
-
-	return Keys[UpperName].bIsDown;
-}
-
-bool Base_Input::IsPress(std::string_view _Name)
-{
-	std::string UpperName = Base_String::ToUpper(_Name);
-
-	if (Keys.end() == Keys.find(UpperName))
-	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â Å°¸¦ »ç¿ëÇÏ·Á°í Çß½À´Ï´Ù." + UpperName);
-	}
-
-	return Keys[UpperName].bIsPress;
-}
-
-bool Base_Input::IsFree(std::string_view _Name)
-{
-	std::string UpperName = Base_String::ToUpper(_Name);
-
-	if (Keys.end() == Keys.find(UpperName))
-	{
-		MsgAssert("Á¸ÀçÇÏÁö ¾Ê´Â Å°¸¦ »ç¿ëÇÏ·Á°í Çß½À´Ï´Ù." + UpperName);
-	}
-
-	return Keys[UpperName].bIsFree;
-}
-
+// ---------------- Key(Action) ----------------
 void Base_Input::CreateKey(std::string_view _Name, int _Key)
 {
 	std::string UpperName = Base_String::ToUpper(_Name);
 
 	if (Keys.end() != Keys.find(UpperName))
 	{
-		MsgAssert("ÀÌ¹Ì Á¸ÀçÇÏ´Â ÀÌ¸§ÀÇ Å°¸¦ ¶Ç ¸¸µé·Á°í Çß½À´Ï´Ù.");
+		MsgAssert("ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì´ë¦„ì˜ í‚¤ë¥¼ ë˜ ë§Œë“¤ë ¤ê³  í–ˆìŠµë‹ˆë‹¤. " + UpperName);
 	}
 
 	Keys[UpperName].Input = _Key;
 }
 
+bool Base_Input::RebindKey(std::string_view _Name, int _NewKey)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	auto it = Keys.find(UpperName);
+	if (it == Keys.end()) return false;
+	it->second.Input = _NewKey;
+	it->second.Reset();
+	return true;
+}
 
+bool Base_Input::IsDown(std::string_view _Name)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	auto it = Keys.find(UpperName);
+	if (it == Keys.end())
+	{
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í‚¤ë¥¼ ì¡°íšŒ " + UpperName);
+		return false;
+	}
+	return it->second.bIsDown;
+}
 
+bool Base_Input::IsPress(std::string_view _Name)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	auto it = Keys.find(UpperName);
+	if (it == Keys.end())
+	{
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í‚¤ë¥¼ ì¡°íšŒ " + UpperName);
+		return false;
+	}
+	return it->second.bIsPress;
+}
 
+bool Base_Input::IsFree(std::string_view _Name)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	auto it = Keys.find(UpperName);
+	if (it == Keys.end())
+	{
+		MsgAssert("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í‚¤ë¥¼ ì¡°íšŒ " + UpperName);
+		return false;
+	}
+	return it->second.bIsFree;
+}
+
+// ---------------- Axis ----------------
+void Base_Input::CreateAxis(std::string_view _Name, int _PositiveKey, int _NegativeKey)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	Axis& A = Axes[UpperName];
+	A.PositiveKey = _PositiveKey;
+	A.NegativeKey = _NegativeKey;
+}
+
+float Base_Input::GetAxis(std::string_view _Name)
+{
+	std::string UpperName = Base_String::ToUpper(_Name);
+	auto it = Axes.find(UpperName);
+	if (it == Axes.end()) return 0.0f;
+
+	float value = 0.0f;
+	if (0 != GetAsyncKeyState(it->second.PositiveKey)) value += 1.0f;
+	if (0 != GetAsyncKeyState(it->second.NegativeKey)) value -= 1.0f;
+	return value;
+}
+
+// ---------------- Cursor Lock ----------------
+void Base_Input::SetCursorLocked(bool _Locked)
+{
+	if (_Locked == bCursorLocked) return;
+
+	bCursorLocked = _Locked;
+	if (_Locked)
+	{
+		// ì»¤ì„œ ìˆ¨ê¸°ê³  í™”ë©´ ì¤‘ì•™ìœ¼ë¡œ ì´ë™
+		float4 Screen = Base_Windows::GetScreenSize();
+		POINT Center = { static_cast<long>(Screen.x / 2), static_cast<long>(Screen.y / 2) };
+		ClientToScreen(Base_Windows::GetHWnd(), &Center);
+		SetCursorPos(Center.x, Center.y);
+		while (ShowCursor(FALSE) >= 0) { /* ë‚´ë¶€ ì¹´ìš´í„°ê°€ ìŒìˆ˜ê°€ ë  ë•Œê¹Œì§€ */ }
+	}
+	else
+	{
+		while (ShowCursor(TRUE) < 0) { /* ë‚´ë¶€ ì¹´ìš´í„°ê°€ 0 ì´ìƒì´ ë  ë•Œê¹Œì§€ */ }
+	}
+}
+
+// ---------------- Update ----------------
+void Base_Input::Update(float _DeltaTime)
+{
+	// í‚¤ ìƒíƒœ ê°±ì‹ 
+	for (auto& Iter : Keys)
+	{
+		Iter.second.Update(_DeltaTime);
+	}
+
+	// ë§ˆìš°ìŠ¤ ìœ„ì¹˜ / ë¸íƒ€
+	POINT CursorPt;
+	GetCursorPos(&CursorPt);
+	ScreenToClient(Base_Windows::GetHWnd(), &CursorPt);
+
+	if (bCursorLocked)
+	{
+		// ì ê¸ˆ ìƒíƒœ: ë¸íƒ€ëŠ” 'í˜„ì¬ ìœ„ì¹˜ - ì¤‘ì•™'ìœ¼ë¡œ ê³„ì‚°, ë§¤ í”„ë ˆì„ ì¤‘ì•™ìœ¼ë¡œ ì¬ë°°ì¹˜
+		float4 Screen = Base_Windows::GetScreenSize();
+		int CenterX = static_cast<int>(Screen.x / 2);
+		int CenterY = static_cast<int>(Screen.y / 2);
+
+		MouseDeltaX = CursorPt.x - CenterX;
+		MouseDeltaY = CursorPt.y - CenterY;
+
+		POINT Recenter = { CenterX, CenterY };
+		ClientToScreen(Base_Windows::GetHWnd(), &Recenter);
+		SetCursorPos(Recenter.x, Recenter.y);
+
+		MouseX = CenterX;
+		MouseY = CenterY;
+	}
+	else
+	{
+		// ììœ  ëª¨ë“œ: ì´ì „ í”„ë ˆì„ ìœ„ì¹˜ì™€ ë¹„êµí•´ ë¸íƒ€ ì‚°ì¶œ
+		MouseDeltaX = CursorPt.x - MouseX;
+		MouseDeltaY = CursorPt.y - MouseY;
+		MouseX = CursorPt.x;
+		MouseY = CursorPt.y;
+	}
+
+	// íœ  (Base_Windowsê°€ WM_MOUSEWHEELì—ì„œ ëˆ„ì í•œ ê°’ ì†Œë¹„)
+	MouseWheel = Base_Windows::ConsumeMouseWheelDelta();
+}

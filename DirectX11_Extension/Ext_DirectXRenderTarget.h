@@ -70,6 +70,7 @@ public:
 	}
 
 	void RenderTargetClear(); // RenderTargetViewsClear(), DepthStencilViewClear() 호출
+	void RenderTargetColorClear() { RenderTargetViewsClear(); } // 컬러만 클리어 (공유 depth 유지용)
 	void RenderTargetSetting(); // OMSetRenderTargets(), RSSetViewports() 호출
 	void RenderTargetSetting(size_t _Index); // OMSetRenderTargets(), RSSetViewports() 호출
 	void Merge(std::shared_ptr<Ext_DirectXRenderTarget> _OtherRenderTarget, size_t _Index = 0);

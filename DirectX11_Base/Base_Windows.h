@@ -26,6 +26,9 @@ public:
 	static bool GetIsWindowFocus() { return IsWindowFocus; };
 	static void SetWindowsEnd() { IsWindowUpdate = false; };
 
+	// 마우스 휠 누적값(WHEEL_DELTA 단위, 한 틱 = 120). 소비 후 0으로 리셋
+	static int ConsumeMouseWheelDelta() { int d = MouseWheelDelta; MouseWheelDelta = 0; return d; }
+
 protected:
 	
 private:
@@ -41,4 +44,5 @@ private:
 	static float4 WindowPosition;
 	static bool IsWindowUpdate;
 	static bool IsWindowFocus;
+	static int  MouseWheelDelta; // WM_MOUSEWHEEL 누적 델타, 카메라 등에서 소비
 };

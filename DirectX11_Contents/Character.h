@@ -40,6 +40,7 @@ private:
 	std::shared_ptr<class Ext_DynamicMeshComponent> BodyMesh;
 	std::shared_ptr<class Ext_CollisionComponent> BodyCollision;
 	std::shared_ptr<class Ext_MeshComponent> BodyCollisionMesh;
+	std::shared_ptr<class Ext_SpringArm> CameraArm;
 	
 	// Ä«¸Þ¶ó
 	std::shared_ptr<class Ext_Camera> PlayerCamera;

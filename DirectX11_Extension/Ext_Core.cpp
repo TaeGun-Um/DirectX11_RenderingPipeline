@@ -44,6 +44,8 @@ void Ext_Core::Start(std::function<void()> _ContentsCoreStart)
 	Base_Input::CreateKey("Left", 'A');
 	Base_Input::CreateKey("Up", VK_SPACE);
 	Base_Input::CreateKey("DOWN", VK_CONTROL);
+	Base_Input::CreateKey("FlyCam", VK_RBUTTON);  // 언리얼 에디터 스타일: 우클릭 홀드로 flycam 활성
+	Base_Input::CreateKey("Sprint", VK_SHIFT);    // flycam 중 Shift로 3배속
 
 	if (nullptr == _ContentsCoreStart)
 	{

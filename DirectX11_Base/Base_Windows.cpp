@@ -14,6 +14,7 @@ float4              Base_Windows::WindowSize = { 0.f, 0.f, 0.f, 0.f };
 float4              Base_Windows::WindowPosition = { 0.f, 0.f, 0.f, 0.f };
 bool                Base_Windows::IsWindowUpdate = true;
 bool                Base_Windows::IsWindowFocus = true;
+int                 Base_Windows::MouseWheelDelta = 0;
 
 LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
 {
@@ -42,6 +43,12 @@ LRESULT CALLBACK Base_Windows::MessageFunction(HWND _hWnd, UINT _message, WPARAM
     case WM_KEYDOWN:
     {
         // 사용자가 키보드 눌렀을 때 활성화
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        // 휠 델타 누적. GET_WHEEL_DELTA_WPARAM은 양수(앞으로 굴림) / 음수(뒤로 굴림)
+        MouseWheelDelta += GET_WHEEL_DELTA_WPARAM(_wParam);
         break;
     }
     case WM_DESTROY:

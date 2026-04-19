@@ -323,6 +323,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Ext_SpringArm.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Ext_Scene.cpp">
       <SubType>
       </SubType>
@@ -511,6 +515,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Ext_ReflectionComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Ext_SpringArm.h">
       <SubType>
       </SubType>
     </ClInclude>
