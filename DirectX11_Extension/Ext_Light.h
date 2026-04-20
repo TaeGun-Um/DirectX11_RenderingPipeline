@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Ext_Actor.h"
 
 enum class LightType
@@ -70,11 +70,11 @@ struct LightDatas
 //  C++ 측에서는 `bool` 이 1 byte 지만 XMMATRIX 의 16-byte 정렬 요구로 인해
 //  구조체 레이아웃이 동일하게 맞춰진다 (컴파일러가 자동 padding 삽입).
 static_assert(sizeof(LightData) == 480,
-    "LightData size mismatch — HLSL LightData 레이아웃과 일치하지 않음 (예상 480)");
+    "LightData size mismatch - HLSL LightData 레이아웃과 일치하지 않음 (예상 480)");
 static_assert(sizeof(LightData) % 16 == 0,
     "LightData must be 16-byte aligned (D3D11 cbuffer 규격)");
 static_assert(sizeof(LightDatas) == 4 + 12 + 480 * MAX_LIGHTS,
-    "LightDatas size mismatch — HLSL cbuffer(b2) 레이아웃과 일치하지 않음");
+    "LightDatas size mismatch - HLSL cbuffer(b2) 레이아웃과 일치하지 않음");
 
 class Ext_Light : public Ext_Actor
 {

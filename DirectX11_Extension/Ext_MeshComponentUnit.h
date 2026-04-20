@@ -29,7 +29,7 @@ struct alignas(16) RenderingData
 //
 //  C++ 측은 alignas(16) 덕에 자동으로 48 bytes 로 정렬됨.
 static_assert(sizeof(RenderingData) == 48,
-    "RenderingData size mismatch — HLSL cbuffer(b3) 레이아웃과 일치하지 않음 (예상 48)");
+    "RenderingData size mismatch - HLSL cbuffer(b3) 레이아웃과 일치하지 않음 (예상 48)");
 static_assert(sizeof(RenderingData) % 16 == 0,
     "RenderingData must be 16-byte aligned (D3D11 cbuffer 규격)");
 

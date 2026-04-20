@@ -10,5 +10,5 @@ IF NOT EXIST "%~dp0%ThirdParty\Assimp\lib\x64\Release\assimp-vc143-mt.lib" (
 )
 
 IF NOT EXIST "%~dp0%ThirdParty\DirectXTK\lib\x64\Release\DirectXTK.lib" (
-    powershell expand-archive ThirdParty\DirectXTK\lib.zip ThirdParty\DirectXTK\lib\
+    powershell expand-archive ThirdParty\DirectXTK\lib.zip ThirdParty\DirectXTK\
 )

@@ -46,7 +46,7 @@ struct TransformData
 //
 //  불일치 시 ShaderResourceSetting 런타임 assert 전에 컴파일 타임 차단.
 static_assert(sizeof(TransformData) == 528,
-    "TransformData size mismatch — HLSL cbuffer(b0) 레이아웃과 일치하지 않음 (예상 528)");
+    "TransformData size mismatch - HLSL cbuffer(b0) 레이아웃과 일치하지 않음 (예상 528)");
 static_assert(sizeof(TransformData) % 16 == 0,
     "TransformData must be 16-byte aligned (D3D11 cbuffer 규격)");
 

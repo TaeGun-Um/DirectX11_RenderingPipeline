@@ -18,7 +18,7 @@
 #include "Ext_DirectXDepth.h"
 #include "Ext_DirectXRenderTarget.h"
 
-// Hot Reload — 모든 VS/PS 를 파일에서 다시 읽어 재컴파일
+// Hot Reload - 모든 VS/PS 를 파일에서 다시 읽어 재컴파일
 // - 각 Shader 의 Reload() 는 실패해도 예외 던지지 않고 기존 상태를 유지
 // - 전체 성공/실패 수를 OutputDebug 로 보고해 개발 중 눈에 띄게 함
 void Ext_DirectXResourceLoader::ReloadAllShaders()
@@ -41,7 +41,7 @@ void Ext_DirectXResourceLoader::ReloadAllShaders()
 		if (PS->Reload()) ++SuccessPS;
 	}
 
-	std::string Msg = "[HotReload] ===== 완료 — VS " +
+	std::string Msg = "[HotReload] ===== 완료 - VS " +
 		std::to_string(SuccessVS) + "/" + std::to_string(TotalVS) +
 		", PS " + std::to_string(SuccessPS) + "/" + std::to_string(TotalPS) + " =====\n";
 	OutputDebugStringA(Msg.c_str());

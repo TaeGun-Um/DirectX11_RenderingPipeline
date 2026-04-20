@@ -35,7 +35,8 @@ private:
 	std::vector<std::weak_ptr<Ext_Actor>> CurrentBatch;
 
 	float AccTime      = 0.0f; // 사이클 누적 시간
-	int   CycleCounter = 0;    // 몇 번째 사이클인지 — 이름 중복 회피용
+	int   CycleCounter = 0;    // 몇 번째 사이클인지 - 이름 중복 회피용
+	bool  bSpawned     = false; // 현재 배치가 살아있는지 (true=보임, false=비어있음)
 
 	// 튜닝 파라미터
 	float SpawnRadius = 150.0f;
