@@ -2,11 +2,11 @@
 
 그래픽스 학습용 **Direct3D 11 프레임워크**. Scene / Actor / Component 기반 오브젝트 구조 위에 Forward · Deferred · Shadow · PostProcess · Reflection 등 주요 렌더링 기법을 단계적으로 쌓아 올린 개인 프로젝트입니다.
 
-> 📚 상세 문서는 [`docs/`](docs/) 참조 — [Framework](docs/Framework/) · [DirectX](docs/DirectX/) · [Environment](docs/Environment/) · [WorkLog](docs/WorkLog/)
+> 상세 문서는 [`docs/`](docs/) 참조 — [Framework](docs/Framework/) · [DirectX](docs/DirectX/) · [Environment](docs/Environment/) · [WorkLog](docs/WorkLog/)
 
 ---
 
-## ✨ 기능
+## 기능
 
 **렌더링**
 - Forward / **Deferred** 렌더링 경로 (G-Buffer → LightPass → Merge + Forward 알파 패스)
@@ -30,7 +30,7 @@
 
 ---
 
-## 🏗️ 아키텍처
+## 아키텍처
 
 | # | 프로젝트 | 종류 | 역할 |
 |---|---|---|---|
@@ -55,7 +55,7 @@
 
 ---
 
-## 🖥️ 요구 사항
+## 요구 사항
 
 - **OS**: Windows 10 이상 (개발/테스트 Windows 11)
 - **IDE**: Visual Studio 2022 (Toolset `v143`)
@@ -69,7 +69,7 @@
 
 ---
 
-## 🚀 빌드 & 실행
+## 빌드 & 실행
 
 ### 1. 초기 세팅 (최초 1회)
 ```bat
@@ -95,7 +95,7 @@ x64/{Configuration}/03. DirectX11_RenderingPipeline.exe
 
 ---
 
-## 🎮 기본 조작
+## 기본 조작
 
 | 입력 | 동작 |
 |---|---|
@@ -111,7 +111,7 @@ x64/{Configuration}/03. DirectX11_RenderingPipeline.exe
 
 ---
 
-## 📁 디렉토리 구조
+## 디렉토리 구조
 
 ```
 DirectX11_RenderingPipeline/
@@ -128,7 +128,7 @@ DirectX11_RenderingPipeline/
 
 ---
 
-## 📖 문서
+## 문서
 
 | 폴더 | 내용 |
 |---|---|
@@ -137,7 +137,6 @@ DirectX11_RenderingPipeline/
 | [`docs/Framework/`](docs/Framework/) | 프레임워크 구현 — 기초 구조부터 렌더링 기법까지 (01~16) |
 | [`docs/WorkLog/`](docs/WorkLog/) | 작업 기록 — 날짜별 세션 로그 |
 
-> 원본 블로그 글([umtimos.tistory.com](https://umtimos.tistory.com))은 운영 종료 후 본 레포에 통합 이관되었습니다.
 
 ---
 
